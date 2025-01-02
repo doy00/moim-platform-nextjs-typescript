@@ -1,6 +1,6 @@
 'use client';
 
-import { TAuthInputs } from '@/types/auth.type';
+import { TAuthInputs } from '@/types/auth/auth.type';
 import { useForm } from 'react-hook-form';
 import Input from './Input';
 

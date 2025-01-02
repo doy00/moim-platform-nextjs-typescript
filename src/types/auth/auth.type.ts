@@ -5,3 +5,11 @@ export type TAuthInputs = {
   password: string;
   passwordConfirm?: string;
 };
+
+export type TSignUpResponse = {
+  message: string;
+};
+
+export type TSignInResponse = {
+  token: string;
+};
