@@ -1,3 +1,4 @@
+import { getItemWithExpireTime } from '@/utils/auth.util';
 import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
 
@@ -7,7 +8,7 @@ const api = axios.create({
 
 api.interceptors.request.use((config) => {
   if (typeof window !== 'undefined') {
-    const token = localStorage.getItem('dudemeet-token');
+    const token = getItemWithExpireTime('dudemeet-token');
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
     }
