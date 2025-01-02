@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
+import QueryProvider from '@/Providers/QueryProvider';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {
@@ -23,7 +24,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`font-pretendard antialiased ${pretendard.variable}`}>{children}</body>
+      <body className={`font-pretendard antialiased ${pretendard.variable}`}>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }
