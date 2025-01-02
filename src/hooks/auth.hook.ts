@@ -41,6 +41,7 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
     onSuccess: () => {
       removeItem('dudemeet-token');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
+      queryClient.setQueryData([QUERY_KEY_ME], null);
     },
   });
 }
@@ -59,5 +60,9 @@ export function useMeQuery(): UseQueryResult<TMeResponse, TError> {
   return useQuery<TMeResponse, TError>({
     queryKey: [QUERY_KEY_ME],
     queryFn: getMe,
+    refetchOnMount: false,
+    refetchOnWindowFocus: false,
+    refetchOnReconnect: false,
+    staleTime: 1000 * 60 * 60,
   });
 }

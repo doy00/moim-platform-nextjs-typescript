@@ -1,15 +1,14 @@
 'use client';
 
-import { TAuthInputs } from '@/types/auth.type';
 import { cn } from '@/utils/ui.util';
 import { InputHTMLAttributes, useState } from 'react';
-import { UseFormRegister } from 'react-hook-form';
+import { UseFormRegisterReturn } from 'react-hook-form';
 import Eye from './Eye';
 import EyeSlash from './EyeSlash';
 
 interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
-  register: UseFormRegister<TAuthInputs>;
-  name: keyof TAuthInputs;
+  name: string;
+  register: UseFormRegisterReturn;
 }
 
 function Input({ className, type, register, ...props }: InputProps) {
@@ -27,7 +26,7 @@ function Input({ className, type, register, ...props }: InputProps) {
           className,
         )}
         {...props}
-        {...register(props.name)}
+        {...register}
       />
       {type === 'password' && (
         <div

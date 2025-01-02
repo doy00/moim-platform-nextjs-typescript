@@ -33,11 +33,3 @@ export type TMeResponse = {
   createdAt: string;
   updatedAt: string;
 };
-
-export type TMe = {
-  id: number | string;
-  email: string;
-  name: string;
-  companyName: string;
-  image: string;
-};
