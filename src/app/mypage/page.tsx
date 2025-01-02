@@ -1,4 +1,4 @@
-import Meetings from './meetings/page';
+import Meetings from '../../components/mypage/meetings/Meetings';
 
 export default function Mypage() {
   return (
