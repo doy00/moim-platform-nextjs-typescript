@@ -4,7 +4,7 @@ import { TAuthInputs } from '@/types/auth.type';
 import { useForm } from 'react-hook-form';
 import Input from './Input';
 
-function SignUpForm() {
+export default function SignUpForm() {
   const { register, handleSubmit } = useForm<TAuthInputs>();
 
   const onSubmit = (data: TAuthInputs) => {
@@ -19,7 +19,7 @@ function SignUpForm() {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full h-fit min-h-[35%] flex flex-col items-center justify-center gap-10"
+        className="w-full h-fit flex flex-col items-center justify-center gap-10"
       >
         <div className="w-[90%] flex flex-col items-center justify-center gap-10">
           <div className="w-full flex flex-col gap-4">
@@ -58,5 +58,3 @@ function SignUpForm() {
     </>
   );
 }
-
-export default SignUpForm;
