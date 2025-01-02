@@ -2,18 +2,18 @@
 
 import { TAuthInputs } from '@/types/auth.type';
 import { cn } from '@/utils/ui.util';
-import * as React from 'react';
+import { InputHTMLAttributes, useState } from 'react';
 import { UseFormRegister } from 'react-hook-form';
 import Eye from './Eye';
 import EyeSlash from './EyeSlash';
 
-interface InputProps extends React.InputHTMLAttributes<HTMLInputElement> {
+interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
   register: UseFormRegister<TAuthInputs>;
   name: keyof TAuthInputs;
 }
 
 function Input({ className, type, register, ...props }: InputProps) {
-  const [showPassword, setShowPassword] = React.useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
