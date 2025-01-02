@@ -17,3 +17,7 @@ export const getItemWithExpireTime = (keyName: string): string | null => {
   }
   return obj.value;
 };
+
+export const removeItem = (keyName: string) => {
+  window.localStorage.removeItem(keyName);
+};
