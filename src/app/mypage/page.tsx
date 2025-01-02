@@ -1,3 +1,5 @@
+import Meetings from './meetings/page';
+
 export default function Mypage() {
   return (
     <div className="h-screen max-w-[1200px] mx-auto">
@@ -19,6 +21,7 @@ export default function Mypage() {
             </div>
           </div>
         </div>
+        <Meetings />
       </div>
     </div>
   );
