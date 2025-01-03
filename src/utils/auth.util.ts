@@ -1,3 +1,5 @@
+'use client';
+
 import { useCallback, useRef } from 'react';
 
 export const setItemWithExpireTime = (keyName: string, keyValue: string, tts: number) => {

@@ -9,6 +9,7 @@ import type {
   TSignUpResponse,
 } from '@/types/auth.type';
 import type { TError } from '@/types/error.type';
+import { deleteCookie, setCookie } from '@/utils/auth-server.util';
 import { removeItem, setItemWithExpireTime } from '@/utils/auth.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -29,6 +30,11 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
     mutationFn: postSignIn,
     onSuccess: (data) => {
       setItemWithExpireTime('dudemeet-token', data.token, 1000 * 60 * 60);
+      setCookie({
+        name: 'dudemeet-token',
+        value: data.token,
+        maxAge: 60 * 60,
+      });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
     },
   });
@@ -40,6 +46,7 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
     mutationFn: postSignOut,
     onSuccess: () => {
       removeItem('dudemeet-token');
+      deleteCookie('dudemeet-token');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
       queryClient.setQueryData([QUERY_KEY_ME], null);
     },
