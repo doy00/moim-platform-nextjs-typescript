@@ -1,7 +1,8 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
-
 import '../styles/globals.css';
+
+import HomeGnb from '@/components/home/HomeGnb';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,9 +22,13 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  
   return (
     <html lang="ko">
-      <body className={`font-pretendard antialiased ${pretendard.variable}`}>{children}</body>
+      <body className={`layout font-pretendard antialiased ${pretendard.variable}`}>
+        {children}
+        <HomeGnb />
+      </body>
     </html>
   );
 }
