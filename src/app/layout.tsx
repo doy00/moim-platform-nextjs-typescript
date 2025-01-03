@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 
-import QueryProvider from '@/Providers/QueryProvider';
+import QueryProvider from '@/providers/QueryProvider';
 import '../styles/globals.css';
 
 export const metadata: Metadata = {

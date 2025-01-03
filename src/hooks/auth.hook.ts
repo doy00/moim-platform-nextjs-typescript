@@ -63,10 +63,11 @@ export function usePutMeMutation(): UseMutationResult<TMeResponse, TError, TPutM
   });
 }
 
-export function useMeQuery(): UseQueryResult<TMeResponse, TError> {
+export function useMeQuery(enabled: boolean = true): UseQueryResult<TMeResponse, TError> {
   return useQuery<TMeResponse, TError>({
     queryKey: [QUERY_KEY_ME],
     queryFn: getMe,
+    enabled,
     refetchOnMount: false,
     refetchOnWindowFocus: false,
     refetchOnReconnect: false,
