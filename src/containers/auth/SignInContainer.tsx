@@ -1,18 +1,36 @@
 'use client';
 
 import { SignInForm } from '@/components/auth';
-import Link from 'next/link';
+import SelectAuth from '@/components/auth/SelectAuth';
+import { useAuthType } from '@/hooks/auth.hook';
+import { useRouter, useSearchParams } from 'next/navigation';
 
 export default function SignInContainer() {
+  const { authType, handleAuthType } = useAuthType();
+
+  const router = useRouter();
+  const searchParams = useSearchParams();
+
+  const type = searchParams.get('type');
+
+  const handleClickLogin = () => {
+    handleAuthType('email');
+    router.push('/signin?type=email');
+  };
+
   return (
-    <div className="w-full h-full flex flex-col items-center justify-center">
-      <div className="flex flex-col items-center justify-center gap-2 pb-6">
-        <h1 className="text-title-1 font-bold">로그인</h1>
-      </div>
-      <SignInForm />
-      <p className="text-sm text-gray-500">
-        두더밑이 처음이신가요? <Link href="/signup">회원가입</Link>
-      </p>
-    </div>
+    <section className="w-full h-auto min-h-dvh flex flex-col items-center justify-center bg-white">
+      {!authType || type === null ? (
+        <SelectAuth handleAuthType={handleAuthType}>
+          <p className="text-sm text-gray500">
+            이미 계정이 있으신가요?{' '}
+            <button onClick={handleClickLogin} className="underline font-bold text-gray900">
+              로그인하기
+            </button>
+          </p>
+        </SelectAuth>
+      ) : null}
+      {authType === 'email' && type === 'email' ? <SignInForm /> : null}
+    </section>
   );
 }
