@@ -1,5 +1,8 @@
 'use server';
 
+import { getMe } from '@/apis/auth.api';
+import { QUERY_KEY_ME } from '@/constants/auth.const';
+import { dehydrate, QueryClient } from '@tanstack/react-query';
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';
 
@@ -20,3 +23,15 @@ export async function setCookie(options: ResponseCookie): Promise<void> {
     ...options,
   });
 }
+
+export const prefetchMe = async () => {
+  const queryClient = new QueryClient();
+
+  await queryClient.prefetchQuery({
+    queryKey: [QUERY_KEY_ME],
+    queryFn: () => getMe(),
+  });
+  const me = await queryClient.getQueryData([QUERY_KEY_ME]);
+  const dehydratedState = dehydrate(queryClient);
+  return { me, dehydratedState };
+};
