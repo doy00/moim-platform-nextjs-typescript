@@ -1,4 +1,5 @@
-import { getItemWithExpireTime } from '@/utils/auth-client.util';
+import { TError } from '@/types/error.type';
+import { getItem } from '@/utils/auth-client.util';
 import { getCookie } from '@/utils/auth-server.util';
 import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
@@ -9,7 +10,7 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   if (typeof window !== 'undefined') {
-    const token = getItemWithExpireTime('dudemeet-token');
+    const token = getItem('dudemeet-token');
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
     }
@@ -25,6 +26,13 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   <T>(response: AxiosResponse<T>) => response.data as T,
   (error: AxiosError) => {
+    if (
+      error.response?.status === 401 &&
+      (error.response?.data as TError)?.code === 'INVALID_TOKEN'
+    ) {
+      window.location.href = '/signup?type=email';
+      return;
+    }
     return Promise.reject(error.response?.data);
   },
 );

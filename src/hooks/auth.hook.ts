@@ -9,7 +9,7 @@ import type {
   TSignUpResponse,
 } from '@/types/auth.type';
 import type { TError } from '@/types/error.type';
-import { removeItem, setItemWithExpireTime } from '@/utils/auth-client.util';
+import { removeItem, setItem } from '@/utils/auth-client.util';
 import { deleteCookie, setCookie } from '@/utils/auth-server.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -29,7 +29,7 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
   return useMutation<TSignInResponse, TError, TAuthInputs>({
     mutationFn: postSignIn,
     onSuccess: (data) => {
-      setItemWithExpireTime('dudemeet-token', data.token, 1000 * 60 * 60);
+      setItem('dudemeet-token', data.token);
       setCookie({
         name: 'dudemeet-token',
         value: data.token,
@@ -68,9 +68,5 @@ export function useMeQuery(enabled: boolean = true): UseQueryResult<TMeResponse,
     queryKey: [QUERY_KEY_ME],
     queryFn: getMe,
     enabled,
-    refetchOnMount: false,
-    refetchOnWindowFocus: false,
-    refetchOnReconnect: false,
-    staleTime: 1000 * 60 * 60,
   });
 }
