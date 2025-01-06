@@ -29,6 +29,7 @@ export default function RootLayout({
         {children}
         <HomeGnb />
       </body>
+      <div id="portal-root"></div>
     </html>
   );
 }

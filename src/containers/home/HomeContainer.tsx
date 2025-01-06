@@ -7,7 +7,7 @@ import HomeHero from '@/components/home/HomeHero'
 
 export default function HomeContainer() {
   return (
-    <div>
+    <div id="layout-container" tabIndex={-1}>
       <HomeHeader />
       <HomeHero />
     </div>
