@@ -22,17 +22,17 @@ export default function HomeGnb() {
     return (
       <li key={menu.name} className="cursor-pointer">
         <Link href={menu.path}>
-          <div className="flex flex-col items-center">
+          <div className="flex flex-col items-center w-[106px] h-[44px]">
             <menu.icon
               className={clsx(
-                'w-10 h-10 transition-colors',
-                isActive ? 'fill-black' : 'fill-gray-400'
+                'w-6 h-6 transition-colors',
+                isActive ? 'fill-[#42424A]' : 'fill-[#B8B9C1]'
               )}
             />
             <span
               className={clsx(
-                'text-lg font-bold',
-                isActive ? 'text-black' : 'text-gray-400'
+                'text-caption-normal',
+                isActive ? 'text-[#42424A]' : 'text-[#B8B9C1]'
               )}
             >
               {menu.name}
@@ -46,10 +46,10 @@ export default function HomeGnb() {
   
   return (
     <nav
-    className="fixed bottom-0 left-0 right-0 bg-rose-50 text-green-600 font-bold text-xl z-10 mx-auto max-w-[500px] w-full"
+    className="h-[62px] fixed bottom-0 left-0 right-0 bg-background200 text-green-600 font-bold text-xl z-10 mx-auto max-w-[500px] w-full"
     >
     {/* MENU_LIST */}
-    <ul className="list-none flex justify-between items-center text-sm px-10 py-4">
+    <ul className="list-none flex justify-between items-center text-sm px-6 py-[9px] mx-auto">
       {renderedGnbMenu}
     </ul>
     </nav>
