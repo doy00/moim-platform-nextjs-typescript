@@ -13,7 +13,6 @@ import { removeItem, setItemWithExpireTime } from '@/utils/auth-client.util';
 import { deleteCookie, setCookie } from '@/utils/auth-server.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useState } from 'react';
 
 export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthInputs> {
   const queryClient = useQueryClient();
@@ -74,12 +73,4 @@ export function useMeQuery(enabled: boolean = true): UseQueryResult<TMeResponse,
     refetchOnReconnect: false,
     staleTime: 1000 * 60 * 60,
   });
-}
-
-export function useAuthType() {
-  const [authType, setAuthType] = useState<'kakao' | 'email' | null>(null);
-
-  const handleAuthType = useCallback((type: 'kakao' | 'email' | null) => setAuthType(type), []);
-
-  return { authType, handleAuthType };
 }

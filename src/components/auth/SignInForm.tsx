@@ -4,11 +4,11 @@ import { useSignInMutation } from '@/hooks/auth.hook';
 import { TAuthInputs } from '@/types/auth.type';
 import { useDebounce } from '@/utils/auth-client.util';
 import { cn } from '@/utils/ui.util';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
+import AuthQuestions from './AuthQuestions';
 import Input from './Input';
 
 export default function SignInForm() {
@@ -156,12 +156,7 @@ export default function SignInForm() {
         </div>
 
         <div className="w-full flex flex-col items-center justify-center gap-4">
-          <p className="text-sm text-gray500">
-            아직 계정이 없으신가요?{' '}
-            <Link href="/signup" className="underline font-bold text-gray900">
-              회원가입하기
-            </Link>
-          </p>
+          <AuthQuestions type="signup" />
           <AuthButton
             className={cn(
               'bg-gray950 text-white rounded-2xl h-[56px] text-body-1-normal font-semibold',
