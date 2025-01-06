@@ -47,8 +47,6 @@ export default function SignUpForm() {
     trigger(name);
   }, 1000);
 
-  const password = watch('password');
-
   const { isTouched: isNameTouched, invalid: isNameInvalid } = getFieldState('name');
   const { isTouched: isEmailTouched, invalid: isEmailInvalid } = getFieldState('email');
   const { isTouched: isCompanyNameTouched, invalid: isCompanyNameInvalid } =
@@ -232,7 +230,7 @@ export default function SignUpForm() {
                   register={register('passwordConfirm', {
                     required: '비밀번호를 다시 한번 입력해주세요',
                     validate: (value) => {
-                      if (value === password) return '비밀번호가 일치합니다';
+                      if (value === watch('password')) return '비밀번호가 일치합니다';
                       return '비밀번호가 일치하지 않습니다.';
                     },
                     onChange: (e) => {
