@@ -2,7 +2,7 @@
 
 import { useSignUpMutation } from '@/hooks/auth.hook';
 import { TAuthInputs } from '@/types/auth.type';
-import { useDebounce } from '@/utils/auth.util';
+import { useDebounce } from '@/utils/auth-client.util';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { useForm } from 'react-hook-form';

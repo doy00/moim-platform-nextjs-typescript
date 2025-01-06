@@ -9,8 +9,8 @@ import type {
   TSignUpResponse,
 } from '@/types/auth.type';
 import type { TError } from '@/types/error.type';
+import { removeItem, setItemWithExpireTime } from '@/utils/auth-client.util';
 import { deleteCookie, setCookie } from '@/utils/auth-server.util';
-import { removeItem, setItemWithExpireTime } from '@/utils/auth.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
