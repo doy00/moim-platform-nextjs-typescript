@@ -1,11 +1,31 @@
+import GatheringCard from '@/components/mypage/created-meetings/gatheringCard/GatheringCard';
+import { IJoind } from '@/types/gathering.type';
+import { getJoined } from '@/apis/getJoined';
+import { useEffect, useState } from 'react';
+
 export default function Meetings() {
+  const [gatheringJoined, setGatheringJoined] = useState<IJoind[]>([]);
+
+  useEffect(() => {
+    const fetchGatheringJoined = async () => {
+      const token = localStorage.getItem('dudemeet-token');
+      console.log('저장된 토큰:', token);
+
+      try {
+        const data = await getJoined();
+        setGatheringJoined(data);
+      } catch (error) {
+        console.error('모임 조회 실패:', error);
+      }
+    };
+    fetchGatheringJoined();
+  }, []);
+
   return (
     <div>
-      {/* TODO: 카테고리 부분 나의 모임, 나의 리뷰, 내가 만든 모임 병합은 각 페이지 구현 후 mypage 브랜치에
-        서 병합하기 */}
-      <div>
-        <h1 className="text-2xl font-bold">나의 모임</h1>
-      </div>
+      {gatheringJoined.map((gathering) => (
+        <GatheringCard key={gathering.id} gathering={gathering} />
+      ))}
     </div>
   );
 }
