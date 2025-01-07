@@ -2,34 +2,37 @@
 
 import Meetings from '@/components/mypage/meetings/Meetings';
 import CreatedMeetings from '@/components/mypage/created-meetings/CreatedMeetings';
-// import { getUserInfo } from '@/apis/getUserInfo';
+import { getUserInfo } from '@/apis/getUserInfo';
 import { IUser } from '@/types/user';
 import { useEffect, useState } from 'react';
 import Image from 'next/image';
 import defaultProfile from '../../../public/images/dude.png';
 
-const MOCK_USER: IUser = {
-  teamId: '6-5',
-  id: 1006,
-  email: 'test@email.com',
-  name: '테스트입니다.',
-  companyName: '테스트용',
-  image: null,
-  createdAt: new Date('2025-01-02T04:37:49.547Z'),
-  updatedAt: new Date('2025-01-02T04:37:49.547Z'),
-};
-
 export default function Mypage() {
   const [userInfo, setUserInfo] = useState<IUser | null>(null);
+  const [activeTab, setActiveTab] = useState('meetings');
 
   useEffect(() => {
-    setUserInfo(MOCK_USER);
-    // const fetchInfo = async () => {
-    //   const data = await getUserInfo();
-    //   setUserInfo(data);
-    // };
-    // fetchInfo();
+    // setUserInfo(MOCK_USER);
+    const fetchInfo = async () => {
+      const token = localStorage.getItem('dudemeet-token');
+      console.log('저장된 토큰:', token);
+
+      const data = await getUserInfo();
+      setUserInfo(data);
+    };
+    fetchInfo();
   }, []);
+
+  const renderTab = () => {
+    if (activeTab === 'meetings') {
+      return <Meetings />;
+    } else if (activeTab === 'reviews') {
+      return <div>나의 리뷰</div>;
+    } else if (activeTab === 'created-meetings') {
+      return <CreatedMeetings />;
+    }
+  };
 
   return (
     <div className="h-screen max-w-[1200px] mx-auto">
@@ -42,24 +45,51 @@ export default function Mypage() {
             <button className="rounded-full bg-gray-400">프로필 수정</button>
           </div>
           <hr />
-          <div className="flex gap-4">
-            <div>
+          {userInfo && (
+            <div className="flex gap-4">
               <Image
                 src={userInfo?.image ?? defaultProfile}
                 alt="profile"
                 width={100}
                 height={100}
               />
+              <div className="flex flex-col gap-2">
+                <span>{userInfo?.name}</span>
+                <span>{userInfo?.companyName}</span>
+                <span>{userInfo?.email}</span>
+              </div>
             </div>
-            <div className="flex flex-col gap-2">
-              <span>{userInfo?.name}</span>
-              <span>{userInfo?.companyName}</span>
-              <span>{userInfo?.email}</span>
-            </div>
-          </div>
+          )}
         </div>
-        <Meetings />
-        <CreatedMeetings />
+        <div>
+          <button
+            className={`py-2 px-4 ${
+              activeTab === 'meetings' ? 'border-b-2 border-black font-bold' : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('meetings')}
+          >
+            나의 모임
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              activeTab === 'reviews' ? 'border-b-2 border-black font-bold' : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('reviews')}
+          >
+            나의 리뷰
+          </button>
+          <button
+            className={`py-2 px-4 ${
+              activeTab === 'created-meetings'
+                ? 'border-b-2 border-black font-bold'
+                : 'text-gray-500'
+            }`}
+            onClick={() => setActiveTab('created-meetings')}
+          >
+            내가 만든 모임
+          </button>
+        </div>
+        {renderTab()}
       </div>
     </div>
   );
