@@ -4,11 +4,19 @@ import GatheringCard from '@/components/mypage/created-meetings/gatheringCard/Ga
 import { IGathering } from '@/types/gathering.type';
 import { useEffect, useState } from 'react';
 import { getGatherings } from '@/apis/gatherings';
+import { getUserInfo } from '@/apis/getUserInfo';
 
 export default function CreatedMeetings() {
   const [gatherings, setGatherings] = useState<IGathering[]>([]);
-  // 임시 userId
-  const userId = 1006;
+  const [userId, setUserId] = useState<number | null>(null);
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      const data = await getUserInfo();
+      setUserId(data.id);
+    };
+    fetchUserInfo();
+  }, []);
 
   useEffect(() => {
     const fetchGatherings = async () => {
