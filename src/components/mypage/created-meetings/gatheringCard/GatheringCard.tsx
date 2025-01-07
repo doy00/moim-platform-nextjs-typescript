@@ -1,11 +1,12 @@
 'use client';
 
-import { IGathering } from '@/types/gathering.type';
+import { IGathering, IJoind } from '@/types/gathering.type';
 import Image from 'next/image';
 import defaultProfile from '../../../../../public/images/dude.png';
 
 interface Props {
-  gathering: IGathering;
+  gathering: IGathering | IJoind;
+  // gathering: IJoind;
 }
 
 export default function GatheringCard({ gathering }: Props) {
