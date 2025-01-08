@@ -20,3 +20,9 @@ export interface IDetailParticipants {
   participants: IParticipant[];
   className?: string;
 }
+
+export interface IParticipantsProgress {
+  currentCount: number;
+  maxCount: number;
+  className?: string;
+}

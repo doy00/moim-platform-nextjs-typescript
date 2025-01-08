@@ -8,12 +8,12 @@ import { DetailContent } from './DetailContent';
 import { DetailReview } from './DetailReview';
 
 const participants = [
-  { id: 1, image: "/svgs/profile.svg", name: "User 1" },
-  { id: 2, image: "/svgs/profile.svg", name: "User 2" },
-  { id: 3, image: "/svgs/profile.svg", name: "User 3" },
-  { id: 4, image: "/svgs/profile.svg", name: "User 4" },
-  { id: 5, image: "/svgs/profile.svg", name: "User 5" },
-  { id: 6, image: "/svgs/profile.svg", name: "User 6" },
+  { userId: 1, image: "/svgs/profile.svg", name: "User 1" },
+  { userId: 2, image: "/svgs/profile.svg", name: "User 2" },
+  { userId: 3, image: "/svgs/profile.svg", name: "User 3" },
+  { userId: 4, image: "/svgs/profile.svg", name: "User 4" },
+  { userId: 5, image: "/svgs/profile.svg", name: "User 5" },
+  { userId: 6, image: "/svgs/profile.svg", name: "User 6" },
 ];
 
 export default function DetailContainer(
