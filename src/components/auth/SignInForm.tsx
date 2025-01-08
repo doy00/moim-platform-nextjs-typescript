@@ -41,17 +41,17 @@ export default function SignInForm() {
     if (response.token) router.push('/');
   };
 
-  const { isTouched: isEmailTouched, invalid: isEmailInvalid } = getFieldState('email');
-  const { isTouched: isPasswordTouched, invalid: isPasswordInvalid } = getFieldState('password');
+  const { isDirty: isEmailDirty, invalid: isEmailInvalid } = getFieldState('email');
+  const { isDirty: isPasswordDirty, invalid: isPasswordInvalid } = getFieldState('password');
 
   const isDisabled =
     isSignInPending ||
     !!errors.password ||
     !!errors.email ||
     !!signInError ||
-    !isEmailTouched ||
+    !isEmailDirty ||
     isEmailInvalid ||
-    !isPasswordTouched ||
+    !isPasswordDirty ||
     isPasswordInvalid;
 
   useEffect(() => {
@@ -125,7 +125,7 @@ export default function SignInForm() {
                   register={register('password', {
                     required: '비밀번호를 입력해주세요',
                     minLength: {
-                      value: 8,
+                      value: 7,
                       message: '비밀번호를 확인해주세요',
                     },
                     onChange: (e) => {
@@ -160,7 +160,7 @@ export default function SignInForm() {
           <AuthButton
             className={cn(
               'bg-gray950 text-white rounded-2xl h-[56px] text-body-1-normal font-semibold',
-              isDisabled ? 'text-gray600 cursor-not-allowed' : 'text-gray200',
+              isDisabled ? 'text-gray600 cursor-not-allowed' : 'text-gray50 bg-orange200',
             )}
             disabled={isDisabled}
             type="submit"

@@ -5,7 +5,7 @@ import { TAuthInputs } from '@/types/auth.type';
 import { useDebounce } from '@/utils/auth-client.util';
 import { cn } from '@/utils/ui.util';
 import { useRouter } from 'next/navigation';
-import { useEffect, useId } from 'react';
+import { useEffect, useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthQuestions from './AuthQuestions';
@@ -47,31 +47,33 @@ export default function SignUpForm() {
     trigger(name);
   }, 1000);
 
-  const { isTouched: isNameTouched, invalid: isNameInvalid } = getFieldState('name');
-  const { isTouched: isEmailTouched, invalid: isEmailInvalid } = getFieldState('email');
-  const { isTouched: isCompanyNameTouched, invalid: isCompanyNameInvalid } =
+  const { isDirty: isNicknameDirty, invalid: isNicknameInvalid } = getFieldState('nickname');
+  const { isDirty: isEmailDirty, invalid: isEmailInvalid } = getFieldState('email');
+  const { isDirty: isCompanyNameDirty, invalid: isCompanyNameInvalid } =
     getFieldState('companyName');
-  const { isTouched: isPasswordTouched, invalid: isPasswordInvalid } = getFieldState('password');
-  const { isTouched: isPasswordConfirmTouched, invalid: isPasswordConfirmInvalid } =
+  const { isDirty: isPasswordDirty, invalid: isPasswordInvalid } = getFieldState('password');
+  const { isDirty: isPasswordConfirmDirty, invalid: isPasswordConfirmInvalid } =
     getFieldState('passwordConfirm');
+
+  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
 
   const isDisabled =
     isSignUpPending ||
     !!errors.password ||
     !!errors.email ||
     !!errors.companyName ||
-    !!errors.name ||
+    !!errors.nickname ||
     !!errors.passwordConfirm ||
     !!signUpError ||
-    !isEmailTouched ||
+    !isEmailDirty ||
     isEmailInvalid ||
-    !isNameTouched ||
-    isNameInvalid ||
-    !isCompanyNameTouched ||
+    !isNicknameDirty ||
+    isNicknameInvalid ||
+    !isCompanyNameDirty ||
     isCompanyNameInvalid ||
-    !isPasswordTouched ||
+    !isPasswordDirty ||
     isPasswordInvalid ||
-    !isPasswordConfirmTouched ||
+    !isPasswordConfirmDirty ||
     isPasswordConfirmInvalid;
 
   useEffect(() => {
@@ -79,13 +81,18 @@ export default function SignUpForm() {
   }, [signUpError]);
 
   return (
-    <div className="w-[343px] h-full min-h-dvh flex flex-col items-center justify-center py-5">
+    <div className="w-[343px] h-full min-h-dvh flex flex-col items-center justify-center">
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full h-fit flex flex-col items-center justify-center gap-10"
+        className="w-full min-h-dvh flex flex-col items-center justify-center gap-10 py-5"
       >
         <div className="flex-1 w-full flex flex-col items-center justify-center gap-6">
-          <h3 className="text-title-1 text-left w-full font-semibold">회원가입</h3>
+          <div className="w-full flex flex-col items-center justify-center gap-2">
+            <h3 className="text-title-1 text-left w-full font-semibold">반가워요!</h3>
+            <p className="text-body-2-normal text-gray400 text-left w-full">
+              두두와 함께 새로운 모임을 발굴해보세요
+            </p>
+          </div>
           {isSignUpPending && <div>로딩 중...</div>}
           <div className="w-full flex flex-col items-center justify-center gap-10">
             <div className="w-full flex flex-col gap-4">
@@ -95,25 +102,25 @@ export default function SignUpForm() {
                 </label>
                 <Input
                   type="text"
-                  placeholder="이름을 입력해주세요"
-                  name="name"
+                  placeholder="dothemeet"
+                  name="nickname"
                   id={nameId}
                   className={cn(
                     'h-[54px]',
-                    (errors.name || signUpError) && 'focus-visible:ring-red-500',
+                    (errors.nickname || signUpError) && 'focus-visible:ring-red-500',
                   )}
-                  register={register('name', {
+                  register={register('nickname', {
                     required: '이름을 입력해주세요',
                     onChange: (e) => {
                       if (signUpError) reset();
-                      setValue('name', e.target.value);
-                      debouncedValidation('name');
+                      setValue('nickname', e.target.value);
+                      debouncedValidation('nickname');
                     },
                   })}
                 />
-                {errors.name && (
+                {errors.nickname && (
                   <p className="text-red-500 text-label-normal font-medium">
-                    {errors.name.message}
+                    {errors.nickname.message}
                   </p>
                 )}
               </div>
@@ -123,7 +130,7 @@ export default function SignUpForm() {
                 </label>
                 <Input
                   type="text"
-                  placeholder="이메일을 입력해주세요"
+                  placeholder="example@google.com"
                   name="email"
                   className={cn(
                     'h-[54px]',
@@ -189,7 +196,7 @@ export default function SignUpForm() {
                 <Input
                   type="password"
                   placeholder="비밀번호를 입력해주세요"
-                  name="password"
+                  name="********"
                   id={passwordId}
                   className={cn(
                     'h-[54px]',
@@ -220,7 +227,7 @@ export default function SignUpForm() {
                 </label>
                 <Input
                   type="password"
-                  placeholder="비밀번호를 다시 한번 입력해주세요"
+                  placeholder="********"
                   name="passwordConfirm"
                   id={passwordConfirmId}
                   className={cn(
@@ -230,7 +237,11 @@ export default function SignUpForm() {
                   register={register('passwordConfirm', {
                     required: '비밀번호를 다시 한번 입력해주세요',
                     validate: (value) => {
-                      if (value === watch('password')) return '비밀번호가 일치합니다';
+                      if (value === watch('password')) {
+                        setIsPasswordConfirmed(true);
+                        return true;
+                      }
+                      setIsPasswordConfirmed(false);
                       return '비밀번호가 일치하지 않습니다.';
                     },
                     onChange: (e) => {
@@ -245,7 +256,7 @@ export default function SignUpForm() {
                     {errors.passwordConfirm.message}
                   </p>
                 )}
-                {errors.passwordConfirm?.message === '비밀번호가 일치합니다' && (
+                {isPasswordConfirmed && (
                   <p className="text-green-500 text-label-normal font-medium">
                     비밀번호가 일치합니다
                   </p>
@@ -260,12 +271,12 @@ export default function SignUpForm() {
           <AuthButton
             className={cn(
               'bg-gray950 text-white rounded-2xl h-[56px] text-body-1-normal font-semibold',
-              isDisabled ? 'text-gray600 cursor-not-allowed' : 'text-gray200',
+              isDisabled ? 'text-gray600 cursor-not-allowed' : 'text-gray50 bg-orange200',
             )}
             disabled={isDisabled}
             type="submit"
           >
-            회원가입
+            가입 완료
           </AuthButton>
         </div>
       </form>
