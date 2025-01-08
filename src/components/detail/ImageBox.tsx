@@ -1,5 +1,5 @@
 import React, { useState } from "react"
-import { IImageBox } from "@/types/detail/type"
+import { IImageBox } from "@/types/detail"
 
 export const ImageBox: React.FC<IImageBox> = ({
   image,

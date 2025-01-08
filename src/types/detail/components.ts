@@ -1,4 +1,4 @@
-
+// 컴포넌트 관련 타입
 export interface IImageBox {
   image: string;
   alt?: string;
@@ -6,7 +6,7 @@ export interface IImageBox {
   aspectRatio?: string;
 }
 
-export interface IChipSmall {
+export interface IChipSmallSquircle {
   text: string;
   variant: 'light' | 'dark' | 'success';
   className?: string;
