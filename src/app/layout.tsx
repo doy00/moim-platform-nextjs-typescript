@@ -23,7 +23,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`font-pretendard antialiased ${pretendard.variable}`}>{children}</body>
+      <body className={`layout font-pretendard antialiased ${pretendard.variable}`}>{children}</body>
     </html>
   );
 }
