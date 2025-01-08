@@ -5,42 +5,21 @@ import { Drawer as DrawerPrimitive } from "vaul"
 
 import { cn } from "@/lib/utils"
 
-
-// Body 스타일 관리 함수
-const updateBodyStyle = (isOpen: boolean) => {
-  if (typeof window === "undefined") return; // 서버사이드 렌더링 방지
-  const scrollbarWidth =
-    window.innerWidth - document.documentElement.clientWidth;
-
-  if (isOpen) {
-    document.body.style.overflow = "hidden"; // 스크롤 차단
-    document.body.style.paddingRight = `${scrollbarWidth}px`; // 스크롤바 너비만큼 padding 추가
-  } else {
-    document.body.style.overflow = ""; // 초기화
-    document.body.style.paddingRight = ""; // 초기화
-  }
-}
-
 const Drawer = ({
   shouldScaleBackground = true,
-  onOpenChange,
   ...props
-}: React.ComponentProps<typeof DrawerPrimitive.Root> & {
-  onOpenChange?: (isOpen: boolean) => void;
-}) => (
+}: React.ComponentProps<typeof DrawerPrimitive.Root>) => (
   <DrawerPrimitive.Root
     shouldScaleBackground={shouldScaleBackground}
     {...props}
-    onOpenChange={(isOpen) => {
-      updateBodyStyle(isOpen); // Body 스타일 업데이트
-      onOpenChange?.(isOpen); // 외부에서 전달된 onOpenChange 호출
-    }}
   />
 )
 Drawer.displayName = "Drawer"
 
 const DrawerTrigger = DrawerPrimitive.Trigger
+
 const DrawerPortal = DrawerPrimitive.Portal
+
 const DrawerClose = DrawerPrimitive.Close
 
 const DrawerOverlay = React.forwardRef<
@@ -49,7 +28,7 @@ const DrawerOverlay = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <DrawerPrimitive.Overlay
     ref={ref}
-    className={cn("max-w-[500px] mx-auto fixed inset-0 z-50 bg-black/80", className)}
+    className={cn("max-w-[500px] mx-auto fixed inset-0 z-50 bg-[#403D3A]/80", className)}
     {...props}
   />
 ))
@@ -57,26 +36,24 @@ DrawerOverlay.displayName = DrawerPrimitive.Overlay.displayName
 
 const DrawerContent = React.forwardRef<
   React.ElementRef<typeof DrawerPrimitive.Content>,
-  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content> & {
-    container?: HTMLElement;
-  }
->(({ className, children, container = document.body, ...props }, ref) => (
-  <DrawerPortal container={container}>
+  React.ComponentPropsWithoutRef<typeof DrawerPrimitive.Content>
+>(({ className, children, ...props }, ref) => (
+  <DrawerPortal>
     <DrawerOverlay />
     <DrawerPrimitive.Content
       ref={ref}
       className={cn(
-        "fixed inset-x-0 bottom-0 max-w-[500px] mx-auto z-50 mt-24 flex h-auto flex-col rounded-t-[10px] border bg-background",
+        "max-w-[500px] mx-auto fixed inset-x-0 bottom-0 z-50 mt-24 flex h-[618px] flex-col rounded-t-[10px] border bg-background",
         className
       )}
       {...props}
     >
-      <div className="mx-auto mt-4 h-2 w-[100px] rounded-full bg-muted" />
+      <div className="mx-auto mt-2 h-[5px] w-[64px] rounded-full bg-[#DED8D9]" />
       {children}
     </DrawerPrimitive.Content>
   </DrawerPortal>
-));
-DrawerContent.displayName = "DrawerContent";
+))
+DrawerContent.displayName = "DrawerContent"
 
 const DrawerHeader = ({
   className,

@@ -25,11 +25,12 @@ export default function RootLayout({
   
   return (
     <html lang="ko">
-      <body className={`layout font-pretendard antialiased ${pretendard.variable}`}>
-        {children}
+      <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
+        <div className='layout'>
+          {children}
+        </div>
         <HomeGnb />
       </body>
-      <div id="portal-root"></div>
     </html>
   );
 }
