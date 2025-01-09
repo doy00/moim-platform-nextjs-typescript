@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
+import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
-import Input from './Input';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -100,7 +100,7 @@ export default function SignUpForm() {
                 <label htmlFor={nameId} className="text-body-2-normal font-semibold">
                   이름 <span className="text-red-500">*</span>
                 </label>
-                <Input
+                <AuthInput
                   type="text"
                   placeholder="dothemeet"
                   name="nickname"
@@ -128,7 +128,7 @@ export default function SignUpForm() {
                 <label htmlFor={emailId} className="text-body-2-normal font-semibold">
                   이메일 <span className="text-red-500">*</span>
                 </label>
-                <Input
+                <AuthInput
                   type="text"
                   placeholder="example@google.com"
                   name="email"
@@ -165,7 +165,7 @@ export default function SignUpForm() {
                 <label htmlFor={companyNameId} className="text-body-2-normal font-semibold">
                   회사명 <span className="text-red-500">*</span>
                 </label>
-                <Input
+                <AuthInput
                   type="text"
                   placeholder="회사명을 입력해주세요"
                   name="companyName"
@@ -193,7 +193,7 @@ export default function SignUpForm() {
                 <label htmlFor={passwordId} className="text-body-2-normal font-semibold">
                   비밀번호 <span className="text-red-500">*</span>
                 </label>
-                <Input
+                <AuthInput
                   type="password"
                   placeholder="비밀번호를 입력해주세요"
                   name="********"
@@ -225,7 +225,7 @@ export default function SignUpForm() {
                 <label htmlFor={passwordConfirmId} className="text-body-2-normal font-semibold">
                   비밀번호 확인 <span className="text-red-500">*</span>
                 </label>
-                <Input
+                <AuthInput
                   type="password"
                   placeholder="********"
                   name="passwordConfirm"

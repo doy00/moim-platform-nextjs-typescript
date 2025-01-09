@@ -9,7 +9,7 @@ import type {
   TSignUpResponse,
 } from '@/types/auth.type';
 import type { TError } from '@/types/error.type';
-import { removeItem, setItem } from '@/utils/auth-client.util';
+import { removeLocalStorageItem, setLocalStorageItem } from '@/utils/auth-client.util';
 import { deleteCookie, setCookie } from '@/utils/auth-server.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
@@ -29,7 +29,7 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
   return useMutation<TSignInResponse, TError, TAuthInputs>({
     mutationFn: postSignIn,
     onSuccess: (data) => {
-      setItem('dudemeet-token', data.token);
+      setLocalStorageItem('dudemeet-token', data.token);
       setCookie({
         name: 'dudemeet-token',
         value: data.token,
@@ -45,7 +45,7 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
   return useMutation<TSignOutResponse, TError, void>({
     mutationFn: postSignOut,
     onSuccess: () => {
-      removeItem('dudemeet-token');
+      removeLocalStorageItem('dudemeet-token');
       deleteCookie('dudemeet-token');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
       queryClient.setQueryData([QUERY_KEY_ME], null);

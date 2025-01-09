@@ -1,8 +1,8 @@
-interface KakaoProps {
+interface AuthKakaoProps {
   className?: string;
 }
 
-export default function Kakao({ className }: KakaoProps) {
+export default function AuthKakao({ className }: AuthKakaoProps) {
   return (
     <svg className={className} viewBox="0 0 18 18" fill="none" xmlns="http://www.w3.org/2000/svg">
       <path

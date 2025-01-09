@@ -3,15 +3,15 @@
 import { cn } from '@/utils/ui.util';
 import { InputHTMLAttributes, useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import Eye from './Eye';
-import EyeSlash from './EyeSlash';
+import AuthEye from './AuthEye';
+import AuthEyeSlash from './AuthEyeSlash';
 
-interface InputProps extends InputHTMLAttributes<HTMLInputElement> {
+interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
   register: UseFormRegisterReturn;
 }
 
-function Input({ className, type, register, ...props }: InputProps) {
+function AuthInput({ className, type, register, ...props }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
@@ -33,11 +33,15 @@ function Input({ className, type, register, ...props }: InputProps) {
           className="absolute right-3 cursor-pointer text-muted-foreground"
           onClick={togglePasswordVisibility}
         >
-          {showPassword ? <Eye className="text-gray300" /> : <EyeSlash className="text-gray300" />}
+          {showPassword ? (
+            <AuthEye className="text-gray300" />
+          ) : (
+            <AuthEyeSlash className="text-gray300" />
+          )}
         </div>
       )}
     </div>
   );
 }
 
-export default Input;
+export default AuthInput;

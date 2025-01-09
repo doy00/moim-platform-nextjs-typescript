@@ -1,8 +1,8 @@
-interface EyeProps {
+interface AuthEyeSlashProps {
   className?: string;
 }
 
-export default function EyeSlash({ className }: EyeProps) {
+export default function AuthEyeSlash({ className }: AuthEyeSlashProps) {
   return (
     <svg
       className={className}

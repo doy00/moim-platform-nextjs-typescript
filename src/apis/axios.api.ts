@@ -1,5 +1,5 @@
 import { TError } from '@/types/error.type';
-import { getItem } from '@/utils/auth-client.util';
+import { getLocalStorageItem } from '@/utils/auth-client.util';
 import { getCookie } from '@/utils/auth-server.util';
 import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
@@ -10,7 +10,7 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   if (typeof window !== 'undefined') {
-    const token = getItem('dudemeet-token');
+    const token = getLocalStorageItem('dudemeet-token');
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
     }

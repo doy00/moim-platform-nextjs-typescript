@@ -8,8 +8,8 @@ import { useRouter } from 'next/navigation';
 import { useEffect, useId } from 'react';
 import { useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
+import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
-import Input from './Input';
 
 export default function SignInForm() {
   const router = useRouter();
@@ -73,7 +73,7 @@ export default function SignInForm() {
                 <label htmlFor={emailId} className="text-body-2-normal font-semibold">
                   이메일 <span className="text-red-500">*</span>
                 </label>
-                <Input
+                <AuthInput
                   type="text"
                   placeholder="이메일을 입력해주세요"
                   className={cn(
@@ -112,7 +112,7 @@ export default function SignInForm() {
                 <label htmlFor={passwordId} className="text-body-2-normal font-semibold">
                   비밀번호 <span className="text-red-500">*</span>
                 </label>
-                <Input
+                <AuthInput
                   type="password"
                   placeholder="비밀번호를 입력해주세요"
                   className={cn(
