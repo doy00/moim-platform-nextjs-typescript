@@ -1,7 +1,8 @@
 'use client';
 
 import React, { useState } from 'react';
-import { Drawer, DrawerTrigger, DrawerContent, DrawerClose } from '@/components/ui/drawer';
+import { Drawer, DrawerTrigger, DrawerContent, DrawerClose, DrawerTitle } from '@/components/ui/drawer';
+import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 
 // Constants
 import { FILTER_TAB_MENUS } from '@/constants/home/filter-tab';
@@ -109,7 +110,12 @@ const FilterDrawer: React.FC = () => {
       <DrawerTrigger>
         <FilterActivateIcon className="fill-gray200" />
       </DrawerTrigger>
-      <DrawerContent>
+      <DrawerContent aria-describedby={undefined}>
+       {/* Visually Hidden Title */}
+        <VisuallyHidden>
+          <DrawerTitle>필터 드로어</DrawerTitle>
+        </VisuallyHidden>
+
         <div className="">
           {/* 닫기버튼 */}
           <DrawerClose asChild>
