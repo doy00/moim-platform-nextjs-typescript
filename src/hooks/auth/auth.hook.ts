@@ -34,6 +34,9 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
         name: 'dudemeet-token',
         value: data.token,
         maxAge: 60 * 60,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
       });
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
     },
