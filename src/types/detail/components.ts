@@ -8,7 +8,7 @@ export interface IImageBox {
 
 export interface IChipSmallSquircle {
   text: string;
-  variant: 'light' | 'dark' | 'success';
+  variant: 'light' | 'dark' | 'success' | 'tag';
   className?: string;
 }
 

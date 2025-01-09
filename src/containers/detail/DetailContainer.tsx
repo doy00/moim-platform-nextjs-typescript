@@ -4,15 +4,89 @@ import { ImageBox } from '@/components/detail/ImageBox';
 import { DetailInfo } from '../../components/detail/DetailInfo';
 import { DetailParticipants } from '../../components/detail/DetailParticipants';
 import { DetailContent } from '../../components/detail/DetailContent';
+import { DetailHost } from '@/components/detail/DetailHost';
 import { DetailReview } from '../../components/detail/DetailReview';
+import { IParticipant } from '@/types/detail';
 
-const participants = [
-  { userId: 1, image: "/svgs/profile.svg", name: "User 1" },
-  { userId: 2, image: "/svgs/profile.svg", name: "User 2" },
-  { userId: 3, image: "/svgs/profile.svg", name: "User 3" },
-  { userId: 4, image: "/svgs/profile.svg", name: "User 4" },
-  { userId: 5, image: "/svgs/profile.svg", name: "User 5" },
-  { userId: 6, image: "/svgs/profile.svg", name: "User 6" },
+const participants: IParticipant[] = [
+  {
+    teamId: 1,
+    userId: 1,
+    gatheringId: 1,
+    joinedAt: new Date().toISOString(),
+    User: {
+      id: 1,
+      email: "user1@example.com",
+      name: "User 1",
+      companyName: "Company A",
+      image: "/svgs/profile.svg"
+    }
+  },
+  {
+    teamId: 1,
+    userId: 2,
+    gatheringId: 1,
+    joinedAt: new Date().toISOString(),
+    User: {
+      id: 2,
+      email: "user2@example.com",
+      name: "User 2",
+      companyName: "Company B",
+      image: "/svgs/profile.svg"
+    }
+  },
+  {
+    teamId: 1,
+    userId: 3,
+    gatheringId: 1,
+    joinedAt: new Date().toISOString(),
+    User: {
+      id: 3,
+      email: "user3@example.com",
+      name: "User 3",
+      companyName: "Company C",
+      image: "/svgs/profile.svg"
+    }
+  },
+  {
+    teamId: 1,
+    userId: 4,
+    gatheringId: 1,
+    joinedAt: new Date().toISOString(),
+    User: {
+      id: 4,
+      email: "user4@example.com",
+      name: "User 4",
+      companyName: "Company D",
+      image: "/svgs/profile.svg"
+    }
+  },
+  {
+    teamId: 1,
+    userId: 5,
+    gatheringId: 1,
+    joinedAt: new Date().toISOString(),
+    User: {
+      id: 5,
+      email: "user5@example.com",
+      name: "User 5",
+      companyName: "Company E",
+      image: "/svgs/profile.svg"
+    }
+  },
+  {
+    teamId: 1,
+    userId: 6,
+    gatheringId: 1,
+    joinedAt: new Date().toISOString(),
+    User: {
+      id: 6,
+      email: "user6@example.com",
+      name: "User 6",
+      companyName: "Company F",
+      image: "/svgs/profile.svg"
+    }
+  },
 ];
 
 export default function DetailContainer(
@@ -68,6 +142,12 @@ export default function DetailContainer(
         />
         <DetailContent 
           content="모임 내용이 들어갑니다."
+        />
+        <DetailHost 
+          name="두두씨"
+          introduction="안녕하세요! 기획하는 두두입니다."
+          hostTag={['기획', '마케팅', '자기계발']}
+          profileImage='/svgs/profile.svg'
         />
         <DetailReview 
           rating={4}

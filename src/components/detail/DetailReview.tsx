@@ -80,7 +80,7 @@ export const DetailReview: React.FC<IDetailReview> = ({
             </div>
           </div>
 
-      <button className="mt-6 w-full h-14 rounded-lg py-[17px] text-body-2-normal font-semibold text-gray400 bg-gray100 hover:bg-gray50">
+      <button className="mt-6 w-full h-14 rounded-xl py-[17px] text-body-2-normal font-semibold text-gray400 bg-gray100 hover:bg-gray50">
         후기 더보기
       </button>
 
