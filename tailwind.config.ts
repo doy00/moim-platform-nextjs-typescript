@@ -123,7 +123,7 @@ export default {
   			gray100: '#F0EFEE',
   			gray200: '#DEDBD9',
   			gray300: '#C1BDB8',
-  			gray400: '#837C74',
+  			gray400: '#9E9892',
   			gray500: '#837C74',
   			gray600: '#6B655E',
   			gray700: '#57524D',
