@@ -1,8 +1,7 @@
 'use client';
 
-import { useSignInMutation } from '@/hooks/auth/auth.hook';
+import { useDebounce, useSignInMutation } from '@/hooks/auth/auth.hook';
 import { TAuthInputs } from '@/types/auth/auth.type';
-import { useDebounce } from '@/utils/auth/auth-client.util';
 import { cn } from '@/utils/auth/ui.util';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId } from 'react';

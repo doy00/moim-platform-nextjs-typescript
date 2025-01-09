@@ -1,3 +1,5 @@
+'use client';
+
 import { getMe, postSignIn, postSignOut, postSignUp, putMe } from '@/apis/auth/auth.api';
 import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
@@ -13,6 +15,28 @@ import { removeLocalStorageItem, setLocalStorageItem } from '@/utils/auth/auth-c
 import { deleteCookie, setCookie } from '@/utils/auth/auth-server.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useCallback, useRef } from 'react';
+
+type Debounce<T extends unknown[]> = (...args: T) => void;
+
+export const useDebounce = <T extends unknown[]>(
+  func: (...args: T) => void,
+  delay: number,
+): Debounce<T> => {
+  const timerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  return useCallback(
+    (...args: T) => {
+      if (timerRef.current !== null) {
+        clearTimeout(timerRef.current);
+      }
+      timerRef.current = setTimeout(() => {
+        func(...args);
+      }, delay);
+    },
+    [func, delay],
+  );
+};
 
 export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthInputs> {
   const queryClient = useQueryClient();
