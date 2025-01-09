@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { ChipSmallSquircle } from "../../components/detail/ChipSmallSquircle";
+import { ChipSmallSquircle } from "./ChipSmallSquircle";
 import { ChipSmallRound } from "@/components/detail/ChipSmallRound";
 import { Separator } from "@/components/ui/separator"
 import { IDetailInfo } from "@/types/detail";

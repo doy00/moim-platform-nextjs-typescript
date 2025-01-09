@@ -1,3 +1,7 @@
+/**  shadcn progress 바 컴포넌트
+ * - progressColor prop 추가하여 Indicator의 배경색을 외부에서 제어할 수 있게 변경
+ */
+
 "use client"
 
 import * as React from "react"

@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { cn } from '@/lib/utils';
-import { Progress } from '@/components/ui/progress';
+import { Progress } from '@/components/ui/detail-progress';
 import { IParticipantsProgress } from '@/types/detail';
 
 export const ParticipantsProgress: React.FC<IParticipantsProgress> = ({

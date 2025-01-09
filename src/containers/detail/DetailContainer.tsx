@@ -1,11 +1,10 @@
 'use client';
 
-import { useState, useEffect } from 'react';
 import { ImageBox } from '@/components/detail/ImageBox';
-import { DetailInfo } from './DetailInfo';
-import { DetailParticipants } from './DetailParticipants';
-import { DetailContent } from './DetailContent';
-import { DetailReview } from './DetailReview';
+import { DetailInfo } from '../../components/detail/DetailInfo';
+import { DetailParticipants } from '../../components/detail/DetailParticipants';
+import { DetailContent } from '../../components/detail/DetailContent';
+import { DetailReview } from '../../components/detail/DetailReview';
 
 const participants = [
   { userId: 1, image: "/svgs/profile.svg", name: "User 1" },
@@ -78,20 +77,5 @@ export default function DetailContainer(
         />
       </div>
     </div>
-    // <div className="detail-layout">
-    //   상세 페이지
-
-
-
-
-
-      // <h1>{gathering.name}</h1>
-      // <div>
-      //   <img src={gathering.image} alt={gathering.name} />
-      //   <p>장소: {gathering.location}</p>
-      //   <p>일시: {new Date(gathering.dateTime).toLocaleString()}</p>
-      //   <p>참여인원: {gathering.participantCount}/{gathering.capacity}</p>
-      // </div> 
-    // </div>
   );
 }
