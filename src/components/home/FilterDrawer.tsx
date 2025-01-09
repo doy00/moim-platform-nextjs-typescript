@@ -125,7 +125,7 @@ const FilterDrawer: React.FC = () => {
           </DrawerClose>
 
           {/* 탭 메뉴 */}
-          <div className="max-w-[375px] h-12 space-x-4 flex items-center border-b pl-5">
+          <div className="min-w-[375px] h-12 space-x-4 flex items-center border-b pl-5">
             {FILTER_TAB_MENUS.map((menu: IFilterTabMenu) => (
               <button
                 key={menu.id}

@@ -19,20 +19,20 @@ type HomeCardProps = {
   };
 };
 
-const categoryMap = {
+const categoryMap: Record<number, string>= {
   0: '프로젝트',
   1: '스터디·기획',
   2: '면접'
 }
 
-const statusMap = {
+const statusMap: Record<number, string> = {
   0: '마감 D-10',
   1: '모집중',
   2: '종료',
 };
 
 export default function HomeCard({ data }: HomeCardProps ) {
-  const { category, title, content, recruitment_deadline, start_date, end_date, min_participants, max_participants, status } = data;
+  const { category, title, content, start_date, end_date, max_participants, status } = data;
 
     // 카테고리 번호에 따른 아이콘 맵핑
     const categoryIcons = [
@@ -42,7 +42,7 @@ export default function HomeCard({ data }: HomeCardProps ) {
     ];
 
   return (
-    <article className='flex w-[343px] h-[138px] border border-orange200 p-4 space-x-5'>
+    <article className='flex min-w-[343px] h-[138px] border border-orange200 p-4 space-x-5'>
       {/* 왼쪽 컨텐츠 */}
       <section className='w-9 h-9'>
         <Image 
@@ -52,7 +52,7 @@ export default function HomeCard({ data }: HomeCardProps ) {
         />
       </section>
       {/* 오른쪽 컨텐츠 */}
-      <section className="flex flex-col w-[255px] h-[106px] space-y-2">
+      <section className="flex-1 flex-col min-w-[255px] h-[106px] space-y-2">
         {/* 카테고리 + 상태 + 하트 */}
         <div className="flex justify-between items-center">
           <div className="flex items-center space-x-2">
