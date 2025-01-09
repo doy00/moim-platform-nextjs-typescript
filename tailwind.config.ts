@@ -76,6 +76,18 @@ export default {
         gray900: '#403D3A',
         gray950: '#2B2926',
 
+        grayscale50: '#F8F7F7',
+        grayscale100: '#F0EFEE',
+        grayscale200: '#DEDBD9',
+        grayscale300: '#C1BDB8',
+        grayscale400: '#9E9892',
+        grayscale500: '#837C74',
+        grayscale600: '#6B655E',
+        grayscale700: '#57524D',
+        grayscale800: '#4A4642',
+        grayscale900: '#403D3A',
+        grayscale950: '#2B2926',
+
         textNormal: '#26262B',
         textAlter1: '#3A3A40',
         textAlter2: '#42424A',
