@@ -5,7 +5,7 @@ import type {
   TSignInResponse,
   TSignOutResponse,
   TSignUpResponse,
-} from '@/types/auth.type';
+} from '@/types/auth/auth.type';
 import api from './axios.api';
 
 export const postSignUp = (data: TAuthInputs) => {

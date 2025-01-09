@@ -1,7 +1,7 @@
 'use server';
 
-import { getMe } from '@/apis/auth.api';
-import { QUERY_KEY_ME } from '@/constants/auth.const';
+import { getMe } from '@/apis/auth/auth.api';
+import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import { dehydrate, QueryClient } from '@tanstack/react-query';
 import type { ResponseCookie } from 'next/dist/compiled/@edge-runtime/cookies';
 import { cookies } from 'next/headers';

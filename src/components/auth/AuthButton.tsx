@@ -1,4 +1,4 @@
-import { cn } from '@/utils/ui.util';
+import { cn } from '@/utils/auth/ui.util';
 import { ButtonHTMLAttributes } from 'react';
 
 interface AuthButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {

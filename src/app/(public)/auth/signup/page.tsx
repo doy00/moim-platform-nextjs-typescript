@@ -1,5 +1,5 @@
 import SignUpContainer from '@/containers/auth/SignUpContainer';
-import { getCookie, prefetchMe } from '@/utils/auth-server.util';
+import { getCookie, prefetchMe } from '@/utils/auth/auth-server.util';
 import { HydrationBoundary } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
 import { Suspense } from 'react';

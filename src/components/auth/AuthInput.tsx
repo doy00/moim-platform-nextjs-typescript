@@ -1,6 +1,6 @@
 'use client';
 
-import { cn } from '@/utils/ui.util';
+import { cn } from '@/utils/auth/ui.util';
 import { InputHTMLAttributes, useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
 import AuthEye from './AuthEye';

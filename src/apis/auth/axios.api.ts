@@ -1,6 +1,6 @@
-import { TError } from '@/types/error.type';
-import { getLocalStorageItem } from '@/utils/auth-client.util';
-import { getCookie } from '@/utils/auth-server.util';
+import { TError } from '@/types/auth/error.type';
+import { getLocalStorageItem } from '@/utils/auth/auth-client.util';
+import { getCookie } from '@/utils/auth/auth-server.util';
 import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
 

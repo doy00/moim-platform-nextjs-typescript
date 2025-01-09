@@ -1,5 +1,5 @@
-import { getMe, postSignIn, postSignOut, postSignUp, putMe } from '@/apis/auth.api';
-import { QUERY_KEY_ME } from '@/constants/auth.const';
+import { getMe, postSignIn, postSignOut, postSignUp, putMe } from '@/apis/auth/auth.api';
+import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
   TAuthInputs,
   TMeResponse,
@@ -7,10 +7,10 @@ import type {
   TSignInResponse,
   TSignOutResponse,
   TSignUpResponse,
-} from '@/types/auth.type';
-import type { TError } from '@/types/error.type';
-import { removeLocalStorageItem, setLocalStorageItem } from '@/utils/auth-client.util';
-import { deleteCookie, setCookie } from '@/utils/auth-server.util';
+} from '@/types/auth/auth.type';
+import type { TError } from '@/types/auth/error.type';
+import { removeLocalStorageItem, setLocalStorageItem } from '@/utils/auth/auth-client.util';
+import { deleteCookie, setCookie } from '@/utils/auth/auth-server.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 
