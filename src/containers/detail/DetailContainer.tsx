@@ -71,9 +71,10 @@ export default function DetailContainer(
         />
         <DetailReview 
           rating={4}
-          content="리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."
+          content="리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."
           author={"작성자"}
           date="25. 02. 01"
+          authorImage="/svgs/profile.svg" 
         />
       </div>
     </div>
