@@ -1,6 +1,6 @@
 import Image from 'next/image';
 
-export default function DudemeetLogo() {
+export default function DudemeetCharacter() {
   return (
     <div className="relative w-full flex flex-col items-center justify-center">
       <div className="absolute w-[155px] h-[155px] bg-background400 rounded-full -translate-y-7"></div>
