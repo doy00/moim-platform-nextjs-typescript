@@ -85,6 +85,10 @@ export default {
         background200: '#FBFAF9',
         background300: '#FAF6F3',
         background400: '#F2EFEB',
+
+        success: '#04A37E',
+        error: '#F5535E',
+        primary: '#448EFE',
       },
     },
   },

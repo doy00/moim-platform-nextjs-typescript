@@ -74,7 +74,7 @@ export default function SignInForm() {
             <div className="w-full flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <label htmlFor={emailId} className="text-body-2-normal font-semibold">
-                  이메일 <span className="text-red-500">*</span>
+                  이메일 <span className="text-red200">*</span>
                 </label>
                 <AuthInput
                   type="text"
@@ -82,7 +82,7 @@ export default function SignInForm() {
                   className={cn(
                     'h-[54px]',
                     (errors.email || signInError?.code === 'USER_NOT_FOUND') &&
-                      'focus-visible:ring-red-500',
+                      'focus-visible:ring-error',
                   )}
                   name="email"
                   id={emailId}
@@ -100,20 +100,17 @@ export default function SignInForm() {
                   })}
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-label-normal font-medium">
-                    {errors.email.message}
-                  </p>
+                  <p className="text-error text-label-normal font-medium">{errors.email.message}</p>
                 )}
                 {signInError && signInError.code === 'USER_NOT_FOUND' && (
-                  // <p className="text-red-500 text-label-normal font-medium">{signInError.message}</p>
-                  <p className="text-red-500 text-label-normal font-medium">
+                  <p className="text-error text-label-normal font-medium">
                     등록되지 않은 계정이에요
                   </p>
                 )}
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor={passwordId} className="text-body-2-normal font-semibold">
-                  비밀번호 <span className="text-red-500">*</span>
+                  비밀번호 <span className="text-red200">*</span>
                 </label>
                 <AuthInput
                   type="password"
@@ -121,7 +118,7 @@ export default function SignInForm() {
                   className={cn(
                     'h-[54px]',
                     (errors.password || signInError?.code === 'INVALID_CREDENTIALS') &&
-                      'focus-visible:ring-red-500',
+                      'focus-visible:ring-error',
                   )}
                   name="password"
                   id={passwordId}
@@ -139,14 +136,12 @@ export default function SignInForm() {
                   })}
                 />
                 {errors.password && (
-                  <p className="text-red-500 text-label-normal font-medium">
+                  <p className="text-error text-label-normal font-medium">
                     {errors.password.message}
                   </p>
                 )}
                 {signInError && signInError.code === 'INVALID_CREDENTIALS' && (
-                  <p className="text-red-500 text-label-normal font-medium">
-                    {signInError.message}
-                  </p>
+                  <p className="text-error text-label-normal font-medium">{signInError.message}</p>
                 )}
                 {!errors.password && !signInError && (
                   <p className="text-gray300 text-label-normal font-medium">

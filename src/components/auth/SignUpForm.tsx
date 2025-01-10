@@ -101,7 +101,7 @@ export default function SignUpForm() {
             <div className="w-full flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <label htmlFor={nameId} className="text-body-2-normal font-semibold">
-                  닉네임 <span className="text-red-500">*</span>
+                  닉네임 <span className="text-red200">*</span>
                 </label>
                 <AuthInput
                   type="text"
@@ -110,7 +110,7 @@ export default function SignUpForm() {
                   id={nameId}
                   className={cn(
                     'h-[54px]',
-                    (errors.name || signUpError) && 'focus-visible:ring-red-500',
+                    (errors.name || signUpError) && 'focus-visible:ring-error',
                   )}
                   register={register('name', {
                     required: '이름을 입력해주세요',
@@ -122,14 +122,12 @@ export default function SignUpForm() {
                   })}
                 />
                 {errors.name && (
-                  <p className="text-red-500 text-label-normal font-medium">
-                    {errors.name.message}
-                  </p>
+                  <p className="text-error text-label-normal font-medium">{errors.name.message}</p>
                 )}
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor={emailId} className="text-body-2-normal font-semibold">
-                  이메일 <span className="text-red-500">*</span>
+                  이메일 <span className="text-red200">*</span>
                 </label>
                 <AuthInput
                   type="text"
@@ -154,12 +152,10 @@ export default function SignUpForm() {
                   })}
                 />
                 {errors.email && (
-                  <p className="text-red-500 text-label-normal font-medium">
-                    {errors.email.message}
-                  </p>
+                  <p className="text-error text-label-normal font-medium">{errors.email.message}</p>
                 )}
                 {signUpError && (
-                  <p className="text-red-500 text-label-normal font-medium">
+                  <p className="text-error text-label-normal font-medium">
                     {signUpError.message === '이미 사용 중인 이메일입니다'
                       ? '중복되는 이메일이 있어요'
                       : errors.email?.message}
@@ -168,7 +164,7 @@ export default function SignUpForm() {
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor={companyNameId} className="text-body-2-normal font-semibold">
-                  회사명 <span className="text-red-500">*</span>
+                  회사명 <span className="text-red200">*</span>
                 </label>
                 <AuthInput
                   type="text"
@@ -177,7 +173,7 @@ export default function SignUpForm() {
                   id={companyNameId}
                   className={cn(
                     'h-[54px]',
-                    (errors.companyName || signUpError) && 'focus-visible:ring-red-500',
+                    (errors.companyName || signUpError) && 'focus-visible:ring-error',
                   )}
                   register={register('companyName', {
                     required: '회사명을 입력해주세요',
@@ -189,14 +185,14 @@ export default function SignUpForm() {
                   })}
                 />
                 {errors.companyName && (
-                  <p className="text-red-500 text-label-normal font-medium">
+                  <p className="text-error text-label-normal font-medium">
                     {errors.companyName.message}
                   </p>
                 )}
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor={passwordId} className="text-body-2-normal font-semibold">
-                  비밀번호 <span className="text-red-500">*</span>
+                  비밀번호 <span className="text-red200">*</span>
                 </label>
                 <AuthInput
                   type="password"
@@ -205,7 +201,7 @@ export default function SignUpForm() {
                   id={passwordId}
                   className={cn(
                     'h-[54px]',
-                    (errors.password || signUpError) && 'focus-visible:ring-red-500',
+                    (errors.password || signUpError) && 'focus-visible:ring-error',
                   )}
                   register={register('password', {
                     required: '비밀번호를 입력해주세요',
@@ -220,18 +216,19 @@ export default function SignUpForm() {
                     },
                   })}
                 />
-                <p className="text-label-normal text-gray300 font-semibold">
-                  특수문자 포함 8~20자 사이로 입력해주세요
-                </p>
-                {errors.password && (
-                  <p className="text-red-500 text-label-normal font-medium">
+                {errors.password ? (
+                  <p className="text-error text-label-normal font-medium">
                     {errors.password.message}
+                  </p>
+                ) : (
+                  <p className="text-label-normal text-gray300 font-semibold">
+                    특수문자 포함 8~20자 사이로 입력해주세요
                   </p>
                 )}
               </div>
               <div className="flex flex-col gap-2">
                 <label htmlFor={passwordConfirmId} className="text-body-2-normal font-semibold">
-                  비밀번호 확인 <span className="text-red-500">*</span>
+                  비밀번호 확인 <span className="text-red200">*</span>
                 </label>
                 <AuthInput
                   type="password"
@@ -240,7 +237,7 @@ export default function SignUpForm() {
                   id={passwordConfirmId}
                   className={cn(
                     'h-[54px]',
-                    (errors.passwordConfirm || signUpError) && 'focus-visible:ring-red-500',
+                    (errors.passwordConfirm || signUpError) && 'focus-visible:ring-error',
                   )}
                   register={register('passwordConfirm', {
                     required: '비밀번호를 다시 한번 입력해주세요',
@@ -261,7 +258,7 @@ export default function SignUpForm() {
                 />
 
                 {errors.passwordConfirm?.message === '비밀번호가 일치하지 않습니다.' && (
-                  <p className="text-red-500 text-label-normal font-medium">
+                  <p className="text-error text-label-normal font-medium">
                     {errors.passwordConfirm.message}
                   </p>
                 )}
