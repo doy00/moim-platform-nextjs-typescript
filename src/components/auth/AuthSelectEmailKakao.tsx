@@ -15,12 +15,12 @@ export default function AuthSelectEmailKakao({ children }: AuthSelectEmailKakaoP
       </div>
       <div className="w-full flex flex-col items-center justify-center gap-4 pb-12">
         <div className="w-full flex flex-col items-center justify-center gap-2">
-          <Link href="/signin?type=kakao" className="w-full">
+          <Link href="/auth/signin?type=kakao" className="w-full">
             <AuthButton>
               <AuthKakao className="w-5 h-5" /> 카카오로 시작하기
             </AuthButton>
           </Link>
-          <Link href="/signup" className="w-full">
+          <Link href="/auth/signup" className="w-full">
             <AuthButton>이메일로 시작하기</AuthButton>
           </Link>
         </div>
