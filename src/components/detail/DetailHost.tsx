@@ -18,7 +18,7 @@ export const DetailHost = ({
 }: IDetailHost) => {
   return (
     <div className="relative flex flex-col">
-      <div className="relative w-fit mt-5 px-2 font-semibold body-1-reading">
+      <div className="relative w-fit mt-5 px-2 font-semibold text-body-1-reading">
         {"주최자 프로필"}
       </div>
 
@@ -38,10 +38,10 @@ export const DetailHost = ({
 
             {/* 주최자 소개 텍스트 */}
             <div className="flex flex-col gap-0.5">
-              <span className="body-2-normal font-medium text-gray800">
+              <span className="text-body-2-normal font-medium text-gray800">
                 {name}
               </span>
-              <span className="label-normal text-gray400">
+              <span className="text-label-normal text-gray400">
                 {introduction}
               </span>
             </div>

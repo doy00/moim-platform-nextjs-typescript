@@ -8,7 +8,7 @@
   }
 
   .detail-container .layout {
-    @apply bg-white;
+    @apply bg-background200;
   }
   :root {
 

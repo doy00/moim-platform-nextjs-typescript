@@ -1,5 +1,5 @@
 'use client';
-
+import { useState } from 'react';
 import { ImageBox } from '@/components/detail/ImageBox';
 import { DetailInfo } from '../../components/detail/DetailInfo';
 import { DetailParticipants } from '../../components/detail/DetailParticipants';
@@ -7,6 +7,7 @@ import { DetailContent } from '../../components/detail/DetailContent';
 import { DetailHost } from '@/components/detail/DetailHost';
 import { DetailReview } from '../../components/detail/DetailReview';
 import { IParticipant } from '@/types/detail';
+import { FloatingBar } from '@/components/detail/FloatingBar';
 
 const participants: IParticipant[] = [
   {
@@ -124,6 +125,20 @@ export default function DetailContainer(
   // if (error) return <div>{error}</div>;
   // if (!gathering) return <div>모임을 찾을 수 없습니다.</div>;
 
+  // FloatingBar 관련 함수
+  // 찜하기 함수
+  const [isLiked, setIsLiked] = useState(false);    // 찜하기 상태
+  
+  const handleLikeClick = () => {
+    setIsLiked(prev => !prev);
+    console.log('찜하기 클릭');
+  }
+
+  // 신청하기 함수
+  const handleApplyClick = () => {
+    console.log('신청하기 클릭');
+  }
+
   return (
     <div className="detail-container">
       <div className="layout">
@@ -155,6 +170,11 @@ export default function DetailContainer(
           author={"작성자"}
           date="25. 02. 01"
           authorImage="/svgs/profile.svg" 
+        />
+        <FloatingBar
+          onHeartClick={handleLikeClick}
+          onApplyClick={handleApplyClick}
+          isLiked={isLiked}
         />
       </div>
     </div>
