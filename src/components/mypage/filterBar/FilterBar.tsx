@@ -1,4 +1,4 @@
-import { Switch } from '@/components/mypage/filterBar/switch/switch';
+import Switch from '@/components/mypage/filterBar/switch/Switch';
 import DropDown from '@/components/mypage/filterBar/dropDown/DropDown';
 import Filter from '@/components/mypage/filterBar/filter/Filter';
 
