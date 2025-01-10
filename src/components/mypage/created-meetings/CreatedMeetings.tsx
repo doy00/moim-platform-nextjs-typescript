@@ -1,6 +1,6 @@
 'use client';
 
-import GatheringCard from '@/components/mypage/created-meetings/gatheringCard/GatheringCard';
+import GatheringCard from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
 import emptyDudu from '../../../../public/images/mypage/dudu-empty.svg';
 import Link from 'next/link';
