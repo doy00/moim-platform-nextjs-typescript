@@ -47,7 +47,7 @@ export default function SignUpForm() {
     trigger(name);
   }, 1000);
 
-  const { isDirty: isNicknameDirty, invalid: isNicknameInvalid } = getFieldState('nickname');
+  const { isDirty: isNameDirty, invalid: isNameInvalid } = getFieldState('name');
   const { isDirty: isEmailDirty, invalid: isEmailInvalid } = getFieldState('email');
   const { isDirty: isCompanyNameDirty, invalid: isCompanyNameInvalid } =
     getFieldState('companyName');
@@ -62,13 +62,13 @@ export default function SignUpForm() {
     !!errors.password ||
     !!errors.email ||
     !!errors.companyName ||
-    !!errors.nickname ||
+    !!errors.name ||
     !!errors.passwordConfirm ||
     !!signUpError ||
     !isEmailDirty ||
     isEmailInvalid ||
-    !isNicknameDirty ||
-    isNicknameInvalid ||
+    !isNameDirty ||
+    isNameInvalid ||
     !isCompanyNameDirty ||
     isCompanyNameInvalid ||
     !isPasswordDirty ||
@@ -101,29 +101,29 @@ export default function SignUpForm() {
             <div className="w-full flex flex-col gap-4">
               <div className="flex flex-col gap-2">
                 <label htmlFor={nameId} className="text-body-2-normal font-semibold">
-                  이름 <span className="text-red-500">*</span>
+                  닉네임 <span className="text-red-500">*</span>
                 </label>
                 <AuthInput
                   type="text"
                   placeholder="dothemeet"
-                  name="nickname"
+                  name="name"
                   id={nameId}
                   className={cn(
                     'h-[54px]',
-                    (errors.nickname || signUpError) && 'focus-visible:ring-red-500',
+                    (errors.name || signUpError) && 'focus-visible:ring-red-500',
                   )}
-                  register={register('nickname', {
+                  register={register('name', {
                     required: '이름을 입력해주세요',
                     onChange: (e) => {
                       if (signUpError) reset();
-                      setValue('nickname', e.target.value);
-                      debouncedValidation('nickname');
+                      setValue('name', e.target.value);
+                      debouncedValidation('name');
                     },
                   })}
                 />
-                {errors.nickname && (
+                {errors.name && (
                   <p className="text-red-500 text-label-normal font-medium">
-                    {errors.nickname.message}
+                    {errors.name.message}
                   </p>
                 )}
               </div>
@@ -259,17 +259,19 @@ export default function SignUpForm() {
                     },
                   })}
                 />
-                <p className="text-label-normal text-gray300 font-semibold">
-                  특수문자 포함 8~20자 사이로 입력해주세요
-                </p>
+
                 {errors.passwordConfirm?.message === '비밀번호가 일치하지 않습니다.' && (
                   <p className="text-red-500 text-label-normal font-medium">
                     {errors.passwordConfirm.message}
                   </p>
                 )}
-                {isPasswordConfirmed && (
+                {isPasswordConfirmed ? (
                   <p className="text-green-500 text-label-normal font-medium">
                     비밀번호가 일치합니다
+                  </p>
+                ) : (
+                  <p className="text-label-normal text-gray300 font-semibold">
+                    특수문자 포함 8~20자 사이로 입력해주세요
                   </p>
                 )}
               </div>

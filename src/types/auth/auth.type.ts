@@ -1,6 +1,6 @@
 export type TAuthInputs = {
   email: string;
-  nickname?: string;
+  name: string;
   companyName?: string;
   password: string;
   passwordConfirm?: string;
