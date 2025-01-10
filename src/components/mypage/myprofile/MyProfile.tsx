@@ -1,22 +1,11 @@
+'use client';
+
 import Image from 'next/image';
 import defaultProfile from '../../../../public/images/mypage/profile-default.svg';
-import { IUser } from '@/types/user';
-import { useState, useEffect } from 'react';
-import { getUserInfo } from '@/apis/userInfo';
+import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 
 export default function MyProfile() {
-  const [userInfo, setUserInfo] = useState<IUser | null>(null);
-
-  useEffect(() => {
-    const fetchInfo = async () => {
-      const token = localStorage.getItem('dudemeet-token');
-      console.log('저장된 토큰:', token);
-
-      const data = await getUserInfo();
-      setUserInfo(data);
-    };
-    fetchInfo();
-  }, []);
+  const { data: userInfo } = useUserQuery();
 
   return (
     <div className="px-3">
