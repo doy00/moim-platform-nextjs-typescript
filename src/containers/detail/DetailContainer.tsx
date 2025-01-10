@@ -1,5 +1,6 @@
 'use client';
 import { useState } from 'react';
+import { DetailShare } from '@/components/detail/DetailShare';
 import { ImageBox } from '@/components/detail/ImageBox';
 import { DetailInfo } from '../../components/detail/DetailInfo';
 import { DetailParticipants } from '../../components/detail/DetailParticipants';
@@ -142,6 +143,7 @@ export default function DetailContainer(
   return (
     <div className="detail-container">
       <div className="layout">
+        <DetailShare />
         <ImageBox 
           image="/images/image.png"
         />
