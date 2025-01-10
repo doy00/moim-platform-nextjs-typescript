@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import arrowDownIcon from '../../../../public/images/mypage/arrow-down.svg';
 import Image from 'next/image';
 
@@ -8,8 +8,19 @@ export default function DropDown() {
 
   const options = ['진행 중', '진행 예정', '종료'];
 
+  useEffect(() => {
+    const closeDropdown = () => setIsOpen(false);
+    window.addEventListener('click', closeDropdown);
+    return () => window.removeEventListener('click', closeDropdown);
+  }, []);
+
+  const handleClick = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsOpen(!isOpen);
+  };
+
   return (
-    <div className="relative">
+    <div onClick={handleClick} className="relative">
       <button
         onClick={() => setIsOpen(!isOpen)}
         className="flex items-center justify-between w-32 border border-background400 rounded-xl bg-background100 px-3.5 py-3"
