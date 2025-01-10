@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Meetings from '@/components/mypage/meetings/Meetings';
 import CreatedMeetings from '@/components/mypage/created-meetings/CreatedMeetings';
-import Filter from '@/components/mypage/filter/Filter';
+import FilterBar from '@/components/mypage/filterBar/FilterBar';
 import { motion, AnimatePresence } from 'framer-motion';
 
 export default function RenderTab() {
@@ -62,7 +62,7 @@ export default function RenderTab() {
           만든 모임
         </button>
       </div>
-      <Filter />
+      <FilterBar />
       {renderTab()}
     </div>
   );
