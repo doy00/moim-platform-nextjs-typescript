@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import '../styles/globals.css';
 
 import HomeGnb from '@/components/home/HomeGnb';
+import ReactQueryProvider from '@/libs/home/ReactQueryProvider';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -26,10 +27,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
-        <div className='layout'>
-          {children}
-        </div>
-        <HomeGnb />
+        <ReactQueryProvider>
+          <div className='layout'>
+              {children}
+          </div>
+          <HomeGnb />
+        </ReactQueryProvider>
       </body>
     </html>
   );

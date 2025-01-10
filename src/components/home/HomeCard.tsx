@@ -1,22 +1,15 @@
+'use client'
+
 import React from 'react'
 import Image from 'next/image';
 
 import HeartIcon from './icons/HeartIcon'
 
+import { IMoim } from '@/utils/home/fetchMoims';
+
 // DUMMYDATA TYPE
 type HomeCardProps = {
-  data: {
-    id: number;
-    category: number;
-    title: string;
-    content: string;
-    recruitment_deadline: string;
-    start_date: string;
-    end_date: string;
-    min_participants: number;
-    max_participants: number;
-    status: number;
-  };
+  data: IMoim;
 };
 
 const categoryMap: Record<number, string>= {
