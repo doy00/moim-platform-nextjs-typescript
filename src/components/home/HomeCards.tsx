@@ -1,17 +1,25 @@
 'use client';
 
-import React from 'react';
+import React, { useEffect } from 'react';
 // Tanstack-Query
 import { useInfiniteQuery } from '@tanstack/react-query';
 import IntersectionObserver from '@/libs/home/intersectionObserver';
 // Store
 import { useFilterStore } from '@/stores/home/filterStore';
+import { useFavoriteStore } from '@/stores/home/favoriteStore';
 // Components
 import HomeCard from './HomeCard';
 import { fetchMockMoims, IMoim } from '@/utils/home/fetchMoims';
 
 export default function HomeCards() {
   const { category, region, status } = useFilterStore();
+  const { fetchFavorites } = useFavoriteStore();
+
+    // 백엔드에서 찜 데이터를 로드
+    useEffect(() => {
+      fetchFavorites();
+    }, [fetchFavorites]);
+  
 
 
   const {

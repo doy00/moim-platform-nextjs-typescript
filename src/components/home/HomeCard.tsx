@@ -6,6 +6,9 @@ import Image from 'next/image';
 import HeartIcon from './icons/HeartIcon';
 import { IMoim } from '@/utils/home/fetchMoims';
 
+// Store
+import { useFavoriteStore } from '@/stores/home/favoriteStore';
+
 // DUMMYDATA TYPE
 type HomeCardProps = {
   data: IMoim;
@@ -29,7 +32,10 @@ const statusMap: Record<string, string> = {
 };
 
 export default function HomeCard({ data }: HomeCardProps) {
-  const { category, title, content, start_date, end_date, max_participants, status } = data;
+  const { id, category, title, content, start_date, end_date, max_participants, status } = data;
+  const { favorites, toggleFavorite } = useFavoriteStore()
+  const isFavorited = favorites.has(id)
+
 
   return (
     <article className="flex min-w-[343px] h-[138px] border border-orange200 p-4 space-x-5">
@@ -55,7 +61,9 @@ export default function HomeCard({ data }: HomeCardProps) {
               {statusMap[status]} 
             </span>
           </div>
-          <HeartIcon className="fill-gray200" />
+          <button onClick={() => toggleFavorite(id)}>
+            <HeartIcon className={`w-6 h-6 ${isFavorited ? 'fill-red-500' : 'fill-gray-300'}`} />
+          </button>
         </div>
         {/* 모임 타이틀 + 위치 + 참여명수 */}
         <div className="space-y-1">
