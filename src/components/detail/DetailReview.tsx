@@ -22,7 +22,7 @@ export const DetailReview: React.FC<IDetailReview> = ({
 
   // 이미지 로딩 실패시 기본 이미지를 보여줌
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = "/svgs/profile.svg";
+    e.currentTarget.src = "/svgs/detail-profile.svg";
   };
   
 
@@ -31,7 +31,9 @@ export const DetailReview: React.FC<IDetailReview> = ({
       {/* 타이틀 */}
       <div className="relative w-fit mt-5 px-2 font-semibold text-gray800 text-[16px]">
         {"모임 후기"}
-        <span className="ml-2 text-orange200">{"{reviewCount}개"}</span>
+        <span className="ml-2 text-orange200">
+          {"{reviewCount}"}
+        </span>
       </div>
 
       
@@ -80,7 +82,7 @@ export const DetailReview: React.FC<IDetailReview> = ({
             </div>
           </div>
 
-      <button className="mt-6 w-full h-14 rounded-xl py-[17px] text-body-2-normal font-semibold text-gray400 bg-gray100 hover:bg-gray50">
+      <button className="mt-6 w-full h-14 rounded-xl py-[17px] text-body-2-normal font-semibold text-gray400 bg-gray100 hover:bg-gray200">
         후기 더보기
       </button>
 

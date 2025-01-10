@@ -32,20 +32,20 @@ export const DetailInfo: React.FC<IDetailInfo> = ({
         </div>
       
       <div className="flex flex-col gap-1.5">
-        <h3 className="text-base font-medium text-textNormal truncate"
+        <h3 className="text-body-1-normal font-medium text-textNormal truncate"
         >
           {title}
         </h3>
-        <p className="text-xs text-gray400 truncate">
+        <p className="text-caption-normal text-gray500 font-medium truncate">
           {location}
         </p>
       </div>
 
       <div className="flex flex-col gap-0.5">
         <div className="flex items-center gap-2 w-full">
-          <span className="text-caption-normal text-gray400">{"모집 일정"}</span>
+          <span className="text-caption-normal font-medium text-gray500">{"모집 일정"}</span>
           <Separator orientation="vertical" className="mx-1 h-3 bg-gray200" />
-          <span className="text-caption-normal text-gray400">
+          <span className="text-caption-normal font-medium text-gray500">
             {recruitmentPeriod}
           </span>
           <span>
@@ -57,9 +57,9 @@ export const DetailInfo: React.FC<IDetailInfo> = ({
         </div>
         
         <div className="flex items-center gap-2 max-w-[255px]">
-          <span className="text-caption-normal text-gray400">{"모임 날짜"}</span>
+          <span className="text-caption-normal font-medium text-gray500">{"모임 날짜"}</span>
           <Separator orientation="vertical" className="mx-1 h-3 bg-gray200" />
-          <span className="text-caption-normal text-gray400 flex-1">
+          <span className="text-caption-normal font-medium text-gray500 flex-1">
             {meetingDate}
           </span>
         </div>

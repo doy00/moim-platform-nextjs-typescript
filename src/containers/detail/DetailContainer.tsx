@@ -162,14 +162,14 @@ export default function DetailContainer(
           name="두두씨"
           introduction="안녕하세요! 기획하는 두두입니다."
           hostTag={['기획', '마케팅', '자기계발']}
-          profileImage='/svgs/profile.svg'
+          profileImage='/svgs/detail-profile.svg'
         />
         <DetailReview 
           rating={4}
           content="리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."
           author={"작성자"}
           date="25. 02. 01"
-          authorImage="/svgs/profile.svg" 
+          authorImage="/svgs/detail-profile.svg" 
         />
         <FloatingBar
           onHeartClick={handleLikeClick}

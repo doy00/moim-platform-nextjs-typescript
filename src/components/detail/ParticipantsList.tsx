@@ -39,7 +39,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
                     <div className="absolute w-8 h-8 rounded-full border-2 border-background200 overflow-hidden">
                       <Image
                         // src={participant.User?.image || '/svgs/profile.svg'}
-                        src="/svgs/profile.svg"
+                        src="/svgs/detail-profile.svg"
                         // alt={participant.User?name || "Anonymous"}
                         alt="Anonymous"
                         width={32}
@@ -52,7 +52,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
 
                 {remainingCountOfParticipants > 0 && (
                   <div className="relative w-8 h-8 flex items-center justify-center bg-background200 rounded-full border-2 border-background200">
-                    <span className="text-xs text-gray600 font-medium">
+                    <span className="text-xs text-gray400 font-medium">
                       +{remainingCountOfParticipants}
                     </span>
                   </div>
@@ -90,7 +90,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
             </HoverCard>
 
       {/* 남은 인원 */}
-      <span className="font-medium text-brown400">
+      <span className="text-body-2-normal font-medium text-brown400">
         {"00명 더 참여할 수 있어요"}
       </span>
     </div>

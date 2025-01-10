@@ -29,7 +29,7 @@ export const DetailHost = ({
               {/* 프로필 이미지 */}
               <div className="w-12 h-12 shrink-0 relative rounded-full overflow-hidden">
                 <Image
-                  src={profileImage || "/svgs/profile.svg"}
+                  src={profileImage || "/svgs/detail-profile.svg"}
                   alt={"주최자 프로필 이미지"}
                   fill
                   className="object-cover"
