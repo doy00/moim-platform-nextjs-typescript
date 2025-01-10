@@ -90,7 +90,7 @@ export default function SignInForm() {
                     required: '이메일을 입력해주세요',
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: '올바른 이메일 형식이 아닙니다.',
+                      message: '올바른 이메일 형식을 입력해 주세요',
                     },
                     onChange: (e) => {
                       if (signInError) reset();
