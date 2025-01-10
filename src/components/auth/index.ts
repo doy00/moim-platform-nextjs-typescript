@@ -6,5 +6,6 @@ export { default as AuthKakao } from './AuthKakao';
 export { default as AuthQuestions } from './AuthQuestions';
 export { default as AuthSelectEmailKakao } from './AuthSelectEmailKakao';
 export { default as DudemeetCharacter } from './DudemeetCharacter';
+export { default as DudemeetLogo } from './DudemeetLogo';
 export { default as SignInForm } from './SignInForm';
 export { default as SignUpForm } from './SignUpForm';

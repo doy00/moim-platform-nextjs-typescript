@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
+import DudemeetLogo from './DudemeetLogo';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -81,9 +82,12 @@ export default function SignUpForm() {
 
   return (
     <div className="w-[343px] h-full min-h-dvh flex flex-col items-center justify-center">
+      <div className="w-full h-14 flex items-center">
+        <DudemeetLogo />
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="w-full min-h-dvh flex flex-col items-center justify-center gap-10 py-5"
+        className="w-full flex flex-col items-center justify-center gap-10 pt-4 pb-5"
       >
         <div className="flex-1 w-full flex flex-col items-center justify-center gap-6">
           <div className="w-full flex flex-col items-center justify-center gap-2">
@@ -140,7 +144,7 @@ export default function SignUpForm() {
                     required: '이메일을 입력해주세요',
                     pattern: {
                       value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                      message: '올바른 이메일 형식이 아닙니다.',
+                      message: '올바른 이메일을 입력해주세요',
                     },
                     onChange: (e) => {
                       if (signUpError) reset();
@@ -156,7 +160,9 @@ export default function SignUpForm() {
                 )}
                 {signUpError && (
                   <p className="text-red-500 text-label-normal font-medium">
-                    {signUpError.message}
+                    {signUpError.message === '이미 사용 중인 이메일입니다'
+                      ? '중복되는 이메일이 있어요'
+                      : errors.email?.message}
                   </p>
                 )}
               </div>
@@ -194,8 +200,8 @@ export default function SignUpForm() {
                 </label>
                 <AuthInput
                   type="password"
-                  placeholder="비밀번호를 입력해주세요"
-                  name="********"
+                  placeholder="******"
+                  name="password"
                   id={passwordId}
                   className={cn(
                     'h-[54px]',
@@ -205,7 +211,7 @@ export default function SignUpForm() {
                     required: '비밀번호를 입력해주세요',
                     pattern: {
                       value: /^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                      message: '비밀번호는 8자 이상으로 숫자 특수문자 포함해주세요',
+                      message: '특수문자 포함 8~20자 사이로 입력해주세요',
                     },
                     onChange: (e) => {
                       if (signUpError) reset();
@@ -214,6 +220,9 @@ export default function SignUpForm() {
                     },
                   })}
                 />
+                <p className="text-label-normal text-gray300 font-semibold">
+                  특수문자 포함 8~20자 사이로 입력해주세요
+                </p>
                 {errors.password && (
                   <p className="text-red-500 text-label-normal font-medium">
                     {errors.password.message}
@@ -226,7 +235,7 @@ export default function SignUpForm() {
                 </label>
                 <AuthInput
                   type="password"
-                  placeholder="********"
+                  placeholder="******"
                   name="passwordConfirm"
                   id={passwordConfirmId}
                   className={cn(
@@ -241,7 +250,7 @@ export default function SignUpForm() {
                         return true;
                       }
                       setIsPasswordConfirmed(false);
-                      return '비밀번호가 일치하지 않습니다.';
+                      return '비밀번호가 일치하지 않아요';
                     },
                     onChange: (e) => {
                       if (signUpError) reset();
@@ -250,6 +259,9 @@ export default function SignUpForm() {
                     },
                   })}
                 />
+                <p className="text-label-normal text-gray300 font-semibold">
+                  특수문자 포함 8~20자 사이로 입력해주세요
+                </p>
                 {errors.passwordConfirm?.message === '비밀번호가 일치하지 않습니다.' && (
                   <p className="text-red-500 text-label-normal font-medium">
                     {errors.passwordConfirm.message}

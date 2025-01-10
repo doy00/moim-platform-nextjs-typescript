@@ -9,6 +9,7 @@ import { useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
+import DudemeetLogo from './DudemeetLogo';
 
 export default function SignInForm() {
   const router = useRouter();
@@ -58,12 +59,15 @@ export default function SignInForm() {
   }, [signInError]);
 
   return (
-    <div className="w-[343px] h-dvh flex flex-col items-center justify-center py-5">
+    <div className="w-[343px] h-dvh flex flex-col items-center justify-center pb-5">
+      <div className="w-full h-14 flex items-center">
+        <DudemeetLogo />
+      </div>
       <form
         onSubmit={handleSubmit(onSubmit)}
         className="w-full h-full flex flex-col items-center justify-center"
       >
-        <div className="flex-1 w-full flex flex-col items-center justify-center gap-6">
+        <div className="flex-1 w-full flex flex-col items-center pt-16 gap-6">
           <h3 className="text-title-1 text-left w-full font-semibold">로그인</h3>
           {isSignInPending && <div>로딩 중...</div>}
           <div className="w-full flex flex-col items-center justify-center gap-10">
@@ -113,7 +117,7 @@ export default function SignInForm() {
                 </label>
                 <AuthInput
                   type="password"
-                  placeholder="비밀번호를 입력해주세요"
+                  placeholder="******"
                   className={cn(
                     'h-[54px]',
                     (errors.password || signInError?.code === 'INVALID_CREDENTIALS') &&
