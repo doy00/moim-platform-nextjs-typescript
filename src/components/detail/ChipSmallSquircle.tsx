@@ -13,7 +13,6 @@ export const ChipSmallSquircle: React.FC<IChipSmallSquircle> = ({
         'px-2 py-1 rounded-md text-xs font-medium', 
         variant === 'light' && 'bg-background300 text-textNormal',
         variant === 'dark' && 'bg-gray800 text-gray50',
-        variant === 'success' && 'bg-[#04A37E] text-gray50',
         variant === 'tag' && 'bg-background300 text-caption-normal',
         className
       )}

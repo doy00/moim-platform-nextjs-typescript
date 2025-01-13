@@ -26,7 +26,7 @@ export const DetailInfo: React.FC<IDetailInfo> = ({
             text="프로젝트"
           />
           <ChipSmallSquircle 
-            variant="success"
+            variant="dark"
             text="개설 확정"
           />
         </div>
