@@ -1,8 +1,8 @@
-interface DudemeetLogoProps {
+interface DothemeetLogoProps {
   className?: string;
 }
 
-export default function DudemeetLogo({ className }: DudemeetLogoProps) {
+export default function DothemeetLogo({ className }: DothemeetLogoProps) {
   return (
     <svg
       className={className}

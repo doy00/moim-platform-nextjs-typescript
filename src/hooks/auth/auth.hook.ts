@@ -53,9 +53,9 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
   return useMutation<TSignInResponse, TError, TAuthInputs>({
     mutationFn: postSignIn,
     onSuccess: (data) => {
-      setLocalStorageItem('dudemeet-token', data.token);
+      setLocalStorageItem('dothemeet-token', data.token);
       setCookie({
-        name: 'dudemeet-token',
+        name: 'dothemeet-token',
         value: data.token,
         maxAge: 60 * 60,
         httpOnly: true,
@@ -72,8 +72,8 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
   return useMutation<TSignOutResponse, TError, void>({
     mutationFn: postSignOut,
     onSuccess: () => {
-      removeLocalStorageItem('dudemeet-token');
-      deleteCookie('dudemeet-token');
+      removeLocalStorageItem('dothemeet-token');
+      deleteCookie('dothemeet-token');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
       queryClient.setQueryData([QUERY_KEY_ME], null);
     },

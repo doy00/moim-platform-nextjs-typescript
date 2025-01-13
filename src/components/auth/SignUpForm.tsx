@@ -9,7 +9,7 @@ import { useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
-import DudemeetLogo from './DudemeetLogo';
+import DothemeetLogo from './DothemeetLogo';
 
 export default function SignUpForm() {
   const router = useRouter();
@@ -83,7 +83,7 @@ export default function SignUpForm() {
   return (
     <div className="w-[343px] h-full min-h-dvh flex flex-col items-center justify-center">
       <div className="w-full h-14 flex items-center">
-        <DudemeetLogo />
+        <DothemeetLogo />
       </div>
       <form
         onSubmit={handleSubmit(onSubmit)}

@@ -5,7 +5,7 @@ import { redirect } from 'next/navigation';
 import { Suspense } from 'react';
 
 export default async function SignUpPage() {
-  const token = await getCookie('dudemeet-token');
+  const token = await getCookie('dothemeet-token');
   if (!token) return <SignUpContainer />;
 
   const { me, dehydratedState } = await prefetchMe();

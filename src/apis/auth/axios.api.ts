@@ -10,12 +10,12 @@ const api = axios.create({
 
 api.interceptors.request.use(async (config) => {
   if (typeof window !== 'undefined') {
-    const token = getLocalStorageItem('dudemeet-token');
+    const token = getLocalStorageItem('dothemeet-token');
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
     }
   } else {
-    const token = await getCookie('dudemeet-token');
+    const token = await getCookie('dothemeet-token');
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
     }

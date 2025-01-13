@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import AuthButton from './AuthButton';
 import AuthKakao from './AuthKakao';
-import DudemeetCharacter from './DudemeetCharacter';
+import DothemeetCharacter from './DothemeetCharacter';
 
 interface AuthSelectEmailKakaoProps {
   children: React.ReactNode;
@@ -11,7 +11,7 @@ export default function AuthSelectEmailKakao({ children }: AuthSelectEmailKakaoP
   return (
     <div className="w-[327px] min-h-dvh flex flex-col items-center justify-center">
       <div className="flex-1 flex items-center justify-center">
-        <DudemeetCharacter />
+        <DothemeetCharacter />
       </div>
       <div className="w-full flex flex-col items-center justify-center gap-4 pb-12">
         <div className="w-full flex flex-col items-center justify-center gap-2">
