@@ -33,7 +33,7 @@ export default function HomeCards() {
   >({
     queryKey: ['moims', category, region, status], 
     queryFn: async ({ pageParam = 1 }) => {
-      return fetchMockMoims({ page: pageParam, category, region, status });
+      return fetchMockMoims({ page: pageParam, category, region: region.length > 0 ? region.join(',') : 'all', status });
     }, 
     getNextPageParam: (lastPage) =>
       lastPage.pagination.current_page < lastPage.pagination.total_pages
