@@ -1,11 +1,14 @@
 /** app/detail/[teamId]/[id]/page.tsx */
 import DetailContainer from "@/containers/detail/DetailContainer";
+import { Suspense } from "react";
 
-export default async function GatheringsDetail() {
+export default async function DetailPage() {
 
   return (
-    <div className="w-full min-h-screen px-4 py-4 bg-background200">
+    <div>
+      <Suspense fallback={<div>Loading...</div>}>
           <DetailContainer />
+      </Suspense>
     </div>
   );
 }

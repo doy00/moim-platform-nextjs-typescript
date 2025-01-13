@@ -6,10 +6,6 @@
   .layout {
     @apply mx-auto min-h-dvh w-full min-w-[360px] max-w-[500px] bg-gray-200 font-pretendard;
   }
-
-  .detail-container .layout {
-    @apply bg-background200;
-  }
   :root {
 
     --background: 0 0% 100%;

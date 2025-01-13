@@ -141,8 +141,7 @@ export default function DetailContainer(
   }
 
   return (
-    <div className="detail-container">
-      <div className="layout">
+      <div className="w-full min-h-screen px-4 py-4 bg-background200">
         <DetailShare />
         <ImageBox 
           image="/images/image.png"
@@ -179,6 +178,5 @@ export default function DetailContainer(
           isLiked={isLiked}
         />
       </div>
-    </div>
   );
 }
