@@ -78,7 +78,7 @@ export default function SignInForm() {
                 </label>
                 <AuthInput
                   type="text"
-                  placeholder="이메일을 입력해주세요"
+                  placeholder="example@google.com"
                   className={cn(
                     'h-[54px]',
                     (errors.email || signInError?.code === 'USER_NOT_FOUND') &&
