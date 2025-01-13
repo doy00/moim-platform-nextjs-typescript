@@ -9,6 +9,8 @@ import { DetailHost } from '@/components/detail/DetailHost';
 import { DetailReview } from '../../components/detail/DetailReview';
 import { IParticipant } from '@/types/detail';
 import { FloatingBar } from '@/components/detail/FloatingBar';
+import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
+import Link from 'next/link';
 
 const participants: IParticipant[] = [
   {
@@ -141,10 +143,13 @@ export default function DetailContainer(
   }
 
   return (
-      <div className="w-full min-h-screen px-4 py-4 bg-background200">
+      <div className="w-full min-h-screen px-4 bg-background200">
+          <Link href="/" className="w-full h-14 py-[10px] flex items-center">
+            <DothemeetLogo />
+          </Link>
         <DetailShare />
         <ImageBox 
-          image="/images/image.png"
+          image="/images/img_moim-image.png"
         />
         <DetailInfo 
           title="모임 타이틀이 들어갑니다." 
