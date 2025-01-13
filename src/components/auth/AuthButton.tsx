@@ -12,7 +12,7 @@ export default function AuthButton({ children, className, onClick, ...props }: A
     <button
       onClick={onClick}
       className={cn(
-        'flex flex-row items-center justify-center w-full h-[58px] bg-gray100 rounded-[20px] gap-3',
+        'flex flex-row items-center justify-center w-full h-[58px] bg-gray100 rounded-[20px] gap-3 font-medium',
         className,
       )}
       {...props}
