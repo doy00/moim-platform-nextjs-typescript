@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { IImageBox } from "@/types/detail"
+import Image from "next/image";
 
 export const ImageBox: React.FC<IImageBox> = ({
   image,
@@ -25,10 +26,11 @@ export const ImageBox: React.FC<IImageBox> = ({
   
   return (
     <div className={`relative w-full mx-auto rounded-2xl overflow-hidden ${aspectRatio} ${className || ''}`}>
-      <div className="absolute inset-0">
-        <img 
+      <div className=" absolute inset-0">
+        <Image 
           src={image}
           alt={alt}
+          fill
           className="w-full h-full object-cover"
           onError={() => setHasError(true)}
         />
