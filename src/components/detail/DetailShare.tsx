@@ -24,7 +24,8 @@ export const DetailShare: React.FC<IDetailShare> = ({ className }) => {
                           <Image
                             src="/images/img_illust-circle.png"
                             alt={"프로필 이미지"}
-                            fill
+                            width={48}
+                            height={48}
                             className="object-cover"
                           />
                         </div>

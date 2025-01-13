@@ -1,5 +1,6 @@
 import React, { useState } from "react"
 import { IImageBox } from "@/types/detail"
+import { IMAGE_SIZE } from "@/constants/detail/images";
 import Image from "next/image";
 
 export const ImageBox: React.FC<IImageBox> = ({
@@ -15,8 +16,8 @@ export const ImageBox: React.FC<IImageBox> = ({
   if (!image || hasError) {
     return (
       <div className={`relative w-full mx-auto rounded-2xl overflow-hidden ${aspectRatio} ${className || ''}`}>
-        <div className="absolute inset-0 bg-gray-100 flex items-center justify-center">
-          <div className="text-center text-gray-400">
+        <div className="absolute inset-0 bg-gray100 flex items-center justify-center">
+          <div className="text-center text-gray400">
             <p className="text-sm">이미지를 찾을 수 없습니다</p>
           </div>
         </div>
@@ -26,12 +27,13 @@ export const ImageBox: React.FC<IImageBox> = ({
   
   return (
     <div className={`relative w-full mx-auto rounded-2xl overflow-hidden ${aspectRatio} ${className || ''}`}>
-      <div className=" absolute inset-0">
+      <div className="absolute inset-0">
         <Image 
           src={image}
           alt={alt}
           fill
-          className="w-full h-full object-cover"
+          style={{ objectFit: "cover" }}
+          sizes={IMAGE_SIZE.DEFAULT}
           onError={() => setHasError(true)}
         />
       </div>
