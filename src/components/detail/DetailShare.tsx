@@ -22,7 +22,7 @@ export const DetailShare: React.FC<IDetailShare> = ({ className }) => {
                     <div className="flex gap-3 items-center w-full">
                         <div className="w-12 h-12 ml-1 shrink-0 relative rounded-full overflow-hidden">
                           <Image
-                            src="/svgs/detail-profile.svg"
+                            src="/images/img_illust-circle.png"
                             alt={"프로필 이미지"}
                             fill
                             className="object-cover"
