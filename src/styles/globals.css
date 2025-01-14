@@ -4,6 +4,6 @@
 
 @layer base {
   .layout {
-    @apply mx-auto min-h-dvh w-full min-w-[360px] max-w-[500px] bg-gray-200 font-pretendard;
+    @apply mx-auto min-h-dvh w-full min-w-[360px] md:min-w-[744px] desktop:min-w-[1920px] max-w-[500px] bg-gray-200 font-pretendard;
   }
 }
