@@ -59,11 +59,7 @@ export default function SignInForm() {
   }, [signInError]);
 
   return (
-    <div
-      className={
-        'w-full h-full flex flex-col items-center justify-center bg-background200 md:bg-background100'
-      }
-    >
+    <div className="w-full h-full flex flex-col items-center justify-center bg-background200 md:bg-background100">
       {isSignInPending && <div>로딩 중...</div>}
 
       <div className="w-[343px] md:w-[664px] desktop:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
@@ -165,7 +161,7 @@ export default function SignInForm() {
                 </div>
               </div>
 
-              <div className="w-full flex flex-col items-center justify-center gap-4">
+              <div className="w-full md:w-[584px] flex flex-col items-center justify-center gap-4">
                 <AuthQuestions type="signup" />
                 <AuthButton
                   className={cn(
