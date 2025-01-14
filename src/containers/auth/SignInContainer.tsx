@@ -10,7 +10,7 @@ export default function SignInContainer() {
   const type = searchParams.get('type');
 
   return (
-    <section className="w-full h-auto min-h-dvh flex flex-col items-center justify-center bg-background200 text-gray800">
+    <section className="w-full h-auto min-h-dvh flex flex-col items-center justify-center bg-background100 text-gray800">
       {type === null ? (
         <AuthSelectEmailKakao>
           <AuthQuestions type="signin" />
