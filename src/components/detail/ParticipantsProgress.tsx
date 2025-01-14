@@ -34,7 +34,7 @@ export const ParticipantsProgress: React.FC<IParticipantsProgress> = ({
       {/* 참여 신청한 인원 */}
       <div className="flex flex-col">
         <span className="font-semibold text-body-2-normal text-gray800">
-          {"{currentCount}명 참여중"}
+          {currentCount}명 참여중
         </span>
       </div>
 

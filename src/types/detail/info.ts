@@ -4,4 +4,5 @@ export interface IDetailInfo {
   recruitmentPeriod: string;
   meetingDate: string;
   className?: string;
+  image?: string;
 }

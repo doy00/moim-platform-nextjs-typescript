@@ -3,26 +3,27 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { FootIcon } from "./icons/FootIcon";
 import { FootEmptyIcon } from "./icons/FootEmptyIcon";
-import { IDetailReview } from "@/types/detail";
+import { IDetailReview, IDetailReviewProps } from "@/types/detail";
+import { DEFAULT_IMAGE } from "@/constants/detail/images";
 
 
-export const DetailReview: React.FC<IDetailReview> = ({ 
+export const DetailReview: React.FC<IDetailReviewProps> = ({ 
   className, 
-  rating, 
-  content, 
+  score, 
+  comment, 
   author, 
   date, 
   authorImage
-  }: IDetailReview) => {
+  }: IDetailReviewProps) => {
 
   // 평점
   const paws = Array.from({ length: 5 }, (_,index) => ({
-    filled: index < rating, 
+    filled: index < score, 
   }))
 
   // 이미지 로딩 실패시 기본 이미지를 보여줌
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = "/svgs/detail-profile.svg";
+    e.currentTarget.src = DEFAULT_IMAGE.PROFILE;
   };
   
 
@@ -53,7 +54,7 @@ export const DetailReview: React.FC<IDetailReview> = ({
 
             {/* 후기 텍스트 */}
             <p className="text-label-reading text-gray400 truncate">
-              {content}
+              {comment}
             </p>
           
             {/* 리뷰 작성자 정보*/}

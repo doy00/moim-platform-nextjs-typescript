@@ -1,5 +1,7 @@
 'use client';
-import { useState } from 'react';
+import { axiosInstance } from '@/apis/detail/axios.api';
+import { useState, useEffect } from 'react';
+import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
 import { DetailShare } from '@/components/detail/DetailShare';
 import { ImageBox } from '@/components/detail/ImageBox';
 import { DetailInfo } from '../../components/detail/DetailInfo';
@@ -8,9 +10,20 @@ import { DetailContent } from '../../components/detail/DetailContent';
 import { DetailHost } from '@/components/detail/DetailHost';
 import { DetailReview } from '../../components/detail/DetailReview';
 import { IParticipant } from '@/types/detail';
+import { IMoimDetail } from '@/types/detail/i-moim'
 import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
+import { DEFAULT_IMAGE } from '@/constants/detail/images';
 import Link from 'next/link';
+
+interface IDetailContainer {
+  id: number;
+  initialData?: {
+    detailInfo: IMoimDetail;
+    participants: IParticipant[];
+    reviews: any[];
+  }
+}
 
 const participants: IParticipant[] = [
   {
@@ -93,40 +106,61 @@ const participants: IParticipant[] = [
   },
 ];
 
-export default function DetailContainer(
-  // { id }: IGatheringsDetail
-  ) {
-  // const [gathering, setGathering] = useState<IGatherings | null>(null);
-  // const [isLoading, setIsLoading] = useState(true);
-  // const [error, setError] = useState<string | null>(null);
+export default function DetailContainer({ 
+  id, 
+  // initialData
+}: IDetailContainer) {
+  
+  // 방법2 tanstack query
+  // const { 
+  //   info, 
+  //   participants, reviews, isLoading 
+  // } = useMoimDetail(id); // 커스텀훅 사용
 
-  // const teamId = 'dudemeet';
+    // 방법1
+    const [isLoading, setIsLoading] = useState(true);
+    const [error, setError] = useState<string | null>(null);
+    const [data, setData] = useState<IMoimDetail | null>(null);
 
-  // useEffect(() => {
-  //   const fetchGatheringDetail = async () => {
-  //     try {
-  //       setIsLoading(true);
-  //       const response = await fetch(`https://fe-adv-project-together-dallaem.vercel.app/api/${teamId}/gatherings/${id}`);
+    useEffect(() => {
+      async function fetchData() {
+        try {
+          // base URL 상수
+          const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+
+          const response = await fetch(`${BASE_URL}/detail/${id}`);
+  
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          const fetchedData = await response.json();
+
+          
+          // [ ] 수정필요: 이미지를 찾을 수 없을때 이미지 URL 처리
+          const processedData = {
+            ...fetchedData,
+            image: fetchedData.image ? `${BASE_URL}/${fetchedData.image}` : DEFAULT_IMAGE.MOIM
+          };
+
+          setData(processedData);
+
+          // setError("failed to fetch data");
+        } catch (err) {
+          setError(err instanceof Error ? err.message : 'An error occurred while fetching data');
+          console.error('Failed to fetch moim detail:', err);
+        } finally {
+          setIsLoading(false);
+        }
+      }
         
-  //       if (!response.ok) {
-  //         throw new Error('모임을 불러오는데 실패했습니다.');
-  //       }
-        
-  //       const data = await response.json();
-  //       setGathering(data);
-  //     } catch (err) {
-  //       setError(err instanceof Error ? err.message : '에러가 발생했습니다.');
-  //     } finally {
-  //       setIsLoading(false);
-  //     }
-  //   };
+    
+    fetchData();
+  }, [id]);
+  
+  
 
-  //   fetchGatheringDetail();
-  // }, [id]);
 
-  // if (isLoading) return <div>Loading...</div>;
-  // if (error) return <div>{error}</div>;
-  // if (!gathering) return <div>모임을 찾을 수 없습니다.</div>;
+
 
   // FloatingBar 관련 함수
   // 찜하기 함수
@@ -134,49 +168,70 @@ export default function DetailContainer(
   
   const handleLikeClick = () => {
     setIsLiked(prev => !prev);
-    console.log('찜하기 클릭');
+    // console.log('찜하기 클릭');
   }
 
   // 신청하기 함수
-  const handleApplyClick = () => {
-    console.log('신청하기 클릭');
+  const handleApplyClick = async () => {
+    try {
+    // console.log('신청하기 클릭');
+    // await joinMoim(id)
+  } catch (error) {
+    console.error("모임 신청하기를 실패했습니다.:", error)
   }
+}
+
+
+  if (isLoading) return <div></div>;
 
   return (
-      <div className="w-full min-h-screen px-4 bg-background200">
-          <Link href="/" className="w-full h-14 py-[10px] flex items-center">
-            <DothemeetLogo />
-          </Link>
+      <div className="w-full min-h-screen px-4 pb-[93px] bg-background200">
+        <Link href="/" className="w-full h-14 py-[10px] flex items-center">
+          <DothemeetLogo />
+        </Link>
+
         <DetailShare />
         <ImageBox 
-          image="/images/img_moim-image.png"
+          image={data?.image || DEFAULT_IMAGE.MOIM}
         />
         <DetailInfo 
-          title="모임 타이틀이 들어갑니다." 
-          location="위치가 들어갑니다." 
-          recruitmentPeriod="모집 일정이 들어갑니다." 
-          meetingDate="모임 날짜가 들어갑니다." 
+          title={data?.name || "모임 타이틀이 들어갑니다." }
+          location={data?.location || "위치가 들어갑니다."}
+          recruitmentPeriod={data?.registrationEnd || "모집 일정이 들어갑니다." }
+          meetingDate={data?.dateTime || "모임 날짜가 들어갑니다." }
         />
         <DetailParticipants 
-          participants={participants}
+          participants={participants || []}
           
         />
         <DetailContent 
-          content="모임 내용이 들어갑니다."
+          content={
+            data?.content || 
+            "모임 내용이 들어갑니다."}
         />
         <DetailHost 
           name="두두씨"
           introduction="안녕하세요! 기획하는 두두입니다."
           hostTag={['기획', '마케팅', '자기계발']}
-          profileImage='/svgs/detail-profile.svg'
+          profileImage={
+            // data?.image || 
+            DEFAULT_IMAGE.PROFILE}
         />
+
+        {/* {reviews?.map((review, index) => (
         <DetailReview 
-          rating={4}
-          content="리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."
-          author={"작성자"}
-          date="25. 02. 01"
-          authorImage="/svgs/detail-profile.svg" 
+          key={index}
+          score={review.score}
+          comment={review.comment || "리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."}
+          author={review.User?.name || "작성자"}
+          date={new Date(review.createdAt).toLocaleDateString('ko-KR', {
+            year: '2-digit',
+            month: '2-digit',
+            day: '2-digit'
+          }) || "25. 02. 01" }
+          authorImage={review.User?.image || "/svgs/img_detail-profile.svg"}
         />
+        ))} */}
         <FloatingBar
           onHeartClick={handleLikeClick}
           onApplyClick={handleApplyClick}
