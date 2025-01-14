@@ -87,11 +87,11 @@ export default function SignUpForm() {
       {/** 로딩 수정요망 */}
       {isSignUpPending && <div>로딩 중...</div>}
 
-      <div className="w-[343px] md:w-[664px] desktop:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
+      <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
         <div className="w-full h-14 flex items-center">
           <DothemeetLogo />
         </div>
-        <div className="w-full h-full md:min-h-[1335px] desktop:min-h-[1276px] flex flex-col items-center justify-start md:justify-center ">
+        <div className="w-full h-full md:min-h-[1335px] 2xl:min-h-[1276px] flex flex-col items-center justify-start md:justify-center ">
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="w-full md:w-[664px] h-full md:h-[1092px] flex flex-col items-center justify-start md:justify-center md:bg-background200 md:rounded-[32px] gap-10 pt-4 pb-5 md:p-0"

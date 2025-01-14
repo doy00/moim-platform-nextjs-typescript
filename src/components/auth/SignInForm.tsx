@@ -63,7 +63,7 @@ export default function SignInForm() {
       {/** 로딩 수정요망 */}
       {isSignInPending && <div>로딩 중...</div>}
 
-      <div className="w-[343px] md:w-[664px] desktop:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
+      <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
         <div className="w-full h-14 flex items-center">
           <DothemeetLogo />
         </div>
