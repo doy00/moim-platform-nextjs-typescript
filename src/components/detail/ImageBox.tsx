@@ -1,6 +1,7 @@
 import React, { useState } from "react"
 import { IImageBox } from "@/types/detail"
 import { IMAGE_SIZE } from "@/constants/detail/images";
+import { DEFAULT_IMAGE } from "@/constants/detail/images";
 import Image from "next/image";
 
 export const ImageBox: React.FC<IImageBox> = ({
@@ -29,7 +30,7 @@ export const ImageBox: React.FC<IImageBox> = ({
     <div className={`relative w-full mx-auto rounded-2xl overflow-hidden ${aspectRatio} ${className || ''}`}>
       <div className="absolute inset-0">
         <Image 
-          src={image}
+          src={image ? `/images/${image}` : DEFAULT_IMAGE.MOIM}
           alt={alt}
           fill
           style={{ objectFit: "cover" }}

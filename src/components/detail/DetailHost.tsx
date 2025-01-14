@@ -2,6 +2,7 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
+import { DEFAULT_IMAGE } from '@/constants/detail/images';
 
 interface IDetailHost {
   name: string;
@@ -29,7 +30,7 @@ export const DetailHost = ({
               {/* 프로필 이미지 */}
               <div className="w-12 h-12 shrink-0 relative rounded-full overflow-hidden">
                 <Image
-                  src={profileImage || "/svgs/detail-profile.svg"}
+                  src={profileImage || DEFAULT_IMAGE.PROFILE}
                   alt={"주최자 프로필 이미지"}
                   fill
                   className="object-cover"

@@ -8,6 +8,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { IParticipant } from "@/types/detail";
+import { DEFAULT_IMAGE } from '@/constants/detail/images';
 
 interface IParticipantsList {
   participants: IParticipant[];
@@ -39,7 +40,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
                     <div className="absolute w-8 h-8 rounded-full border-2 border-background200 overflow-hidden">
                       <Image
                         // src={participant.User?.image || '/svgs/profile.svg'}
-                        src="/svgs/detail-profile.svg"
+                        src={DEFAULT_IMAGE.PROFILE}
                         // alt={participant.User?name || "Anonymous"}
                         alt="Anonymous"
                         width={32}
@@ -72,7 +73,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
                     >
                       <Image
                         // src={participant.User?.image || '/svgs/profile.svg'}
-                        src="/svgs/profile.svg"
+                        src={DEFAULT_IMAGE.PROFILE}
                         // alt={participant.User?.name || 'Anonymous'}
                         alt="Anonymous"
                         width={24}
