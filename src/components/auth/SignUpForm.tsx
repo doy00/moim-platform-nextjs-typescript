@@ -6,6 +6,7 @@ import { cn } from '@/utils/auth/ui.util';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
 import { useForm } from 'react-hook-form';
+import AuthBar from './AuthBar';
 import AuthButton from './AuthButton';
 import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
@@ -15,9 +16,11 @@ export default function SignUpForm() {
   const router = useRouter();
   const emailId = useId();
   const passwordId = useId();
-  const nameId = useId();
-  const companyNameId = useId();
+  const nicknameId = useId();
+  const positionId = useId();
   const passwordConfirmId = useId();
+  const introductionId = useId();
+  const tagsId = useId();
   const {
     register,
     handleSubmit,
@@ -47,10 +50,9 @@ export default function SignUpForm() {
     trigger(name);
   }, 1000);
 
-  const { isDirty: isNameDirty, invalid: isNameInvalid } = getFieldState('name');
+  const { isDirty: isNicknameDirty, invalid: isNicknameInvalid } = getFieldState('nickname');
   const { isDirty: isEmailDirty, invalid: isEmailInvalid } = getFieldState('email');
-  const { isDirty: isCompanyNameDirty, invalid: isCompanyNameInvalid } =
-    getFieldState('companyName');
+  const { isDirty: isPositionDirty, invalid: isPositionInvalid } = getFieldState('position');
   const { isDirty: isPasswordDirty, invalid: isPasswordInvalid } = getFieldState('password');
   const { isDirty: isPasswordConfirmDirty, invalid: isPasswordConfirmInvalid } =
     getFieldState('passwordConfirm');
@@ -61,16 +63,16 @@ export default function SignUpForm() {
     isSignUpPending ||
     !!errors.password ||
     !!errors.email ||
-    !!errors.companyName ||
-    !!errors.name ||
+    !!errors.position ||
+    !!errors.nickname ||
     !!errors.passwordConfirm ||
     !!signUpError ||
     !isEmailDirty ||
     isEmailInvalid ||
-    !isNameDirty ||
-    isNameInvalid ||
-    !isCompanyNameDirty ||
-    isCompanyNameInvalid ||
+    !isNicknameDirty ||
+    isNicknameInvalid ||
+    !isPositionDirty ||
+    isPositionInvalid ||
     !isPasswordDirty ||
     isPasswordInvalid ||
     !isPasswordConfirmDirty ||
@@ -82,6 +84,7 @@ export default function SignUpForm() {
 
   return (
     <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background100">
+      {/** 로딩 수정요망 */}
       {isSignUpPending && <div>로딩 중...</div>}
 
       <div className="w-[343px] md:w-[664px] desktop:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
@@ -104,35 +107,35 @@ export default function SignUpForm() {
               <div className="w-full flex flex-col items-center justify-center gap-10">
                 <div className="w-full flex flex-col gap-4">
                   <div className="flex flex-col gap-2">
-                    <label htmlFor={nameId} className="text-body-2-normal font-semibold">
+                    <label htmlFor={nicknameId} className="text-body-2-normal font-medium">
                       닉네임 <span className="text-red200">*</span>
                     </label>
                     <AuthInput
                       type="text"
                       placeholder="dothemeet"
                       name="name"
-                      id={nameId}
+                      id={nicknameId}
                       className={cn(
                         'h-[54px]',
-                        (errors.name || signUpError) && 'focus-visible:ring-error',
+                        (errors.nickname || signUpError) && 'focus-visible:ring-error',
                       )}
-                      register={register('name', {
-                        required: '이름을 입력해주세요',
+                      register={register('nickname', {
+                        required: '닉네임을 입력해주세요',
                         onChange: (e) => {
                           if (signUpError) reset();
-                          setValue('name', e.target.value);
-                          debouncedValidation('name');
+                          setValue('nickname', e.target.value);
+                          debouncedValidation('nickname');
                         },
                       })}
                     />
-                    {errors.name && (
+                    {errors.nickname && (
                       <p className="text-error text-label-normal font-medium">
-                        {errors.name.message}
+                        {errors.nickname.message}
                       </p>
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor={emailId} className="text-body-2-normal font-semibold">
+                    <label htmlFor={emailId} className="text-body-2-normal font-medium">
                       이메일 <span className="text-red200">*</span>
                     </label>
                     <AuthInput
@@ -171,35 +174,35 @@ export default function SignUpForm() {
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor={companyNameId} className="text-body-2-normal font-semibold">
-                      회사명 <span className="text-red200">*</span>
+                    <label htmlFor={positionId} className="text-body-2-normal font-medium">
+                      직군 <span className="text-red200">*</span>
                     </label>
                     <AuthInput
                       type="text"
-                      placeholder="회사명을 입력해주세요"
-                      name="companyName"
-                      id={companyNameId}
+                      placeholder="직군을 입력해주세요"
+                      name="position"
+                      id={positionId}
                       className={cn(
                         'h-[54px]',
-                        (errors.companyName || signUpError) && 'focus-visible:ring-error',
+                        (errors.position || signUpError) && 'focus-visible:ring-error',
                       )}
-                      register={register('companyName', {
-                        required: '회사명을 입력해주세요',
+                      register={register('position', {
+                        required: '직군을 입력해주세요',
                         onChange: (e) => {
                           if (signUpError) reset();
-                          setValue('companyName', e.target.value);
-                          debouncedValidation('companyName');
+                          setValue('position', e.target.value);
+                          debouncedValidation('position');
                         },
                       })}
                     />
-                    {errors.companyName && (
+                    {errors.position && (
                       <p className="text-error text-label-normal font-medium">
-                        {errors.companyName.message}
+                        {errors.position.message}
                       </p>
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor={passwordId} className="text-body-2-normal font-semibold">
+                    <label htmlFor={passwordId} className="text-body-2-normal font-medium">
                       비밀번호 <span className="text-red200">*</span>
                     </label>
                     <AuthInput
@@ -235,7 +238,7 @@ export default function SignUpForm() {
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor={passwordConfirmId} className="text-body-2-normal font-semibold">
+                    <label htmlFor={passwordConfirmId} className="text-body-2-normal font-medium">
                       비밀번호 확인 <span className="text-red200">*</span>
                     </label>
                     <AuthInput
@@ -277,6 +280,87 @@ export default function SignUpForm() {
                     ) : (
                       <p className="text-label-normal text-gray300 font-semibold">
                         특수문자 포함 8~20자 사이로 입력해주세요
+                      </p>
+                    )}
+                  </div>
+
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor={introductionId} className="text-body-2-normal font-medium">
+                      소개
+                    </label>
+                    <AuthInput
+                      type="text"
+                      placeholder="소개를 입력해주세요"
+                      name="introduction"
+                      isTextarea
+                      id={introductionId}
+                      className={cn(
+                        'h-[54px]',
+                        (errors.introduction || signUpError) && 'focus-visible:ring-error',
+                      )}
+                      register={register('introduction', {
+                        maxLength: {
+                          value: 20,
+                          message: '최대 20자까지 입력할 수 있어요',
+                        },
+                        onChange: (e) => {
+                          if (signUpError) reset();
+                          setValue('introduction', e.target.value);
+                          debouncedValidation('introduction');
+                        },
+                      })}
+                    />
+                    {errors.introduction ? (
+                      <p className="text-error text-label-normal font-medium">
+                        {errors.introduction.message}
+                      </p>
+                    ) : (
+                      <p className="text-label-normal text-gray300 font-semibold">
+                        최대 20자까지 입력할 수 있어요
+                      </p>
+                    )}
+                  </div>
+
+                  {/** 태그 수정요망 */}
+                  <div className="flex flex-col gap-2">
+                    <div className="flex justify-between">
+                      <label htmlFor={introductionId} className="text-body-2-normal font-medium">
+                        태그
+                      </label>
+                      <p className="text-body-2-normal font-medium flex items-center gap-1">
+                        <span className="text-gray600">0</span>
+                        <AuthBar />
+                        <span className="text-gray300">3</span>
+                      </p>
+                    </div>
+                    <AuthInput
+                      type="text"
+                      placeholder="# 태그추가"
+                      name="tags"
+                      id={tagsId}
+                      className={cn(
+                        'h-[34px] w-[76px] text-xs',
+                        (errors.nickname || signUpError) && 'focus-visible:ring-error',
+                      )}
+                      register={register('tags', {
+                        maxLength: {
+                          value: 5,
+                          message: '최대 5글자까지 입력할 수 있어요',
+                        },
+                        onChange: (e) => {
+                          if (signUpError) reset();
+                          setValue('tags', e.target.value);
+                          debouncedValidation('tags');
+                        },
+                      })}
+                    />
+                    {errors.tags ? (
+                      <p className="text-error text-label-normal font-medium">
+                        {errors.tags?.message}
+                      </p>
+                    ) : (
+                      <p className="text-label-normal text-gray300 font-semibold">
+                        최대 5글자까지 입력할 수 있어요
                       </p>
                     )}
                   </div>

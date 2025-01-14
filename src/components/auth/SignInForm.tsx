@@ -60,6 +60,7 @@ export default function SignInForm() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-background200 md:bg-background100">
+      {/** 로딩 수정요망 */}
       {isSignInPending && <div>로딩 중...</div>}
 
       <div className="w-[343px] md:w-[664px] desktop:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
