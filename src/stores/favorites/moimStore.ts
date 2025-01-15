@@ -1,5 +1,6 @@
+import { IMoim } from '@/types/home/i-moim';
+import { fetchMockMoims } from '@/utils/home/fetchMoims';
 import { create } from 'zustand';
-import { IMoim, fetchMockMoims } from '@/utils/home/fetchMoims';
 
 type TMoimState = {
   moims: IMoim[];
