@@ -15,18 +15,78 @@ export default {
         pretendard: 'var(--font-pretendard)',
       },
       fontSize: {
-        'title-1': ['24px', { lineHeight: '32px' }],
-        'title-2': ['22px', { lineHeight: '28px' }],
-        'heading-1': ['20px', { lineHeight: '26px' }],
-        'heading-2': ['18x', { lineHeight: '24px' }],
-        'body-1-normal': ['16px', { lineHeight: '20px' }],
-        'body-1-reading': ['16px', { lineHeight: '26px' }],
-        'body-2-normal': ['14px', { lineHeight: '20px' }],
-        'body-2-reading': ['14px', { lineHeight: '24px' }],
-        'label-normal': ['13px', { lineHeight: '18px' }],
-        'label-reading': ['13px', { lineHeight: '20px' }],
-        'caption-normal': ['12px', { lineHeight: '18px' }],
-        'caption-reading': ['12px', { lineHeight: '20px' }],
+        'title-1': [
+          '24px',
+          {
+            lineHeight: '32px',
+          },
+        ],
+        'title-2': [
+          '22px',
+          {
+            lineHeight: '28px',
+          },
+        ],
+        'heading-1': [
+          '20px',
+          {
+            lineHeight: '26px',
+          },
+        ],
+        'heading-2': [
+          '18x',
+          {
+            lineHeight: '24px',
+          },
+        ],
+        'body-1-normal': [
+          '16px',
+          {
+            lineHeight: '20px',
+          },
+        ],
+        'body-1-reading': [
+          '16px',
+          {
+            lineHeight: '26px',
+          },
+        ],
+        'body-2-normal': [
+          '14px',
+          {
+            lineHeight: '20px',
+          },
+        ],
+        'body-2-reading': [
+          '14px',
+          {
+            lineHeight: '24px',
+          },
+        ],
+        'label-normal': [
+          '13px',
+          {
+            lineHeight: '18px',
+          },
+        ],
+        'label-reading': [
+          '13px',
+          {
+            lineHeight: '20px',
+          },
+        ],
+        'caption-normal': [
+          '12px',
+          {
+            lineHeight: '18px',
+          },
+        ],
+        'caption-reading': [
+          '12px',
+          {
+            lineHeight: '20px',
+          },
+        ],
       },
       screens: {
         xs: '460px',
@@ -82,7 +142,6 @@ export default {
         textAlter1: '#3A3A40',
         textAlter2: '#42424A',
         textAlter3: '#4D4E57',
-
         background100: '#FFFFFF',
         background200: '#FBFAF9',
         background300: '#FAF6F3',

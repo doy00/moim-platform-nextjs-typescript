@@ -1,12 +1,11 @@
 'use client'
 
+import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import QueryProvider from '@/libs/detail/QueryProvider';
 import '../styles/globals.css';
-
 import HomeGnb from '@/components/home/HomeGnb';
 import QueryProvider from '@/libs/home/QueryProvider';
-
 import { usePathname } from 'next/navigation';
 
 const pretendard = localFont({
@@ -23,11 +22,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   
-// HomeGnb를 보여줄 경로 목록
-const pathname = usePathname();
-const showGnbPaths = ['/home', '/favorites', '/mypage'];
-const showGnb = showGnbPaths.includes(pathname);
-
+  // HomeGnb를 보여줄 경로 목록
+  const pathname = usePathname();
+  const showGnbPaths = ['/home', '/favorites', '/mypage'];
+  const showGnb = showGnbPaths.includes(pathname);
 
   return (
     <html lang="ko">

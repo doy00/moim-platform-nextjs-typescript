@@ -1,3 +1,9 @@
+import TemporaryLogin from '@/containers/mypage/TemporaryLogin';
+
 export default function Home() {
-  return <div></div>;
+  return (
+    <>
+      <TemporaryLogin />
+    </>
+  );
 }
