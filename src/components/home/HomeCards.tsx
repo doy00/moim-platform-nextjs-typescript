@@ -1,16 +1,16 @@
 'use client';
 
-import React, { useEffect } from 'react';
+import { useEffect } from 'react';
 // Tanstack-Query
-import { useInfiniteQuery } from '@tanstack/react-query';
 import IntersectionObserver from '@/libs/home/intersectionObserver';
+import { useInfiniteQuery } from '@tanstack/react-query';
 // Store
-import { useFilterStore } from '@/stores/home/filterStore';
 import { useFavoriteStore } from '@/stores/home/favoriteStore';
+import { useFilterStore } from '@/stores/home/filterStore';
 // Components
-import HomeCard from './HomeCard';
-import { fetchMockMoims } from '@/utils/home/fetchMoims';
 import { IMoim } from '@/types/home/i-moim';
+import { fetchMockMoims } from '@/utils/home/fetchMoims';
+import HomeCard from './HomeCard';
 
 export default function HomeCards() {
   const { category, region, status, confirmed, sortOrder } = useFilterStore();
@@ -27,12 +27,12 @@ export default function HomeCards() {
     queryKey: ['moims', category, region, status, confirmed, sortOrder],
     queryFn: ({ pageParam = 1 }) =>
       fetchMockMoims({
-        page: pageParam,
+        page: pageParam as number,
         type: category,
         region: region.length > 0 ? region.join(',') : 'all',
         status,
         confirmed,
-        sortOrder
+        sortOrder,
       }),
     getNextPageParam: (lastPage) =>
       lastPage.pagination.current_page < lastPage.pagination.total_pages
@@ -50,9 +50,7 @@ export default function HomeCards() {
   return (
     <>
       <div className="px-4 pt-[14px] space-y-4">
-        {data?.pages.map((page) =>
-          page.data.map((item) => <HomeCard key={item.id} data={item} />)
-        )}
+        {data?.pages.map((page) => page.data.map((item) => <HomeCard key={item.id} data={item} />))}
         {isFetchingNextPage && <p className="text-center">Loading more...</p>}
       </div>
       <IntersectionObserver onIntersect={handleIntersect} />
