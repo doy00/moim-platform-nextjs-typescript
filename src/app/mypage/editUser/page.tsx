@@ -34,7 +34,7 @@ export default function EditUser() {
           <span className="text-label-normal font-medium text-orange200">비밀번호 변경</span>
         </div>
 
-        <div className="flex flex-col gap-6 mt-8">
+        <form className="flex flex-col gap-6 mt-8">
           <div className="flex flex-col gap-3">
             <label htmlFor="email">이메일 주소</label>
             <input
@@ -83,7 +83,10 @@ export default function EditUser() {
               최대 5글자까지 입력 가능해요
             </span>
           </div>
-        </div>
+          <button type="submit" className="bg-gray950 rounded-2xl px-[141px] py-[17px]">
+            <span className="text-body-1-normal font-semibold text-gray600">수정완료</span>
+          </button>
+        </form>
       </div>
     </div>
   );

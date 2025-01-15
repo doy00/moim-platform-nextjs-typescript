@@ -7,10 +7,10 @@ export const getJoined = async (): Promise<IJoind[]> => {
     throw new Error('인증 토큰이 없습니다.');
   }
 
-  const response = await axiosInstance.get('/gatherings/joined', {
+  const { data } = await axiosInstance.get('/gatherings/joined', {
     headers: {
       Authorization: `Bearer ${token}`,
     },
   });
-  return response.data;
+  return data;
 };

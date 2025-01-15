@@ -20,7 +20,7 @@ export default function Filter() {
           <Image src={filterIcon} alt="filter" width={24} height={24} />
         </div>
       </DrawerTrigger>
-      <DrawerContent className="h-[80vh]">
+      <DrawerContent className="h-[80vh] max-w-[1200px] rounded-3xl mx-auto ">
         <DrawerHeader>
           <DrawerTitle className="sr-only">필터 옵션</DrawerTitle>
           {/* <div className="border border-background400 rounded-xl bg-background100 px-3.5 py-3">
