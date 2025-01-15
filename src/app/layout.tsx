@@ -1,6 +1,7 @@
 'use client'
 
 import localFont from 'next/font/local';
+import QueryProvider from '@/libs/detail/QueryProvider';
 import '../styles/globals.css';
 
 import HomeGnb from '@/components/home/HomeGnb';
@@ -8,7 +9,7 @@ import QueryProvider from '@/libs/home/QueryProvider';
 
 import { usePathname } from 'next/navigation';
 
-export const pretendard = localFont({
+const pretendard = localFont({
   src: '../../public/fonts/PretendardVariable.woff2',
   weight: '45 920',
   style: 'normal',
