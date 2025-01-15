@@ -1,12 +1,10 @@
-'use client'
+'use client';
 
-import type { Metadata } from 'next';
-import localFont from 'next/font/local';
-import QueryProvider from '@/libs/detail/QueryProvider';
-import '../styles/globals.css';
 import HomeGnb from '@/components/home/HomeGnb';
-import QueryProvider from '@/libs/home/QueryProvider';
+import QueryProvider from '@/libs/detail/QueryProvider';
+import localFont from 'next/font/local';
 import { usePathname } from 'next/navigation';
+import '../styles/globals.css';
 
 const pretendard = localFont({
   src: '../../public/fonts/PretendardVariable.woff2',
@@ -21,7 +19,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
   // HomeGnb를 보여줄 경로 목록
   const pathname = usePathname();
   const showGnbPaths = ['/home', '/favorites', '/mypage'];
@@ -29,11 +26,9 @@ export default function RootLayout({
 
   return (
     <html lang="ko">
-      <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
+      <body className={`bg-background100 font-pretendard antialiased ${pretendard.variable}`}>
         <QueryProvider>
-          <div className='layout'>
-              {children}
-          </div>
+          <div className="layout">{children}</div>
           {showGnb && <HomeGnb />}
         </QueryProvider>
       </body>
