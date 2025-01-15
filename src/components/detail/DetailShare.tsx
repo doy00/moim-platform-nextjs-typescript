@@ -1,7 +1,7 @@
 // 모임 공유하기 컴포넌트
 import React from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/detail/cn";
 import { DeleteIcon } from "./icons/DeleteIcon";
 
 interface IDetailShare {

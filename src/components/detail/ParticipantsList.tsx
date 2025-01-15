@@ -1,6 +1,6 @@
 // 모임 참여 신청을 한 유저들의 목록을 보여주는 컴포넌트입니다.
 import React, { useState } from 'react';
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/detail/cn";
 import Image from "next/image";
 import {
   HoverCard,

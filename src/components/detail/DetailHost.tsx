@@ -1,5 +1,5 @@
 // 주최자 프로필 컴포넌트
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/detail/cn";
 import Image from "next/image";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
 import { DEFAULT_IMAGE } from '@/constants/detail/images';

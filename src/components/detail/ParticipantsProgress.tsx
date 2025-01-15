@@ -2,7 +2,6 @@
 
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils';
 import { Progress } from '@/components/detail/detail-progress';
 import { IParticipantsProgress } from '@/types/detail';
 import { FireIcon } from './icons/FireIcon';

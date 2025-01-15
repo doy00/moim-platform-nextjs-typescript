@@ -1,6 +1,6 @@
 import React from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/detail/cn";
 import { FootIcon } from "./icons/FootIcon";
 import { FootEmptyIcon } from "./icons/FootEmptyIcon";
 import { IDetailReview, IDetailReviewProps } from "@/types/detail";
