@@ -5,6 +5,7 @@ export default {
     './src/pages/**/*.{js,ts,jsx,tsx,mdx}',
     './src/components/**/*.{js,ts,jsx,tsx,mdx}',
     './src/app/**/*.{js,ts,jsx,tsx,mdx}',
+    './src/**/*.{js,ts,jsx,tsx,mdx}',
   ],
   theme: {
     extend: {
@@ -28,7 +29,7 @@ export default {
       screens: {
         xs: '460px',
         sm: '640px',
-        md: '768px',
+        md: '744px',
         lg: '1024px',
         xl: '1280px',
         '2xl': '1536px',
@@ -67,7 +68,7 @@ export default {
         gray100: '#F0EFEE',
         gray200: '#DEDBD9',
         gray300: '#C1BDB8',
-        gray400: '#837C74',
+        gray400: '#9E9892',
         gray500: '#837C74',
         gray600: '#6B655E',
         gray700: '#57524D',
@@ -84,6 +85,10 @@ export default {
         background200: '#FBFAF9',
         background300: '#FAF6F3',
         background400: '#F2EFEB',
+
+        success: '#04A37E',
+        error: '#F5535E',
+        primary: '#448EFE',
       },
     },
   },
