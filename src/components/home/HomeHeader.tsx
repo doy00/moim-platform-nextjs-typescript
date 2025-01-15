@@ -27,7 +27,7 @@ export default function HomeHeader() {
       </div>
       <div className='flex items-center gap-x-3'>
         <SearchIcon className='fill-gray300'/>
-        <div onClick={handlePlusClick}>
+        <div className='cursor-pointer' onClick={handlePlusClick}>
           <PlusIcon className='fill-orange200'/>
         </div>
       </div>
