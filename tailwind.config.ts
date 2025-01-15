@@ -149,7 +149,7 @@ export default {
 
         success: '#04A37E',
         error: '#F5535E',
-        primary: '#448EFE',
+        'duthemeet-primary': '#448EFE',
 
         background: 'hsl(var(--background))',
         foreground: 'hsl(var(--foreground))',
