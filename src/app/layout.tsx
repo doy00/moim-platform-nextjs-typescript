@@ -24,7 +24,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <body className={`layout font-pretendard antialiased ${pretendard.variable}`}>{children}
+      <body className={`layout font-pretendard antialiased ${pretendard.variable}`}>
         <QueryProvider>{children}</QueryProvider>
       </body>
     </html>
