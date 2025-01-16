@@ -63,7 +63,7 @@ export const ParticipantsProgress: React.FC<IParticipantsProgress> = ({
           {"최소인원 3명"}
         </span>
         <span className="text-caption-normal font-medium text-gray500">
-          {"최대인원 {maxCount}명"}
+          최대인원 {maxCount}명
         </span>
       </div>
       

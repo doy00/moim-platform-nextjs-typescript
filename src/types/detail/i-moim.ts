@@ -1,5 +1,5 @@
 export interface IMoimDetail {
-  teamId: number;
+  teamId?: number;
   id: number;
   type: string;
   name: string;
@@ -8,7 +8,7 @@ export interface IMoimDetail {
   location: string;
   participantCount: number;
   capacity: number;
-  image: string;
+  image?: string;
   createdBy: number;
   createdAt: string;
   content: string;

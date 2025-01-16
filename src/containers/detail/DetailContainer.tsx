@@ -1,7 +1,11 @@
 'use client';
 import { axiosInstance } from '@/apis/detail/axios.api';
+// import { getDetailInfo, getParticipants, getDetailReviews } from '@/apis/detail/detail.api';
+import Link from 'next/link';
 import { useState, useEffect } from 'react';
-import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
+import { useQuery } from '@tanstack/react-query';
+// import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
+// components
 import { DetailShare } from '@/components/detail/DetailShare';
 import { ImageBox } from '@/components/detail/ImageBox';
 import { DetailInfo } from '../../components/detail/DetailInfo';
@@ -13,8 +17,9 @@ import { IParticipant } from '@/types/detail';
 import { IMoimDetail } from '@/types/detail/i-moim'
 import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
+// constants
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
-import Link from 'next/link';
+import axios from 'axios';
 
 interface IDetailContainer {
   id: number;
@@ -25,6 +30,7 @@ interface IDetailContainer {
   }
 }
 
+// mock participants
 const participants: IParticipant[] = [
   {
     teamId: 1,
@@ -106,18 +112,21 @@ const participants: IParticipant[] = [
   },
 ];
 
-export default function DetailContainer({ 
-  id, 
-  // initialData
-}: IDetailContainer) {
+export default function DetailContainer({ id }: IDetailContainer) {
   
-  // 방법2 tanstack query
+  // tanstack query 사용
+  // const { data, isLoading, error } = useQuery({
+  //   queryKey: ['moimDetail', id],
+  //   qureryFn: async () => {
+      [ ]
+  //   }
+  // })
   // const { 
   //   info, 
   //   participants, reviews, isLoading 
   // } = useMoimDetail(id); // 커스텀훅 사용
 
-    // 방법1
+    // 데이터 확인용 axios만 사용
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<IMoimDetail | null>(null);
@@ -125,43 +134,34 @@ export default function DetailContainer({
     useEffect(() => {
       async function fetchData() {
         try {
-          // base URL 상수
-          const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
+          const {data} = await axiosInstance.get<IMoimDetail>(`/detail/${id}`);
 
-          const response = await fetch(`${BASE_URL}/detail/${id}`);
-  
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+          console.log('API Response:', data);
+
+          if (!data) {
+            throw new Error('데이터가 존재하지 않습니다');
           }
-          const fetchedData = await response.json();
-
           
           // [ ] 수정필요: 이미지를 찾을 수 없을때 이미지 URL 처리
-          const processedData = {
-            ...fetchedData,
-            image: fetchedData.image ? `${BASE_URL}/${fetchedData.image}` : DEFAULT_IMAGE.MOIM
+          const processedData: IMoimDetail = {
+            ...data,
+            
+            image: data.image 
+              ? `${process.env.NEXT_PUBLIC_API_URL}/${data.image}` 
+              : DEFAULT_IMAGE.MOIM
           };
 
           setData(processedData);
-
-          // setError("failed to fetch data");
         } catch (err) {
-          setError(err instanceof Error ? err.message : 'An error occurred while fetching data');
+          setError('정보를 불러오는데 실패했습니다.');
           console.error('Failed to fetch moim detail:', err);
         } finally {
           setIsLoading(false);
         }
       }
-        
-    
     fetchData();
   }, [id]);
   
-  
-
-
-
-
   // FloatingBar 관련 함수
   // 찜하기 함수
   const [isLiked, setIsLiked] = useState(false);    // 찜하기 상태
@@ -180,7 +180,6 @@ export default function DetailContainer({
     console.error("모임 신청하기를 실패했습니다.:", error)
   }
 }
-
 
   if (isLoading) return <div></div>;
 

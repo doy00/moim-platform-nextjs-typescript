@@ -13,27 +13,16 @@ interface DetailPageProps {
 export default async function DetailPage({
   params,
 } : DetailPageProps) {
-  // try {
-  // [ ] tanstack query 사용. 서버 사이드 렌더링을 위해 모든 데이터를 가져옵니다.
-  // const [detailInfo, participants, reviewsResponse] = await Promise.all([
-  //   getDetailInfo(Number(params.id)),
-  //   getParticipants(Number(params.id)),
-  //   getDetailReviews(Number(params.id), { limit: 5 })
-  // ]);
 
-  const id = Number(params.id) 
-  // const { id } = await params;
+  // Dynamic route parameters 사용을 위해 비동기 처리
+  const { id } = await Promise.resolve(params);  
+  const moimId = parseInt(id) 
 
   return (
     <div>
       <Suspense fallback={<div>Loading...</div>}>
           <DetailContainer 
-          id={id}
-          // initialData={{
-            //   detailInfo,
-            //   participants,
-            //   reviews: reviewsResponse
-            // }}
+          id={moimId}
           />
       </Suspense>
     </div>

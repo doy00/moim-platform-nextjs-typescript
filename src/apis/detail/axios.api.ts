@@ -1,10 +1,9 @@
-import axios from 'axios';
+import axios, { AxiosResponse } from 'axios';
 
 export const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL,
   headers: {
-    Accept: 'application/json',
-    'Content-Type': 'application/json',
+    Accept: 'application/json', 'Content-Type': 'application/json',
   },
 });
 
@@ -23,14 +22,17 @@ axiosInstance.interceptors.request.use(
 );
 
 axiosInstance.interceptors.response.use(
-  (response) => response.data,
+  (response: AxiosResponse<any>) => response,
   (error) => {
-    if (error.response?.status === 401) {
-      // 토큰 만료시 로그아웃 상태로 변경
-      // 찜 여부 로컬스토리지로 확인
-      // [ ] localStorage.removeItem('dudemeet-token');
-
-
+    if (error.response) {
+      // 응답이 200 이외
+      console.error('API Error:', error.response.data);
+    } else if (error.request) {
+      // request가 갔으나 response가 없는 경우
+      console.error('Netwrok Error:', error.request);
+    } else {
+      // request 관련 에러
+      console.error('Error:', error.message);
     }
     return Promise.reject(error.response?.data ?? error); // 에러를 다시 throw
   }

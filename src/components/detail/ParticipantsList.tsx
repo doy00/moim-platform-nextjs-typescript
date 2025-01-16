@@ -90,7 +90,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
               </HoverCardContent>
             </HoverCard>
 
-      {/* 남은 인원 */}
+      {/* [ ] 남은 인원 */}
       <span className="text-body-2-normal font-medium text-brown400">
         {"00명 더 참여할 수 있어요"}
       </span>
