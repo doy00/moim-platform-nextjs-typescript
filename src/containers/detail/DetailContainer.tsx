@@ -1,6 +1,6 @@
 'use client';
 import { axiosInstance } from '@/apis/detail/axios.api';
-// import { getDetailInfo, getParticipants, getDetailReviews } from '@/apis/detail/detail.api';
+import { getDetailInfo, getParticipants, getDetailReviews } from '@/apis/detail/detail.api';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
@@ -13,21 +13,21 @@ import { DetailParticipants } from '../../components/detail/DetailParticipants';
 import { DetailContent } from '../../components/detail/DetailContent';
 import { DetailHost } from '@/components/detail/DetailHost';
 import { DetailReview } from '../../components/detail/DetailReview';
-import { IParticipant } from '@/types/detail';
+import { IDetailReviewProps, IDetailReviewResponse, IParticipant } from '@/types/detail';
 import { IMoimDetail } from '@/types/detail/i-moim'
+import { IDetailReview } from '@/types/detail';
 import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
-import axios from 'axios';
 
 interface IDetailContainer {
   id: number;
-  initialData?: {
-    detailInfo: IMoimDetail;
-    participants: IParticipant[];
-    reviews: any[];
-  }
+  // initialData?: {
+  //   detailInfo: IMoimDetail;
+  //   participants: IParticipant[];
+  //   reviews: IDetailReviewProps[];
+  // }
 }
 
 // mock participants
@@ -130,28 +130,108 @@ export default function DetailContainer({ id }: IDetailContainer) {
     const [isLoading, setIsLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
     const [data, setData] = useState<IMoimDetail | null>(null);
+    const [reviews, setReviews] = useState<IDetailReviewResponse | null >(null);
+    // {
+    //   data: IDetailReviewProps[];
+    //   totalItemCount: number;
+    //   currentPage: number;
+    //   totalPages: number;
+    // }
+      // | null>(null);
 
     useEffect(() => {
       async function fetchData() {
         try {
-          const {data} = await axiosInstance.get<IMoimDetail>(`/detail/${id}`);
+          // 모임 정보(Detail Info) 조회
+          // const {data} = await axiosInstance.get<IMoimDetail>(`/detail/${id}`);
+          const detailData = await getDetailInfo(id);
+          console.log('API Response:', detailData);
 
-          console.log('API Response:', data);
-
-          if (!data) {
-            throw new Error('데이터가 존재하지 않습니다');
-          }
-          
-          // [ ] 수정필요: 이미지를 찾을 수 없을때 이미지 URL 처리
           const processedData: IMoimDetail = {
-            ...data,
-            
-            image: data.image 
-              ? `${process.env.NEXT_PUBLIC_API_URL}/${data.image}` 
-              : DEFAULT_IMAGE.MOIM
+            ...detailData,
+            image: detailData.image
+            ? `${process.env.NEXT_PUBLIC_API_URL}/${detailData.image}` 
+            : DEFAULT_IMAGE.MOIM
           };
-
           setData(processedData);
+
+          // [ ] 수정필요: Info 데이터 처리 - 이미지를 찾을 수 없을때 이미지 URL 처리
+          // const processedData: IMoimDetail = {
+          //   ...data,
+            
+          //   image: data.image 
+          //     ? `${process.env.NEXT_PUBLIC_API_URL}/${data.image}` 
+          //     : DEFAULT_IMAGE.MOIM
+          // };
+          // setData(processedData);
+
+
+
+          // 모임 리뷰 조회
+          // const reviewResponse = await axiosInstance.get<IDetailReview[]>(`/detail/${id}/review`);
+          const reviewData = await getDetailReviews(id);
+
+// 먼저 IDetailReview[] 형식으로 변환
+const processedReviewData: IDetailReview[] = reviewData.data.map(review => ({
+  id: review.id,
+  userId: review.userId,
+  gatheringId: review.gatheringId,
+  rate: review.rate,
+  comment: review.comment,
+  created_at: review.created_at,
+  User: review.User,
+  Gathering: review.Gathering,
+}));
+
+// 그 다음 전체 응답 객체 구성
+const processedReviews: IDetailReviewResponse = {
+  data: processedReviewData,
+  totalItemCount: reviewData.totalItemCount,
+  currentPage: reviewData.currentPage,
+  totalPages: reviewData.totalPages
+};
+
+
+          // const processedReviews: IDetailReviewResponse = 
+          // {
+          //   data: reviewData.data.map((review) => ({
+          //     rate: review.rate,
+          //     comment: review.comment,
+          //     author: review.User?.name || 'Unknown',
+          //     date: new Date(review.created_at).toLocaleDateString('ko-KR', {
+          //       year: '2-digit',
+          //       month: '2-digit',
+          //       day: '2-digit'
+          //     }),
+          //     authorImage: review.User?.image || DEFAULT_IMAGE.PROFILE,
+          //   })),
+          //   totalItemCount: reviewData.totalItemCount,
+          //   currentPage: reviewData.currentPage,
+          //   totalPages: reviewData.totalPages,
+          // };
+          setReviews(processedReviews);
+
+
+          // if (!data) {
+          //   throw new Error('데이터가 존재하지 않습니다');
+          // }
+          
+          
+
+          // 리뷰 데이터 처리 - IDetailReviewProps 형식으로 변환
+          // const processedReviews: IDetailReviewProps[] = reviewResponse.data.map(review => ({
+          //   rate: review.rate,
+          //   comment: review.comment,
+          //   author: review.User?.name,
+          //   date: new Date(review.created_at).toLocaleDateString('ko-KR', {
+          //     year: '2-digit',
+          //     month: '2-digit',
+          //     day: '2-digit'
+          //   }),
+          //   authorImage: review.User?.image || DEFAULT_IMAGE.PROFILE,
+          // }));
+          // setReviews(processedReviews || []);
+
         } catch (err) {
           setError('정보를 불러오는데 실패했습니다.');
           console.error('Failed to fetch moim detail:', err);
@@ -159,7 +239,9 @@ export default function DetailContainer({ id }: IDetailContainer) {
           setIsLoading(false);
         }
       }
-    fetchData();
+    if (id) {
+      fetchData();
+    }
   }, [id]);
   
   // FloatingBar 관련 함수
@@ -191,7 +273,11 @@ export default function DetailContainer({ id }: IDetailContainer) {
 
         <DetailShare />
         <ImageBox 
-          image={data?.image || DEFAULT_IMAGE.MOIM}
+          image={data?.image 
+            ? (data.image.startsWith('http')
+              ? data.image
+              : DEFAULT_IMAGE.MOIM)    
+            : DEFAULT_IMAGE.MOIM}
         />
         <DetailInfo 
           title={data?.name || "모임 타이틀이 들어갑니다." }
@@ -216,21 +302,23 @@ export default function DetailContainer({ id }: IDetailContainer) {
             // data?.image || 
             DEFAULT_IMAGE.PROFILE}
         />
-
-        {/* {reviews?.map((review, index) => (
-        <DetailReview 
-          key={index}
-          score={review.score}
-          comment={review.comment || "리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."}
-          author={review.User?.name || "작성자"}
-          date={new Date(review.createdAt).toLocaleDateString('ko-KR', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit'
-          }) || "25. 02. 01" }
-          authorImage={review.User?.image || "/svgs/img_detail-profile.svg"}
-        />
-        ))} */}
+        {reviews && reviews.data && reviews.data.length > 0 ? (
+          reviews.data.map((review, index) => (
+          <DetailReview 
+            key={index}
+            rate={review.rate}
+            comment={review.comment || "리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."}
+            author={review.User?.name || "작성자"}
+            date={review.Gathering?.dateTime || "25. 02. 01"}
+            authorImage={review.User?.image || DEFAULT_IMAGE.PROFILE}
+            reviewCount={reviews.data.length}
+          />
+          ))
+        ) : (
+          // 리뷰가 없을 때
+          <DetailReview reviewCount={0} />
+        )}
+        
         <FloatingBar
           onHeartClick={handleLikeClick}
           onApplyClick={handleApplyClick}
