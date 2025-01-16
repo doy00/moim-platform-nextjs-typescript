@@ -31,9 +31,7 @@ export const useMoimDetail = (id: number) => {
     error: reviewsError
   } = useQuery({
     queryKey: ['detail-reviews', id],
-    queryFn: () => getDetailReviews(id, { 
-      limit: 5 
-    }),
+    queryFn: () => getDetailReviews(id),
   });
 
   const isLoading = isInfoLoading || isParticipantsLoading || isReviewsLoading;

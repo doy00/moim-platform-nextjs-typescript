@@ -1,11 +1,12 @@
 'use client';
-import { axiosInstance } from '@/apis/detail/axios.api';
 import { getDetailInfo, getParticipants, getDetailReviews } from '@/apis/detail/detail.api';
+import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
+import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import { useQuery } from '@tanstack/react-query';
 // import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
-// components
+// components 
 import { DetailShare } from '@/components/detail/DetailShare';
 import { ImageBox } from '@/components/detail/ImageBox';
 import { DetailInfo } from '../../components/detail/DetailInfo';
@@ -20,6 +21,8 @@ import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
+// uitls
+import { formatDate, formatDateRange } from '@/utils/detail/date';
 
 interface IDetailContainer {
   id: number;
@@ -113,7 +116,8 @@ const participants: IParticipant[] = [
 ];
 
 export default function DetailContainer({ id }: IDetailContainer) {
-  
+  const { joinMoim, isJoined } = useJoinMoim();
+  const { isLiked, isProcessing, toggleLike } = useLikeMoim(id);
   // tanstack query 사용
   // const { data, isLoading, error } = useQuery({
   //   queryKey: ['moimDetail', id],
@@ -143,7 +147,6 @@ export default function DetailContainer({ id }: IDetailContainer) {
       async function fetchData() {
         try {
           // 모임 정보(Detail Info) 조회
-          // const {data} = await axiosInstance.get<IMoimDetail>(`/detail/${id}`);
           const detailData = await getDetailInfo(id);
           console.log('API Response:', detailData);
 
@@ -168,7 +171,6 @@ export default function DetailContainer({ id }: IDetailContainer) {
 
 
           // 모임 리뷰 조회
-          // const reviewResponse = await axiosInstance.get<IDetailReview[]>(`/detail/${id}/review`);
           const reviewData = await getDetailReviews(id);
 
 // 먼저 IDetailReview[] 형식으로 변환
@@ -244,24 +246,7 @@ const processedReviews: IDetailReviewResponse = {
     }
   }, [id]);
   
-  // FloatingBar 관련 함수
-  // 찜하기 함수
-  const [isLiked, setIsLiked] = useState(false);    // 찜하기 상태
-  
-  const handleLikeClick = () => {
-    setIsLiked(prev => !prev);
-    // console.log('찜하기 클릭');
-  }
 
-  // 신청하기 함수
-  const handleApplyClick = async () => {
-    try {
-    // console.log('신청하기 클릭');
-    // await joinMoim(id)
-  } catch (error) {
-    console.error("모임 신청하기를 실패했습니다.:", error)
-  }
-}
 
   if (isLoading) return <div></div>;
 
@@ -282,8 +267,14 @@ const processedReviews: IDetailReviewResponse = {
         <DetailInfo 
           title={data?.name || "모임 타이틀이 들어갑니다." }
           location={data?.location || "위치가 들어갑니다."}
-          recruitmentPeriod={data?.registrationEnd || "모집 일정이 들어갑니다." }
-          meetingDate={data?.dateTime || "모임 날짜가 들어갑니다." }
+          recruitmentPeriod={
+            data?.createdAt && data?.registrationEnd 
+            ? formatDateRange(data.createdAt, data.registrationEnd)
+            : "모집 일정이 들어갑니다." }
+          meetingDate={
+            data?.dateTime 
+            ? formatDate(data.dateTime)
+            : "모임 날짜가 들어갑니다." }
         />
         <DetailParticipants 
           participants={participants || []}
@@ -320,8 +311,8 @@ const processedReviews: IDetailReviewResponse = {
         )}
         
         <FloatingBar
-          onHeartClick={handleLikeClick}
-          onApplyClick={handleApplyClick}
+          onHeartClick={toggleLike}
+          onJoinClick={() => joinMoim(id)}
           isLiked={isLiked}
         />
       </div>
