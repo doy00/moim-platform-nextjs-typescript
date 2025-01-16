@@ -3,6 +3,7 @@ import { cn } from "@/utils/detail/cn";
 import Image from "next/image";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
+import { ChipSmallRound } from "./ChipSmallRound";
 
 interface IDetailHost {
   name: string;
@@ -39,9 +40,15 @@ export const DetailHost = ({
 
             {/* 주최자 소개 텍스트 */}
             <div className="flex flex-col gap-0.5">
-              <span className="text-body-2-normal font-medium text-gray800">
-                {name}
-              </span>
+              <div className="flex gap-1 items-center">
+                  <span className="text-body-2-normal font-medium text-gray800">
+                    {name}
+                  </span>
+                  <ChipSmallRound 
+                    variant="gray"
+                    text="Label"  
+                    />
+              </div>
               <span className="text-label-normal text-gray400">
                 {introduction}
               </span>
@@ -50,7 +57,7 @@ export const DetailHost = ({
             </div>
 
             {/* 주최자 태그 */}
-            <div className="flex gap-1 items-center ">
+            <div className="flex gap-1 items-center">
               {hostTag.map((tag, index) => (
               <ChipSmallSquircle
                 key={`tag-${index}`}
