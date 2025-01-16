@@ -49,19 +49,20 @@ export default function RenderTab() {
         </button>
         <button
           className={`w-1/3 py-3.5 px-4 font-semibold text-sm ${
-            activeTab === 'created-meetings' ? 'border-b-2 border-[#4A4642] ' : 'text-[#C1BDB8]'
-          }`}
-          onClick={() => setActiveTab('created-meetings')}
-        >
-          만든 모임
-        </button>
-        <button
-          className={`w-1/3 py-3.5 px-4 font-semibold text-sm ${
             activeTab === 'reviews' ? 'border-b-2 border-[#4A4642] ' : 'text-[#C1BDB8]'
           }`}
           onClick={() => setActiveTab('reviews')}
         >
           내 리뷰
+        </button>
+
+        <button
+          className={`w-1/3 py-3.5 px-4 font-semibold text-sm ${
+            activeTab === 'created-meetings' ? 'border-b-2 border-[#4A4642] ' : 'text-[#C1BDB8]'
+          }`}
+          onClick={() => setActiveTab('created-meetings')}
+        >
+          만든 모임
         </button>
       </div>
       {(activeTab === 'meetings' || activeTab === 'created-meetings') && <FilterBar />}
