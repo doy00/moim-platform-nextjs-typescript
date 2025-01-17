@@ -6,9 +6,13 @@ interface Props {
   review: IReview;
 }
 
-export default function ReviewCard({ review }: Props) {
+const ReviewWrapper = ({ children }: { children: React.ReactNode }) => (
+  <div className="flex flex-col bg-background100 rounded-xl px-4 py-[18px] gap-3">{children}</div>
+);
+
+export function ReviewCard({ review }: Props) {
   return (
-    <div className="flex flex-col bg-background100 rounded-xl px-4 py-[18px] gap-3">
+    <ReviewWrapper>
       <div className="flex flex-col gap-1">
         <span>{review.score}</span>
         <div className="flex items-center justify-start gap-2">
@@ -32,6 +36,30 @@ export default function ReviewCard({ review }: Props) {
           </span>
         </div>
       </div>
-    </div>
+    </ReviewWrapper>
+  );
+}
+
+export function ReviewSkeleton() {
+  return (
+    <ReviewWrapper>
+      <div className="animate-pulse flex flex-col gap-1">
+        <div className="h-6 w-16 bg-gray-200 rounded" />
+        <div className="flex items-center justify-start gap-2">
+          <div className="h-4 w-24 bg-gray-200 rounded" />
+          <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
+          <div className="h-4 w-24 bg-gray-200 rounded" />
+        </div>
+      </div>
+      <div className="h-4 w-full bg-gray-200 rounded" />
+      <div className="flex items-center justify-end gap-2">
+        <div className="w-6 h-6 bg-gray-200 rounded-full" />
+        <div className="flex justify-between items-center gap-2">
+          <div className="h-4 w-16 bg-gray-200 rounded" />
+          <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
+          <div className="h-4 w-24 bg-gray-200 rounded" />
+        </div>
+      </div>
+    </ReviewWrapper>
   );
 }
