@@ -5,11 +5,12 @@ import { TAuthInputs } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useForm } from 'react-hook-form';
 import AuthBar from './AuthBar';
 import AuthButton from './AuthButton';
 import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
+import AuthSelect from './AuthSelect';
 import DothemeetLogo from './DothemeetLogo';
 
 export default function SignUpForm() {
@@ -29,6 +30,7 @@ export default function SignUpForm() {
     setValue,
     getFieldState,
     formState: { errors },
+    control,
   } = useForm<TAuthInputs>({
     mode: 'onBlur',
   });
@@ -174,34 +176,6 @@ export default function SignUpForm() {
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor={positionId} className="text-body-2-normal font-medium">
-                      직군 <span className="text-red200">*</span>
-                    </label>
-                    <AuthInput
-                      type="text"
-                      placeholder="직군을 입력해주세요"
-                      name="position"
-                      id={positionId}
-                      className={cn(
-                        'h-[54px]',
-                        (errors.position || signUpError) && 'focus-visible:ring-error',
-                      )}
-                      register={register('position', {
-                        required: '직군을 입력해주세요',
-                        onChange: (e) => {
-                          if (signUpError) reset();
-                          setValue('position', e.target.value);
-                          debouncedValidation('position');
-                        },
-                      })}
-                    />
-                    {errors.position && (
-                      <p className="text-error text-label-normal font-medium">
-                        {errors.position.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-2">
                     <label htmlFor={passwordId} className="text-body-2-normal font-medium">
                       비밀번호 <span className="text-red200">*</span>
                     </label>
@@ -283,7 +257,38 @@ export default function SignUpForm() {
                       </p>
                     )}
                   </div>
-
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor={positionId} className="text-body-2-normal font-medium">
+                      직군 <span className="text-red200">*</span>
+                    </label>
+                    <Controller
+                      name="position"
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <AuthSelect
+                          options={[
+                            { value: 'backend', label: '백엔드' },
+                            { value: 'frontend', label: '프론트엔드' },
+                            { value: 'designer', label: '디자인' },
+                            { value: 'pm', label: 'PM' },
+                          ]}
+                          className={cn(
+                            'h-[54px]',
+                            (errors.position || signUpError) && 'focus-visible:ring-error',
+                          )}
+                          placeholder="직군을 선택해주세요"
+                          value={value}
+                          onChange={onChange}
+                        />
+                      )}
+                      rules={{ required: '직군을 선택해주세요' }}
+                    />
+                    {errors.position && (
+                      <p className="text-error text-label-normal font-medium">
+                        {errors.position.message}
+                      </p>
+                    )}
+                  </div>
                   <div className="flex flex-col gap-2">
                     <label htmlFor={introductionId} className="text-body-2-normal font-medium">
                       소개
@@ -295,7 +300,7 @@ export default function SignUpForm() {
                       isTextarea
                       id={introductionId}
                       className={cn(
-                        'h-[54px]',
+                        'h-[100px]',
                         (errors.introduction || signUpError) && 'focus-visible:ring-error',
                       )}
                       register={register('introduction', {

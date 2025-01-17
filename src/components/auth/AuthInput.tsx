@@ -26,7 +26,7 @@ function AuthInput({ className, type, register, isTextarea, ...props }: AuthInpu
             'flex h-10 w-full rounded-xl border border-input bg-background400 p-3 text-sm border-none file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:ring-gray200 disabled:cursor-not-allowed disabled:opacity-50 placeholder:text-body-2-normal placeholder:text-gray300 placeholder:font-medium resize-none',
             className,
           )}
-          rows={3}
+          rows={4}
           {...props}
           {...register}
         />
