@@ -1,6 +1,4 @@
-'use client';
-
-import GatheringCard from '@/components/mypage/gatheringCard/GatheringCard';
+import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
 import emptyDudu from '../../../public/images/mypage/dudu-empty.svg';
 import Link from 'next/link';
@@ -11,7 +9,7 @@ export default function CreatedMeetings() {
   const { data, isLoading } = useCreatedGatheringsQuery();
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <GatheringSkeleton />;
   }
 
   if (!data || data.length === 0) {

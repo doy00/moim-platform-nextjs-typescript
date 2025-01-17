@@ -1,6 +1,4 @@
-'use client';
-
-import GatheringCard from '@/components/mypage/gatheringCard/GatheringCard';
+import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
 import emptyDudu from '../../../public/images/mypage/dudu-empty.svg';
 import { useJoinedGatheringsQuery } from '@/hooks/mypage/queries/useGatheringsQuery';
@@ -9,7 +7,7 @@ export default function Meetings() {
   const { data, isLoading } = useJoinedGatheringsQuery();
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">로딩 중...</div>;
+    return <GatheringSkeleton />;
   }
 
   if (!data || data.length === 0) {
