@@ -35,7 +35,7 @@ function AuthSelect({ options, placeholder, value, className, onChange }: Custom
     <div className="relative flex items-center w-full">
       <div
         className={cn(
-          'w-full flex items-center justify-between h-10 px-3 rounded-xl border-input bg-background400 cursor-pointer font-medium text-gray300',
+          'w-full flex text-sm items-center justify-between h-10 px-3 rounded-xl border-input bg-background400 cursor-pointer font-medium text-gray300',
           className,
         )}
         onClick={handleToggle}

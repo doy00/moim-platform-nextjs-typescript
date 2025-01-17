@@ -3,7 +3,8 @@
 import { getMe, postSignIn, postSignOut, postSignUp, putMe } from '@/apis/auth/auth.api';
 import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
-  TAuthInputs,
+  TAuthSignInInputs,
+  TAuthSignUpInputs,
   TMeResponse,
   TPutMeInputs,
   TSignInResponse,
@@ -38,9 +39,9 @@ export const useDebounce = <T extends unknown[]>(
   );
 };
 
-export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthInputs> {
+export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthSignUpInputs> {
   const queryClient = useQueryClient();
-  return useMutation<TSignUpResponse, TError, TAuthInputs>({
+  return useMutation<TSignUpResponse, TError, TAuthSignUpInputs>({
     mutationFn: postSignUp,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
@@ -48,9 +49,9 @@ export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, 
   });
 }
 
-export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, TAuthInputs> {
+export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, TAuthSignInInputs> {
   const queryClient = useQueryClient();
-  return useMutation<TSignInResponse, TError, TAuthInputs>({
+  return useMutation<TSignInResponse, TError, TAuthSignInInputs>({
     mutationFn: postSignIn,
     onSuccess: (data) => {
       setLocalStorageItem('dothemeet-token', data.token);

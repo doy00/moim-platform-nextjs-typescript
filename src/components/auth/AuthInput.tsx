@@ -10,16 +10,17 @@ interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement | HTMLText
   name: string;
   register: UseFormRegisterReturn;
   isTextarea?: boolean;
+  isArray?: boolean;
 }
 
-function AuthInput({ className, type, register, isTextarea, ...props }: AuthInputProps) {
+function AuthInput({ className, type, register, isTextarea, isArray, ...props }: AuthInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
   return (
-    <div className="relative flex items-center w-full">
+    <div className={cn('relative flex items-center w-full', isArray && 'w-auto')}>
       {isTextarea ? (
         <textarea
           className={cn(

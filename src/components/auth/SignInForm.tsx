@@ -1,8 +1,9 @@
 'use client';
 
 import { useDebounce, useSignInMutation } from '@/hooks/auth/auth.hook';
-import { TAuthInputs } from '@/types/auth/auth.type';
+import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId } from 'react';
 import { useForm } from 'react-hook-form';
@@ -21,10 +22,8 @@ export default function SignInForm() {
     trigger,
     setValue,
     getFieldState,
-    formState: { errors },
-  } = useForm<TAuthInputs>({
-    mode: 'onBlur',
-  });
+    formState: { errors, isValid },
+  } = useForm<TAuthFormValues>();
   const {
     mutateAsync: signIn,
     isPending: isSignInPending,
@@ -32,27 +31,22 @@ export default function SignInForm() {
     reset,
   } = useSignInMutation();
 
-  const debouncedValidation = useDebounce((name: keyof TAuthInputs) => {
+  const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
     trigger(name);
   }, 1000);
 
-  const onSubmit = async (data: TAuthInputs) => {
-    const response = await signIn(data);
+  const onSubmit = async (data: TAuthFormValues) => {
+    if (signInError) return;
+    const signInData = {
+      email: data.email,
+      password: data.password,
+    };
+    const response = await signIn(signInData);
     if (response.token) router.push('/');
   };
 
-  const { isDirty: isEmailDirty, invalid: isEmailInvalid } = getFieldState('email');
-  const { isDirty: isPasswordDirty, invalid: isPasswordInvalid } = getFieldState('password');
-
   const isDisabled =
-    isSignInPending ||
-    !!errors.password ||
-    !!errors.email ||
-    !!signInError ||
-    !isEmailDirty ||
-    isEmailInvalid ||
-    !isPasswordDirty ||
-    isPasswordInvalid;
+    isSignInPending || !!errors.password || !!errors.email || !!signInError || !isValid;
 
   useEffect(() => {
     if (signInError) console.error(signInError);
@@ -65,7 +59,9 @@ export default function SignInForm() {
 
       <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
         <div className="w-full h-14 flex items-center">
-          <DothemeetLogo />
+          <Link href="/" className="cursor-pointer">
+            <DothemeetLogo />
+          </Link>
         </div>
         <div className="w-full h-full flex flex-col items-center justify-start md:justify-center ">
           <form

@@ -1,3 +1,4 @@
+export { default as AuthBar } from './AuthBar';
 export { default as AuthButton } from './AuthButton';
 export { default as AuthEye } from './AuthEye';
 export { default as AuthEyeSlash } from './AuthEyeSlash';

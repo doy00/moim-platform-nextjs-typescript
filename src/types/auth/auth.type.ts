@@ -1,10 +1,27 @@
-export type TAuthInputs = {
+export type TTags = {
+  id: number;
+  value: string;
+};
+
+type TAuthValuesDefault = {
   email: string;
   nickname: string;
   position: string;
   password: string;
   passwordConfirm?: string;
   introduction?: string;
+};
+
+export type TAuthFormValues = TAuthValuesDefault & {
+  tags?: TTags[];
+};
+
+export type TAuthSignInInputs = {
+  email: string;
+  password: string;
+};
+
+export type TAuthSignUpInputs = TAuthValuesDefault & {
   tags?: string[];
 };
 
