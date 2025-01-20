@@ -1,6 +1,6 @@
 'use client';
 
-import { useDebounce, useSignUpMutation } from '@/hooks/auth/auth.hook';
+import { useDebounce, useSignInMutation, useSignUpMutation } from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import Link from 'next/link';
@@ -29,7 +29,6 @@ export default function SignUpForm() {
     watch,
     trigger,
     setValue,
-    getFieldState,
     formState: { errors, isValid },
     control,
   } = useForm<TAuthFormValues>({
@@ -48,6 +47,7 @@ export default function SignUpForm() {
     error: signUpError,
     reset,
   } = useSignUpMutation();
+  const { mutateAsync: signIn } = useSignInMutation();
 
   const handleAppendTag = () => {
     if (fields.length < 3) {
@@ -72,7 +72,10 @@ export default function SignUpForm() {
       tags: data.tags?.map((tag) => tag.value),
     };
     const response = await signUp(signUpData);
-    if (response.message === '사용자 생성 성공') router.push('/');
+    if (response.isSuccess) {
+      await signIn({ email: data.email, password: data.password });
+      router.push('/');
+    }
   };
 
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
@@ -236,6 +239,7 @@ export default function SignUpForm() {
                       register={register('passwordConfirm', {
                         required: '비밀번호를 다시 한번 입력해주세요',
                         validate: (value) => {
+                          console.log(value);
                           if (value === watch('password')) {
                             setIsPasswordConfirmed(true);
                             return true;

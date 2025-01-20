@@ -1,8 +1,16 @@
 import { headers } from 'next/headers';
+import { NextResponse } from 'next/server';
 
 export async function GET() {
   const headersList = await headers();
   const token = headersList.get('Authorization');
+
+  if (!token) {
+    return NextResponse.json(
+      { isSuccess: false, message: 'Unauthorized', status: 401, data: null },
+      { status: 401 },
+    );
+  }
 
   const response = {
     isSuccess: true,
@@ -17,5 +25,5 @@ export async function GET() {
     },
   };
 
-  console.log(token);
+  return NextResponse.json(response, { status: 200 });
 }
