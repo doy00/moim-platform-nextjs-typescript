@@ -1,9 +1,17 @@
-import CreateReview from '@/components/mypage/myReview/CreateReview';
+// import CreateReview from '@/components/mypage/myReview/CreateReview';
 
-export default function Review() {
+// interface PageProps {
+
+// }
+
+export default function Review({}) {
+  //   const { gatheringId } = params;
+  //   const { userId } = searchParams;
+
   return (
     <div>
-      <CreateReview />
+      {/* <CreateReview gathering={gatheringId} user={userId} /> */}
+      리뷰페이지
     </div>
   );
 }
