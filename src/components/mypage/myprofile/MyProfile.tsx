@@ -14,17 +14,17 @@ const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function MyProfile() {
-  const { data: userInfo, isLoading } = useUserQuery();
+  const { data, isLoading } = useUserQuery();
 
   if (isLoading) {
     return (
       <ProfileWrapper>
         <div className="animate-pulse flex gap-2 justify-between">
           <div className="flex flex-col gap-2">
-            <div className="h-6 w-24 bg-gray-200 rounded"></div>
-            <div className="h-4 w-32 bg-gray-200 rounded"></div>
+            <div className="h-6 w-24 bg-gray-200 rounded" />
+            <div className="h-4 w-32 bg-gray-200 rounded" />
           </div>
-          <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+          <div className="w-16 h-16 bg-gray-200 rounded-full" />
         </div>
       </ProfileWrapper>
     );
@@ -32,13 +32,13 @@ export default function MyProfile() {
 
   return (
     <ProfileWrapper>
-      {userInfo && (
+      {data && (
         <div className="flex gap-2 justify-between">
           <div className="flex flex-col gap-2">
-            <span className="text-lg font-semibold">{userInfo?.name}</span>
-            <span className="text-[13px] font-normal text-[#9E9892]">{userInfo?.companyName}</span>
+            <span className="text-lg font-semibold">{data?.name}</span>
+            <span className="text-[13px] font-normal text-[#9E9892]">{data?.companyName}</span>
           </div>
-          <Image src={userInfo?.image ?? defaultProfile} alt="profile" width={64} height={64} />
+          <Image src={data?.image ?? defaultProfile} alt="profile" width={64} height={64} />
         </div>
       )}
     </ProfileWrapper>

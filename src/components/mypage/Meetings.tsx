@@ -1,15 +1,13 @@
-'use client';
-
-import GatheringCard from '@/components/mypage/gatheringCard/GatheringCard';
+import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
-import emptyDudu from '../../../public/images/mypage/dudu-empty.svg';
+import emptyDudu from '@images/mypage/dudu-empty.svg';
 import { useJoinedGatheringsQuery } from '@/hooks/mypage/queries/useGatheringsQuery';
 
 export default function Meetings() {
   const { data, isLoading } = useJoinedGatheringsQuery();
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">로딩 중...</div>;
+    return <GatheringSkeleton />;
   }
 
   if (!data || data.length === 0) {
@@ -24,7 +22,7 @@ export default function Meetings() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
       {data.map((gathering) => (
         <GatheringCard key={gathering.id} gathering={gathering} />
       ))}

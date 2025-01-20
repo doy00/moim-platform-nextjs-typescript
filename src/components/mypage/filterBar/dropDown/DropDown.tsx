@@ -1,5 +1,7 @@
+'use client';
+
 import { useState, useEffect } from 'react';
-import arrowDownIcon from '../../../../../public/images/mypage/arrow-down.svg';
+import arrowDownIcon from '@images/mypage/arrow-down.svg';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
 
