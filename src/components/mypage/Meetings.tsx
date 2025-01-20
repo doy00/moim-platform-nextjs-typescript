@@ -22,7 +22,7 @@ export default function Meetings() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
       {data.map((gathering) => (
         <GatheringCard key={gathering.id} gathering={gathering} />
       ))}

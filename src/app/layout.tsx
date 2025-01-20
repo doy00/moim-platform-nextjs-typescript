@@ -1,5 +1,3 @@
-'use client'
-
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import QueryProvider from '@/libs/detail/QueryProvider';
@@ -21,22 +19,22 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  
-  // HomeGnb를 보여줄 경로 목록
-  const pathname = usePathname();
-  const showGnbPaths = ['/home', '/favorites', '/mypage'];
-  const showGnb = showGnbPaths.includes(pathname);
-
   return (
     <html lang="ko">
-      <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
-        <QueryProvider>
-          <div className='layout'>
-              {children}
-          </div>
-          {showGnb && <HomeGnb />}
-        </QueryProvider>
-      </body>
+      <QueryProvider>
+        <body
+          className={`layout font-pretendard antialiased ${pretendard.variable} min-h-screen
+          w-full mx-auto
+          px-4 
+          sm:px-6 sm:max-w-screen-sm
+          md:px-8 md:max-w-screen-md
+          lg:px-12 lg:max-w-screen-lg
+          xl:px-16 xl:max-w-screen-xl
+          `}
+        >
+          {children}
+        </body>
+      </QueryProvider>
     </html>
   );
 }
