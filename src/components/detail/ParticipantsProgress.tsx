@@ -3,7 +3,7 @@
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Progress } from '@/components/detail/detail-progress';
-import { IParticipantsProgress } from '@/types/detail';
+import { IParticipantsProgress } from '@/types/detail/i-participant';
 import { FireIcon } from './icons/FireIcon';
 
 export const ParticipantsProgress: React.FC<IParticipantsProgress> = ({
