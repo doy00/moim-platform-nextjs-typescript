@@ -16,7 +16,8 @@ import { removeLocalStorageItem, setLocalStorageItem } from '@/utils/auth/auth-c
 import { deleteCookie, setCookie } from '@/utils/auth/auth-server.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useRef } from 'react';
+import { useRouter } from 'next/navigation';
+import { useCallback, useEffect, useRef } from 'react';
 
 type Debounce<T extends unknown[]> = (...args: T) => void;
 
@@ -77,6 +78,7 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
   });
 }
 
+// signout 엔드포인트가 추후 없어진다면 이 뮤테이션도 없어질 예정
 export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError, void> {
   const queryClient = useQueryClient();
   return useMutation<TSignOutResponse, TError, void>({
@@ -108,4 +110,30 @@ export function useMeQuery(enabled: boolean = true): UseQueryResult<TMeResponse[
     queryFn: getMe,
     enabled,
   });
+}
+
+// me 객체 접근과, 로그아웃을 편리하게 사용하기 위한 훅
+export function useAuth() {
+  const queryClient = useQueryClient();
+  const { data: me, isPending: isMeLoading, error } = useMeQuery();
+  const router = useRouter();
+
+  const signOut = useCallback(() => {
+    removeLocalStorageItem('dothemeet-token');
+    removeLocalStorageItem('dothemeet-refreshToken');
+    deleteCookie('dothemeet-token');
+    deleteCookie('dothemeet-refreshToken');
+    queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
+    queryClient.setQueryData([QUERY_KEY_ME], null);
+    router.refresh();
+  }, [queryClient, router]);
+
+  useEffect(() => {
+    if (!error) return;
+    if (error.message !== 'Unauthorized') {
+      console.log(error);
+    }
+  }, [error, router]);
+
+  return { me, signOut, isMeLoading };
 }

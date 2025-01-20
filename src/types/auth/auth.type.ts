@@ -59,7 +59,7 @@ export type TMeResponse = {
   message: string;
   status: number;
   data: {
-    id: number;
+    email: string;
     nickname: string;
     position: string;
     introduction: string;
