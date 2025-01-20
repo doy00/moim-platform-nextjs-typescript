@@ -10,7 +10,7 @@ export default function CategoryStep() {
   const { type, setType } = useMakeStore();
 
   return (
-    <section className="flex flex-col px-4 h-[557px]">
+    <section className="flex flex-col px-4 w-full h-[680px]">
       {/* Section Header */}
       <div className="flex flex-col items-start mb-[52px]">
         <h1 className="text-title-2 font-semibold">어떤 모임을 만들까요?</h1>
@@ -25,7 +25,7 @@ export default function CategoryStep() {
           return (
             <div
               key={item.id}
-              className={`flex items-center space-x-2.5 w-[343px] mb-[11px] h-16 px-6 py-5 cursor-pointer rounded-md ${
+              className={`flex items-center space-x-2.5 min-w-[343px] mb-[11px] h-16 px-6 py-5 cursor-pointer rounded-md ${
                 isSelected
                   ? 'border border-orange200 text-orange200'
                   : 'border border-[#DEDBD9] text-[#9e9892]'

@@ -1,18 +1,23 @@
 'use client';
 
 import React, { useState } from 'react';
+import { useRouter } from 'next/navigation';
 //Store
 //Components
-import { Progress } from '../ui/progress';
 import CategoryStep from './CategoryStep';
 import DescriptionStep from './DescriptionStep';
 import DateLocationStep from './DateLocationStep';
 import ParticipantsStep from './ParticipantsStep';
-import DeleteIcon from '../home/icons/DeleteIcon';
+import StepProgressbar from './StepProgressbar';
+import MakeCancel from './MakeCancel';
+//Icon
+import ArrowLeftLine from '../home/icons/ArrowLeftLine';
 
 export default function MakeMain() {
   const [step, setStep] = useState<number>(1);
-  const progressValue = step * 25;
+  const totalSteps = 4;
+
+  const router = useRouter()
 
 
   const handleNextStep = () => {
@@ -26,11 +31,19 @@ export default function MakeMain() {
   const handleSubmit = async () => {
     try {
       //
+      router.push('/home');
+      alert('모임 만들기 성공')
     } catch (error) {
       console.error('error 발생', error);
     }
   };
 
+  const handleLeave = () => {
+    console.log("이어서 계속 작성.");
+  };
+
+
+  
   const renderStep = () => {
     switch (step) {
       case 1:
@@ -52,25 +65,25 @@ export default function MakeMain() {
       <div className="flex flex-col items-start w-full h-16 space-y-4">
         <div className='px-5 w-full flex items-center justify-between'>
           <h1 className="text-lg font-bold">모임 만들기</h1>
-          <DeleteIcon />
+          <MakeCancel onLeave={handleLeave} />
         </div>
-        <Progress value={progressValue} />
+        <StepProgressbar currentStep={step} totalSteps={totalSteps} />
       </div>
       {/* Step 영역 */}
       <div>{renderStep()}</div>
       {/* Button 영역 */}
-      <div className="flex space-x-4 px-5">
+      <div className="flex space-x-3 px-5 pb-[62px]">
         {step > 1 && (
-          <button onClick={handlePrevStep} className="px-4 py-2 bg-gray-300 rounded-md">
-            이전
+          <button onClick={handlePrevStep} className="flex items-center justify-center px-6 py-4 h-[56px] bg-background400 rounded-2xl">
+            <ArrowLeftLine className='fill-gray300' />
           </button>
         )}
         {step < 4 ? (
-          <button onClick={handleNextStep} className="px-4 py-2 bg-blue-500 text-white rounded-md">
+          <button onClick={handleNextStep} className="flex items-center justify-center w-full h-[56px] bg-gray950 text-white rounded-2xl mb-4">
             다음
           </button>
         ) : (
-          <button onClick={handleSubmit} className="px-4 py-2 bg-green-500 text-white rounded-md">
+          <button onClick={handleSubmit} className="flex items-center justify-center w-full h-[56px] bg-gray950 text-white rounded-2xl">
             완료
           </button>
         )}

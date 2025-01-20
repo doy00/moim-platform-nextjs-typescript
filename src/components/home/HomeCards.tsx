@@ -50,7 +50,7 @@ export default function HomeCards() {
   };
 
   const renderedCard = (
-    <div className="px-4 pt-[14px] space-y-4">
+    <div className="px-4 pt-[14px] space-y-4 pb-[62px]">
       {data?.pages.map((page) =>
         page.data.map((item: IMoim) => <HomeCard key={item.id} data={item} />)
       )}
