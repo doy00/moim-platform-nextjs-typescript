@@ -3,7 +3,7 @@ import Image from 'next/image';
 import { useReviewQuery } from '@/hooks/mypage/queries/useReviewQuery';
 import emptyDudu from '../../../../public/images/mypage/dudu-empty.svg';
 
-export default function MyReview() {
+export default function CompletedReview() {
   const { data, isLoading } = useReviewQuery();
 
   if (isLoading) {
