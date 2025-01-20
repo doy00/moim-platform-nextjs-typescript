@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { CategoryTab, LocationTab, StatusTab } from './Tabs';
 
 export default function FilterTabs() {
   const [activeTab, setActiveTab] = useState('category');
@@ -17,11 +18,11 @@ export default function FilterTabs() {
             className="absolute w-full"
           >
             {activeTab === 'category' ? (
-              <div>카테고리</div>
+              <CategoryTab />
             ) : activeTab === 'location' ? (
-              <div>지역</div>
+              <LocationTab />
             ) : (
-              <div>상태</div>
+              <StatusTab />
             )}
           </motion.div>
         </AnimatePresence>

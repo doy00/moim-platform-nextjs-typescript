@@ -4,7 +4,7 @@ import { useState } from 'react';
 import Meetings from '@/components/mypage/Meetings';
 import CreatedMeetings from '@/components/mypage/CreatedMeetings';
 import FilterBar from '@/components/mypage/filterBar/FilterBar';
-import MyReview from '@/components/mypage/myReview/MyReview';
+import CompletedReviewCard from '@/components/mypage/myReview/CompletedReview';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReviewTabs from '@/components/mypage/myReview/ReviewTabs';
 
@@ -21,15 +21,15 @@ export default function RenderTab() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.2 }}
-            className="absolute w-full"
+            className="relative w-full"
           >
             {activeTab === 'meetings' ? (
               <Meetings />
             ) : activeTab === 'reviews' ? (
-              <MyReview />
-            ) : (
+              <CompletedReviewCard />
+            ) : activeTab === 'created-meetings' ? (
               <CreatedMeetings />
-            )}
+            ) : null}
           </motion.div>
         </AnimatePresence>
       </div>
