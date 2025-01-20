@@ -1,17 +1,21 @@
 import { useQuery } from '@tanstack/react-query';
-import { getJoined } from '@/apis/getJoined';
-import { getGatherings } from '@/apis/gatherings';
+import { getJoined } from '@/apis/myMoim';
+import { getGatherings } from '@/apis/ownMoim';
 
 export const useJoinedGatheringsQuery = () => {
   return useQuery({
-    queryKey: ['joinedGatherings'],
+    queryKey: ['getJoinedGatherings'],
     queryFn: getJoined,
+    staleTime: 1000 * 60,
+    refetchOnMount: false,
   });
 };
 
 export const useCreatedGatheringsQuery = () => {
   return useQuery({
-    queryKey: ['createdGatherings'],
+    queryKey: ['getCreatedGatherings'],
     queryFn: getGatherings,
+    staleTime: 1000 * 60,
+    refetchOnMount: false,
   });
 };

@@ -1,10 +1,12 @@
 // 상세페이지 하단 찜하기, 신청하기 버튼이 있는 플로팅 바 컴포넌트입니다.
 import { HeartIcon } from "./icons/HeartIcon";
 import { HeartEmptyIcon } from "./icons/HeartEmptyIcon";
+import { ToasterDark } from "./ToasterDark";
 
 interface IFloatingBar {
   onHeartClick: () => void;
-  onApplyClick: () => void;
+  onJoinClick: () => void;  // [ ] Promise<{success: boolean; message: string}> 제거
+  isJoining?: boolean;
   isLiked?: boolean;
   actionLabel?: string;
   disabled?: boolean;
@@ -12,7 +14,8 @@ interface IFloatingBar {
 
 export const FloatingBar = ({
   onHeartClick,
-  onApplyClick,
+  onJoinClick,
+  isJoining = false,
   isLiked = false,
   actionLabel = '신청하기',
   disabled = false
@@ -52,12 +55,13 @@ export const FloatingBar = ({
 
         {/* 신청하기 버튼 */}
         <button 
-          onClick={onApplyClick}
+          onClick={onJoinClick}
           disabled={disabled}
           className="flex-1 h-14 min-w-65 bg-gray950 rounded-2xl text-gray200 text-body-1-normal font-semibold  hover:bg-gray800 transition-all duration-200"
         >
           {actionLabel}
         </button>
+        <ToasterDark position="bottom-center" duration={2000} />
       </div>
     </div>
   );

@@ -1,8 +1,6 @@
-'use client';
-
-import GatheringCard from '@/components/mypage/gatheringCard/GatheringCard';
+import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
-import emptyDudu from '../../../public/images/mypage/dudu-empty.svg';
+import emptyDudu from '@images/mypage/dudu-empty.svg';
 import Link from 'next/link';
 import { useCreatedGatheringsQuery } from '@/hooks/mypage/queries/useGatheringsQuery';
 import { motion } from 'framer-motion';
@@ -11,7 +9,7 @@ export default function CreatedMeetings() {
   const { data, isLoading } = useCreatedGatheringsQuery();
 
   if (isLoading) {
-    return <div>로딩 중...</div>;
+    return <GatheringSkeleton />;
   }
 
   if (!data || data.length === 0) {
@@ -35,7 +33,7 @@ export default function CreatedMeetings() {
   }
 
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
       {data.map((gathering) => (
         <GatheringCard key={gathering.id} gathering={gathering} />
       ))}

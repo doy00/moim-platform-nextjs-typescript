@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import filterIcon from '../../../../../public/images/mypage/filter.svg';
+import filterIcon from '@images/mypage/filter.svg';
 import {
   Drawer,
   DrawerContent,
@@ -9,7 +9,7 @@ import {
   DrawerClose,
   DrawerTitle,
 } from '@/components/mypage/filterBar/filter/ui/drawer';
-import closeIcon from '../../../../../public/images/mypage/close.svg';
+import closeIcon from '@images/mypage/close.svg';
 import FilterTabs from './filterTabs/FilterTabs';
 
 export default function Filter() {
