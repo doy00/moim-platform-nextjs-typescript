@@ -26,11 +26,20 @@ export type TAuthSignUpInputs = TAuthValuesDefault & {
 };
 
 export type TSignUpResponse = {
+  isSuccess: boolean;
   message: string;
+  status: number;
+  data: number;
 };
 
 export type TSignInResponse = {
-  token: string;
+  isSuccess: boolean;
+  message: string;
+  status: number;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
 };
 
 export type TSignOutResponse = {
