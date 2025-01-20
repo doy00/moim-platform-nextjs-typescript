@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { IChipSmallSquircle } from "@/types/detail";
+import { IChipSmallSquircle } from "@/types/detail/i-components";
 
 export const ChipSmallSquircle: React.FC<IChipSmallSquircle> = ({
   text,

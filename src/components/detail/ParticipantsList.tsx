@@ -7,7 +7,7 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { IParticipant } from "@/types/detail";
+import { IParticipant } from "@/types/detail/i-participant";
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
 
 interface IParticipantsList {

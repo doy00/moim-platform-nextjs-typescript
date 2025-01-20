@@ -1,7 +1,7 @@
 // 현재 참여 인원수와 참여 유저 목록을 알 수 있는 컴포넌트입니다.
 import React, { useState } from "react";
 import { cn } from "@/utils/detail/cn";
-import { IDetailParticipants } from "@/types/detail";
+import { IDetailParticipants } from "@/types/detail/i-participant";
 import { ParticipantsProgress } from "./ParticipantsProgress";
 import { ParticipantsList } from "./ParticipantsList";
 
