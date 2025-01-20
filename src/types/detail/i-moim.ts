@@ -1,17 +1,42 @@
-export interface IMoimDetail {
-  teamId?: number;
-  id: number;
-  type: string;
-  name: string;
-  dateTime: string;
-  registrationEnd: string;
-  location: string;
-  participantCount: number;
-  capacity: number;
-  image?: string;
-  createdBy: number;
+// types/detail/i-moim.ts
+export interface IMoimReview {
+  nickname: string;
+  contents: string;
+  emotion: string;
   createdAt: string;
+}
+
+export interface IMoimDetail {
+  moimId: number;
+  title: string;
   content: string;
+  moimType: string;
+  moimStatus: string;
+  si: string;
+  district: string;
+  roadAddress: string;
+  startDate: string;
+  endDate: string;
+  participants: number;
+  minParticipants: number;
+  maxParticipants: number;
+  reviews: IMoimReview[];
+  image: string;     // [ ] 현재 api에 이미지 없음
+}
+export interface IDetailInfoAPIResponse {
+  title: string;
+  location: string;
+  recruitmentPeriod: string;
+  meetingDate: string;
+  className?: string;
+  image?: string;
+}
+
+export interface ApiDetailResponse {
+  isSuccess: boolean;
+  message: string;
+  status: number;
+  data: IMoimDetail;
 }
 
 export interface IDetailContainer {

@@ -63,11 +63,12 @@ const processDetailData = (data: IMoimDetail | undefined): IMoimDetail => {
 
   return {
     ...data,
-    image: 
-      // data.image
-      // ? `${process.env.NEXT_PUBLIC_API_URL}/${data.image}`
-      // : 
-      DEFAULT_IMAGE.MOIM
+    // API에서 전체 URL을 제공하는 경우
+    image: data.image?.startsWith('http') 
+      ? data.image 
+      : data.image 
+      ? `${process.env.NEXT_PUBLIC_API_URL}/${data.image}`
+      : DEFAULT_IMAGE.MOIM
   };
 };
 
