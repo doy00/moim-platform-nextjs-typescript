@@ -1,8 +1,8 @@
 // 컴포넌트 관련 타입
-// import { StaticImageData } from "next/image";  // 정적 이미지 임포트 위해 추가
+import { StaticImageData } from "next/image";  // 정적 이미지 임포트 위해 추가
 export interface IImageBox {
   image: string 
-  // | StaticImageData;
+  | StaticImageData;
   alt?: string;
   className?: string;
   aspectRatio?: string;
@@ -10,7 +10,7 @@ export interface IImageBox {
 
 export interface IChipSmallSquircle {
   text: string;
-  variant: 'light' | 'dark' | 'success' | 'tag';
+  variant: 'light' | 'dark' | 'success' | 'tag' | 'emotion';
   className?: string;
 }
 

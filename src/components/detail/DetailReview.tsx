@@ -1,27 +1,21 @@
 import React from "react";
 import Image from "next/image";
 import { cn } from "@/utils/detail/cn";
-import { FootIcon } from "./icons/FootIcon";
-import { FootEmptyIcon } from "./icons/FootEmptyIcon";
-import { IDetailReview, IDetailReviewProps } from "@/types/detail";
+import { ReviewEmotion, IDetailReview } from "@/types/detail/i-review";
 import { DEFAULT_IMAGE } from "@/constants/detail/images";
 import { DuduEmpty } from "./icons/DuduEmpty";
+import { ChipSmallSquircle } from "./ChipSmallSquircle";
 
-
-export const DetailReview: React.FC<IDetailReviewProps> = ({ 
+export const DetailReview: React.FC<IDetailReview> = ({ 
   className, 
-  rate = 0, 
+  emotion = '괜찮아요', 
   comment, 
   author, 
   date, 
   authorImage,
   reviewCount,
-  }: IDetailReviewProps) => {
+  }) => {
 
-  // 평점
-  const paws = Array.from({ length: 5 }, (_,index) => ({
-    filled: index < rate, 
-  }))
 
   // 이미지 로딩 실패시 기본 이미지를 보여줌
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
@@ -64,13 +58,12 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
           <div 
             className={cn("relative flex flex-col gap-3 px-4 py-5 mt-4 bg-background400 rounded-2xl", className)}
           >
-            {/* 평점 */}
+            {/* 감정표현 칩 */}
             <div className="flex gap-0.5">
-              {paws.map((paw, index) => (
-                <div key={index} className="flex items-center justify-center">
-                  {paw.filled ? <FootIcon /> : <FootEmptyIcon />}
-                  </div>
-              ))}
+              <ChipSmallSquircle 
+                variant="emotion"
+                text="그냥그래요"   // [ ] {emotion}
+              />
             </div>
 
             {/* 후기 텍스트 */}
