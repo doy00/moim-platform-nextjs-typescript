@@ -42,7 +42,7 @@ export default function SignInForm() {
       password: data.password,
     };
     const response = await signIn(signInData);
-    if (response.token) router.push('/');
+    if (response.data.accessToken) router.push('/');
   };
 
   const isDisabled =
