@@ -4,9 +4,12 @@ import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
 import { IGathering } from '@/types/gathering.type';
 import { IUser } from '@/types/user';
 import Image from 'next/image';
-import close from '../../../../public/images/mypage/close.svg';
+import close from '@images/mypage/close.svg';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
+import badOff from '@images/mypage/dude-grade-bad-off.svg';
+import goodOff from '@images/mypage/dude-grade-good-off.svg';
+import greatOff from '@images/mypage/dude-grade-best-off.svg';
 
 interface Props {
   gathering: IGathering;
@@ -38,7 +41,7 @@ export default function CreateReview({ gathering, user }: Props) {
         </div>
 
         <span className="text-heading1 text-gray800 font-semibold">
-          님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
+          {user?.name}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
         </span>
       </div>
       <div>
@@ -46,10 +49,10 @@ export default function CreateReview({ gathering, user }: Props) {
       </div>
       <div className="flex flex-col gap-6">
         <span>모임은 어땠나요?</span>
-        <div className="flex gap-7 justify-center">
-          <button>그냥그래요</button>
-          <button>괜찮아요</button>
-          <button>추천해요</button>
+        <div className="flex gap-7 items-center justify-center sm:justify-start">
+          <Image src={badOff} alt="그냥그래요" width={80} height={112} />
+          <Image src={goodOff} alt="괜찮아요" width={80} height={112} />
+          <Image src={greatOff} alt="추천해요" width={80} height={112} />
         </div>
       </div>
 

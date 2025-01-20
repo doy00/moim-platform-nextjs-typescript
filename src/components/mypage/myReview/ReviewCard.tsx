@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import profileDefault from '../../../../public/images/mypage/profile-default.svg';
+import profileDefault from '@images/mypage/profile-default.svg';
 import { IReview } from '@/types/reviews.type';
 
 interface Props {

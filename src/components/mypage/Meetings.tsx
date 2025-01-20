@@ -1,6 +1,6 @@
 import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
-import emptyDudu from '../../../public/images/mypage/dudu-empty.svg';
+import emptyDudu from '@images/mypage/dudu-empty.svg';
 import { useJoinedGatheringsQuery } from '@/hooks/mypage/queries/useGatheringsQuery';
 
 export default function Meetings() {

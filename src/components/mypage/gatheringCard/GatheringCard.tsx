@@ -1,7 +1,7 @@
 import { IGathering, IJoind } from '@/types/gathering.type';
 import Image from 'next/image';
-import puzzle from '../../../../public/images/mypage/puzzle-on.svg';
-import emptyHeart from '../../../../public/images/mypage/empty-heart.svg';
+import puzzle from '@images/mypage/puzzle-on.svg';
+import emptyHeart from '@images/mypage/empty-heart.svg';
 import Link from 'next/link';
 
 interface Props {
@@ -51,7 +51,7 @@ export function GatheringCard({ gathering, isReviewed }: Props) {
           {showReviewButton ? (
             <Link
               href={`/mypage/review/${gathering.id}`}
-              className="w-full py-4 px-4 bg-gray100 rounded-[14px] text-body-2-normal font-semibold text-gray800 hover:bg-gray200"
+              className="w-full py-4 px-4 bg-gray100 rounded-[14px] text-body-2-normal font-semibold text-gray800 hover:bg-gray200 block text-center"
             >
               리뷰작성
             </Link>

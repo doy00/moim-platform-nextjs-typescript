@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import PendingReview from './PendingReview';
+// import PendingReview from './PendingReview';
 import CompletedReview from './CompletedReview';
 
 type TReviewTab = '작성 가능한 리뷰' | '작성한 리뷰';
@@ -18,10 +18,10 @@ export default function ReviewTabs() {
   };
 
   const getReviewCard = () => {
-    if (click === '작성 가능한 리뷰') {
-      return <PendingReview />;
+    if (click === '작성한 리뷰') {
+      return <CompletedReview />;
     }
-    // return <CompletedReview />;
+    // return <PendingReview />;
   };
 
   return (

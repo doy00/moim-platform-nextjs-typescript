@@ -1,7 +1,7 @@
 import Image from 'next/image';
-import cone from '../../../../../../public/images/mypage/cone.svg';
-import puzzle from '../../../../../../public/images/mypage/puzzle-off.svg';
-import conversation from '../../../../../../public/images/mypage/conversation.svg';
+import cone from '@images/mypage/cone.svg';
+import puzzle from '@images/mypage/puzzle-off.svg';
+import conversation from '@images/mypage/conversation.svg';
 
 const TabWrapper = ({ children }: { children: React.ReactNode }) => {
   return (

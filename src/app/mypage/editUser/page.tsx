@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import defaultProfile from '../../../../public/images/mypage/profile-edit-default.svg';
+import defaultProfile from '@images/mypage/profile-edit-default.svg';
 import Header from '@/components/mypage/header/Header';
 import Link from 'next/link';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
