@@ -55,14 +55,14 @@ export type TPutMeInputs = {
 };
 
 export type TMeResponse = {
-  teamId: number | string;
-  id: number | string;
-  email: string;
-  nickname: string;
-  position: string;
-  introduction: string;
-  tags: string[];
-  image: string;
-  createdAt: string;
-  updatedAt: string;
+  isSuccess: boolean;
+  message: string;
+  status: number;
+  data: {
+    id: number;
+    nickname: string;
+    position: string;
+    introduction: string;
+    tags: string[];
+  };
 };
