@@ -23,20 +23,18 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="ko">
-      <QueryProvider>
-        <body
-          className={`layout font-pretendard antialiased ${pretendard.variable} min-h-screen
-          w-full mx-auto
-          px-4 
-          sm:px-6 sm:max-w-screen-sm
-          md:px-8 md:max-w-screen-md
-          lg:px-12 lg:max-w-screen-lg
-          xl:px-16 xl:max-w-screen-xl
-          `}
-        >
-          {children}
-        </body>
-      </QueryProvider>
+      <body
+        className={`layout font-pretendard antialiased ${pretendard.variable} min-h-screen
+        w-full mx-auto
+        px-4 
+        sm:px-6 sm:max-w-screen-sm
+        md:px-8 md:max-w-screen-md
+        lg:px-12 lg:max-w-screen-lg
+        xl:px-16 xl:max-w-screen-xl
+        `}
+      >
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }
