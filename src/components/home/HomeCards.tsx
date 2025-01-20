@@ -47,6 +47,16 @@ export default function HomeCards() {
     }
   };
 
+  const renderedCard = (
+    <div className="px-4 pt-[14px] space-y-4 pb-[62px]">
+      {data?.pages.map((page) =>
+        page.data.map((item: IMoim) => <HomeCard key={item.id} data={item} />)
+      )}
+      {/* 추가 데이터 로딩 상태 표시 */}
+      {isFetchingNextPage && <p className="text-center">Loading more...</p>}
+    </div>
+  );
+
   return (
     <>
       <div className="px-4 pt-[14px] space-y-4">
