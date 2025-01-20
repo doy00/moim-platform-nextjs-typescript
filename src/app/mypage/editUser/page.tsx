@@ -1,37 +1,30 @@
 'use client';
 
 import Image from 'next/image';
-import { getUserInfo, editUserInfo } from '@/apis/userInfo';
-import defaultProfile from '../../../../public/images/dude.png';
-import { IUser } from '@/types/user';
-import { useEffect, useState } from 'react';
+import defaultProfile from '../../../../public/images/mypage/profile-edit-default.svg';
 import Header from '@/components/mypage/header/Header';
+import Link from 'next/link';
+import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 
 export default function EditUser() {
-  const [userInfo, setUserInfo] = useState<IUser>();
-  //   const [editUser, setEditUser] = useState<IUser>();
+  const { data, isLoading } = useUserQuery();
 
-  useEffect(() => {
-    const fetchUserInfo = async () => {
-      const data = await getUserInfo();
-      setUserInfo(data);
-    };
-    fetchUserInfo();
-  }, []);
-
-  //   const handleEditUser = async () => {
-  //     if (!editUser) return;
-  //     const data = await editUserInfo(userInfo?.id || 0, editUser);
-  //     setEditUser(data);
-  //   };
+  if (isLoading) {
+    return <div>Loading...</div>;
+  }
 
   return (
-    <div>
+    <div className="h-screen max-w-[1200px] flex flex-col gap-4">
       <Header />
       <div className="py-10 px-4">
         <div className="flex flex-col items-center gap-6">
-          <Image src={userInfo?.image ?? defaultProfile} alt="profile" width={86} height={86} />
-          <span className="text-label-normal font-medium text-orange200">비밀번호 변경</span>
+          <Image src={data?.image ?? defaultProfile} alt="profile" width={86} height={86} />
+          <Link
+            href="/mypage/editPassword"
+            className="text-label-normal font-medium text-orange200"
+          >
+            비밀번호 변경
+          </Link>
         </div>
 
         <form className="flex flex-col gap-6 mt-8">
@@ -42,6 +35,8 @@ export default function EditUser() {
               id="email"
               placeholder="dothemeet@google.com"
               className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300"
+              value={data?.email}
+              disabled
             />
           </div>
 
@@ -53,6 +48,8 @@ export default function EditUser() {
                 id="nickName"
                 placeholder="두두두두"
                 className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300"
+                value={data?.name}
+                disabled
               />
               <span className="text-label-normal font-medium text-gray300">
                 최대 8글자까지 입력 가능해요
@@ -66,7 +63,7 @@ export default function EditUser() {
               <textarea
                 id="textarea"
                 placeholder="소개를 입력해주세요"
-                className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300"
+                className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 resize-none"
               />
               <span className="text-label-normal font-medium text-gray300">
                 최대 20글자까지 입력 가능해요
