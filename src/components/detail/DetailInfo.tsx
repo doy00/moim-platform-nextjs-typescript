@@ -1,11 +1,11 @@
 import React from "react";
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/detail/cn";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
 import { ChipSmallRound } from "@/components/detail/ChipSmallRound";
 import { Separator } from "@/components/ui/separator"
-import { IDetailInfo } from "@/types/detail";
+import { IDetailInfoAPIResponse } from "@/types/detail/i-moim";
 
-export const DetailInfo: React.FC<IDetailInfo> = ({
+export const DetailInfo: React.FC<IDetailInfoAPIResponse> = ({
   title,
   location,
   recruitmentPeriod,
