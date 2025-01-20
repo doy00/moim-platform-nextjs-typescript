@@ -1,13 +1,13 @@
 // 모임 참여 신청을 한 유저들의 목록을 보여주는 컴포넌트입니다.
 import React, { useState } from 'react';
-import { cn } from "@/lib/utils";
+import { cn } from "@/utils/detail/cn";
 import Image from "next/image";
 import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { IParticipant } from "@/types/detail";
+import { IParticipant } from "@/types/detail/i-participant";
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
 
 interface IParticipantsList {
@@ -90,7 +90,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
               </HoverCardContent>
             </HoverCard>
 
-      {/* 남은 인원 */}
+      {/* [ ] 남은 인원 */}
       <span className="text-body-2-normal font-medium text-brown400">
         {"00명 더 참여할 수 있어요"}
       </span>
