@@ -4,7 +4,7 @@
 
 @layer base {
   .layout {
-    @apply relative mx-auto min-h-dvh w-full min-w-[360px] md:min-w-[744px] max-w-[500px] bg-background100 font-pretendard;
+    @apply relative mx-auto min-h-dvh w-full min-w-[360px] max-w-[500px] bg-background100 font-pretendard;
   }
   
   :root {
@@ -65,7 +65,7 @@
 @layer base {
   * {
     @apply border-border;
-  }
+
   /* vaul drawer가 열려있을 때 body 스타일 제어 */
 /* body[data-overlay-open="true"] {
   overflow: hidden;

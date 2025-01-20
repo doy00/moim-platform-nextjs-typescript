@@ -10,13 +10,17 @@ export default function SignInContainer() {
   const type = searchParams.get('type');
 
   return (
-    <section className="w-full h-auto min-h-dvh flex flex-col items-center justify-center bg-background100 text-gray800">
-      {type === null ? (
-        <AuthSelectEmailKakao>
-          <AuthQuestions type="signin" />
-        </AuthSelectEmailKakao>
-      ) : null}
-      {type === 'email' ? <SignInForm /> : null}
-    </section>
+    <div>
+      <div className="fixed top-0 left-0 w-full h-full min-w-dvw min-h-dvh flex flex-col items-center justify-center bg-background100 text-gray800">
+        <section className="w-full h-auto min-h-dvh flex flex-col items-center justify-center bg-background100 text-gray800">
+          {type === null ? (
+            <AuthSelectEmailKakao>
+              <AuthQuestions type="signin" />
+            </AuthSelectEmailKakao>
+          ) : null}
+          {type === 'email' ? <SignInForm /> : null}
+        </section>
+      </div>
+    </div>
   );
 }

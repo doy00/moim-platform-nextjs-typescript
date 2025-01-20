@@ -1,30 +1,19 @@
 'use client';
-import { axiosInstance } from '@/apis/detail/axios.api';
-import { useState, useEffect } from 'react';
+
 import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
-import { DetailShare } from '@/components/detail/DetailShare';
-import { ImageBox } from '@/components/detail/ImageBox';
-import { DetailInfo } from '../../components/detail/DetailInfo';
-import { DetailParticipants } from '../../components/detail/DetailParticipants';
-import { DetailContent } from '../../components/detail/DetailContent';
-import { DetailHost } from '@/components/detail/DetailHost';
-import { DetailReview } from '../../components/detail/DetailReview';
-import { IParticipant } from '@/types/detail';
-import { IMoimDetail } from '@/types/detail/i-moim'
-import { FloatingBar } from '@/components/detail/FloatingBar';
-import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
-import { DEFAULT_IMAGE } from '@/constants/detail/images';
-import Link from 'next/link';
+import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
+import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
+import DetailPresenter from '@/components/detail/DetailPresenter';
+import { SignInDialog } from '@/components/detail/SignInDialog';
+import { IParticipant } from '@/types/detail/i-participant';
+import { useState } from 'react';
+import { useCheckAuth, getLocalStorageItem } from '@/hooks/detail/useCheckAuth';
 
 interface IDetailContainer {
   id: number;
-  initialData?: {
-    detailInfo: IMoimDetail;
-    participants: IParticipant[];
-    reviews: any[];
-  }
 }
 
+// mock participants
 const participants: IParticipant[] = [
   {
     teamId: 1,
@@ -106,137 +95,89 @@ const participants: IParticipant[] = [
   },
 ];
 
-export default function DetailContainer({ 
-  id, 
-  // initialData
-}: IDetailContainer) {
+export default function DetailContainer({ id }: IDetailContainer) {
+  const { detail: detailData, isLoading, error } = useMoimDetail(id);
+
+  // 모임 신청하기, 찜하기 클릭시 로그인 확인 
+  const { checkAuthAndExecute } = useCheckAuth();  
+  const [showDialog, setShowDialog] = useState(false);
+
+// 로그인 상태 확인 및 액션 처리
+const handleAuthAction = (action: () => void) => {
+  // 클라이언트 사이드에서만 실행
+  if (typeof window === 'undefined') return;
+
+  const token = getLocalStorageItem('dothemeet-token');
   
-  // 방법2 tanstack query
-  // const { 
-  //   info, 
-  //   participants, reviews, isLoading 
-  // } = useMoimDetail(id); // 커스텀훅 사용
-
-    // 방법1
-    const [isLoading, setIsLoading] = useState(true);
-    const [error, setError] = useState<string | null>(null);
-    const [data, setData] = useState<IMoimDetail | null>(null);
-
-    useEffect(() => {
-      async function fetchData() {
-        try {
-          // base URL 상수
-          const BASE_URL = process.env.NEXT_PUBLIC_API_URL;
-
-          const response = await fetch(`${BASE_URL}/detail/${id}`);
-  
-          if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
-          }
-          const fetchedData = await response.json();
-
-          
-          // [ ] 수정필요: 이미지를 찾을 수 없을때 이미지 URL 처리
-          const processedData = {
-            ...fetchedData,
-            image: fetchedData.image ? `${BASE_URL}/${fetchedData.image}` : DEFAULT_IMAGE.MOIM
-          };
-
-          setData(processedData);
-
-          // setError("failed to fetch data");
-        } catch (err) {
-          setError(err instanceof Error ? err.message : 'An error occurred while fetching data');
-          console.error('Failed to fetch moim detail:', err);
-        } finally {
-          setIsLoading(false);
-        }
-      }
-        
+  if (!token) {
+    // 현재 URL 저장 (로그인 후 리다이렉트용)
+    const currentPath = window.location.pathname;
+    localStorage.setItem('redirect-after-login', currentPath);
     
-    fetchData();
-  }, [id]);
-  
-  
-
-
-
-
-  // FloatingBar 관련 함수
-  // 찜하기 함수
-  const [isLiked, setIsLiked] = useState(false);    // 찜하기 상태
-  
-  const handleLikeClick = () => {
-    setIsLiked(prev => !prev);
-    // console.log('찜하기 클릭');
+    setShowDialog(true);
+    return;
   }
 
-  // 신청하기 함수
-  const handleApplyClick = async () => {
-    try {
-    // console.log('신청하기 클릭');
-    // await joinMoim(id)
-  } catch (error) {
-    console.error("모임 신청하기를 실패했습니다.:", error)
-  }
-}
+  action();
+};
 
+  // 신청하기 버튼 핸들러
+  const handleJoin = () => {
+    handleAuthAction(() => joinMoim(id));
+    // joinMoim(id);
+  };
 
-  if (isLoading) return <div></div>;
+  // 찜하기 버튼 핸들러
+  const handleLike = () => {
+    handleAuthAction(toggleLike);
+    // toggleLike();
+  };
+
+  // 모임 신청하기, 찜하기 커스텀 훅 사용
+  const { joinMoim, isJoining, error: joinError } = useJoinMoim({
+    // onSuccess: () => {
+    //   // 토스트 메시지
+    //   toast.success('모임 신청이 완료되었습니다.');
+    });
+  if (joinError) return <div>{joinError.message}</div>;
+
+  const { isLiked, isProcessing, toggleLike } = useLikeMoim(id);
+  
+  // 로딩 상태 처리
+  if (isLoading) return <div>Loading...</div>;
+  // 에러 상태 처리
+  if (error) return <div>Error: {error.message}</div>;
+
+  // 데이터 처리 로직
+  const processedData = detailData ? {
+    ...detailData,
+    location: `${detailData.si} ${detailData.district} ${detailData.roadAddress}`,  // 지역 데이터
+    dateTime:detailData.startDate,    // 모집 시작 날짜
+    registratonEnd: detailData.endDate,  // 모집 마감 날짜
+    participantCount: detailData.participants,  // 참여 인원 수
+    capacity: detailData.maxParticipants,       // 정원
+    // [ ] 이미지 관련 추가
+    // image: detailData.image
+    //   ? `${process.env.NEXT_PUBLIC_API_URL}/${detailData.image}`
+    //   : DEFAULT_IMAGE.MOIM
+  } : undefined;
 
   return (
-      <div className="w-full min-h-screen px-4 pb-[93px] bg-background200">
-        <Link href="/" className="w-full h-14 py-[10px] flex items-center">
-          <DothemeetLogo />
-        </Link>
-
-        <DetailShare />
-        <ImageBox 
-          image={data?.image || DEFAULT_IMAGE.MOIM}
-        />
-        <DetailInfo 
-          title={data?.name || "모임 타이틀이 들어갑니다." }
-          location={data?.location || "위치가 들어갑니다."}
-          recruitmentPeriod={data?.registrationEnd || "모집 일정이 들어갑니다." }
-          meetingDate={data?.dateTime || "모임 날짜가 들어갑니다." }
-        />
-        <DetailParticipants 
-          participants={participants || []}
-          
-        />
-        <DetailContent 
-          content={
-            data?.content || 
-            "모임 내용이 들어갑니다."}
-        />
-        <DetailHost 
-          name="두두씨"
-          introduction="안녕하세요! 기획하는 두두입니다."
-          hostTag={['기획', '마케팅', '자기계발']}
-          profileImage={
-            // data?.image || 
-            DEFAULT_IMAGE.PROFILE}
-        />
-
-        {/* {reviews?.map((review, index) => (
-        <DetailReview 
-          key={index}
-          score={review.score}
-          comment={review.comment || "리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다.리뷰 내용이 들어갑니다."}
-          author={review.User?.name || "작성자"}
-          date={new Date(review.createdAt).toLocaleDateString('ko-KR', {
-            year: '2-digit',
-            month: '2-digit',
-            day: '2-digit'
-          }) || "25. 02. 01" }
-          authorImage={review.User?.image || "/svgs/img_detail-profile.svg"}
-        />
-        ))} */}
-        <FloatingBar
-          onHeartClick={handleLikeClick}
-          onApplyClick={handleApplyClick}
-          isLiked={isLiked}
-        />
-      </div>
+    <div className="w-full min-h-screen px-4 pb-[93px] bg-background200">
+      <DetailPresenter 
+        data={processedData}
+        participants={participants} // 임시로 빈 배열
+        reviews={undefined} // 임시로 undefined
+        isJoining={false} // 임시로 false
+        isLiked={false} // 임시로 false
+        onJoin={handleJoin} // 임시로 빈 함수
+        onLikeToggle={handleLike} // 임시로 빈 함수
+      />
+      <SignInDialog 
+        isOpen={showDialog}
+        onClose={() => setShowDialog(false)}
+      />
+    </div>
   );
 }
+

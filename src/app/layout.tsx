@@ -1,7 +1,12 @@
+'use client';
+
 import type { Metadata } from 'next';
 import localFont from 'next/font/local';
 import QueryProvider from '@/libs/detail/QueryProvider';
+import HomeGnb from '@/components/home/HomeGnb';
+import { usePathname } from 'next/navigation';
 import '../styles/globals.css';
+
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -21,9 +26,30 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+
+  // HomeGnb를 보여줄 경로 목록
+  const pathname = usePathname();
+  const showGnbPaths = ['/home', '/favorites', '/mypage'];
+  const showGnb = showGnbPaths.includes(pathname);
+
   return (
     <html lang="ko">
-      <body
+      <head>
+        {/* Daum 우편번호 API 스크립트 로드 */}
+        <script
+          src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
+          async
+        ></script>
+      </head>
+      <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
+        <QueryProvider>
+          <div className="layout">{children}</div>
+          {showGnb && <HomeGnb />}
+        </QueryProvider>
+      </body>
+    </html>
+    
+    {/* <body
         className={`layout font-pretendard antialiased ${pretendard.variable} min-h-screen
         w-full mx-auto
         px-4 
@@ -32,9 +58,8 @@ export default function RootLayout({
         lg:px-12 lg:max-w-screen-lg
         xl:px-16 xl:max-w-screen-xl
         `}
-      >
-        <QueryProvider>{children}</QueryProvider>
-      </body>
-    </html>
+      > */}
   );
 }
+    
+    

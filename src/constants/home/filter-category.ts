@@ -10,3 +10,9 @@ export const CATEGORY_ITEMS: ICategoryItem[] = [
   { id: 'study', label: '스터디', icon: OpenBookIcon },
   { id: 'interview', label: '면접', icon: ConversationIcon },
 ]
+
+export const CATEGORY_ITMES_TWO: ICategoryItem[] = [
+  { id: 'project', label: '프로젝트', icon: PuzzleIcon },
+  { id: 'study', label: '스터디', icon: OpenBookIcon },
+  { id: 'interview', label: '면접', icon: ConversationIcon },
+]

@@ -1,41 +1,43 @@
 // app/detail/[id]/page.tsx
 import * as React from 'react';
 import DetailContainer from "@/containers/detail/DetailContainer";
-import { getDetailInfo, getParticipants, getDetailReviews } from "@/apis/detail/detail.api";
+import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { Suspense } from "react";
+import { getDetail } from '@/apis/detail/detail.api';
+
 
 interface DetailPageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export default async function DetailPage({
   params,
 } : DetailPageProps) {
-  // try {
-  // [ ] tanstack query 사용. 서버 사이드 렌더링을 위해 모든 데이터를 가져옵니다.
-  // const [detailInfo, participants, reviewsResponse] = await Promise.all([
-  //   getDetailInfo(Number(params.id)),
-  //   getParticipants(Number(params.id)),
-  //   getDetailReviews(Number(params.id), { limit: 5 })
-  // ]);
+  // queryClient 생성
+  const queryClient = new QueryClient();
 
-  const id = Number(params.id) 
-  // const { id } = await params;
+  // Dynamic route parameters 사용을 위해 비동기 처리
+  const { id } = await Promise.resolve(params);  
+  const moimId = parseInt(id) 
+
+  // 서버에서 초기 데이터 prefetching
+  await Promise.all([
+    queryClient.prefetchQuery({
+      queryKey: ['detail', id],
+      queryFn: () => getDetail(moimId),
+    }),
+    // [ ] 쿼리들 추가 예정
+  ]);
 
   return (
     <div>
-      <Suspense fallback={<div>Loading...</div>}>
-          <DetailContainer 
-          id={id}
-          // initialData={{
-            //   detailInfo,
-            //   participants,
-            //   reviews: reviewsResponse
-            // }}
-          />
-      </Suspense>
+      <HydrationBoundary state={dehydrate(queryClient)}>
+        <Suspense fallback={<div>Loading...</div>}>
+            <DetailContainer 
+            id={moimId}
+            />
+        </Suspense>
+      </HydrationBoundary>
     </div>
   );
-}; 
+}
