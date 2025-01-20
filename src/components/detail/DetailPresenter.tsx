@@ -1,9 +1,6 @@
 // components/detail/DetailPresenter.tsx 
 // 상세페이지 전체 UI 렌더링을 담당하는 컴포넌트
-// hooks
-import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
-import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
-import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
+import Link from 'next/link';
 // components 
 import { DetailShare } from '@/components/detail/DetailShare';
 import { ImageBox } from '@/components/detail/ImageBox';
@@ -16,7 +13,7 @@ import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 // types
 import { DetailPresenterProps } from '@/types/detail/i-presenter';
-import { IDetailReview, IDetailReviewResponse, ReviewEmotion } from '@/types/detail/i-review';
+import { ReviewEmotion } from '@/types/detail/i-review';
 import { IMoimDetail } from '@/types/detail/i-moim'
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
@@ -94,6 +91,9 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
 
   return (
     <div className="w-full min-h-screen px-4 pb-[93px] bg-background200">
+        <Link href="/" className="w-full h-14 py-[10px] flex items-center">
+          <DothemeetLogo />
+        </Link>
         <DetailShare />
         <ImageBox image={DEFAULT_IMAGE.MOIM} />
         {/* <ImageBox 

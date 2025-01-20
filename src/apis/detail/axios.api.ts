@@ -7,12 +7,18 @@ export const axiosInstance = axios.create({
   },
 });
 
+// 브라우저 환경인지 체크하는 함수(로컬스토리지 사용할 때)
+const isBrowser = () => typeof window !== 'undefined';
+
 // 요청 인터셉터 설정
 axiosInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('dothemeet-token');
-    if (token) {
-      config.headers.sAuthorization = `Bearer ${token}`;
+    // 브라우저 환경에서만 localStorage 사용
+    if (isBrowser()) {
+      const token = localStorage.getItem('dothemeet-token');
+      if (token) {
+        config.headers.sAuthorization = `Bearer ${token}`;
+      }
     }
     return config;
   },

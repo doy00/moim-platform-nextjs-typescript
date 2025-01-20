@@ -1,7 +1,7 @@
 import React from "react";
 import Image from "next/image";
 import { cn } from "@/utils/detail/cn";
-import { ReviewEmotion, IDetailReview } from "@/types/detail/i-review";
+import { IDetailReview } from "@/types/detail/i-review";
 import { DEFAULT_IMAGE } from "@/constants/detail/images";
 import { DuduEmpty } from "./icons/DuduEmpty";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
