@@ -2,7 +2,6 @@ import SignUpContainer from '@/containers/auth/SignUpContainer';
 import { getCookie, prefetchMe } from '@/utils/auth/auth-server.util';
 import { HydrationBoundary } from '@tanstack/react-query';
 import { redirect } from 'next/navigation';
-import { Suspense } from 'react';
 
 export default async function SignUpPage() {
   const token = await getCookie('accessToken');
@@ -13,10 +12,8 @@ export default async function SignUpPage() {
   if (me) redirect('/');
 
   return (
-    <Suspense fallback={<div>Loading...</div>}>
-      <HydrationBoundary state={dehydratedState}>
-        <SignUpContainer />
-      </HydrationBoundary>
-    </Suspense>
+    <HydrationBoundary state={dehydratedState}>
+      <SignUpContainer />
+    </HydrationBoundary>
   );
 }
