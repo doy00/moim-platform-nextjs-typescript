@@ -1,4 +1,4 @@
-import { IGathering, IJoind } from '@/types/gathering.type';
+import { IGathering, IJoind } from '@/types/mypage/gathering.type';
 import Image from 'next/image';
 import puzzle from '@images/mypage/puzzle-on.svg';
 import emptyHeart from '@images/mypage/empty-heart.svg';
