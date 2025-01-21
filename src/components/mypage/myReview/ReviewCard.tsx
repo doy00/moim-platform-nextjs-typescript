@@ -1,6 +1,6 @@
-import Image from 'next/image';
+import { IReview } from '@/types/mypage/reviews.type';
 import profileDefault from '@images/mypage/profile-default.svg';
-import { IReview } from '@/types/reviews.type';
+import Image from 'next/image';
 
 interface Props {
   review: IReview;

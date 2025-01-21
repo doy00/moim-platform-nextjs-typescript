@@ -1,15 +1,15 @@
 'use client';
 
 import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
-import { IGathering } from '@/types/gathering.type';
-import { IUser } from '@/types/user';
-import Image from 'next/image';
+import { IGathering } from '@/types/mypage/gathering.type';
+import { IUser } from '@/types/mypage/user';
 import close from '@images/mypage/close.svg';
+import badOff from '@images/mypage/dude-grade-bad-off.svg';
+import greatOff from '@images/mypage/dude-grade-best-off.svg';
+import goodOff from '@images/mypage/dude-grade-good-off.svg';
+import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import badOff from '@images/mypage/dude-grade-bad-off.svg';
-import goodOff from '@images/mypage/dude-grade-good-off.svg';
-import greatOff from '@images/mypage/dude-grade-best-off.svg';
 
 interface Props {
   gathering: IGathering;
