@@ -1,19 +1,19 @@
-import MypageContainer from '@/containers/mypage/MypageContainer';
-import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
-import { getQueryClient } from '@/hooks/mypage/queries/getQueryClient';
 import { getJoined } from '@/apis/myMoim';
 import { getGatherings } from '@/apis/ownMoim';
+import { getReviews } from '@/apis/reviews';
 import { getUserInfo } from '@/apis/userInfo';
+import MypageContainer from '@/containers/mypage/MypageContainer';
+import { getQueryClient } from '@/hooks/mypage/queries/getQueryClient';
+import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
-import { getReviews } from '@/apis/reviews';
 
 export default async function Mypage() {
   const cookieStore = await cookies();
   const token = cookieStore.get('accessToken')?.value;
 
   if (!token) {
-    redirect('/');
+    redirect('/auth/signin');
   }
 
   const queryClient = getQueryClient();
