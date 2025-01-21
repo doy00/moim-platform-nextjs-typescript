@@ -1,7 +1,7 @@
 'use client';
 
 import { cn } from '@/lib/utils';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import AuthDropDown from './AuthDropDown';
 import AuthDropUp from './AuthDropUp';
 
@@ -20,6 +20,7 @@ interface CustomSelectProps {
 
 function AuthSelect({ options, placeholder, value, className, onChange }: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
+  const inputDivRef = useRef<HTMLDivElement>(null);
 
   const handleSelect = (selectedValue: string) => {
     onChange(selectedValue);
@@ -30,17 +31,27 @@ function AuthSelect({ options, placeholder, value, className, onChange }: Custom
     setIsOpen((prev) => !prev);
   };
 
+  const handleOnFocus = () => {
+    if (inputDivRef.current) {
+      inputDivRef.current.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+    setIsOpen(true);
+  };
+
   const selectedOption = options.find((option) => option.value === value);
+
   return (
     <div className="relative flex items-center w-full">
       <div
         tabIndex={0}
+        ref={inputDivRef}
+        onFocus={handleOnFocus}
         role="combobox"
         aria-controls="options-listbox"
         aria-expanded={isOpen}
         aria-haspopup="listbox"
         className={cn(
-          'w-full flex text-sm items-center justify-between h-10 px-3 rounded-xl border-input bg-background400 cursor-pointer font-medium text-gray300 outline-none focus:ring-2 focus:ring-orange200',
+          'w-full flex text-sm items-center justify-between h-10 px-3 rounded-xl border-input bg-background400 cursor-pointer font-medium text-gray300 outline-none focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-offset-0 focus-visible:ring-gray200',
           className,
         )}
         onClick={handleToggle}
