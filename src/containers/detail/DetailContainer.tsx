@@ -114,7 +114,7 @@ const handleAuthAction = (action: () => void) => {
     const currentPath = window.location.pathname;
     localStorage.setItem('redirect-after-login', currentPath);
     
-    setShowDialog(true);
+    setTimeout(() => setShowDialog(true), 0);   // [ ] ForwardRef 컴포넌트 상태 업데이트 문제 해결
     return;
   }
 
