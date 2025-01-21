@@ -1,6 +1,6 @@
 import SwitchFilter from '@/components/mypage/filterBar/switch/SwitchFilter';
 import DropDown from '@/components/mypage/filterBar/dropDown/DropDown';
-import Filter from '@/components/mypage/filterBar/filter/Filter';
+import Filter from '@/components/filter/Filter';
 
 export default function FilterBar() {
   return (
