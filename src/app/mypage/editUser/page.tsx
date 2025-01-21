@@ -6,7 +6,7 @@ import Header from '@/components/mypage/header/Header';
 import Link from 'next/link';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { useState } from 'react';
-import LoadingAnimation from '@/components/mypage/LoadingAnimation';
+import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
 
 interface UserData {
   email: string;
@@ -61,8 +61,13 @@ export default function EditUser() {
 
   const isFormValid = tags.length > 0 && tags.length <= 3 && textareaValue;
 
+  //스켈레톤으로 구현하는 것이 더 나아보임, 추후 수정 예정
   if (isLoading) {
-    return <LoadingAnimation />;
+    return (
+      <div className="flex flex-col gap-5 justify-center items-center h-screen">
+        <LoadingAnimation />
+      </div>
+    );
   }
 
   return (
