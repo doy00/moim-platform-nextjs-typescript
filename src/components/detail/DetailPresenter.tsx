@@ -44,7 +44,7 @@ const processDetailData = (data: IMoimDetail | undefined): IMoimDetail => {
       moimStatus: '',
       si: '',
       district: '',
-      roadAddress: '',
+      roadAddress: '주소를 불러오는 중입니다.',
       startDate: '',
       endDate: '',
       // participants: [],
@@ -74,7 +74,7 @@ const processedData = processDetailData(data);
 // 주소 조합
 const fullAddress = processedData ? 
 `${processedData.si} ${processedData.district} ${processedData.roadAddress}`.trim() : 
-"위치가 들어갑니다.";
+"주소를 불러오는 중입니다.";
 
 // 평점: emotion 문자열을 ReviewEmotion 타입으로 안전하게 변환하는 함수
 // [ ] 리팩토링
@@ -105,7 +105,7 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
         /> */}
         <DetailInfo 
           title={processedData?.title || "모임 타이틀이 들어갑니다." }
-          location={fullAddress || "위치가 들어갑니다."}
+          location={fullAddress}
           recruitmentPeriod={
             processedData?.startDate && processedData?.endDate
             ? formatDateRange(processedData.startDate, processedData.endDate)

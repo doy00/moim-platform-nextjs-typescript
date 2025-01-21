@@ -3,18 +3,19 @@ import { axiosInstance } from './axios.api';
 import { ApiDetailResponse } from '@/types/detail/i-moim';
 
 // 모임 상세 데이터(모임정보, 참여자 수, 리뷰) 전체 조회
-export const getDetail = async (id: number): Promise<ApiDetailResponse> => {
+export const getDetail = async (id: number): Promise<ApiDetailResponse | null> => {
   try {
     const response = await axiosInstance.get<ApiDetailResponse>(`/moim/detail/${id}`);
     return response.data;
   } catch (error: any) {
     console.error('API error 모임 상세 전체:', error.response || error);
-    throw {
-      isSuccess: false,
-      message: error.response?.data?.message || '모임상세 데이터를 불러오는데 실패했습니다.',
-      status: error.response?.status || 500,
-      data: null
-    }
+    // throw {
+    //   isSuccess: false,
+    //   message: error.response?.data?.message || '모임상세 데이터를 불러오는데 실패했습니다.',
+    //   status: error.response?.status || 500,
+    //   data: null
+    // }
+    return null;
   }
 };
 
