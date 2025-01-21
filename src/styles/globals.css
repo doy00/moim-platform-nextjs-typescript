@@ -4,7 +4,7 @@
 
 @layer base {
   .layout {
-    @apply relative mx-auto min-h-dvh w-full min-w-[360px] md:min-w-[744px] max-w-[500px] bg-background100 font-pretendard;
+    @apply relative mx-auto min-h-dvh w-full min-w-[360px] max-w-[500px] bg-background100 font-pretendard;
   }
   :root {
     --background: 0 0% 100%;
