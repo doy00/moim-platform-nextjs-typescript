@@ -64,7 +64,10 @@ export default function HomeCard({ data }: { data: IMoim }) {
               {statusMap[moimStatus]}
             </span>
           </div>
-          <button onClick={() => toggleFavorite(moimId)}>
+          <button
+            onClick={() => toggleFavorite(moimId)}
+            aria-label={isFavorited ? 'Remove from favorites' : 'Add to favorites'}
+          >
             <HeartIcon className={`w-6 h-6 ${isFavorited ? 'fill-red-500' : 'fill-gray-300'}`} />
           </button>
         </div>

@@ -9,35 +9,49 @@ type TFavoriteState = {
 
 export const useFavoriteStore = create<TFavoriteState>((set, get) => ({
   favorites: new Set(),
-  toggleFavorite: async(id: number) => {
+
+  toggleFavorite: async (moimId: number) => {
     const favorites = new Set(get().favorites);
+    const isFavorited = favorites.has(moimId);
 
-    if(favorites.has(id)) {
-      favorites.delete(id)
-      try {
-        await axiosInstance.delete(`/favorites/${id}`)
-    } catch (error) {
-        console.error('Failed to remove favorite', error)
+    // Optimistic Update
+    if (isFavorited) {
+      favorites.delete(moimId);
+      set({ favorites });
+    } else {
+      favorites.add(moimId);
+      set({ favorites });
     }
-  } else {
-    favorites.add(id);
+
     try {
-      await axiosInstance.post(`/favorites`, { id })
-    } catch(error) {
-      console.error('Failed to add favorite', error)
-    }
-  }
-  
-    set({ favorites })
+      // API 호출
+      const response = await axiosInstance.post(`/moim/like`, null, {
+        params: { moimId },
+      });
 
+      if (!response.data.isSuccess) {
+        throw new Error(response.data.message || 'Failed to toggle favorite');
+      }
+    } catch (error) {
+      console.error('Failed to toggle favorite:', error);
+
+      // Rollback 상태
+      if (isFavorited) {
+        favorites.add(moimId);
+      } else {
+        favorites.delete(moimId);
+      }
+      set({ favorites });
+    }
   },
+
   fetchFavorites: async () => {
     try {
-      const response = await axiosInstance.get<{ id: number }[]>('/favorites');
-      const favorites = new Set<number>(response.data.map((item) => item.id)); // 타입 명시
+      const response = await axiosInstance.get<{ moimId: number }[]>('/favorites');
+      const favorites = new Set<number>(response.data.map((item) => item.moimId));
       set({ favorites });
     } catch (error) {
-      console.error('Failed to fetch favorites', error);
+      console.error('Failed to fetch favorites:', error);
     }
   },
-}))
+}));

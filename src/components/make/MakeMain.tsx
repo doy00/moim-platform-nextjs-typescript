@@ -1,6 +1,7 @@
 'use client';
 
 import React, { useState } from 'react';
+import axiosHomeInstance from '@/libs/home/home-axios';
 import { useRouter } from 'next/navigation';
 //Store
 //Components
@@ -12,16 +13,48 @@ import StepProgressbar from './StepProgressbar';
 import MakeCancel from './MakeCancel';
 //Icon
 import ArrowLeftLine from '../home/icons/ArrowLeftLine';
+import { useMakeStore } from '@/stores/make/makeStore';
 
 export default function MakeMain() {
   const [step, setStep] = useState<number>(1);
   const totalSteps = 4;
-
   const router = useRouter()
+  const {
+    type,
+    title,
+    content,
+    si,
+    district,
+    roadAddress,
+    recruitmentDeadline,
+    startDate,
+    endDate,
+    minParticipants,
+    maxParticipants,
+  } = useMakeStore()
 
+
+  // const validateStep = (): boolean => {
+  //   switch (step) {
+  //     case 1:
+  //       return !!type;
+  //     case 2:
+  //       return !!title && !!content;
+  //     case 3:
+  //       return !!roadAddress && !!recruitmentDeadline && !!startDate && !!endDate;
+  //     case 4:
+  //       return minParticipants > 0 && maxParticipants >= minParticipants;
+  //     default:
+  //       return false;
+  //   }
+  // };
 
   const handleNextStep = () => {
-    setStep((prev) => Math.min(prev + 1, 4)); 
+    // if (!validateStep()) {
+    //   alert('현재 스텝에서 필수 항목을 모두 입력해주세요.');
+    //   return;
+    // }
+    setStep((prev) => Math.min(prev + 1, totalSteps));
   };
 
   const handlePrevStep = () => {
@@ -29,19 +62,42 @@ export default function MakeMain() {
   };
 
   const handleSubmit = async () => {
+    // if (!validateStep()) {
+    //   alert('필수 항목을 확인해주세요.');
+    //   return;
+    // }
+
+    const requestData = {
+      type,
+      title,
+      content,
+      si,
+      district,
+      roadAddress,
+      recruitmentDeadline,
+      startDate,
+      endDate,
+      minParticipants,
+      maxParticipants,
+    };
+
     try {
-      //
-      router.push('/home');
-      alert('모임 만들기 성공')
+      const response = await axiosHomeInstance.post('/moim/create', requestData);
+      if (response.data.isSuccess) {
+        alert('모임 생성에 성공했습니다!');
+        router.push('/home');
+      } else {
+        alert('모임 생성에 실패했습니다.');
+      }
     } catch (error) {
-      console.error('error 발생', error);
+      console.error('모임 생성 실패:', error);
+      alert('모임 생성 중 문제가 발생했습니다.');
     }
   };
 
   const handleLeave = () => {
-    console.log("이어서 계속 작성.");
+    console.log('작성 취소 후 나가기');
   };
-
 
   
   const renderStep = () => {
