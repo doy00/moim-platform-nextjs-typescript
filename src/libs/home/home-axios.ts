@@ -1,33 +1,24 @@
-import axios from 'axios'
+import axios from 'axios';
+import { error } from 'console';
 
-const axiosInstance = axios.create({
-  baseURL: 'http://api.dothemeet.com', // 가칭
-  timeout: 5000,
-  headers: {
-    'Content-Type': 'application/json'
-  }
-})
+const axiosHomeInstance = axios.create({
+  baseURL: 'http://54.180.32.63:8080',
+});
 
-// Request Interceptor
-axiosInstance.interceptors.request.use(
+axiosHomeInstance.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
-    if(token) {
+    console.log('Axios 요청 성공', config)
+    const token = localStorage.getItem('accessToken')
+    if (token) {
       config.headers.Authorization = `Bearer ${token}`
-    }
-    return config;
-  }
-)
-
-
-// Response Interceptor
-axiosInstance.interceptors.response.use(
-  (response) => response,
+    } else {
+      console.error('AcessToken이 없습니다.')
+    } 
+    return config
+  },
   (error) => {
-    if(error.response?.status === 401 ) {
-      console.error('Response Error 401, UnAuthorized')
-    }
+    return Promise.reject(error)
   }
-)
+);
 
-export default axiosInstance;
+export default axiosHomeInstance;

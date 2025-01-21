@@ -9,11 +9,12 @@ import { useFavoriteStore } from '@/stores/home/favoriteStore';
 import { useFilterStore } from '@/stores/home/filterStore';
 // Components
 import { IMoim } from '@/types/home/i-moim';
-import { fetchMockMoims } from '@/utils/home/fetchMoims';
+import { fetchMoims } from '@/utils/home/fetchMoims';
 import HomeCard from './HomeCard';
 
 export default function HomeCards() {
-  const { category, region, status, confirmed, sortOrder } = useFilterStore();
+  const { moimType,region, moimStatus, sortOrder } = useFilterStore();
+
   const { fetchFavorites } = useFavoriteStore();
 
   useEffect(() => {
@@ -24,14 +25,13 @@ export default function HomeCards() {
     { data: IMoim[]; pagination: { current_page: number; total_pages: number } },
     Error
   >({
-    queryKey: ['moims', category, region, status, confirmed, sortOrder],
+    queryKey: ['moims', moimType, region, moimStatus, sortOrder],
     queryFn: ({ pageParam = 1 }) =>
-      fetchMockMoims({
-        page: pageParam as number,
-        type: category,
+      fetchMoims({
+        page: pageParam, 
+        moimType,
         region: region.length > 0 ? region.join(',') : 'all',
-        status,
-        confirmed,
+        moimStatus,
         sortOrder,
       }),
     getNextPageParam: (lastPage) =>
@@ -47,20 +47,12 @@ export default function HomeCards() {
     }
   };
 
-  const renderedCard = (
-    <div className="px-4 pt-[14px] space-y-4 pb-[62px]">
-      {data?.pages.map((page) =>
-        page.data.map((item: IMoim) => <HomeCard key={item.id} data={item} />)
-      )}
-      {/* 추가 데이터 로딩 상태 표시 */}
-      {isFetchingNextPage && <p className="text-center">Loading more...</p>}
-    </div>
-  );
-
   return (
     <>
       <div className="px-4 pt-[14px] space-y-4">
-        {data?.pages.map((page) => page.data.map((item) => <HomeCard key={item.id} data={item} />))}
+      {data?.pages.map((page) =>
+          page.data.map((item) => <HomeCard key={item.moimId} data={item} />)
+        )}
         {isFetchingNextPage && <p className="text-center">Loading more...</p>}
       </div>
       <IntersectionObserver onIntersect={handleIntersect} />
