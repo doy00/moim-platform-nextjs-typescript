@@ -239,7 +239,6 @@ export default function SignUpForm() {
                       register={register('passwordConfirm', {
                         required: '비밀번호를 다시 한번 입력해주세요',
                         validate: (value) => {
-                          console.log(value);
                           if (value === watch('password')) {
                             setIsPasswordConfirmed(true);
                             return true;

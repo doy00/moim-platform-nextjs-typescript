@@ -1,10 +1,7 @@
-'use client';
-
-import HomeGnb from '@/components/home/HomeGnb';
+import '../styles/globals.css';
 import QueryProvider from '@/libs/detail/QueryProvider';
 import localFont from 'next/font/local';
-import { usePathname } from 'next/navigation';
-import '../styles/globals.css';
+import HomeGnb from '@/components/home/HomeGnb';
 
 // export const metadata: Metadata = {
 //   title: 'Create Next App',
@@ -24,11 +21,6 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  // HomeGnb를 보여줄 경로 목록
-  const pathname = usePathname();
-  const showGnbPaths = ['/home', '/favorites', '/mypage'];
-  const showGnb = showGnbPaths.includes(pathname);
-
   return (
     <html lang="ko">
       <head>
@@ -41,7 +33,8 @@ export default function RootLayout({
       <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
         <QueryProvider>
           <div className="layout">{children}</div>
-          {showGnb && <HomeGnb />}
+          {/* GNB는 HomeGnb 컴포넌트에서 관리 */}
+          <HomeGnb />
         </QueryProvider>
       </body>
     </html>

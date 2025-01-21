@@ -1,20 +1,21 @@
-'use client'
+'use client';
 
-import React from 'react'
-import Link from 'next/link'
-import { usePathname } from 'next/navigation'
-
-
-//Libraries
-import clsx from 'clsx'
+import React from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import clsx from 'clsx';
 
 // Constants
-import { GNB_MENU } from '@/constants/home/gnb-menu'
-
+import { GNB_MENU } from '@/constants/home/gnb-menu';
 
 export default function HomeGnb() {
-
   const pathname = usePathname();
+
+  // GNB를 표시할 경로 목록
+  const showGnbPaths = ['/', '/favorites', '/mypage'];
+  const shouldShowGnb = showGnbPaths.includes(pathname);
+
+  if (!shouldShowGnb) return null;
 
   const renderedGnbMenu = GNB_MENU.map((menu) => {
     const isActive = pathname === menu.path;
@@ -42,16 +43,14 @@ export default function HomeGnb() {
       </li>
     );
   });
-  
-  
+
   return (
     <nav
-    className="h-[62px] fixed bottom-0 left-0 right-0 bg-background200 text-green-600 font-bold text-xl z-10 mx-auto max-w-[500px] w-full"
+      className="h-[62px] fixed bottom-0 left-0 right-0 bg-background200 text-green-600 font-bold text-xl z-10 mx-auto max-w-[500px] w-full"
     >
-    {/* MENU_LIST */}
-    <ul className="list-none flex justify-between items-center text-sm px-6 py-[9px] mx-auto">
-      {renderedGnbMenu}
-    </ul>
+      <ul className="list-none flex justify-between items-center text-sm px-6 py-[9px] mx-auto">
+        {renderedGnbMenu}
+      </ul>
     </nav>
-  )
+  );
 }
