@@ -34,11 +34,22 @@ function AuthSelect({ options, placeholder, value, className, onChange }: Custom
   return (
     <div className="relative flex items-center w-full">
       <div
+        tabIndex={0}
+        role="combobox"
+        aria-controls="options-listbox"
+        aria-expanded={isOpen}
+        aria-haspopup="listbox"
         className={cn(
-          'w-full flex text-sm items-center justify-between h-10 px-3 rounded-xl border-input bg-background400 cursor-pointer font-medium text-gray300',
+          'w-full flex text-sm items-center justify-between h-10 px-3 rounded-xl border-input bg-background400 cursor-pointer font-medium text-gray300 outline-none focus:ring-2 focus:ring-orange200',
           className,
         )}
         onClick={handleToggle}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            handleToggle();
+          }
+        }}
       >
         <span className={cn('text-body-2-normal', value ? 'text-gray600' : 'text-gray300')}>
           {value ? selectedOption?.label : placeholder}
@@ -48,7 +59,10 @@ function AuthSelect({ options, placeholder, value, className, onChange }: Custom
       {isOpen && (
         <>
           <div className="fixed inset-0 z-10 w-dvw h-dvh" onClick={handleToggle} />
-          <ul className="absolute z-20 w-full mt-1 top-14 bg-background100 border border-gray200 rounded-xl shadow-lg">
+          <ul
+            id="options-listbox"
+            className="absolute z-20 w-full mt-1 top-14 bg-background100 border border-gray200 rounded-xl shadow-lg"
+          >
             {options.map((option) => (
               <li
                 key={option.value}
