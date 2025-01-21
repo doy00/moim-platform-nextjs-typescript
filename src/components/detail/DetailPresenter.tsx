@@ -114,6 +114,8 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
             processedData?.endDate
             ? formatDate(processedData.endDate)
             : "모임 날짜가 들어갑니다." }
+              participants={processedData?.participants || 0}
+              minParticipants={processedData?.minParticipants || 3 }
         />
         <DetailParticipants 
           participants={participants || []}

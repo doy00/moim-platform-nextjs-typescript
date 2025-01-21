@@ -30,6 +30,8 @@ export interface IDetailInfoAPIResponse {
   meetingDate: string;
   className?: string;
   image?: string;
+  participants: number;
+  minParticipants: number;
 }
 
 export interface ApiDetailResponse {
