@@ -1,5 +1,5 @@
-import { IUser } from '@/types/user';
-import axiosInstance from './axiosInstance';
+import { IUser } from '@/types/mypage/user';
+import axiosInstance from '@/apis/axiosInstance';
 
 export const getUserInfo = async (): Promise<IUser> => {
   const { data } = await axiosInstance.get('/auths/user');
