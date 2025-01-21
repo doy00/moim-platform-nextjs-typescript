@@ -1,7 +1,8 @@
 'use client';
+
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-import Link from 'next/link';
 import { motion } from 'framer-motion';
+import Link from 'next/link';
 
 export default function EditPassword() {
   return (

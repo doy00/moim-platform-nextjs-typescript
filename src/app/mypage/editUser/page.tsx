@@ -1,12 +1,12 @@
 'use client';
 
-import Image from 'next/image';
-import defaultProfile from '@images/mypage/profile-edit-default.svg';
 import Header from '@/components/mypage/header/Header';
-import Link from 'next/link';
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import { useState } from 'react';
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
+import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
+import defaultProfile from '@images/mypage/profile-edit-default.svg';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useState } from 'react';
 
 interface UserData {
   email: string;
