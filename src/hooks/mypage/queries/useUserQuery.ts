@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getUserInfo, editUserInfo } from '@/apis/userInfo';
-import { IUser } from '@/types/user';
+import { IUser } from '@/types/mypage/user';
 
 export const useUserQuery = () => {
   return useQuery({
