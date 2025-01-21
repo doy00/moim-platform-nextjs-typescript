@@ -55,10 +55,10 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
   return useMutation<TSignInResponse, TError, TAuthSignInInputs>({
     mutationFn: postSignIn,
     onSuccess: (data) => {
-      setLocalStorageItem('dothemeet-token', data.data.accessToken);
-      setLocalStorageItem('dothemeet-refreshToken', data.data.refreshToken);
+      setLocalStorageItem('accessToken', data.data.accessToken);
+      setLocalStorageItem('refreshToken', data.data.refreshToken);
       setCookie({
-        name: 'dothemeet-token',
+        name: 'accessToken',
         value: data.data.accessToken,
         maxAge: 60 * 60,
         httpOnly: true,
@@ -66,7 +66,7 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
         sameSite: 'strict',
       });
       setCookie({
-        name: 'dothemeet-refreshToken',
+        name: 'refreshToken',
         value: data.data.refreshToken,
         maxAge: 60 * 60 * 24 * 30,
         httpOnly: true,
@@ -84,10 +84,10 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
   return useMutation<TSignOutResponse, TError, void>({
     mutationFn: postSignOut,
     onSuccess: () => {
-      removeLocalStorageItem('dothemeet-token');
-      removeLocalStorageItem('dothemeet-refreshToken');
-      deleteCookie('dothemeet-token');
-      deleteCookie('dothemeet-refreshToken');
+      removeLocalStorageItem('accessToken');
+      removeLocalStorageItem('refreshToken');
+      deleteCookie('accessToken');
+      deleteCookie('refreshToken');
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
       queryClient.setQueryData([QUERY_KEY_ME], null);
     },
@@ -119,10 +119,10 @@ export function useAuth() {
   const router = useRouter();
 
   const signOut = useCallback(() => {
-    removeLocalStorageItem('dothemeet-token');
-    removeLocalStorageItem('dothemeet-refreshToken');
-    deleteCookie('dothemeet-token');
-    deleteCookie('dothemeet-refreshToken');
+    removeLocalStorageItem('accessToken');
+    removeLocalStorageItem('refreshToken');
+    deleteCookie('accessToken');
+    deleteCookie('refreshToken');
     queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
     queryClient.setQueryData([QUERY_KEY_ME], null);
     router.refresh();

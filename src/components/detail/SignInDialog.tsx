@@ -7,7 +7,8 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
+} from '@/components/detail/Dialog';
+import { cn } from '@/utils/detail/cn';
 
 interface ISignInDialog {
   isOpen: boolean;
@@ -23,7 +24,12 @@ export const SignInDialog = ({ isOpen, onClose }: ISignInDialog ) => {
 
   return (
     <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className='w-[283px] min-h-45 bg-background400 px-6 py-8 gap-6'>
+      <DialogContent 
+        className={cn(
+          'w-[283px] min-h-45 bg-background400 px-6 py-8 gap-6',
+          // '[&.rounded-lg]:rounded-[24px] !rounded-[24px]',
+          )}
+      >
         <DialogHeader className='space-y-3'>
           <DialogTitle className='flex justify-center items-center text-body-1-normal font-semibold text-gray800'>
             {"로그인 후 이용하실 수 있어요"}
