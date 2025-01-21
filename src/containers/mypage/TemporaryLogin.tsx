@@ -1,9 +1,9 @@
 'use client';
 
 import { login } from '@/apis/login';
-import { ILogin } from '@/types/login';
+import { ILogin } from '@/types/mypage/login';
 import { useRouter } from 'next/navigation';
-import Cookies from 'cookies-next';
+import { setCookie } from 'cookies-next';
 
 const MOCK_LOGIN: ILogin = {
   email: 'test@email.com',
@@ -20,7 +20,7 @@ export default function TemporaryLogin() {
     const token = response.data?.token || response.token;
     console.log('토큰값:', token);
 
-    Cookies.setCookie('accessToken', token, { path: '/' });
+    setCookie('accessToken', token, { path: '/' });
     router.push('/mypage');
   };
 
