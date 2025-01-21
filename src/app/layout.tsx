@@ -29,6 +29,8 @@ export default function RootLayout({
   const showGnbPaths = ['/home', '/favorites', '/mypage'];
   const showGnb = showGnbPaths.includes(pathname);
 
+  const layoutClassName = `layout ${pathname.startsWith('/mypage') ? 'mypage' : ''}`;
+
   return (
     <html lang="ko">
       <head>
@@ -40,7 +42,7 @@ export default function RootLayout({
       </head>
       <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
         <QueryProvider>
-          <div className="layout">{children}</div>
+          <div className={layoutClassName}>{children}</div>
           {showGnb && <HomeGnb />}
         </QueryProvider>
       </body>
