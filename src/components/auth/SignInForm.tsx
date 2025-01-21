@@ -31,6 +31,7 @@ export default function SignInForm() {
     reset,
   } = useSignInMutation();
 
+  // react 18 부터 useTransition 사용 가능(useDeferredValue)
   const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
     trigger(name);
   }, 1000);
