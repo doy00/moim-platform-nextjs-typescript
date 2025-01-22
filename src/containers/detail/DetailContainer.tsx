@@ -102,24 +102,24 @@ export default function DetailContainer({ id }: IDetailContainer) {
   const { checkAuthAndExecute } = useCheckAuth();  
   const [showDialog, setShowDialog] = useState(false);
 
-// 로그인 상태 확인 및 액션 처리
-const handleAuthAction = (action: () => void) => {
-  // 클라이언트 사이드에서만 실행
-  if (typeof window === 'undefined') return;
+  // 로그인 상태 확인 및 액션 처리
+  const handleAuthAction = (action: () => void) => {
+    // 클라이언트 사이드에서만 실행
+    if (typeof window === 'undefined') return;
 
-  const token = getLocalStorageItem('dothemeet-token');
-  
-  if (!token) {
-    // 현재 URL 저장 (로그인 후 리다이렉트용)
-    const currentPath = window.location.pathname;
-    localStorage.setItem('redirect-after-login', currentPath);
+    const token = getLocalStorageItem('dothemeet-token');
     
-    setTimeout(() => setShowDialog(true), 0);   // [ ] ForwardRef 컴포넌트 상태 업데이트 문제 해결
-    return;
-  }
+    if (!token) {
+      // 현재 URL 저장 (로그인 후 리다이렉트용)
+      const currentPath = window.location.pathname;
+      localStorage.setItem('redirect-after-login', currentPath);
+      
+      setTimeout(() => setShowDialog(true), 0);   // [ ] ForwardRef 컴포넌트 상태 업데이트 문제 해결
+      return;
+    }
 
-  action();
-};
+    action();
+  };
 
   // 신청하기 버튼 핸들러
   const handleJoin = () => {
@@ -167,7 +167,7 @@ const handleAuthAction = (action: () => void) => {
       <DetailPresenter 
         data={processedData}
         participants={participants} // 임시로 빈 배열
-        reviews={undefined} // 임시로 undefined
+        reviews={processedData?.reviews} // 임시로 undefined
         isJoining={false} // 임시로 false
         isLiked={false} // 임시로 false
         onJoin={handleJoin} // 임시로 빈 함수

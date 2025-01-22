@@ -1,12 +1,12 @@
 // types/detail/i-presenter.ts
-import type { IMoimDetail, IParticipant } from './i-moim';
-import type { IDetailReviewResponse } from './i-review';
+import type { IMoimDetail, IParticipant, IDetailReviewResponse, IMoimReview } from './i-moim';
 
 export interface DetailPresenterProps {
   // 기본 데이터
   data: IMoimDetail | undefined;
   participants: IParticipant[] | undefined;
-  reviews: IDetailReviewResponse | undefined;
+  // reviews: IDetailReviewResponse | undefined;
+  reviews: IMoimReview[] | undefined;
   
   // 상태
   isJoining: boolean;
