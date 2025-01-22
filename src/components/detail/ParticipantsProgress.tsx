@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Progress } from '@/components/detail/detail-progress';
+import { Progress } from '@/components/detail/DetailProgress';
 import { IParticipantsProgress } from '@/types/detail/i-participant';
 import { FireIcon } from './icons/FireIcon';
 

@@ -1,12 +1,7 @@
 // types/detail/i-moim.ts
-export interface IMoimReview {
-  nickname: string;
-  contents: string;
-  emotion: string;
-  createdAt: string;
-}
 
 export interface IMoimDetail {
+  className?: string;
   moimId: number;
   title: string;
   content: string;
@@ -21,16 +16,45 @@ export interface IMoimDetail {
   minParticipants: number;
   maxParticipants: number;
   reviews: IMoimReview[];
-  image: string;     // [ ] 현재 api에 이미지 없음
+  image: string;
 }
-export interface IDetailInfoAPIResponse {
-  title: string;
-  location: string;
-  recruitmentPeriod: string;
-  meetingDate: string;
+
+export interface IMoimReview {
+  nickname: string;
+  contents: string;
+  emotion: ReviewEmotion;
+  createdAt: string;
+}
+
+export type ReviewEmotion = '그냥그래요' | '괜찮아요' | '추천해요';
+
+export interface IDetailReviewComponent {
+  reviews: IMoimReview[];  // 배열
   className?: string;
-  image?: string;
 }
+
+export interface IReviewItem {
+  review: IMoimReview;    // 단일 객체
+  className?: string;
+}
+
+export interface IDetailReviewResponse {
+  data: IMoimReview[];
+  totalItemCount: number;
+  currentPage: number;
+  totalPages: number;
+}
+
+// export interface IDetailInfoAPIResponse {
+//   title: string;
+//   location: string;
+//   recruitmentPeriod: string;
+//   meetingDate: string;
+//   className?: string;
+//   image?: string;
+//   participants: number;
+//   minParticipants: number;
+// }
 
 export interface ApiDetailResponse {
   isSuccess: boolean;
