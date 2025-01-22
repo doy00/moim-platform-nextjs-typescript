@@ -45,16 +45,16 @@ export interface IDetailReviewResponse {
   totalPages: number;
 }
 
-// export interface IDetailInfoAPIResponse {
-//   title: string;
-//   location: string;
-//   recruitmentPeriod: string;
-//   meetingDate: string;
-//   className?: string;
-//   image?: string;
-//   participants: number;
-//   minParticipants: number;
-// }
+export interface IDetailInfoAPIResponse {
+  title: string;
+  location: string;
+  recruitmentPeriod: string;
+  meetingDate: string;
+  className?: string;
+  image?: string;
+  participants: number;
+  minParticipants: number;
+}
 
 export interface ApiDetailResponse {
   isSuccess: boolean;

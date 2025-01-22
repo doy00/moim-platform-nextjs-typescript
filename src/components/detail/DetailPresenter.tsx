@@ -90,7 +90,15 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
 };
 
   return (
-    <div className="w-full min-h-screen px-4 pb-[93px] bg-background200">
+    <div className="
+      w-full min-h-screen mx-auto px-4 pb-[92px] bg-background200
+      xs:max-w-screen-xs
+      sm:max-w-screen-sm
+      md:max-w-screen-md
+      lg:max-w-screen-lg
+      xl:max-w-screen-xl
+      "
+    >
         <Link href="/" className="w-full h-14 py-[10px] flex items-center">
           <DothemeetLogo />
         </Link>
@@ -126,25 +134,9 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
             DEFAULT_IMAGE.PROFILE}
         />
         {/* 리뷰 목록 */}
-        {/* {processedData?.reviews && processedData.reviews.length > 0 ? ( */}
-          {/* processedData.reviews.map((review, index) => ( */}
           <DetailReview 
-            // key={index}
-            // reviewCount={processedData.reviews.length}
-            // emotion={convertToReviewEmotion(processedData.reviews.emotion)}
-            // comment={review.contents || "리뷰 내용이 들어갑니다."}
-            // author={review.nickname || "작성자"}
-            // date={formatDate(review.createdAt) || "25. 02. 01"}
-            // authorImage={DEFAULT_IMAGE.PROFILE}
             reviews={processedData?.reviews || []}
           />
-          {/* )) */}
-        {/* ) : ( */}
-          {/* // 리뷰가 없을 때 */}
-          {/* <DetailReview reviewCount={0} /> */}
-        {/* )} */}
-        
-
         <FloatingBar
           onHeartClick={onLikeToggle}
           onJoinClick={() => onJoin}

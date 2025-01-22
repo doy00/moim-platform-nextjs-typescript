@@ -156,14 +156,14 @@ export default function DetailContainer({ id }: IDetailContainer) {
     registratonEnd: detailData.endDate,  // 모집 마감 날짜
     participantCount: detailData.participants,  // 참여 인원 수
     capacity: detailData.maxParticipants,       // 정원
-    // [ ] 이미지 관련 추가
+    // 이미지 관련 코드 - 보류
     // image: detailData.image
     //   ? `${process.env.NEXT_PUBLIC_API_URL}/${detailData.image}`
     //   : DEFAULT_IMAGE.MOIM
   } : undefined;
 
   return (
-    <div className="w-full min-h-screen px-4 pb-[93px] bg-background200">
+    <div>
       <DetailPresenter 
         data={processedData}
         participants={participants} // 임시로 빈 배열

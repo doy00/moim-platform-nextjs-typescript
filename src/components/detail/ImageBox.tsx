@@ -4,12 +4,13 @@ import { IImageBox } from "@/types/detail/i-components"
 import { IMAGE_SIZE } from "@/constants/detail/images";
 import { DEFAULT_IMAGE } from "@/constants/detail/images";
 import Image, { StaticImageData } from "next/image";
+import { cn } from "@/utils/detail/cn";
 
 export const ImageBox: React.FC<IImageBox> = ({
   image,
   alt= "모임 이미지",
   className,
-  aspectRatio = "aspect-[1.91/1]",
+  aspectRatio,
 }) => {
   // 이미지 로드 실패 상태를 관리하는 상태 변수
   const [hasError, setHasError] = useState(false);
@@ -31,7 +32,7 @@ export const ImageBox: React.FC<IImageBox> = ({
     );
   }
   
-  // 이미지 소스 처리하는 함수
+  /// 이미지 소스 처리하는 함수
   const getImageSource = (): string | StaticImageData => {
     // 이미지가 에러상태 또는 이미지가 없을 경우
     if (hasError || !image) {
@@ -41,29 +42,34 @@ export const ImageBox: React.FC<IImageBox> = ({
     if (typeof image !== 'string') {
       return image;
     }
-    // 이미지가 없거나 로드에 실패하였을 때 fallback 이미지를 표시합니다.
-    // if (!image || image === "" || hasError) {
-    //   return DEFAULT_IMAGE.MOIM;
-    // }
-
     // 이미지가 URL 형태일 경우 
     if (image.startsWith('http') || image.startsWith('data:') || image.startsWith('/')) {
       return image;
     }
-
     // 이미지가 상대 경로일 경우
-    return `images/${image}`;  // [ ]
+    return `images/${image}`;  
   };
-
   
   return (
-    <div className={`relative w-full mx-auto rounded-2xl overflow-hidden ${aspectRatio} ${className || ''}`}>
+    <div className={cn(
+      "relative w-full mx-auto rounded-2xl overflow-hidden",
+      `aspect-[${IMAGE_SIZE.ASPECT_RATIO.MOBILE}]`,
+      `md:aspect-[${IMAGE_SIZE.ASPECT_RATIO.DESKTOP}]`,
+      "h-[180px]",
+      "lg:h-[276px]",
+      className
+      )}
+    >
       <div className="absolute inset-0">
         <Image 
           src={getImageSource()}
           alt={alt}
-          fill
-          style={{ objectFit: "cover" }}
+          width={1240}
+          height={600}
+          className={cn(
+            'w-full h-full object-cover',
+            'absolute'
+          )}
           sizes={IMAGE_SIZE.DEFAULT}
           onError={() => setHasError(true)}
           priority={false}
