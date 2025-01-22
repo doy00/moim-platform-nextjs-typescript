@@ -13,7 +13,7 @@ import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 // types
 import { DetailPresenterProps } from '@/types/detail/i-presenter';
-import { IMoimDetail, ReviewEmotion, IMoimReview } from '@/types/detail/i-moim';
+import { IMoimDetail, ReviewEmotion } from '@/types/detail/i-moim';
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
 // uitls
@@ -53,7 +53,7 @@ export default function DetailPresenter({
       maxParticipants: 12,
       reviews: [],
       
-      // [ ] 이미지?
+      // [ ] 이미지 - 보류
       image: DEFAULT_IMAGE.MOIM,
     };
   }

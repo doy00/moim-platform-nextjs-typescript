@@ -21,7 +21,15 @@ export const FloatingBar = ({
   disabled = false
 }: IFloatingBar) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 w-full max-w-[500px] mx-auto h-19 p-4 bg-background200">
+    <div className="
+      fixed bottom-0 left-0 right-0 z-50 w-full mx-auto h-19 p-4 bg-background200 shadow-2xl rounded-2xl
+      xs:max-w-screen-xs
+      sm:max-w-screen-sm
+      md:max-w-screen-md
+      lg:max-w-screen-lg
+      xl:max-w-screen-xl
+      "
+    >
       <div className="flex items-center gap-3">
         {/* 찜하기 버튼 */}
         <button

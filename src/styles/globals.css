@@ -7,7 +7,7 @@
   .layout {
     @apply relative mx-auto min-h-dvh w-full min-w-[360px] 
     /* max-w-[500px] */
-    bg-background400 font-pretendard;
+    bg-background200 font-pretendard;
   }
 
   /* 마이페이지 페이지 레이아웃 최대 너비 없음으로 수정 */
