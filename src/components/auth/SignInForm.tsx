@@ -40,8 +40,17 @@ export default function SignInForm() {
     !methods.formState.isValid;
 
   useEffect(() => {
-    if (signInError) console.error(signInError);
-  }, [signInError]);
+    console.log(signInError);
+    if (!signInError) return;
+    if (signInError.data === '유저가 존재하지 않습니다.') {
+      methods.setError('email', { type: 'manual', message: '등록되지 않은 계정이에요' });
+      methods.setFocus('email');
+    }
+    if (signInError.data === '비밀번호가 일치하지 않습니다.') {
+      methods.setError('password', { type: 'manual', message: '비밀번호를 확인해주세요' });
+      methods.setFocus('password');
+    }
+  }, [signInError, methods, signInReset]);
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-background200 md:bg-background100">
@@ -70,8 +79,7 @@ export default function SignInForm() {
                         label="이메일"
                         placeholder="example@google.com"
                         type="text"
-                        mutationError={signInError}
-                        reset={signInReset}
+                        mutationReset={signInReset}
                         registerOptions={{
                           required: '이메일을 입력해주세요',
                           pattern: {
@@ -86,8 +94,7 @@ export default function SignInForm() {
                         label="비밀번호"
                         placeholder="******"
                         type="password"
-                        mutationError={signInError}
-                        reset={signInReset}
+                        mutationReset={signInReset}
                         registerOptions={{
                           required: '비밀번호를 입력해주세요',
                           minLength: {

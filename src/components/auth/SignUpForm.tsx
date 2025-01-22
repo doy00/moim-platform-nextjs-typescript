@@ -20,6 +20,8 @@ export default function SignUpForm() {
   const positionId = useId();
   const introductionId = useId();
   const tagsId = useId();
+  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
+
   const methods = useForm<TAuthFormValues>({
     defaultValues: {
       tags: [{ id: 0, value: '' }],
@@ -36,7 +38,11 @@ export default function SignUpForm() {
     error: signUpError,
     reset: signUpReset,
   } = useSignUpMutation();
-  const { mutateAsync: signIn } = useSignInMutation();
+  const {
+    mutateAsync: signIn,
+    isPending: isSignInPending,
+    error: signInError,
+  } = useSignInMutation();
 
   const handleAppendTag = () => {
     if (fields.length < 3) append({ id: fields.length, value: '' });
@@ -71,10 +77,9 @@ export default function SignUpForm() {
     }
   };
 
-  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
-
   const isDisabled =
     isSignUpPending ||
+    isSignInPending ||
     !!methods.formState.errors.password ||
     !!methods.formState.errors.email ||
     !!methods.formState.errors.position ||
@@ -82,16 +87,20 @@ export default function SignUpForm() {
     !!methods.formState.errors.passwordConfirm ||
     !!methods.formState.errors.tags ||
     !!signUpError ||
+    !!signInError ||
     !methods.formState.isValid;
 
   useEffect(() => {
-    if (signUpError) console.error(signUpError);
-  }, [signUpError]);
+    if (signUpError) {
+      methods.setError('email', { type: 'manual', message: '중복되는 이메일이 있어요' });
+      methods.setFocus('email');
+    }
+  }, [signUpError, methods, signUpReset]);
 
   return (
     <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background100">
       {/** 로딩 수정요망 */}
-      {isSignUpPending && <div>로딩 중...</div>}
+      {(isSignUpPending || isSignInPending) && <div>로딩 중...</div>}
 
       <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
         <div className="w-full h-14 flex items-center">
@@ -120,8 +129,6 @@ export default function SignUpForm() {
                       label="닉네임"
                       placeholder="dothemeet"
                       type="text"
-                      mutationError={signUpError}
-                      reset={signUpReset}
                       registerOptions={{ required: '닉네임을 입력해주세요' }}
                     />
 
@@ -130,8 +137,6 @@ export default function SignUpForm() {
                       label="이메일"
                       placeholder="example@google.com"
                       type="text"
-                      mutationError={signUpError}
-                      reset={signUpReset}
                       registerOptions={{
                         required: '이메일을 입력해주세요',
                         pattern: {
@@ -139,13 +144,6 @@ export default function SignUpForm() {
                           message: '올바른 이메일 형식을 입력해 주세요',
                         },
                       }}
-                      additionalErrors={
-                        signUpError && (
-                          <p className="text-error text-label-normal font-medium">
-                            중복되는 이메일이 있어요
-                          </p>
-                        )
-                      }
                     />
 
                     <AuthLabelWithInput
@@ -153,8 +151,6 @@ export default function SignUpForm() {
                       label="비밀번호"
                       placeholder="******"
                       type="password"
-                      mutationError={signUpError}
-                      reset={signUpReset}
                       registerOptions={{
                         required: '비밀번호를 입력해주세요',
                         pattern: {
@@ -176,8 +172,6 @@ export default function SignUpForm() {
                       label="비밀번호 확인"
                       placeholder="******"
                       type="password"
-                      mutationError={signUpError}
-                      reset={signUpReset}
                       registerOptions={{
                         required: '비밀번호를 다시 한번 입력해주세요',
                         validate: (value) => {
@@ -246,8 +240,6 @@ export default function SignUpForm() {
                       isTextarea
                       isRequired={false}
                       className="h-[100px]"
-                      mutationError={signUpError}
-                      reset={signUpReset}
                       registerOptions={{
                         maxLength: {
                           value: 20,

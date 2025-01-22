@@ -3,8 +3,7 @@
 import { useDebounce } from '@/hooks/auth/auth.hook';
 import { cn } from '@/lib/utils';
 import { TAuthFormValues } from '@/types/auth/auth.type';
-import { TError } from '@/types/auth/error.type';
-import { ReactNode, useEffect, useId } from 'react';
+import { ReactNode, useId } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 import AuthInput from './AuthInput';
 
@@ -15,14 +14,13 @@ interface IAuthLabelWithInput {
   type: 'text' | 'password';
   registerOptions: RegisterOptions;
   isTextarea?: boolean;
-  mutationError: TError | null;
-  reset: () => void;
   additionalErrors?: ReactNode;
   className?: string;
   isRequired?: boolean;
+  mutationReset?: () => void;
 }
 
-function AuthLabelWithInput({
+export default function AuthLabelWithInput({
   name,
   label,
   placeholder,
@@ -30,38 +28,21 @@ function AuthLabelWithInput({
   registerOptions,
   isTextarea,
   additionalErrors,
-  mutationError,
   className,
-  reset,
   isRequired = true,
+  mutationReset,
 }: IAuthLabelWithInput) {
   const id = useId();
   const {
     register,
     setValue,
     trigger,
-    setFocus,
     formState: { errors },
   } = useFormContext<TAuthFormValues>();
-
-  // react 18 부터 useTransition 사용 가능(useDeferredValue)
-  // const deferredValue = useDeferredValue(watch(name));
-  // const debouncedValidation = (name: keyof TAuthFormValues) => {
-  //   console.log('debouncedValidation');
-  //   if (deferredValue) trigger(name);
-  // };
 
   const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
     trigger(name);
   }, 600);
-
-  const userNotFoundError = mutationError?.data === '유저가 존재하지 않습니다.';
-  const invalidCredentialsError = mutationError?.data === '비밀번호가 일치하지 않습니다.';
-
-  useEffect(() => {
-    if (userNotFoundError) setFocus('email');
-    if (invalidCredentialsError) setFocus('password');
-  }, [userNotFoundError, invalidCredentialsError, name, setFocus]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -73,15 +54,14 @@ function AuthLabelWithInput({
         placeholder={placeholder}
         isTextarea={isTextarea}
         className={cn('h-[54px]', className, {
-          'focus-visible:ring-error border border-error':
-            errors?.[name] || userNotFoundError || invalidCredentialsError || mutationError,
+          'focus-visible:ring-error border border-error': errors?.[name],
         })}
         name={name}
         id={id}
         register={register(name, {
           ...registerOptions,
           onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (mutationError) reset();
+            if (errors[name]) mutationReset?.();
             setValue(name, e.target.value);
             debouncedValidation(name);
           },
@@ -90,15 +70,14 @@ function AuthLabelWithInput({
       {errors[name] && (
         <p className="text-error text-label-normal font-medium">{errors[name].message}</p>
       )}
-      {name === 'email' && userNotFoundError && (
-        <p className="text-error text-label-normal font-medium">등록되지 않은 계정이에요</p>
-      )}
-      {name === 'password' && invalidCredentialsError && (
-        <p className="text-error text-label-normal font-medium">비밀번호를 확인해주세요</p>
-      )}
       {additionalErrors && additionalErrors}
     </div>
   );
 }
 
-export default AuthLabelWithInput;
+// react 18 부터 useTransition 사용 가능(useDeferredValue)
+// const deferredValue = useDeferredValue(watch(name));
+// const debouncedValidation = (name: keyof TAuthFormValues) => {
+//   console.log('debouncedValidation');
+//   if (deferredValue) trigger(name);
+// };
