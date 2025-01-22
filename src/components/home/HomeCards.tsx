@@ -9,7 +9,7 @@ import { useFavoriteStore } from '@/stores/home/favoriteStore';
 import { useFilterStore } from '@/stores/home/filterStore';
 // Components
 import { IMoim } from '@/types/home/i-moim';
-import { fetchMoims } from '@/utils/home/fetchMoims';
+// import { fetchMoims } from '@/utils/home/fetchMoims';
 import HomeCard from './HomeCard';
 
 export default function HomeCards() {
