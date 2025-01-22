@@ -52,7 +52,7 @@ export default function SignUpForm() {
 
   const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
     methods.trigger(name);
-  }, 1000);
+  }, 600);
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signUpError) return;

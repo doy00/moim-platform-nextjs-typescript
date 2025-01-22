@@ -45,9 +45,15 @@ function AuthLabelWithInput({
   } = useFormContext<TAuthFormValues>();
 
   // react 18 부터 useTransition 사용 가능(useDeferredValue)
+  // const deferredValue = useDeferredValue(watch(name));
+  // const debouncedValidation = (name: keyof TAuthFormValues) => {
+  //   console.log('debouncedValidation');
+  //   if (deferredValue) trigger(name);
+  // };
+
   const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
     trigger(name);
-  }, 1000);
+  }, 600);
 
   const userNotFoundError = mutationError?.code.toLowerCase().includes('user');
   const invalidCredentialsError = mutationError?.code.toLowerCase().includes('invalid');
