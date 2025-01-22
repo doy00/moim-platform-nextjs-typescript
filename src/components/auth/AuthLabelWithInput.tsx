@@ -55,11 +55,12 @@ function AuthLabelWithInput({
     trigger(name);
   }, 600);
 
-  const userNotFoundError = mutationError?.code.toLowerCase().includes('user');
-  const invalidCredentialsError = mutationError?.code.toLowerCase().includes('invalid');
+  const userNotFoundError = mutationError?.data === '유저가 존재하지 않습니다.';
+  const invalidCredentialsError = mutationError?.data === '비밀번호가 일치하지 않습니다.';
 
   useEffect(() => {
-    if (userNotFoundError || invalidCredentialsError) setFocus(name);
+    if (userNotFoundError) setFocus('email');
+    if (invalidCredentialsError) setFocus('password');
   }, [userNotFoundError, invalidCredentialsError, name, setFocus]);
 
   return (
@@ -88,6 +89,12 @@ function AuthLabelWithInput({
       />
       {errors[name] && (
         <p className="text-error text-label-normal font-medium">{errors[name].message}</p>
+      )}
+      {name === 'email' && userNotFoundError && (
+        <p className="text-error text-label-normal font-medium">등록되지 않은 계정이에요</p>
+      )}
+      {name === 'password' && invalidCredentialsError && (
+        <p className="text-error text-label-normal font-medium">비밀번호를 확인해주세요</p>
       )}
       {additionalErrors && additionalErrors}
     </div>

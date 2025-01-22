@@ -79,14 +79,6 @@ export default function SignInForm() {
                             message: '올바른 이메일 형식을 입력해 주세요',
                           },
                         }}
-                        additionalErrors={
-                          signInError &&
-                          signInError.code.toLowerCase().includes('user') && (
-                            <p className="text-error text-label-normal font-medium">
-                              등록되지 않은 계정이에요
-                            </p>
-                          )
-                        }
                       />
 
                       <AuthLabelWithInput
@@ -104,16 +96,12 @@ export default function SignInForm() {
                           },
                         }}
                         additionalErrors={
-                          (signInError && signInError.code.toLowerCase().includes('invalid') && (
-                            <p className="text-error text-label-normal font-medium">
-                              {signInError.message}
-                            </p>
-                          )) ||
-                          (!methods.formState.errors.password && !signInError && (
+                          !methods.formState.errors.password &&
+                          !signInError && (
                             <p className="text-gray300 text-label-normal font-medium">
                               특수문자 포함 8~20자 사이로 입력해주세요
                             </p>
-                          ))
+                          )
                         }
                       />
                     </div>

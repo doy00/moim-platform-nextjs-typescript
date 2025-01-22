@@ -1,4 +1,3 @@
-import { TError } from '@/types/auth/error.type';
 import { getLocalStorageItem } from '@/utils/auth/auth-client.util';
 import { getCookie } from '@/utils/auth/auth-server.util';
 import type { AxiosError, AxiosResponse } from 'axios';
@@ -26,13 +25,6 @@ api.interceptors.request.use(async (config) => {
 api.interceptors.response.use(
   <T>(response: AxiosResponse<T>) => response.data as T,
   (error: AxiosError) => {
-    if (
-      error.response?.status === 401 &&
-      (error.response?.data as TError)?.code === 'INVALID_TOKEN'
-    ) {
-      window.location.href = '/signup?type=email';
-      return;
-    }
     return Promise.reject(error.response?.data);
   },
 );

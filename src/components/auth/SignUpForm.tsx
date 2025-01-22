@@ -142,9 +142,7 @@ export default function SignUpForm() {
                       additionalErrors={
                         signUpError && (
                           <p className="text-error text-label-normal font-medium">
-                            {signUpError.message === '이미 사용 중인 이메일입니다'
-                              ? '중복되는 이메일이 있어요'
-                              : methods.formState.errors.email?.message}
+                            중복되는 이메일이 있어요
                           </p>
                         )
                       }
