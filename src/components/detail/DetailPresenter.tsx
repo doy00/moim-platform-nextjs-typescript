@@ -50,7 +50,7 @@ export default function DetailPresenter({
       // participants: [],
       participants: 0,
       minParticipants: 0,
-      maxParticipants: 0,
+      maxParticipants: 12,
       reviews: [],
       
       // [ ] 이미지?
@@ -112,7 +112,7 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
         />
         <DetailParticipants 
           participants={participants || []}
-          
+          maxParticipants={processedData?.maxParticipants}
         />
         <DetailContent 
           content={processedData?.content}
