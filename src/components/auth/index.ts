@@ -4,6 +4,7 @@ export { default as AuthEye } from './AuthEye';
 export { default as AuthEyeSlash } from './AuthEyeSlash';
 export { default as AuthInput } from './AuthInput';
 export { default as AuthKakao } from './AuthKakao';
+export { default as AuthLabelWithInput } from './AuthLabelWithInput';
 export { default as AuthQuestions } from './AuthQuestions';
 export { default as AuthSelect } from './AuthSelect';
 export { default as AuthSelectEmailKakao } from './AuthSelectEmailKakao';

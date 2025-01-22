@@ -19,6 +19,7 @@ function AuthInput({ className, type, register, isTextarea, isArray, ...props }:
   const togglePasswordVisibility = () => {
     setShowPassword((prevShowPassword) => !prevShowPassword);
   };
+
   return (
     <div className={cn('relative flex items-center w-full', isArray && 'w-auto')}>
       {isTextarea ? (
