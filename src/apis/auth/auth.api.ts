@@ -10,15 +10,13 @@ import type {
 import api from './axios.api';
 
 export const postSignUp = (data: TAuthSignUpInputs) => {
-  // const url = '/user/register';
-  const url = '/auth/api/user/register';
+  const url = '/user/register';
 
   return api.post<TSignUpResponse, TSignUpResponse>(url, data);
 };
 
 export const postSignIn = (data: TAuthSignInInputs) => {
-  // const url = '/user/login';
-  const url = '/auth/api/user/login';
+  const url = '/user/login';
   return api.post<TSignInResponse, TSignInResponse>(url, data);
 };
 
@@ -28,8 +26,7 @@ export const postSignOut = () => {
 };
 
 export const getMe = async () => {
-  // const url = '/user/detail';
-  const url = '/auth/api/user/detail';
+  const url = '/user/detail';
   const response = await api.get<TMeResponse, TMeResponse>(url);
   return response.data;
 };

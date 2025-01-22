@@ -216,10 +216,10 @@ export default function SignUpForm() {
                         render={({ field: { onChange, value } }) => (
                           <AuthSelect
                             options={[
-                              { value: 'pm', label: 'PM' },
-                              { value: 'designer', label: '디자이너' },
-                              { value: 'frontend', label: '프론트 개발자' },
-                              { value: 'backend', label: '백엔드 개발자' },
+                              { value: 'PM', label: 'PM' },
+                              { value: 'DESIGNER', label: '디자이너' },
+                              { value: 'FRONTEND', label: '프론트 개발자' },
+                              { value: 'BACKEND', label: '백엔드 개발자' },
                             ]}
                             className={cn(
                               'h-[54px]',
