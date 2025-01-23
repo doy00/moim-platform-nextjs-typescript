@@ -55,7 +55,7 @@ export default function SignUpForm() {
     isPending: isSetCookiePending,
     error: setCookieError,
   } = useSetCookieMutation();
-  const { me } = useAuth({ enabled: isReadyToGetMe });
+  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
 
   const handleAppendTag = () => {
     if (fields.length < 3) append({ id: fields.length, value: '' });
@@ -126,7 +126,7 @@ export default function SignUpForm() {
 
   return (
     <>
-      {(isSignUpPending || isSignInPending || isSetCookiePending) && <AuthLoading />}
+      {(isSignUpPending || isSignInPending || isSetCookiePending || isMeLoading) && <AuthLoading />}
 
       <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background100">
         <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">

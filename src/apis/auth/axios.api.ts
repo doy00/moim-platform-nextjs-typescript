@@ -29,4 +29,15 @@ api.interceptors.response.use(
   },
 );
 
+export const apiToRouteHandler = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_VERCEL_URL,
+});
+
+apiToRouteHandler.interceptors.response.use(
+  <T>(response: AxiosResponse<T>) => response.data as T,
+  (error: AxiosError) => {
+    return Promise.reject(error.response?.data);
+  },
+);
+
 export default api;
