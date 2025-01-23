@@ -54,7 +54,8 @@ export default function AuthLabelWithInput({
         placeholder={placeholder}
         isTextarea={isTextarea}
         className={cn('h-[54px]', className, {
-          'focus-visible:ring-error border border-error': errors?.[name],
+          // 'focus-visible:ring-error border-solid border-error': errors?.[name],
+          'focus-visible:ring-error ring-1 ring-error': errors?.[name],
         })}
         name={name}
         id={id}

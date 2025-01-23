@@ -15,7 +15,7 @@ export default function AuthSelectEmailKakao({ children }: AuthSelectEmailKakaoP
         <DothemeetLogo />
       </div>
       <div className="flex-1 flex items-center justify-center">
-        <DothemeetCharacter />
+        <DothemeetCharacter isFull />
       </div>
       <div className="w-full 2xl:w-[584px] flex flex-col items-center justify-center gap-4 pb-12 2xl:pb-[100px]">
         <div className="w-full flex flex-col items-center justify-center gap-2">
