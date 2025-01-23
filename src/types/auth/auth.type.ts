@@ -66,3 +66,5 @@ export type TMeResponse = {
     tags: string[];
   };
 };
+
+export type TMe = TMeResponse['data'];

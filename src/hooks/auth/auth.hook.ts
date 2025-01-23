@@ -5,6 +5,7 @@ import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
   TAuthSignInInputs,
   TAuthSignUpInputs,
+  TMe,
   TMeResponse,
   TPutMeInputs,
   TSignInResponse,
@@ -104,18 +105,22 @@ export function usePutMeMutation(): UseMutationResult<TMeResponse, TError, TPutM
   });
 }
 
-export function useMeQuery(enabled: boolean = true): UseQueryResult<TMeResponse['data'], TError> {
-  return useQuery<TMeResponse['data'], TError>({
+export function useMeQuery(enabled: boolean = true): UseQueryResult<TMe, TError> {
+  return useQuery<TMe, TError>({
     queryKey: [QUERY_KEY_ME],
     queryFn: getMe,
     enabled,
   });
 }
 
+interface UseAuthProps {
+  ready?: boolean;
+}
+
 // me 객체 접근과, 로그아웃을 편리하게 사용하기 위한 훅
-export function useAuth() {
+export function useAuth({ ready = true }: UseAuthProps) {
   const queryClient = useQueryClient();
-  const { data: me, isPending: isMeLoading, error } = useMeQuery();
+  const { data: me, isLoading: isMeLoading, error } = useMeQuery(ready);
   const router = useRouter();
 
   const signOut = useCallback(() => {
