@@ -1,6 +1,12 @@
 'use client';
 
-import { useDebounce, useSignUpMutation } from '@/hooks/auth/auth.hook';
+import {
+  useAuth,
+  useDebounce,
+  useSetCookieMutation,
+  useSignInMutation,
+  useSignUpMutation,
+} from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import Link from 'next/link';
@@ -21,17 +27,7 @@ export default function SignUpForm() {
   const introductionId = useId();
   const tagsId = useId();
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
-  const [isComplete, setIsComplete] = useState<{
-    state: boolean;
-    email: string;
-    nickname: string;
-    password: string;
-  }>({
-    state: false,
-    email: '',
-    nickname: '',
-    password: '',
-  });
+  const [isReadyToGetMe, setIsReadyToGetMe] = useState(false);
 
   const methods = useForm<TAuthFormValues>({
     defaultValues: {
@@ -49,6 +45,17 @@ export default function SignUpForm() {
     error: signUpError,
     reset: signUpReset,
   } = useSignUpMutation();
+  const {
+    mutateAsync: signIn,
+    error: signInError,
+    isPending: isSignInPending,
+  } = useSignInMutation();
+  const {
+    mutateAsync: setCookie,
+    isPending: isSetCookiePending,
+    error: setCookieError,
+  } = useSetCookieMutation();
+  const { me } = useAuth({ enabled: isReadyToGetMe });
 
   const handleAppendTag = () => {
     if (fields.length < 3) append({ id: fields.length, value: '' });
@@ -78,17 +85,19 @@ export default function SignUpForm() {
     };
     const response = await signUp(signUpData);
     if (response.isSuccess) {
-      setIsComplete({
-        state: true,
-        email: data.email,
-        nickname: data.nickname,
-        password: data.password,
+      const { data: signInData } = await signIn({ email: data.email, password: data.password });
+      await setCookie({
+        accessToken: signInData.accessToken,
+        refreshToken: signInData.refreshToken,
       });
+      setIsReadyToGetMe(true);
     }
   };
 
   const isDisabled =
     isSignUpPending ||
+    isSignInPending ||
+    isSetCookiePending ||
     !!methods.formState.errors.password ||
     !!methods.formState.errors.email ||
     !!methods.formState.errors.position ||
@@ -96,6 +105,8 @@ export default function SignUpForm() {
     !!methods.formState.errors.passwordConfirm ||
     !!methods.formState.errors.tags ||
     !!signUpError ||
+    !!signInError ||
+    !!setCookieError ||
     !methods.formState.isValid;
 
   useEffect(() => {
@@ -111,11 +122,11 @@ export default function SignUpForm() {
     }
   }, [methods.formState.errors.password, methods]);
 
-  if (isComplete.state) return <AuthSignUpComplete data={isComplete} />;
+  if (me) return <AuthSignUpComplete me={me} />;
 
   return (
     <>
-      {isSignUpPending && <AuthLoading />}
+      {(isSignUpPending || isSignInPending || isSetCookiePending) && <AuthLoading />}
 
       <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background100">
         <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
