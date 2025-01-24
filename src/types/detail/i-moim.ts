@@ -12,7 +12,7 @@ export interface IMoimDetail {
   roadAddress: string;
   startDate: string;
   endDate: string;
-  participants: number;
+  participants: number;   // [ ] 실제 참가자 배열 추가 예정, 참가인원수 별도 
   minParticipants: number;
   maxParticipants: number;
   reviews: IMoimReview[];
