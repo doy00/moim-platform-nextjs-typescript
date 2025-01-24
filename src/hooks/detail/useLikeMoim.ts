@@ -42,8 +42,14 @@ export const useLikeMoim = (moimId: number, options: UseLikeMoimOptions = {}) =>
   // });
 
 
-  // 찜 초기상태 useEffect 사용
+  // 찜 초기상태 확인 useEffect 사용
   const [isLiked, setIsLiked] = useState(false);
+  // const [isLiked, setIsLiked] = useState(() => {
+  //   if (typeof window === 'undefined') return false;
+  //   const likedMoims = localStorage.getItem('likedMoims');
+  //   return likedMoims ? JSON.parse(likedMoims).includes(moimId) : false;
+  // });
+
   const [isProcessing, setIsProcessing] = useState(false);
 
   useEffect(() => {
@@ -74,7 +80,6 @@ export const useLikeMoim = (moimId: number, options: UseLikeMoimOptions = {}) =>
         ? likedMoims.filter((id: number) => id !== moimId)
         : [...likedMoims, moimId];
       localStorage.setItem('likedMoims', JSON.stringify(updatedLikes));
-
       setIsLiked(!isLiked);
       toast.success(successMessage);
     } catch (error) {
