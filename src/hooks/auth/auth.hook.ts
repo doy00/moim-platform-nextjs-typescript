@@ -1,7 +1,14 @@
 'use client';
 
-import { deleteSignOut, getMe, postSignIn, postSignUp, putMe } from '@/apis/auth/auth.api';
-import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
+import {
+  deleteSignOut,
+  getMe,
+  getProviderLogin,
+  postSignIn,
+  postSignUp,
+  putMe,
+} from '@/apis/auth/auth.api';
+import { PROVIDERS, QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
   TAuthSignInInputs,
   TAuthSignInResponse,
@@ -39,13 +46,10 @@ export const useDebounce = <T extends unknown[]>(
 
 export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthSignUpInputs> {
   const queryClient = useQueryClient();
-  const queryClient = useQueryClient();
   return useMutation<TSignUpResponse, TError, TAuthSignUpInputs>({
     mutationFn: postSignUp,
-    onSuccess: (data) => {
-      setLocalStorageItem('access_token', data.tokens.accessToken);
-      setLocalStorageItem('refresh_token', data.tokens.refreshToken);
-      queryClient.setQueryData([QUERY_KEY_ME], data.me);
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
     },
   });
 }
@@ -88,19 +92,40 @@ export function useMeQuery(enabled: boolean = true): UseQueryResult<TMe, TError>
   });
 }
 
-export function useProviderLoginQuery({ provider, next }: { provider: string; next: string }) {
-  return useQuery<{ message: string }, TError, { provider: string; next: string }>({
+interface AuthProviderQueryProps {
+  provider: string;
+  isStart: boolean;
+  next?: string;
+}
+
+export function useProviderLoginQuery({ provider, isStart, next }: AuthProviderQueryProps) {
+  return useQuery<{ message: string }, TError>({
     queryKey: [QUERY_KEY_ME, provider, next],
     queryFn: () => getProviderLogin(provider, next),
-    enabled: !!provider && !!next,
+    enabled: !!provider && isStart,
   });
 }
+
+interface UseAuthProps {
+  enabled?: boolean;
+}
+
+type TProviderLoginState = {
+  provider: string;
+  next: string;
+  isStart: boolean;
+};
 
 // me 객체 접근과, 로그아웃을 편리하게 사용하기 위한 훅
 export function useAuth(props?: UseAuthProps) {
   const { enabled = true } = props || {};
   const [isMutationPending, setIsMutationPending] = useState(false);
-  const { data: me, isLoading: isMeLoading, error } = useMeQuery(enabled);
+  const [providerLoginState, setProviderLoginState] = useState<TProviderLoginState>({
+    provider: '',
+    next: '',
+    isStart: false,
+  });
+  const { data: me, isLoading: isMeLoading, error: meError } = useMeQuery(enabled);
   const {
     mutate: signOut,
     isPending: isSignOutPending,
@@ -111,16 +136,43 @@ export function useAuth(props?: UseAuthProps) {
     isPending: isUpdateMePending,
     error: updateMeError,
   } = usePutMeMutation();
+  const {
+    data: providerLoginData,
+    isPending: isProviderLoginPending,
+    error: providerLoginError,
+  } = useProviderLoginQuery({
+    ...providerLoginState,
+    isStart: providerLoginState.isStart,
+  });
+
+  const loginWithProvider = useCallback((next: string) => {
+    setProviderLoginState((prev) => ({
+      ...prev,
+      provider: PROVIDERS.kakao,
+      next,
+      isStart: true,
+    }));
+  }, []);
 
   useEffect(() => {
-    if (!error && !signOutError && !updateMeError) return;
-    console.log(error?.message);
-  }, [error, signOutError, updateMeError]);
+    if (!meError && !signOutError && !updateMeError && !providerLoginError) return;
+    console.log(meError || signOutError || updateMeError || providerLoginError);
+  }, [meError, signOutError, updateMeError, providerLoginError]);
 
   useEffect(() => {
-    if (!isSignOutPending && !isUpdateMePending) return;
+    if (!isSignOutPending && !isUpdateMePending && !isProviderLoginPending) return;
     setIsMutationPending(true);
-  }, [isSignOutPending, isUpdateMePending]);
+  }, [isSignOutPending, isUpdateMePending, isProviderLoginPending]);
 
-  return { me, signOut, updateMe, isMeLoading, isMutationPending };
+  useEffect(() => {
+    if (!providerLoginData) return;
+    if (providerLoginData.message === '로그인 성공') {
+      setProviderLoginState((prev) => ({
+        ...prev,
+        isStart: false,
+      }));
+    }
+  }, [providerLoginData]);
+
+  return { me, signOut, updateMe, loginWithProvider, isMeLoading, isMutationPending };
 }
