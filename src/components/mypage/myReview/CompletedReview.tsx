@@ -1,17 +1,13 @@
-import ReviewCard from '@/components/mypage/myReview/ReviewCard';
+import { ReviewCard, ReviewSkeleton } from '@/components/mypage/myReview/ReviewCard';
 import Image from 'next/image';
 import { useReviewQuery } from '@/hooks/mypage/queries/useReviewQuery';
-import emptyDudu from '../../../../public/images/mypage/dudu-empty.svg';
+import emptyDudu from '@images/mypage/dudu-empty.svg';
 
-// interface MyReviewProps {
-//   activeTab: '작성 가능한 리뷰' | '작성한 리뷰';
-// }
-
-export default function MyReview() {
+export default function CompletedReview() {
   const { data, isLoading } = useReviewQuery();
 
   if (isLoading) {
-    return <div className="flex justify-center items-center h-screen">로딩 중...</div>;
+    return <ReviewSkeleton />;
   }
 
   if (!data || data.totalItemCount === 0) {

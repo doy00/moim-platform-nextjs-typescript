@@ -5,17 +5,17 @@ import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL,
+  baseURL: process.env.NEXT_PUBLIC_TEMP_API_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL,
 });
 
 api.interceptors.request.use(async (config) => {
   if (typeof window !== 'undefined') {
-    const token = getLocalStorageItem('dothemeet-token');
+    const token = getLocalStorageItem('accessToken');
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
     }
   } else {
-    const token = await getCookie('dothemeet-token');
+    const token = await getCookie('accessToken');
     if (token) {
       config.headers.set('Authorization', `Bearer ${token}`);
     }

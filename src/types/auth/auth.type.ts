@@ -1,19 +1,45 @@
-export type TAuthInputs = {
+export type TTags = {
+  id: number;
+  value: string;
+};
+
+type TAuthValuesDefault = {
   email: string;
   nickname: string;
   position: string;
   password: string;
   passwordConfirm?: string;
   introduction?: string;
+};
+
+export type TAuthFormValues = TAuthValuesDefault & {
+  tags?: TTags[];
+};
+
+export type TAuthSignInInputs = {
+  email: string;
+  password: string;
+};
+
+export type TAuthSignUpInputs = TAuthValuesDefault & {
   tags?: string[];
 };
 
 export type TSignUpResponse = {
+  isSuccess: boolean;
   message: string;
+  status: number;
+  data: number;
 };
 
 export type TSignInResponse = {
-  token: string;
+  isSuccess: boolean;
+  message: string;
+  status: number;
+  data: {
+    accessToken: string;
+    refreshToken: string;
+  };
 };
 
 export type TSignOutResponse = {
@@ -29,14 +55,14 @@ export type TPutMeInputs = {
 };
 
 export type TMeResponse = {
-  teamId: number | string;
-  id: number | string;
-  email: string;
-  nickname: string;
-  position: string;
-  introduction: string;
-  tags: string[];
-  image: string;
-  createdAt: string;
-  updatedAt: string;
+  isSuccess: boolean;
+  message: string;
+  status: number;
+  data: {
+    email: string;
+    nickname: string;
+    position: string;
+    introduction: string;
+    tags: string[];
+  };
 };

@@ -1,6 +1,6 @@
 import React from "react";
 import { cn } from "@/lib/utils";
-import { IChipSmallSquircle } from "@/types/detail";
+import { IChipSmallSquircle } from "@/types/detail/i-components";
 
 export const ChipSmallSquircle: React.FC<IChipSmallSquircle> = ({
   text,
@@ -14,6 +14,7 @@ export const ChipSmallSquircle: React.FC<IChipSmallSquircle> = ({
         variant === 'light' && 'bg-background300 text-textNormal',
         variant === 'dark' && 'bg-gray800 text-gray50',
         variant === 'tag' && 'bg-background300 text-caption-normal',
+        variant === 'emotion' && 'bg-background300 text-cation-normal, text-red200',
         className
       )}
     >

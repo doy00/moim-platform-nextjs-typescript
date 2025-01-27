@@ -1,55 +1,69 @@
 import React from "react";
 import Image from "next/image";
-import { cn } from "@/lib/utils";
-import { FootIcon } from "./icons/FootIcon";
-import { FootEmptyIcon } from "./icons/FootEmptyIcon";
-import { IDetailReview, IDetailReviewProps } from "@/types/detail";
+import { cn } from "@/utils/detail/cn";
+import { IDetailReview } from "@/types/detail/i-review";
 import { DEFAULT_IMAGE } from "@/constants/detail/images";
+import { DuduEmpty } from "./icons/DuduEmpty";
+import { ChipSmallSquircle } from "./ChipSmallSquircle";
 
-
-export const DetailReview: React.FC<IDetailReviewProps> = ({ 
+export const DetailReview: React.FC<IDetailReview> = ({ 
   className, 
-  score, 
+  emotion = '괜찮아요', 
   comment, 
   author, 
   date, 
-  authorImage
-  }: IDetailReviewProps) => {
+  authorImage,
+  reviewCount,
+  }) => {
 
-  // 평점
-  const paws = Array.from({ length: 5 }, (_,index) => ({
-    filled: index < score, 
-  }))
 
   // 이미지 로딩 실패시 기본 이미지를 보여줌
   const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
     e.currentTarget.src = DEFAULT_IMAGE.PROFILE;
   };
   
-
+  // 리뷰가 없을 때의 빈 화면 UI
+  if (reviewCount === 0) {
+    return (
+      <div className="relative flex flex-col">
+         {/* 타이틀 */} 
+            <div className="relative w-fit mt-5 px-2 font-semibold text-gray800 text-[16px]">
+              {"모임 후기"}
+              <span className="ml-2 text-orange200">
+                {reviewCount}
+              </span>
+            </div>
+          {/* 빈 화면 UI */}
+          <div className="relative flex flex-col items-center justify-center py-16">
+            <DuduEmpty />
+            <p className="mt-4 text-gray400 text-caption-normal">
+              아직 작성된 리뷰가 없어요
+            </p>
+          </div>
+      </div>
+    );
+  }
+  // 리뷰가 있을 때 UI
   return (
     <div className="relative flex flex-col">
       {/* 타이틀 */}
       <div className="relative w-fit mt-5 px-2 font-semibold text-gray800 text-[16px]">
         {"모임 후기"}
         <span className="ml-2 text-orange200">
-          {"{reviewCount}"}
+          {reviewCount}
         </span>
       </div>
-
-      
 
       {/* 후기 박스 */}
           <div 
             className={cn("relative flex flex-col gap-3 px-4 py-5 mt-4 bg-background400 rounded-2xl", className)}
           >
-            {/* 평점 */}
+            {/* 감정표현 칩 */}
             <div className="flex gap-0.5">
-              {paws.map((paw, index) => (
-                <div key={index} className="flex items-center justify-center">
-                  {paw.filled ? <FootIcon /> : <FootEmptyIcon />}
-                  </div>
-              ))}
+              <ChipSmallSquircle 
+                variant="emotion"
+                text="그냥그래요"   // [ ] {emotion}
+              />
             </div>
 
             {/* 후기 텍스트 */}
@@ -62,12 +76,12 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
               {/* 작성자 프로핊사진 */}
               {authorImage && (
                 <div className="h-6 w-6 overflow-hidden rounded-full">
-                  <img 
+                  <Image 
                     src={authorImage}
                     alt={`${author}의 프로필`}
                     className="h-full w-full object-cover"
-                    // width={6}
-                    // height={6}
+                    width={6}
+                    height={6}
                     onError={handleImageError}
                   />
               </div>

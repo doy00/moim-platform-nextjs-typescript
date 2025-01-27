@@ -1,11 +1,11 @@
 'use client';
 
-import GatheringCard from '@/components/mypage/gatheringCard/GatheringCard';
-import Image from 'next/image';
-import emptyDudu from '../../../../public/images/mypage/dudu-empty.svg';
-import Link from 'next/link';
 import { useCreatedGatheringsQuery } from '@/hooks/mypage/queries/useGatheringsQuery';
 import { motion } from 'framer-motion';
+import Image from 'next/image';
+import Link from 'next/link';
+import emptyDudu from '../../../../public/images/mypage/dudu-empty.svg';
+import { GatheringCard } from '../gatheringCard/GatheringCard';
 
 export default function CreatedMeetings() {
   const { data, isLoading } = useCreatedGatheringsQuery();

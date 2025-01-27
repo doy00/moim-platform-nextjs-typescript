@@ -1,15 +1,17 @@
 'use client';
 
-import { useDebounce, useSignUpMutation } from '@/hooks/auth/auth.hook';
-import { TAuthInputs } from '@/types/auth/auth.type';
+import { useDebounce, useSignInMutation, useSignUpMutation } from '@/hooks/auth/auth.hook';
+import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
+import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect, useId, useState } from 'react';
-import { useForm } from 'react-hook-form';
+import { Controller, useFieldArray, useForm } from 'react-hook-form';
 import AuthBar from './AuthBar';
 import AuthButton from './AuthButton';
 import AuthInput from './AuthInput';
 import AuthQuestions from './AuthQuestions';
+import AuthSelect from './AuthSelect';
 import DothemeetLogo from './DothemeetLogo';
 
 export default function SignUpForm() {
@@ -27,35 +29,54 @@ export default function SignUpForm() {
     watch,
     trigger,
     setValue,
-    getFieldState,
-    formState: { errors },
-  } = useForm<TAuthInputs>({
-    mode: 'onBlur',
+    formState: { errors, isValid },
+    control,
+  } = useForm<TAuthFormValues>({
+    defaultValues: {
+      tags: [{ id: 0, value: '' }],
+    },
   });
+  const { fields, append } = useFieldArray<TAuthFormValues, 'tags', 'value'>({
+    control,
+    name: 'tags',
+  });
+
   const {
     mutateAsync: signUp,
     isPending: isSignUpPending,
     error: signUpError,
     reset,
   } = useSignUpMutation();
+  const { mutateAsync: signIn } = useSignInMutation();
 
-  const onSubmit = async (data: TAuthInputs) => {
-    if (signUpError && signUpError.message === '이미 사용 중인 이메일입니다') return;
-    delete data.passwordConfirm;
-    const response = await signUp(data);
-    if (response.message === '사용자 생성 성공') router.push('/');
+  const handleAppendTag = () => {
+    if (fields.length < 3) {
+      append({ id: fields.length, value: '' });
+    }
   };
 
-  const debouncedValidation = useDebounce((name: keyof TAuthInputs) => {
+  const debouncedAppendTag = useDebounce(handleAppendTag, 500);
+
+  const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
     trigger(name);
   }, 1000);
 
-  const { isDirty: isNicknameDirty, invalid: isNicknameInvalid } = getFieldState('nickname');
-  const { isDirty: isEmailDirty, invalid: isEmailInvalid } = getFieldState('email');
-  const { isDirty: isPositionDirty, invalid: isPositionInvalid } = getFieldState('position');
-  const { isDirty: isPasswordDirty, invalid: isPasswordInvalid } = getFieldState('password');
-  const { isDirty: isPasswordConfirmDirty, invalid: isPasswordConfirmInvalid } =
-    getFieldState('passwordConfirm');
+  const onSubmit = async (data: TAuthFormValues) => {
+    if (signUpError) return;
+    const signUpData = {
+      email: data.email,
+      password: data.password,
+      nickname: data.nickname,
+      position: data.position,
+      introduction: data.introduction,
+      tags: data.tags?.map((tag) => tag.value),
+    };
+    const response = await signUp(signUpData);
+    if (response.isSuccess) {
+      await signIn({ email: data.email, password: data.password });
+      router.push('/');
+    }
+  };
 
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
 
@@ -67,16 +88,7 @@ export default function SignUpForm() {
     !!errors.nickname ||
     !!errors.passwordConfirm ||
     !!signUpError ||
-    !isEmailDirty ||
-    isEmailInvalid ||
-    !isNicknameDirty ||
-    isNicknameInvalid ||
-    !isPositionDirty ||
-    isPositionInvalid ||
-    !isPasswordDirty ||
-    isPasswordInvalid ||
-    !isPasswordConfirmDirty ||
-    isPasswordConfirmInvalid;
+    !isValid;
 
   useEffect(() => {
     if (signUpError) console.error(signUpError);
@@ -89,7 +101,9 @@ export default function SignUpForm() {
 
       <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
         <div className="w-full h-14 flex items-center">
-          <DothemeetLogo />
+          <Link href="/" className="cursor-pointer">
+            <DothemeetLogo />
+          </Link>
         </div>
         <div className="w-full h-full md:min-h-[1335px] 2xl:min-h-[1276px] flex flex-col items-center justify-start md:justify-center ">
           <form
@@ -174,34 +188,6 @@ export default function SignUpForm() {
                     )}
                   </div>
                   <div className="flex flex-col gap-2">
-                    <label htmlFor={positionId} className="text-body-2-normal font-medium">
-                      직군 <span className="text-red200">*</span>
-                    </label>
-                    <AuthInput
-                      type="text"
-                      placeholder="직군을 입력해주세요"
-                      name="position"
-                      id={positionId}
-                      className={cn(
-                        'h-[54px]',
-                        (errors.position || signUpError) && 'focus-visible:ring-error',
-                      )}
-                      register={register('position', {
-                        required: '직군을 입력해주세요',
-                        onChange: (e) => {
-                          if (signUpError) reset();
-                          setValue('position', e.target.value);
-                          debouncedValidation('position');
-                        },
-                      })}
-                    />
-                    {errors.position && (
-                      <p className="text-error text-label-normal font-medium">
-                        {errors.position.message}
-                      </p>
-                    )}
-                  </div>
-                  <div className="flex flex-col gap-2">
                     <label htmlFor={passwordId} className="text-body-2-normal font-medium">
                       비밀번호 <span className="text-red200">*</span>
                     </label>
@@ -268,22 +254,54 @@ export default function SignUpForm() {
                       })}
                     />
 
-                    {errors.passwordConfirm?.message === '비밀번호가 일치하지 않습니다.' && (
+                    {errors.passwordConfirm?.message && (
                       <p className="text-error text-label-normal font-medium">
                         {errors.passwordConfirm.message}
                       </p>
                     )}
-                    {isPasswordConfirmed ? (
+                    {isPasswordConfirmed && !errors.passwordConfirm?.message && (
                       <p className="text-green-500 text-label-normal font-medium">
                         비밀번호가 일치합니다
                       </p>
-                    ) : (
+                    )}
+                    {!isPasswordConfirmed && !errors.passwordConfirm && (
                       <p className="text-label-normal text-gray300 font-semibold">
                         특수문자 포함 8~20자 사이로 입력해주세요
                       </p>
                     )}
                   </div>
-
+                  <div className="flex flex-col gap-2">
+                    <label htmlFor={positionId} className="text-body-2-normal font-medium">
+                      직군 <span className="text-red200">*</span>
+                    </label>
+                    <Controller
+                      name="position"
+                      control={control}
+                      render={({ field: { onChange, value } }) => (
+                        <AuthSelect
+                          options={[
+                            { value: 'pm', label: 'PM' },
+                            { value: 'designer', label: '디자이너' },
+                            { value: 'frontend', label: '프론트 개발자' },
+                            { value: 'backend', label: '백엔드 개발자' },
+                          ]}
+                          className={cn(
+                            'h-[54px]',
+                            (errors.position || signUpError) && 'focus-visible:ring-error',
+                          )}
+                          placeholder="직군을 선택해주세요"
+                          value={value}
+                          onChange={onChange}
+                        />
+                      )}
+                      rules={{ required: '직군을 선택해주세요' }}
+                    />
+                    {errors.position && (
+                      <p className="text-error text-label-normal font-medium">
+                        {errors.position.message}
+                      </p>
+                    )}
+                  </div>
                   <div className="flex flex-col gap-2">
                     <label htmlFor={introductionId} className="text-body-2-normal font-medium">
                       소개
@@ -295,13 +313,13 @@ export default function SignUpForm() {
                       isTextarea
                       id={introductionId}
                       className={cn(
-                        'h-[54px]',
+                        'h-[100px]',
                         (errors.introduction || signUpError) && 'focus-visible:ring-error',
                       )}
                       register={register('introduction', {
                         maxLength: {
                           value: 20,
-                          message: '최대 20자까지 입력할 수 있어요',
+                          message: '최대 20자까지 입력 가능해요',
                         },
                         onChange: (e) => {
                           if (signUpError) reset();
@@ -316,51 +334,57 @@ export default function SignUpForm() {
                       </p>
                     ) : (
                       <p className="text-label-normal text-gray300 font-semibold">
-                        최대 20자까지 입력할 수 있어요
+                        최대 20자까지 입력 가능해요
                       </p>
                     )}
                   </div>
 
-                  {/** 태그 수정요망 */}
                   <div className="flex flex-col gap-2">
                     <div className="flex justify-between">
                       <label htmlFor={introductionId} className="text-body-2-normal font-medium">
                         태그
                       </label>
                       <p className="text-body-2-normal font-medium flex items-center gap-1">
-                        <span className="text-gray600">0</span>
+                        <span className="text-gray600">{fields.length}</span>
                         <AuthBar />
                         <span className="text-gray300">3</span>
                       </p>
                     </div>
-                    <AuthInput
-                      type="text"
-                      placeholder="# 태그추가"
-                      name="tags"
-                      id={tagsId}
-                      className={cn(
-                        'h-[34px] w-[76px] text-xs',
-                        (errors.nickname || signUpError) && 'focus-visible:ring-error',
-                      )}
-                      register={register('tags', {
-                        maxLength: {
-                          value: 5,
-                          message: '최대 5글자까지 입력할 수 있어요',
-                        },
-                        onChange: (e) => {
-                          if (signUpError) reset();
-                          setValue('tags', e.target.value);
-                          debouncedValidation('tags');
-                        },
-                      })}
-                    />
+                    <div className="flex flex-row gap-2">
+                      {fields.map((field, index) => (
+                        <AuthInput
+                          key={field.id}
+                          type="text"
+                          placeholder="# 태그추가"
+                          name={`tags.${index}.value`}
+                          isArray
+                          id={tagsId}
+                          className={cn(
+                            'h-[34px] w-[76px] text-xs',
+                            (errors.tags || signUpError) && 'focus-visible:ring-error',
+                          )}
+                          register={register(`tags.${index}.value` as const, {
+                            maxLength: {
+                              value: 5,
+                              message: '최대 5글자까지 입력 가능해요',
+                            },
+                            onChange: (e) => {
+                              if (signUpError) reset();
+                              setValue(`tags.${index}.value`, e.target.value);
+                              debouncedValidation(`tags`);
+                              debouncedAppendTag();
+                            },
+                          })}
+                        />
+                      ))}
+                    </div>
                     {errors.tags ? (
                       <p className="text-error text-label-normal font-medium">
-                        {errors.tags?.message}
+                        최대 5글자까지 입력 가능해요
                       </p>
                     ) : (
                       <p className="text-label-normal text-gray300 font-semibold">
-                        최대 5글자까지 입력할 수 있어요
+                        최대 5글자까지 입력 가능해요
                       </p>
                     )}
                   </div>
