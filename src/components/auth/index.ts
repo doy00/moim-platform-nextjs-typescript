@@ -10,6 +10,8 @@ export { default as AuthQuestions } from './AuthQuestions';
 export { default as AuthSelect } from './AuthSelect';
 export { default as AuthSelectEmailKakao } from './AuthSelectEmailKakao';
 export { default as AuthSignUpComplete } from './AuthSignUpComplete';
+export { default as AuthTextArea } from './AuthTextArea';
+export { default as AuthX } from './AuthX';
 export { default as DothemeetCharacter } from './DothemeetCharacter';
 export { default as DothemeetLogo } from './DothemeetLogo';
 export { default as SignInForm } from './SignInForm';
