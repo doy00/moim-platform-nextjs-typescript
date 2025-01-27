@@ -2,7 +2,6 @@ import { PUBLIC_URL } from '@/constants/auth/auth.const';
 import { createClient } from '@/utils/supabase/server';
 import { Provider } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
-import { redirect } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -40,7 +39,5 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: error?.message }, { status: 401 });
   }
 
-  // return NextResponse.json(data, { status: 200 });
-  // console.log('data ====>', data);
-  redirect(data.url);
+  return NextResponse.json(data, { status: 200 });
 }
