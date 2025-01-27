@@ -1,4 +1,4 @@
-import { EPosition, TUsers } from '../supabase/supabase-custom.type';
+import { TUsers } from '../supabase/supabase-custom.type';
 
 export type TTags = {
   id?: string;
@@ -23,6 +23,10 @@ export type TAuthSignInInputs = {
   password: string;
 };
 
+export type TSignUpResponse = {
+  message: string;
+};
+
 export type TSignOutResponse = {
   message: string;
 };
@@ -38,20 +42,4 @@ export type TMe = Omit<TUsers, 'created_at' | 'updated_at'>;
 
 export type TAuthSignUpInputs = Omit<TMe, 'id' | 'image'> & {
   password: string;
-};
-
-export type TSignUpResponse = {
-  me: TMe;
-  tokens: {
-    accessToken: string;
-    refreshToken: string;
-  };
-};
-
-export type TAuthSignInResponse = {
-  me: TMe;
-  tokens: {
-    accessToken: string;
-    refreshToken: string;
-  };
 };
