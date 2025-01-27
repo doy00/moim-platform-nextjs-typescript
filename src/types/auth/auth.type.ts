@@ -1,3 +1,5 @@
+import { TUsers } from '../supabase/supabase-custom.type';
+
 export type TTags = {
   id: number;
   value: string;
@@ -21,25 +23,8 @@ export type TAuthSignInInputs = {
   password: string;
 };
 
-export type TAuthSignUpInputs = TAuthValuesDefault & {
-  tags?: string[];
-};
-
 export type TSignUpResponse = {
-  isSuccess: boolean;
   message: string;
-  status: number;
-  data: number;
-};
-
-export type TSignInResponse = {
-  isSuccess: boolean;
-  message: string;
-  status: number;
-  data: {
-    accessToken: string;
-    refreshToken: string;
-  };
 };
 
 export type TSignOutResponse = {
@@ -54,26 +39,8 @@ export type TPutMeInputs = {
   tags?: string[];
 };
 
-export type TMeResponse = {
-  isSuccess: boolean;
-  message: string;
-  status: number;
-  data: {
-    email: string;
-    nickname: string;
-    position: string;
-    introduction: string;
-    tags: string[];
-  };
-};
+export type TMe = Omit<TUsers, 'created_at' | 'updated_at'>;
 
-export type TMe = TMeResponse['data'];
-
-export type TSetCookieInputs = {
-  accessToken: string;
-  refreshToken: string;
-};
-
-export type TSetCookieResponse = {
-  message: string;
+export type TAuthSignUpInputs = Omit<TMe, 'id' | 'image'> & {
+  password: string;
 };
