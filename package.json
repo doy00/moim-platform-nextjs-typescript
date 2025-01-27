@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "test": "jest"
+    "test": "jest",
+    "genTypes": "supabase gen types typescript --project-id \"kabbnwozubbpbafvlolf\" --schema public > src/types/supabase/supabase.ts"
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.4",
