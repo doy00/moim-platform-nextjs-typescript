@@ -1,6 +1,6 @@
 'use client';
-
-import { useState } from 'react';
+import { useFavoriteStore } from '@/stores/detail/favoriteStore';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
 import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
@@ -17,9 +17,10 @@ interface IDetailContainer {
 export default function DetailContainer({ moimId, token }: IDetailContainer) {
   const { detail: detailData, isLoading, error } = useMoimDetail(moimId, token);
 
+
   // 로그인 상태 확인
   const { me, isMeLoading } = useAuth();    // useAuth 사용
-  const [showDialog, setShowDialog] = useState(false);
+  // const [showDialog, setShowDialog] = useState(false);
 
   const handleAuthCheck = (action: () => void) => {
     if (!me) {
@@ -28,8 +29,7 @@ export default function DetailContainer({ moimId, token }: IDetailContainer) {
         const currentPath = window.location.pathname;
         localStorage.setItem('redirect-after-signin', currentPath);
       }
-    setShowDialog(true);
-    // setTimeout(() => setShowDialog(true), 0);   // [ ] ForwardRef 컴포넌트 상태 업데이트 문제 해결
+    // setShowDialog(true);
     return;
     }
     action();
@@ -37,32 +37,39 @@ export default function DetailContainer({ moimId, token }: IDetailContainer) {
 
   // 신청하기 버튼 핸들러
   const handleJoin = () => {
-    handleAuthCheck(() => joinMoim(moimId));
-    // joinMoim(moimId);
+    // handleAuthCheck(() => joinMoim(moimId));
+    joinMoim(moimId);
   };
 
   // 찜하기 버튼 핸들러
   const handleLike = () => {
-    handleAuthCheck(toggleLike);
+    // handleAuthCheck(handleToggleLike);
+    handleToggleLike();
   };
 
   // 모임 신청하기, 찜하기 커스텀 훅 사용
   const { joinMoim, isJoining, error: joinError } = useJoinMoim({
-    // onSuccess: () => {
-    //   // 토스트 메시지
-    //   toast.success('모임 신청이 완료되었습니다.');
     });
   if (joinError) return <div>{joinError.message}</div>;
 
-  const { isLiked, isProcessing, toggleLike } = useLikeMoim(moimId);
+  const { isLiked, handleToggleLike } = useLikeMoim(moimId);
   
-  // 로딩 상태 처리
-  if (isLoading) return <div>Loading...</div>;
-  // 에러 상태 처리
-  if (error) return <div>Error: {error.message}</div>;
+  const { fetchFavorites } = useFavoriteStore();
+  useEffect(() => {
+    fetchFavorites();
+  }, [fetchFavorites]);
+
+  useEffect(() => {
+    // 디버깅을 위한 로그 추가
+    console.log('현재 모임 찜 상태:', isLiked);
+  }, [isLiked]);
+  // // 로딩 상태 처리
+  // if (isLoading) return <div>Loading...</div>;
+  // // 에러 상태 처리
+  // if (error) return <div>Error: {error.message}</div>;
 
   // 데이터 처리 로직
-  const processedData = detailData ? {
+  const data = detailData ? {
     ...detailData,
     location: `${detailData.si} ${detailData.district} ${detailData.roadAddress}`,  // 모임 장소 지역
     dateTime:detailData.startDate,    // 모집 시작 날짜
@@ -78,18 +85,18 @@ export default function DetailContainer({ moimId, token }: IDetailContainer) {
   return (
     <div>
       <DetailPresenter 
-        data={processedData}
+        data={data}
         participants={[]} // 임시로 빈 배열
-        reviews={processedData?.reviews} // 임시로 undefined
+        reviews={data?.reviews}
         isJoining={false} // 임시로 false
         isLiked={isLiked} // 임시로 false
-        onJoin={handleJoin} // 임시로 빈 함수
-        onLikeToggle={handleLike} // 임시로 빈 함수
+        onJoin={handleJoin} 
+        onLikeToggle={handleLike}
       />
-      <SignInDialog 
+      {/* <SignInDialog 
         isOpen={showDialog}
         onClose={() => setShowDialog(false)}
-      />
+      /> */}
     </div>
   );
 }

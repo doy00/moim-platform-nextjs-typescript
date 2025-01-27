@@ -16,13 +16,6 @@ export const getDetail = async (moimId: number, token?: string)
     return response.data;
   } catch (error: any) {
     console.error('API error 모임 상세 전체 데이터 호출:', error.response || error);
-    // throw {
-    //   isSuccess: false,
-    //   message: error.response?.data?.message || '모임상세 데이터를 불러오는데 실패했습니다.',
-    //   status: error.response?.status || 500,
-    //   data: null
-    // }
-    // return null;    // 데이터 없을 때 임시로 ui만 렌더링
     throw error;    // 쿼리에서 에러 처리
   }
 };
@@ -35,10 +28,5 @@ export const joinMoim = async (moimId: number): Promise<void> => {
 
 // 모임 신청 취소하기
 export const leaveMoim = async (moimId: number): Promise<void> => {
-  await axiosInstance.delete(`/moim/join?moimId=${moimId}`)
+  await axiosInstance.post(`/moim/join?moimId=${moimId}`)
 }
-
-// [ ] 모임 취소하기(주최자)
-// export const cancelMoim = async (id: number): Promise<void> => {
-//   await axiosInstance.put(`/moim/create`);
-// }

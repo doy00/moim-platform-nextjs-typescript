@@ -1,7 +1,7 @@
 // 찜하기 커스텀훅
-// [ ] 아직 likeMoim 없음, useJoinMoim과 비슷하게 작성
 'use client';
 import { useState, useEffect, useCallback } from 'react';
+import { useFavoriteStore } from '@/stores/detail/favoriteStore';
 // import { useMutation, useQueryClient } from '@tanstack/react-query';
 // import { likeMoim } from '@/apis/detail/detail.api';
 // import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
@@ -14,88 +14,62 @@ interface UseLikeMoimOptions {
 }
 
 export const useLikeMoim = (moimId: number, options: UseLikeMoimOptions = {}) => {
-// export const useLikeMoim = (options: UseLikeMoimOptions = {}) => {
-
-  // const queryClient = useQueryClient();
-
   const {
     successMessage = "찜하기가 완료되었어요",
     errorMessage = "잠시후 다시 시도해주세요",
     onSuccess: onSuccessCallback
   }= options;
 
-  // tanstack query
-  // const mutation = useMutation({
-  //   mutationFn: (moimId: number) => useLikeMoim(moimId),
-  //   onSuccess: () => {
-  //     queryClient.invalidateQueries({ queryKey: ['detail-info'] });
-  //     queryClient.invalidateQueries({ queryKey: ['detail-participants'] });
-  //     queryClient.invalidateQueries({ queryKey: ['detail-reviews'] });
-
-  //     toast.success(successMessage);
-  //     onSuccessCallback?.();
-  //   },
-  //   onError: (error: Error) => {
-  //     console.error('찜하기 실패:', error);
-  //   toast.error(errorMessage);
-  //   }
-  // });
-
 
   // 찜 초기상태 확인 useEffect 사용
-  const [isLiked, setIsLiked] = useState(false);
-  // const [isLiked, setIsLiked] = useState(() => {
-  //   if (typeof window === 'undefined') return false;
-  //   const likedMoims = localStorage.getItem('likedMoims');
-  //   return likedMoims ? JSON.parse(likedMoims).includes(moimId) : false;
-  // });
+  // const [isLiked, setIsLiked] = useState(false);
+  // const [isProcessing, setIsProcessing] = useState(false);
+  const { favorites, isFavorite, toggleFavorite, isLoading } = useFavoriteStore();
+  const isLiked = favorites.has(moimId);
 
-  const [isProcessing, setIsProcessing] = useState(false);
-
-  useEffect(() => {
-    const loadLikeStatus = async () => {
-      try {
-        const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
-        setIsLiked(likedMoims.includes(moimId));
+  // useEffect(() => {
+  //   const loadLikeStatus = async () => {
+  //     try {
+  //       const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
+  //       setIsLiked(likedMoims.includes(moimId));
         
-      } catch (error) {
-        console.error('좋아요 상태 로드 실패:', error);
-      }
-    };
+  //     } catch (error) {
+  //       console.error('찜하기 상태 로드 실패:', error);
+  //     }
+  //   };
 
-    loadLikeStatus();
-  }, [moimId]);
+  //   loadLikeStatus();
+  // }, [moimId]);
 
-  const toggleLike = useCallback(async () => {
+  const handleToggleLike = useCallback(async () => {
     const {
       successMessage = isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요",
-      errorMessage = "잠시후 다시 시도해주세요"
+      errorMessage = "잠시후 다시 시도해주세요",
+      onSuccess
     } = options;
 
-    setIsProcessing(true);
+    // setIsProcessing(true);
     try {
-      // [ ] API
-      const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
-      const updatedLikes = isLiked 
-        ? likedMoims.filter((id: number) => id !== moimId)
-        : [...likedMoims, moimId];
-      localStorage.setItem('likedMoims', JSON.stringify(updatedLikes));
-      setIsLiked(!isLiked);
+      // zustand
+      await toggleFavorite(moimId);
+      onSuccess?.();
+
+      // 로컬 스토리지 저장
+      // const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
+      // const updatedLikes = isLiked 
+      //   ? likedMoims.filter((id: number) => id !== moimId)
+      //   : [...likedMoims, moimId];
+      // localStorage.setItem('likedMoims', JSON.stringify(updatedLikes));
+      // setIsLiked(!isLiked);
       toast.success(successMessage);
     } catch (error) {
       console.error('찜하기 토글 실패:', error);
       toast.error(errorMessage);
-    } finally {
-      setIsProcessing(false);
-    }
-  }, [moimId, isLiked, options]);
+    } 
+  }, [moimId, toggleFavorite, isLiked, options]);
 
   return { 
     isLiked,
-    isProcessing, 
-    toggleLike 
-    // likeMoim: mutation.mutate,
-    
-    // error: mutation.error,
+    handleToggleLike,
   };
 };

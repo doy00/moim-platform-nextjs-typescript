@@ -5,7 +5,7 @@ import { ToasterDark } from "./ToasterDark";
 
 interface IFloatingBar {
   onHeartClick: () => void;
-  onJoinClick: () => void;  // [ ] Promise<{success: boolean; message: string}> 제거
+  onJoinClick: () => void;  
   isJoining?: boolean;
   isLiked?: boolean;
   actionLabel?: string;
@@ -27,7 +27,6 @@ export const FloatingBar = ({
       sm:max-w-screen-sm
       md:max-w-screen-md
       lg:max-w-screen-lg
-      xl:max-w-screen-xl
       "
     >
       <div className="flex items-center gap-3">
@@ -69,8 +68,8 @@ export const FloatingBar = ({
         >
           {actionLabel}
         </button>
-        <ToasterDark position="bottom-center" duration={2000} />
       </div>
+      <ToasterDark position="bottom-center" duration={2000} />
     </div>
   );
 };
