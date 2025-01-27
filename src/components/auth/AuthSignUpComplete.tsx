@@ -25,6 +25,7 @@ function AuthSignUpComplete({ me }: AuthSignUpCompleteProps) {
       </div>
       <div className="w-full 2xl:w-[584px] flex flex-col items-center justify-center gap-4 pb-12 2xl:pb-[100px]">
         <div className="w-full flex flex-col items-center justify-center gap-2">
+          {/** TODO: replace with redirect */}
           <Link href="/" className="w-full">
             <AuthButton className="text-gray50 bg-orange200">확인</AuthButton>
           </Link>

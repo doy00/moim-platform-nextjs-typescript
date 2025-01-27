@@ -1,6 +1,6 @@
 'use client';
 
-import { useAuth, useSetCookieMutation, useSignInMutation } from '@/hooks/auth/auth.hook';
+import { useAuth, useSignInMutation } from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import Link from 'next/link';
@@ -22,11 +22,6 @@ export default function SignInForm() {
     error: signInError,
     reset: signInReset,
   } = useSignInMutation();
-  const {
-    mutateAsync: setCookie,
-    isPending: isSetCookiePending,
-    error: setCookieError,
-  } = useSetCookieMutation();
   const [isReadyToGetMe, setIsReadyToGetMe] = useState(false);
   const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
 
@@ -36,34 +31,22 @@ export default function SignInForm() {
       email: data.email,
       password: data.password,
     };
-    const { data: tokens } = await signIn(signInData);
-    await setCookie({
-      accessToken: tokens.accessToken,
-      refreshToken: tokens.refreshToken,
-    });
+    await signIn(signInData);
     setIsReadyToGetMe(true);
   };
 
   const isDisabled =
     isSignInPending ||
-    isSetCookiePending ||
     !!signInError ||
-    !!setCookieError ||
     !!methods.formState.errors.password ||
     !!methods.formState.errors.email ||
     !methods.formState.isValid;
 
   useEffect(() => {
     if (!signInError) return;
-    if (signInError.data === '유저가 존재하지 않습니다.') {
-      methods.setError('email', { type: 'manual', message: '등록되지 않은 계정이에요' });
-      methods.setFocus('email');
-    }
-    if (signInError.data === '비밀번호가 일치하지 않습니다.') {
-      methods.setError('password', { type: 'manual', message: '비밀번호를 확인해주세요' });
-      methods.setFocus('password');
-    }
-  }, [signInError, methods, signInReset]);
+    methods.setError('email', { type: 'manual', message: signInError.message });
+    methods.setFocus('email');
+  }, [signInError, methods]);
 
   useEffect(() => {
     if (!me) return;
@@ -72,7 +55,7 @@ export default function SignInForm() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-background200 md:bg-background100">
-      {(isSignInPending || isSetCookiePending || isMeLoading) && <AuthLoading />}
+      {(isSignInPending || isMeLoading) && <AuthLoading />}
 
       <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
         <div className="w-full h-14 flex items-center">

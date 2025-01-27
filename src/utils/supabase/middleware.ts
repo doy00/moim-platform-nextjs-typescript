@@ -35,7 +35,12 @@ export const updateSession = async (request: NextRequest) => {
   } = await supabase.auth.getUser();
 
   // /, /api 는 리다이렉트 하지 않는다.
-  if (!user && request.nextUrl.pathname !== '/' && !request.nextUrl.pathname.startsWith('/api')) {
+  if (
+    !user &&
+    request.nextUrl.pathname !== '/' &&
+    !request.nextUrl.pathname.startsWith('/api') &&
+    !request.nextUrl.pathname.startsWith('/auth')
+  ) {
     const url = request.nextUrl.clone();
     url.pathname = '/auth/login';
     return NextResponse.redirect(url);
