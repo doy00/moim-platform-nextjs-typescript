@@ -1,3 +1,5 @@
+'use client';
+
 import React from "react";
 import { useMakeStore } from "@/stores/make/makeStore";
 import { Input } from "@/components/ui/input";
@@ -6,16 +8,14 @@ import { StepDatePicker } from "./StepDatePicker";
 
 export default function DateLocationStep() {
   const {
-    location,
-    recruitmentStart,
-    registrationEnd,
-    moimStart,
-    moimEnd,
-    setLocation,
-    setRecruitmentStart,
-    setRegistrationEnd,
-    setMoimStart,
-    setMoimEnd,
+    roadAddress, // 스토어 필드 `roadAddress` 사용
+    recruitmentDeadline, // 모집 종료 날짜 필드
+    startDate,
+    endDate,
+    setRoadAddress,
+    setRecruitmentDeadline,
+    setStartDate,
+    setEndDate,
   } = useMakeStore();
 
   // 주소 검색 핸들러
@@ -24,9 +24,9 @@ export default function DateLocationStep() {
       new window.daum.Postcode({
         oncomplete: (data: { address: string }) => {
           if (data.address) {
-            setLocation(data.address);
+            setRoadAddress(data.address); // 상태 업데이트
           } else {
-            alert("유효한 주소를 선택해주세요.");
+            alert("유효한 주소를 선택해주세요."); // 유효하지 않은 주소 처리
           }
         },
       }).open();
@@ -48,8 +48,8 @@ export default function DateLocationStep() {
         </label>
         <Input
           placeholder="장소를 입력해주세요"
-          value={location}
-          onClick={handleAddressSearch}
+          value={roadAddress} // 상태 값 적용
+          onClick={handleAddressSearch} // 주소 검색 핸들러 연결
           readOnly
           className="text-body-2-normal cursor-pointer min-w-[343px] h-[54px] p-4 bg-background400 focus:ring-orange200 focus:outline-orange200"
         />
@@ -61,14 +61,15 @@ export default function DateLocationStep() {
           모집 기간 <span className="text-orange200">*</span>
         </label>
         <StepDateRange
-          startDate={recruitmentStart ? new Date(recruitmentStart) : null}
-          endDate={registrationEnd ? new Date(registrationEnd) : null}
+          startDate={recruitmentDeadline ? new Date(recruitmentDeadline) : null} // 모집 시작 날짜
+          endDate={endDate ? new Date(endDate) : null} // 모집 종료 날짜
           onDateChange={(dates) => {
-            setRecruitmentStart(dates.start ? dates.start.toISOString() : "");
-            setRegistrationEnd(dates.end ? dates.end.toISOString() : "");
+            setRecruitmentDeadline(dates.start ? dates.start.toISOString() : ""); // 모집 시작 상태 업데이트
+            setEndDate(dates.end ? dates.end.toISOString() : ""); // 모집 종료 상태 업데이트
           }}
         />
       </div>
+
       {/* 모임 날짜 선택 */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-700">
@@ -77,14 +78,14 @@ export default function DateLocationStep() {
         <div className="flex items-center flex-grow space-x-2">
           {/* 시작 날짜 */}
           <StepDatePicker
-            selectedDate={moimStart ? new Date(moimStart) : null}
-            onDateChange={(date) => setMoimStart(date ? date.toISOString() : "")}
+            selectedDate={startDate ? new Date(startDate) : null} // 상태 값 적용
+            onDateChange={(date) => setStartDate(date ? date.toISOString() : "")} // 상태 업데이트
             placeholder="모임 시작 날짜를 선택하세요"
           />
           {/* 종료 날짜 */}
           <StepDatePicker
-            selectedDate={moimEnd ? new Date(moimEnd) : null}
-            onDateChange={(date) => setMoimEnd(date ? date.toISOString() : "")}
+            selectedDate={endDate ? new Date(endDate) : null} // 상태 값 적용
+            onDateChange={(date) => setEndDate(date ? date.toISOString() : "")} // 상태 업데이트
             placeholder="모임 종료 날짜를 선택하세요"
           />
         </div>

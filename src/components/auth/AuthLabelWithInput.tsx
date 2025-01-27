@@ -6,17 +6,17 @@ import { TAuthFormValues } from '@/types/auth/auth.type';
 import { ReactNode, useId } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 import AuthInput from './AuthInput';
+import AuthPasswordInput from './AuthPasswordInput';
 
 interface IAuthLabelWithInput {
   name: keyof TAuthFormValues;
   label: string;
   placeholder: string;
-  type: 'text' | 'password';
   registerOptions: RegisterOptions;
-  isTextarea?: boolean;
   additionalErrors?: ReactNode;
   className?: string;
   isRequired?: boolean;
+  isPassword?: boolean;
   mutationReset?: () => void;
 }
 
@@ -24,12 +24,11 @@ export default function AuthLabelWithInput({
   name,
   label,
   placeholder,
-  type,
   registerOptions,
-  isTextarea,
   additionalErrors,
   className,
   isRequired = true,
+  isPassword = false,
   mutationReset,
 }: IAuthLabelWithInput) {
   const id = useId();
@@ -49,24 +48,41 @@ export default function AuthLabelWithInput({
       <label htmlFor={id} className="text-body-2-normal font-semibold">
         {label} {isRequired && <span className="text-red200">*</span>}
       </label>
-      <AuthInput
-        type={type}
-        placeholder={placeholder}
-        isTextarea={isTextarea}
-        className={cn('h-[54px]', className, {
-          'focus-visible:ring-error border border-error': errors?.[name],
-        })}
-        name={name}
-        id={id}
-        register={register(name, {
-          ...registerOptions,
-          onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-            if (errors[name]) mutationReset?.();
-            setValue(name, e.target.value);
-            debouncedValidation(name);
-          },
-        } as RegisterOptions<TAuthFormValues, typeof name>)}
-      />
+      {isPassword ? (
+        <AuthPasswordInput
+          placeholder={placeholder}
+          className={cn('h-[54px]', className, {
+            'focus-visible:ring-error ring-1 ring-error': errors?.[name],
+          })}
+          name={name}
+          id={id}
+          register={register(name, {
+            ...registerOptions,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+              if (errors[name]) mutationReset?.();
+              setValue(name, e.target.value);
+              debouncedValidation(name);
+            },
+          } as RegisterOptions<TAuthFormValues, typeof name>)}
+        />
+      ) : (
+        <AuthInput
+          placeholder={placeholder}
+          className={cn('h-[54px]', className, {
+            'focus-visible:ring-error ring-1 ring-error': errors?.[name],
+          })}
+          name={name}
+          id={id}
+          register={register(name, {
+            ...registerOptions,
+            onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
+              if (errors[name]) mutationReset?.();
+              setValue(name, e.target.value);
+              debouncedValidation(name);
+            },
+          } as RegisterOptions<TAuthFormValues, typeof name>)}
+        />
+      )}
       {errors[name] && (
         <p className="text-error text-label-normal font-medium">{errors[name].message}</p>
       )}

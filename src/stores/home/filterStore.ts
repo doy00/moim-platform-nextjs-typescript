@@ -2,39 +2,34 @@ import { create } from 'zustand';
 import { TFilterState } from '@/types/home/t-filterState';
 
 export const useFilterStore = create<TFilterState>((set) => ({
-  category: 'all', // 초기값을 상수에 맞게 설정
-  region: [],
-  status: 'all',
-  confirmed: undefined, // 초기값: false
-  sortOrder: "latest",
-  setSortOrder: (sortOrder: "latest" | "likes" | "deadline") => set({ sortOrder }), // 추가
-  setCategory: (category: string) => set({ category }),
+  moimType: 'all', // 초기값을 'all'로 설정
+  region: ['all'], // 초기값을 'all'로 설정
+  moimStatus: 'all', // 초기값
+  sortOrder: 'latest', // 초기 정렬값
+  confirmed: undefined,
+  setSortOrder: (sortOrder: 'latest' | 'likes' | 'deadline') => set({ sortOrder }),
+  setMoimType: (moimType: string) => set({ moimType }),
   toggleRegion: (region: string) =>
     set((state) => {
       if (region === 'all') {
-        return { region: ['all'] };
+        return { region: ['all'] }; // 'all' 선택 시 다른 지역 초기화
       }
 
       const isSelected = state.region.includes(region);
       const newRegions = isSelected
-        ? state.region.filter((r) => r !== region) 
-        : [...state.region.filter((r) => r !== 'all'), region]; 
+        ? state.region.filter((r) => r !== region) // 선택된 지역 제거
+        : [...state.region.filter((r) => r !== 'all'), region]; // 'all' 제외 후 추가
 
-      return { region: newRegions.length > 0 ? newRegions : ['all'] };
+      return { region: newRegions.length > 0 ? newRegions : ['all'] }; // 최소값 보장
     }),
-  setStatus: (status: string) => set({ status }),
+  setMoimStatus: (moimStatus: string) => set({ moimStatus }),
   toggleConfirmed: () =>
-    set((state) => {
-      const newState = state.confirmed === undefined ? true : undefined; // 토글 동작
-      console.log('Switch 상태 업데이트:', newState); // 디버깅 로그
-      return { confirmed: newState };
-    }),
+    set((state) => ({ confirmed: state.confirmed === undefined ? true : undefined })),
   resetFilters: () =>
     set({
-      category: 'all',
-      region: [],
-      status: 'all',
-      confirmed: undefined,
-      sortOrder: "latest",
+      moimType: 'all',
+      region: ['all'],
+      moimStatus: 'all',
+      sortOrder: 'latest',
     }),
 }));

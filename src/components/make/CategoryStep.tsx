@@ -2,8 +2,6 @@
 
 import React from 'react';
 import { useMakeStore } from '@/stores/make/makeStore';
-
-//Constants
 import { CATEGORY_ITMES_TWO } from '@/constants/home/filter-category';
 
 export default function CategoryStep() {
@@ -11,12 +9,10 @@ export default function CategoryStep() {
 
   return (
     <section className="flex flex-col px-4 w-full h-[680px]">
-      {/* Section Header */}
       <div className="flex flex-col items-start mb-[52px]">
         <h1 className="text-title-2 font-semibold">어떤 모임을 만들까요?</h1>
         <p className="text-body-2-normal text-gray400">모임을 만들면 두두가 발굴할 수 있어요</p>
       </div>
-      {/* Section Main */}
       <div>
         {CATEGORY_ITMES_TWO.map((item) => {
           const Icon = item.icon;

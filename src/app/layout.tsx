@@ -25,16 +25,18 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* Daum 우편번호 API 스크립트 로드 */}
         <script
           src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
           async
         ></script>
       </head>
-      <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
+      <body className={`bg-background200 font-pretendard antialiased ${pretendard.variable}`}>
         <QueryProvider>
           <div className="layout">{children}</div>
+<<<<<<< HEAD
           {/* GNB는 HomeGnb 컴포넌트에서 관리 */}
+=======
+>>>>>>> feat/home-api
           <HomeGnb />
         </QueryProvider>
       </body>
