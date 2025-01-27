@@ -1,49 +1,32 @@
-// API 요청 함수
+// 모임 상세 조회 API 요청
 import { axiosInstance } from './axios.api';
 import { ApiDetailResponse } from '@/types/detail/i-moim';
 
 // 모임 상세 데이터(모임정보, 참여자 수, 리뷰) 전체 조회
-export const getDetail = async (id: number): Promise<ApiDetailResponse | null> => {
+export const getDetail = async (moimId: number, token?: string) 
+: Promise<ApiDetailResponse | null> => {
+
   try {
-    const response = await axiosInstance.get<ApiDetailResponse>(`/moim/detail/${id}`);
+    // SSR시 쿠키에서 토큰 가져오기
+    const response = await axiosInstance.get(`/moim/detail/${moimId}`, {
+      headers: token ? {
+        Authorization: `Bearer ${token}`
+      } : undefined
+    });
     return response.data;
   } catch (error: any) {
-    console.error('API error 모임 상세 전체:', error.response || error);
-    // throw {
-    //   isSuccess: false,
-    //   message: error.response?.data?.message || '모임상세 데이터를 불러오는데 실패했습니다.',
-    //   status: error.response?.status || 500,
-    //   data: null
-    // }
-    return null;
+    console.error('API error 모임 상세 전체 데이터 호출:', error.response || error);
+    throw error;    // 쿼리에서 에러 처리
   }
 };
 
 
-// 모임 참여자 목록 조회
-// export const getParticipants = async (id: number): Promise<ApiResponse<IParticipant[]>> => {
-//   try {
-//     const response = await axiosInstance.get<IParticipant[]>(`/moim/detail/${id}/participants`);
-//     return {
-//       data: response.data,
-//     };
-//   } catch (error) {
-//     console.error('Participants를 불러오는데 실패했습니다:', error);
-//     throw error;
-//   }
-// };
-
 // 모임 신청하기
-export const joinMoim = async (id: number): Promise<void> => {
-  await axiosInstance.post(`/moim/detail/${id}/join`);
+export const joinMoim = async (moimId: number): Promise<void> => {
+  await axiosInstance.post(`/moim/join?moimId=${moimId}`);
 };
 
 // 모임 신청 취소하기
-export const leaveMoim = async (id: number): Promise<void> => {
-  await axiosInstance.delete(`/moim/detail/${id}/leave`)
+export const leaveMoim = async (moimId: number): Promise<void> => {
+  await axiosInstance.post(`/moim/join?moimId=${moimId}`)
 }
-
-// 모임 취소하기(주최자)
-// export const cancelMoim = async (id: number): Promise<void> => {
-//   await axiosInstance.put(`/moim/detail/${id}/cancel`);
-// }

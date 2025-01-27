@@ -13,8 +13,7 @@ import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 // types
 import { DetailPresenterProps } from '@/types/detail/i-presenter';
-import { ReviewEmotion } from '@/types/detail/i-review';
-import { IMoimDetail } from '@/types/detail/i-moim'
+import { IMoimDetail, ReviewEmotion } from '@/types/detail/i-moim';
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
 // uitls
@@ -34,13 +33,14 @@ export default function DetailPresenter({
 
 
   // 데이터 처리 함수
-const processDetailData = (data: IMoimDetail | undefined): IMoimDetail => {
+  const processDetailData = (data: IMoimDetail | undefined): IMoimDetail => {
+  // 데이터가 없을때 기본값
   if (!data) {
     return {
       moimId: 0,
-      title: '',
-      content: '',
-      moimType: '',
+      title: '모임 타이틀이 들어갑니다.',
+      content: '모임 내용이 들어갑니다.',
+      moimType: '프로젝트',
       moimStatus: '',
       si: '',
       district: '',
@@ -50,10 +50,10 @@ const processDetailData = (data: IMoimDetail | undefined): IMoimDetail => {
       // participants: [],
       participants: 0,
       minParticipants: 0,
-      maxParticipants: 0,
+      maxParticipants: 12,
       reviews: [],
       
-      // [ ] 이미지?
+      // [ ] 이미지 - 보류
       image: DEFAULT_IMAGE.MOIM,
     };
   }
@@ -90,21 +90,21 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
 };
 
   return (
-    <div className="w-full min-h-screen px-4 pb-[93px] bg-background200">
+    <div className="
+      w-full min-h-screen mx-auto px-4 pb-[92px] bg-background200
+      xs:max-w-screen-xs
+      sm:max-w-screen-sm
+      md:max-w-screen-md
+      lg:max-w-screen-lg
+      "
+    >
         <Link href="/" className="w-full h-14 py-[10px] flex items-center">
           <DothemeetLogo />
         </Link>
         <DetailShare />
         <ImageBox image={DEFAULT_IMAGE.MOIM} />
-        {/* <ImageBox 
-          image={processedData?.image 
-            ? (processedData.image.startsWith('http')
-              ? processedData.image
-              : DEFAULT_IMAGE.MOIM)    
-            : DEFAULT_IMAGE.MOIM}
-        /> */}
         <DetailInfo 
-          title={processedData?.title || "모임 타이틀이 들어갑니다." }
+          title={processedData?.title }
           location={fullAddress}
           recruitmentPeriod={
             processedData?.startDate && processedData?.endDate
@@ -114,13 +114,15 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
             processedData?.endDate
             ? formatDate(processedData.endDate)
             : "모임 날짜가 들어갑니다." }
+          participants={processedData?.participants || 0}
+          minParticipants={processedData?.minParticipants || 3 }
         />
         <DetailParticipants 
           participants={participants || []}
-          
+          maxParticipants={processedData?.maxParticipants}
         />
         <DetailContent 
-          content={ processedData?.content || "모임 내용이 들어갑니다."}
+          content={processedData?.content}
         />
         <DetailHost 
           name="두두씨"
@@ -131,36 +133,15 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
             DEFAULT_IMAGE.PROFILE}
         />
         {/* 리뷰 목록 */}
-        {processedData?.reviews && processedData.reviews.length > 0 ? (
-          processedData.reviews.map((review, index) => (
           <DetailReview 
-            key={index}
-            emotion={convertToReviewEmotion(review.emotion)}
-            comment={review.contents || "리뷰 내용이 들어갑니다."}
-            author={review.nickname || "작성자"}
-            date={formatDate(review.createdAt) || "25. 02. 01"}
-            authorImage={DEFAULT_IMAGE.PROFILE}
-            reviewCount={processedData.reviews.length}
+            reviews={processedData?.reviews || []}
           />
-          ))
-        ) : (
-          // 리뷰가 없을 때
-          <DetailReview reviewCount={0} />
-        )}
-        
-
         <FloatingBar
           onHeartClick={onLikeToggle}
           onJoinClick={() => onJoin}
           isLiked={isLiked}
           isJoining={isJoining}
         />
-      {/* <FloatingBar
-        onHeartClick={onLikeToggle}
-        onJoinClick={onJoin}
-        isLiked={isLiked}
-        isJoining={isJoining}
-      /> */}
     </div>
   );
 }
