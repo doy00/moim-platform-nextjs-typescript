@@ -1,6 +1,7 @@
 import { create } from 'zustand'
 import { persist } from 'zustand/middleware';
-import axiosInstance from '@/libs/home/home-axios'
+import { axiosInstance } from '@/apis/detail/axios.api';
+import { IApiResponse } from '@/types/detail/i-moim';
 
 type TFavoriteState = {
   favorites: Set<number> // 찜한 모임 ID 저장
@@ -24,10 +25,13 @@ export const useFavoriteStore = create<TFavoriteState>()(
     const favorites = new Set(get().favorites);
     const isFavorited = get().favorites.has(moimId);
     try {
-      set({ isLoading: true,error: null });
+      set({ isLoading: true, error: null });
 
       if (isFavorited) {
-        await axiosInstance.delete(`/moim/like?=${moimId}`)
+        await axiosInstance.delete(`/moim/like`, {
+          params: { moimId },
+          withCredentials: true
+        });
         set((state) => {
           const newFavorites = new Set(state.favorites);
           newFavorites.delete(moimId);
@@ -35,7 +39,10 @@ export const useFavoriteStore = create<TFavoriteState>()(
         });
         // toast.success('찜하기가 취소되었어요');
       } else {
-        await axiosInstance.post(`/moim/like?moimId=${moimId}`);
+        await axiosInstance.post(`/moim/like`, null, {
+          params: { moimId },
+          withCredentials: true
+        });
         set((state) => ({
           favorites: new Set(state.favorites).add(moimId)
         }));
@@ -58,9 +65,10 @@ export const useFavoriteStore = create<TFavoriteState>()(
   fetchFavorites: async () => {
     try {
       set({ isLoading: true, error: null });
-      // const response = await axiosInstance.get('/moim/likes');
-      const response = await axiosInstance.get<{ moimId: number }[]>('/moim/likes');
-      const favorites = new Set<number>(response.data.map((item) => item.moimId)); // 타입 명시
+      const response = await axiosInstance.get<IApiResponse<Array<{ moimId: number }>>>('/moim/likes', {
+        withCredentials: false
+      });
+      const favorites = new Set<number>(response.data?.data.map((item) => item.moimId)); // 타입 명시
       set({ favorites });
     } catch (error) {
       console.error('Failed to fetch favorites', error);

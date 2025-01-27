@@ -24,12 +24,11 @@ export default async function DetailPage({
   const token = cookieStore.get('accessToken')?.value;
 
   // 서버에서 초기 데이터 prefetching
-  await Promise.all([
+  await 
     queryClient.prefetchQuery({
       queryKey: ['detail', moimId],
       queryFn: () => getDetail(moimId, token),
-    }),
-  ]);
+    });
 
   return (
     <div>

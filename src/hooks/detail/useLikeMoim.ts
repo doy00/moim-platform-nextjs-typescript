@@ -1,10 +1,7 @@
 // 찜하기 커스텀훅
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useCallback } from 'react';
 import { useFavoriteStore } from '@/stores/detail/favoriteStore';
-// import { useMutation, useQueryClient } from '@tanstack/react-query';
-// import { likeMoim } from '@/apis/detail/detail.api';
-// import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
 import { toast } from 'sonner';
 
 interface UseLikeMoimOptions {
@@ -66,7 +63,7 @@ export const useLikeMoim = (moimId: number, options: UseLikeMoimOptions = {}) =>
       console.error('찜하기 토글 실패:', error);
       toast.error(errorMessage);
     } 
-  }, [moimId, toggleFavorite, isLiked, options]);
+  }, [moimId, toggleFavorite, isLiked]);
 
   return { 
     isLiked,

@@ -7,7 +7,6 @@ import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
 import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
 import DetailPresenter from '@/components/detail/DetailPresenter';
 import { SignInDialog } from '@/components/detail/SignInDialog';
-// import { IParticipant } from '@/types/detail/i-participant';
 
 interface IDetailContainer {
   moimId: number;
@@ -15,12 +14,12 @@ interface IDetailContainer {
 }
 
 export default function DetailContainer({ moimId, token }: IDetailContainer) {
+  const { me } = useAuth();    // useAuth 사용
   const { detail: detailData, isLoading, error } = useMoimDetail(moimId, token);
 
 
   // 로그인 상태 확인
-  const { me, isMeLoading } = useAuth();    // useAuth 사용
-  // const [showDialog, setShowDialog] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   const handleAuthCheck = (action: () => void) => {
     if (!me) {
@@ -29,23 +28,24 @@ export default function DetailContainer({ moimId, token }: IDetailContainer) {
         const currentPath = window.location.pathname;
         localStorage.setItem('redirect-after-signin', currentPath);
       }
-    // setShowDialog(true);
-    return;
+      setShowDialog(true);
+      return;
     }
     action();
   };
 
-  // 신청하기 버튼 핸들러
-  const handleJoin = () => {
-    // handleAuthCheck(() => joinMoim(moimId));
-    joinMoim(moimId);
-  };
-
   // 찜하기 버튼 핸들러
   const handleLike = () => {
-    // handleAuthCheck(handleToggleLike);
-    handleToggleLike();
+    handleAuthCheck(handleToggleLike);
+    // handleToggleLike();
   };
+
+  // 신청하기 버튼 핸들러
+  const handleJoin = () => {
+    handleAuthCheck(() => joinMoim(moimId));
+    // joinMoim(moimId);
+  };
+
 
   // 모임 신청하기, 찜하기 커스텀 훅 사용
   const { joinMoim, isJoining, error: joinError } = useJoinMoim({
@@ -54,19 +54,19 @@ export default function DetailContainer({ moimId, token }: IDetailContainer) {
 
   const { isLiked, handleToggleLike } = useLikeMoim(moimId);
   
-  const { fetchFavorites } = useFavoriteStore();
+  const { fetchFavorites, favorites } = useFavoriteStore();
+  // 로그인 된 경우에만 찜 목록 가져오기
   useEffect(() => {
+    if (me) {
     fetchFavorites();
-  }, [fetchFavorites]);
+    }
+  }, [fetchFavorites, me]);
 
-  useEffect(() => {
-    // 디버깅을 위한 로그 추가
-    console.log('현재 모임 찜 상태:', isLiked);
-  }, [isLiked]);
-  // // 로딩 상태 처리
-  // if (isLoading) return <div>Loading...</div>;
-  // // 에러 상태 처리
-  // if (error) return <div>Error: {error.message}</div>;
+  // useEffect(() => {
+  //   // 현재 모임 찜 상태 디버깅
+  //   console.log('현재 모임 찜 상태:', isLiked, '모임ID:', moimId, '전체 찜:', Array.from(favorites));
+
+  // }, [isLiked, moimId, favorites]);
 
   // 데이터 처리 로직
   const data = detailData ? {
@@ -89,14 +89,14 @@ export default function DetailContainer({ moimId, token }: IDetailContainer) {
         participants={[]} // 임시로 빈 배열
         reviews={data?.reviews}
         isJoining={false} // 임시로 false
-        isLiked={isLiked} // 임시로 false
+        isLiked={isLiked} 
         onJoin={handleJoin} 
         onLikeToggle={handleLike}
       />
-      {/* <SignInDialog 
+      <SignInDialog 
         isOpen={showDialog}
         onClose={() => setShowDialog(false)}
-      /> */}
+      />
     </div>
   );
 }

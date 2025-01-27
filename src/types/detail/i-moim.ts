@@ -63,6 +63,14 @@ export interface ApiDetailResponse {
   data: IMoimDetail;
 }
 
+// API 기본 응답 타입
+export interface IApiResponse<T> {
+  isSuccess: boolean;
+  message: string;
+  status: number;
+  data: T;
+}
+
 export interface IDetailContainer {
   id: number;
   initialData?: {
