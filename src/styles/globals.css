@@ -11,8 +11,8 @@
     min-h-dvh 
     w-full 
     min-w-[360px] 
-    /* max-w-[500px]   */
-    bg-background200 font-pretendard;
+    bg-background200 
+    font-pretendard;
   }
 
 

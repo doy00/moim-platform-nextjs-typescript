@@ -7,24 +7,24 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
-import { IParticipant } from "@/types/detail/i-participant";
+import { IParticipant, IParticipantsList } from "@/types/detail/i-participant";
 import { DEFAULT_IMAGE } from '@/constants/detail/images';
-
-interface IParticipantsList {
-  participants: IParticipant[];
-  className?: string;
-}
 
 export const ParticipantsList: React.FC<IParticipantsList> = ({
   participants,
-  className
+  maxParticipants,
+  className,
 }) => {
-  const [isHovered, setIsHovered] = useState(false);
-  const visibleParticipants = participants.slice(0, 4);
-  const remainingCountOfParticipants = participants.length - 4;
+  // 참가 신청 유저 프로필배지 섹션 (프로필배지 4개 + 나머지 참여자 수)
+  const [isHovered, setIsHovered] = useState(false);  // 프로필배지 hover하면 모든 참가자 프로필 보임
+  const visibleParticipants = participants.slice(0, 4);   // hover 전에 보이는 참가자 프로필 배지(4개)
+  const remainingCountOfParticipants = participants.length - 4;  // 숨겨진 참가자 프로필 수
   
+  // 추가 참가신청 가능 인원수 계산
+  const availableCount = Math.max(0, maxParticipants - participants.length);
+
     return (
-      <div className="flex justify-between text-sm w-full space-y-2">
+      <div className="flex justify-between items-center w-full">
             <HoverCard closeDelay={300}>
               <HoverCardTrigger asChild>
                 <div
@@ -80,8 +80,8 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
                         height={24}
                         className="rounded-full"
                       />
-                      <span className="text-sm text-textNormal">
-                        {/* {participant.User?.name || 'Anonymous'} */}
+                      <span className="text-caption-normal text-textNormal">
+                        {/* [ ] {participant.User?.name || 'Anonymous'} */}
                         Anonymous
                       </span>
                     </div>
@@ -90,9 +90,9 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
               </HoverCardContent>
             </HoverCard>
 
-      {/* [ ] 남은 인원 */}
+      {/* 추가 참가신청 가능 인원 */}
       <span className="text-body-2-normal font-medium text-brown400">
-        {"00명 더 참여할 수 있어요"}
+        {availableCount}명 더 참여할 수 있어요
       </span>
     </div>
   );
