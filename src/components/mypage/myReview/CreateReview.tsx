@@ -2,6 +2,7 @@
 
 import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
 import { IMyMoim } from '@/types/mypage/moim.type';
+import { IGathering } from '@/types/mypage/gathering.type';
 import { IUser } from '@/types/mypage/user';
 import close from '@images/mypage/close.svg';
 import badOff from '@images/mypage/dude-grade-bad-off.svg';

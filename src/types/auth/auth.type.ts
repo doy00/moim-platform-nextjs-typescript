@@ -66,3 +66,14 @@ export type TMeResponse = {
     tags: string[];
   };
 };
+
+export type TMe = TMeResponse['data'];
+
+export type TSetCookieInputs = {
+  accessToken: string;
+  refreshToken: string;
+};
+
+export type TSetCookieResponse = {
+  message: string;
+};
