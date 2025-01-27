@@ -76,7 +76,7 @@ export default function EditUser() {
       <div className="h-auto flex flex-col gap-4 mx-auto max-w-[584px] md:bg-background300 md:rounded-[32px] md:px-11 md:py-10 md:mt-14 lg:mt-10">
         <div className="py-10 px-4">
           <div className="flex flex-col items-center gap-6">
-            <Image src={data?.image ?? defaultProfile} alt="profile" width={86} height={86} />
+            <Image src={data?.data.image ?? defaultProfile} alt="profile" width={86} height={86} />
             <Link
               href="/mypage/editPassword"
               className="text-label-normal font-medium text-orange200"
@@ -93,7 +93,7 @@ export default function EditUser() {
                 id="email"
                 placeholder="dothemeet@google.com"
                 className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300"
-                value={data?.email}
+                value={data?.data.email}
                 disabled
               />
             </div>
@@ -106,7 +106,7 @@ export default function EditUser() {
                   id="nickName"
                   placeholder="두두두두"
                   className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300"
-                  value={data?.name}
+                  value={data?.data.nickname}
                   disabled
                 />
                 <span className="text-label-normal font-medium text-gray300">

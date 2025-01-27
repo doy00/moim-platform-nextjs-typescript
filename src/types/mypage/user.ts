@@ -8,5 +8,7 @@ export interface IUser {
     position: string;
     introduction: string;
     tags: string[];
+    image: string;
+    email: string;
   };
 }
