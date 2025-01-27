@@ -1,43 +1,34 @@
 import type {
   TAuthSignInInputs,
   TAuthSignUpInputs,
-  TMeResponse,
+  TMe,
   TPutMeInputs,
-  TSetCookieInputs,
-  TSetCookieResponse,
-  TSignInResponse,
+  TSignOutResponse,
   TSignUpResponse,
 } from '@/types/auth/auth.type';
-import api, { apiToRouteHandler } from './axios.api';
+import api from './axios.api';
 
 export const postSignUp = (data: TAuthSignUpInputs) => {
-  const url = '/user/register';
-
+  const url = '/api/auth/register';
   return api.post<TSignUpResponse, TSignUpResponse>(url, data);
 };
 
 export const postSignIn = (data: TAuthSignInInputs) => {
-  const url = '/user/login';
-  return api.post<TSignInResponse, TSignInResponse>(url, data);
+  const url = '/api/auth/signin';
+  return api.post<TMe, TMe>(url, data);
+};
+
+export const deleteSignOut = () => {
+  const url = '/api/auth/signout';
+  return api.delete<TSignOutResponse, TSignOutResponse>(url);
 };
 
 export const getMe = async () => {
-  const url = '/user/detail';
-  const response = await api.get<TMeResponse, TMeResponse>(url);
-  return response.data;
+  const url = '/api/auth/me';
+  return await api.get<TMe, TMe>(url);
 };
 
 export const putMe = (data: TPutMeInputs) => {
-  const url = '/auth/user';
-  return api.put<TMeResponse, TMeResponse>(url, data);
+  const url = '/api/auth/me';
+  return api.put<TMe, TMe>(url, data);
 };
-
-export const postSetCookie = (data: TSetCookieInputs) => {
-  const url = '/auth/api/set-cookie';
-  return apiToRouteHandler.post<TSetCookieResponse, TSetCookieResponse>(url, data);
-};
-
-// export const postSignOut = () => {
-//   const url = '/auths/signout';
-//   return api.post<TSignOutResponse, TSignOutResponse>(url);
-// };
