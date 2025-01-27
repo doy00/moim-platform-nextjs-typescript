@@ -1,11 +1,11 @@
-import { IGathering, IJoind } from '@/types/mypage/gathering.type';
+import { IOwnMoim, IMyMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
 import puzzle from '@images/mypage/puzzle-on.svg';
 import emptyHeart from '@images/mypage/empty-heart.svg';
 import Link from 'next/link';
 
 interface Props {
-  gathering: IGathering | IJoind;
+  moim: IOwnMoim['data'][number] | IMyMoim['data'][number];
   isReviewed?: boolean;
 }
 
@@ -13,8 +13,8 @@ const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-background100 rounded-[14px] shadow-md">{children}</div>
 );
 
-export function GatheringCard({ gathering, isReviewed }: Props) {
-  const isGatheringEnded = new Date(gathering?.dateTime) < new Date();
+export function GatheringCard({ moim, isReviewed }: Props) {
+  const isGatheringEnded = new Date(moim.endDate) < new Date();
   const showReviewButton = isGatheringEnded && !isReviewed;
 
   return (
@@ -25,20 +25,20 @@ export function GatheringCard({ gathering, isReviewed }: Props) {
             <Image src={puzzle} alt="puzzle" width={36} height={36} />
             <div className="flex flex-col gap-2">
               <div className="flex flex-col gap-2">
-                <p className="font-medium text-body-1-normal color-[#2B2926]">{gathering?.name}</p>
+                <p className="font-medium text-body-1-normal color-[#2B2926]">{moim?.title}</p>
                 <div className="flex gap-2 items-center">
                   <span className="font-medium text-label-reading text-[#9E9892]">
-                    {gathering?.location}
+                    {moim?.district}
                   </span>
                   <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
                   <span className="font-medium text-label-reading text-[#9E9892]">
-                    {gathering?.participantCount}명 참여
+                    {moim?.participants}명 참여
                   </span>
                 </div>
               </div>
               <div className="flex items-center justify-between gap-2">
                 <span className="font-medium text-caption-normal text-[#837C74]">
-                  {new Date(gathering?.dateTime).toLocaleDateString()}
+                  {new Date(moim?.startDate).toLocaleDateString()}
                 </span>
               </div>
             </div>
@@ -47,16 +47,16 @@ export function GatheringCard({ gathering, isReviewed }: Props) {
             <Image src={emptyHeart} alt="emptyHeart" width={24} height={24} />
           </div>
         </div>
-        <div className="p-4 pt-0">
-          {showReviewButton ? (
+        {showReviewButton ? (
+          <div className="p-4 pt-0">
             <Link
-              href={`/mypage/review/${gathering.id}`}
+              href={`/mypage/review/${moim.moimId}`}
               className="w-full py-4 px-4 bg-gray100 rounded-[14px] text-body-2-normal font-semibold text-gray800 hover:bg-gray200 block text-center"
             >
               리뷰작성
             </Link>
-          ) : null}
-        </div>
+          </div>
+        ) : null}
       </div>
     </GatheringWrapper>
   );
