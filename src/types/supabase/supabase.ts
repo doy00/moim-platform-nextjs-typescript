@@ -209,8 +209,10 @@ export type Database = {
           email: string
           id: string
           image: string | null
+          introduction: string | null
           nickname: string
           position: string
+          tags: string[] | null
           updated_at: string
         }
         Insert: {
@@ -218,8 +220,10 @@ export type Database = {
           email?: string
           id?: string
           image?: string | null
+          introduction?: string | null
           nickname?: string
           position?: string
+          tags?: string[] | null
           updated_at?: string
         }
         Update: {
@@ -227,8 +231,10 @@ export type Database = {
           email?: string
           id?: string
           image?: string | null
+          introduction?: string | null
           nickname?: string
           position?: string
+          tags?: string[] | null
           updated_at?: string
         }
         Relationships: []
