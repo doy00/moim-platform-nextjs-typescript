@@ -1,6 +1,5 @@
-import { TAuthSignUpInputs, TMe } from '@/types/auth/auth.type';
+import { TAuthSignUpInputs } from '@/types/auth/auth.type';
 import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
@@ -42,17 +41,5 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
   }
 
-  const { data: me, error: userError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('id', user.id).single();
-
-  if (userError) {
-    console.error(userError);
-    return NextResponse.json({ message: userError?.message }, { status: 401 });
-  }
-
-  if (!me) {
-    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
-  }
-
-  return NextResponse.json(me, { status: 200 });
+  return NextResponse.json({ message: '회원가입 성공' }, { status: 200 });
 }
