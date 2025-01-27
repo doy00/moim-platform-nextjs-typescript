@@ -1,5 +1,4 @@
 import { TMe } from '@/types/auth/auth.type';
-import { setCookie } from '@/utils/auth/auth-server.util';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -10,22 +9,8 @@ export async function POST(request: Request) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const { data: existingUser, error: existingUserError } = await supabase
-    .from('users')
-    .select('*')
-    .eq('email', email)
-    .single();
-
-  if (!existingUser) {
-    return NextResponse.json({ message: '등록되지 않은 계정이에요' }, { status: 400 });
-  }
-
-  if (existingUserError) {
-    return NextResponse.json({ message: '서버에 문제가 발생했습니다' }, { status: 500 });
-  }
-
   const {
-    data: { user, session },
+    data: { user },
     error,
   } = await supabase.auth.signInWithPassword({
     email,
@@ -33,9 +18,6 @@ export async function POST(request: Request) {
   });
 
   if (error) {
-    if (error.message === 'Invalid login credentials') {
-      return NextResponse.json({ message: '비밀번호를 확인해주세요' }, { status: 400 });
-    }
     return NextResponse.json({ message: error.message }, { status: 400 });
   }
   if (!user) {
@@ -53,14 +35,5 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: '로그인에 실패했습니다' }, { status: 404 });
   }
 
-  setCookie({
-    name: 'access_token',
-    value: session?.access_token,
-    maxAge: 60 * 60,
-  });
-
-  return NextResponse.json(
-    { me, tokens: { accessToken: session?.access_token, refreshToken: session?.refresh_token } },
-    { status: 200 },
-  );
+  return NextResponse.json(me, { status: 200 });
 }
