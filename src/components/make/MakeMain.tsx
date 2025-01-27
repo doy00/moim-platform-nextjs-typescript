@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axiosHomeInstance from '@/libs/home/home-axios';
 import { useRouter } from 'next/navigation';
 //Store
@@ -16,6 +16,17 @@ import ArrowLeftLine from '../home/icons/ArrowLeftLine';
 import { useMakeStore } from '@/stores/make/makeStore';
 
 export default function MakeMain() {
+  // Token-Test
+    useEffect(() => {
+      // AccessToken 설정
+      const token =
+        'eyJhbGciOiJIUzI1NiJ9.eyJ1c2VySWQiOjUsImlhdCI6MTczNzUxOTUyNSwiZXhwIjoxNzM3NjA1OTI1fQ.IJVX44vOSYu7KtaBLlJwiwwfJGmLAtGFy9mYbYdOk4A';
+      localStorage.setItem('accessToken', token);
+      console.log('AccessToken이 설정되었습니다.', token);
+    }, []);
+  
+
+
   const [step, setStep] = useState<number>(1);
   const totalSteps = 4;
   const router = useRouter()
@@ -33,27 +44,7 @@ export default function MakeMain() {
     maxParticipants,
   } = useMakeStore()
 
-
-  // const validateStep = (): boolean => {
-  //   switch (step) {
-  //     case 1:
-  //       return !!type;
-  //     case 2:
-  //       return !!title && !!content;
-  //     case 3:
-  //       return !!roadAddress && !!recruitmentDeadline && !!startDate && !!endDate;
-  //     case 4:
-  //       return minParticipants > 0 && maxParticipants >= minParticipants;
-  //     default:
-  //       return false;
-  //   }
-  // };
-
   const handleNextStep = () => {
-    // if (!validateStep()) {
-    //   alert('현재 스텝에서 필수 항목을 모두 입력해주세요.');
-    //   return;
-    // }
     setStep((prev) => Math.min(prev + 1, totalSteps));
   };
 
@@ -62,10 +53,6 @@ export default function MakeMain() {
   };
 
   const handleSubmit = async () => {
-    // if (!validateStep()) {
-    //   alert('필수 항목을 확인해주세요.');
-    //   return;
-    // }
 
     const requestData = {
       type,

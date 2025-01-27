@@ -13,6 +13,7 @@ export const useMakeStore = create<MakeStoreState>((set) => ({
   endDate: "",
   minParticipants: 0,
   maxParticipants: 0,
+  image: "",
   setType: (type) => set({ type }),
   setTitle: (title) => set({ title }),
   setContent: (content) => set({ content }),
@@ -24,6 +25,7 @@ export const useMakeStore = create<MakeStoreState>((set) => ({
   setEndDate: (endDate) => set({ endDate }),
   setMinParticipants: (minParticipants) => set({ minParticipants }),
   setMaxParticipants: (maxParticipants) => set({ maxParticipants }),
+  setImage: (image: string | null) => set({ image }),
   reset: () =>
     set({
       type: "",

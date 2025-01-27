@@ -1,39 +1,28 @@
+// components/home/HomeCards.tsx
 'use client';
 
 import { useEffect } from 'react';
-// Tanstack-Query
-import IntersectionObserver from '@/libs/home/intersectionObserver';
 import { useInfiniteQuery } from '@tanstack/react-query';
-// Store
-import { useFavoriteStore } from '@/stores/home/favoriteStore';
+
+import IntersectionObserver from '@/libs/home/intersectionObserver';
+import { fetchMoims } from '@/utils/home/fetchMoims';
 import { useFilterStore } from '@/stores/home/filterStore';
-// Components
-import { IMoim } from '@/types/home/i-moim';
-// import { fetchMoims } from '@/utils/home/fetchMoims';
 import HomeCard from './HomeCard';
+import { IMoim } from '@/types/home/i-moim';
+import { useLikeStore } from '@/stores/home/likeStore';
 
 export default function HomeCards() {
-  const { moimType,region, moimStatus, sortOrder } = useFilterStore();
-
-  const { fetchFavorites } = useFavoriteStore();
+  const { moimType, region, moimStatus, sortOrder } = useFilterStore();
+  const { fetchLikes } = useLikeStore()
 
   useEffect(() => {
-    fetchFavorites();
-  }, [fetchFavorites]);
+    fetchLikes();
+  }, [fetchLikes]);
 
-  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } = useInfiniteQuery<
-    { data: IMoim[]; pagination: { current_page: number; total_pages: number } },
-    Error
-  >({
-    queryKey: ['moims', moimType, region, moimStatus, sortOrder],
-    queryFn: ({ pageParam = 1 }) =>
-      fetchMoims({
-        page: pageParam, 
-        moimType,
-        region: region.length > 0 ? region.join(',') : 'all',
-        moimStatus,
-        sortOrder,
-      }),
+  // React Query로 데이터 가져오기
+  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
+    queryKey: ['moims'],
+    queryFn: ({ pageParam = 1 }) => fetchMoims({ pageParam }),
     getNextPageParam: (lastPage) =>
       lastPage.pagination.current_page < lastPage.pagination.total_pages
         ? lastPage.pagination.current_page + 1
@@ -41,19 +30,28 @@ export default function HomeCards() {
     initialPageParam: 1,
   });
 
+  // 클라이언트 필터링
+  const filteredMoims = data?.pages.flatMap((page) =>
+    page.data.filter((moim: IMoim) => {
+      // 필터 조건 적용
+      return (
+        (!moimType || moim.moimType === moimType) &&
+        (!region || region.includes(moim.roadAddress)) &&
+        (!moimStatus || moim.moimStatus === moimStatus)
+      );
+    })
+  );
+
   const handleIntersect = () => {
-    if (hasNextPage && !isFetchingNextPage) {
-      fetchNextPage();
-    }
+    if (hasNextPage) fetchNextPage();
   };
 
   return (
     <>
       <div className="px-4 pt-[14px] space-y-4">
-      {data?.pages.map((page) =>
-          page.data.map((item) => <HomeCard key={item.moimId} data={item} />)
-        )}
-        {isFetchingNextPage && <p className="text-center">Loading more...</p>}
+        {filteredMoims?.map((item) => (
+          <HomeCard key={item.moimId} data={item} />
+        ))}
       </div>
       <IntersectionObserver onIntersect={handleIntersect} />
     </>

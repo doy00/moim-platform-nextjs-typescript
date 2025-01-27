@@ -7,8 +7,14 @@ export interface IMoim {
   endDate: string; // 기존 registrationEnd -> endDate
   participants: number; // 참가자 수 (동일)
   moimStatus: string; // 기존 status -> moimStatus
-  si: string; // 지역 (시)
-  district: string; // 지역 (구)
   likes?: number; // 좋아요 수
 }
 
+export interface Pagination {
+  current_page: number;
+  total_pages: number;
+}
+export interface MoimResponse {
+  data: IMoim[];
+  pagination: Pagination;
+}
