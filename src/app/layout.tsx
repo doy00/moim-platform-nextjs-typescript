@@ -31,7 +31,7 @@ export default function RootLayout({
           async
         ></script>
       </head>
-      <body className={`bg-gray-200 font-pretendard antialiased ${pretendard.variable}`}>
+      <body className={`bg-background200 font-pretendard antialiased ${pretendard.variable}`}>
         <QueryProvider>
           <div className="layout">{children}</div>
           {/* GNB는 HomeGnb 컴포넌트에서 관리 */}
