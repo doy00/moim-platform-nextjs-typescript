@@ -95,7 +95,6 @@ export default function SignInForm() {
                         name="email"
                         label="이메일"
                         placeholder="example@google.com"
-                        type="text"
                         mutationReset={signInReset}
                         registerOptions={{
                           required: '이메일을 입력해주세요',
@@ -110,7 +109,7 @@ export default function SignInForm() {
                         name="password"
                         label="비밀번호"
                         placeholder="******"
-                        type="password"
+                        isPassword
                         mutationReset={signInReset}
                         registerOptions={{
                           required: '비밀번호를 입력해주세요',
