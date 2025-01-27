@@ -26,17 +26,17 @@ import ResetIcon from './icons/ResetIcon';
 const FilterDrawer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>(FILTER_TAB_MENUS[0].id);
   const {
-    category,
+    moimType,
     region,
-    status,
-    setCategory,
+    moimStatus,
+    setMoimType,
+    setMoimStatus,
     toggleRegion,
-    setStatus,
-    resetFilters,
+    resetFilters
   } = useFilterStore();
 
   const handleApplyFilters = () => {
-    console.log('Applied Filters:', { category, region, status });
+    console.log('Applied Filters:', { moimType, region, moimStatus });
     // API 코드보고 코드 추가(?)
   };
 
@@ -53,7 +53,7 @@ const FilterDrawer: React.FC = () => {
           <div className="flex flex-col space-y-[11px] items-center justify-between px-3">
             {CATEGORY_ITEMS.map((item) => {
               const Icon = item.icon;
-              const isSelected = category === item.id;
+              const isSelected = moimType === item.id;
 
               return (
                 <div
@@ -63,7 +63,7 @@ const FilterDrawer: React.FC = () => {
                       ? 'border border-orange200 text-orange200'
                       : 'border border-[#DEDBD9] text-[#9e9892]'
                   }`}
-                  onClick={() => setCategory(item.id)}
+                  onClick={() => setMoimType(item.id)}
                 >
                   <Icon className={`w-6 h-6 ${isSelected ? 'fill-orange200' : 'fill-[#9e9892]'}`} />
                   <span>{item.label}</span>
@@ -115,7 +115,7 @@ const FilterDrawer: React.FC = () => {
           <div className="flex flex-col space-y-[11px] items-center justify-between px-3">
             {STATUS_ITEMS.map((item) => {
               const Icon = item.icon;
-              const isSelected = status === item.id;
+              const isSelected = moimStatus === item.id;
 
               return (
                 <div
@@ -123,7 +123,7 @@ const FilterDrawer: React.FC = () => {
                   className={`flex items-center space-x-2.5 w-full h-16 px-6 py-5 cursor-pointer rounded-md ${
                     isSelected ? 'bg-background400 text-black' : 'bg-transparent text-[#9e9892]'
                   }`}
-                  onClick={() => setStatus(item.id)}
+                  onClick={() => setMoimStatus(item.id)}
                 >
                   <Icon className={`w-6 h-6 ${isSelected ? 'fill-black' : 'fill-[#9e9892]'}`} />
                   <span>{item.label}</span>

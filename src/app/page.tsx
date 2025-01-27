@@ -1,7 +1,14 @@
+<<<<<<< HEAD
 import React from 'react';
 
 //Container
 import HomeContainer from '@/containers/home/HomeContainer';
+=======
+import React from 'react'
+
+//Container
+import HomeContainer from '@/containers/home/HomeContainer'
+>>>>>>> feat/home-api
 
 export default function Home() {
   return (
