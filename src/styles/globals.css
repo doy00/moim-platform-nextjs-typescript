@@ -5,25 +5,16 @@
 @layer base {
   /* 공통 배경컬러 200으로 수정 */
   .layout {
-    @apply relative mx-auto min-h-dvh w-full min-w-[360px] max-w-[500px] bg-background200 font-pretendard;
+    @apply 
+    relative 
+    mx-auto 
+    min-h-dvh 
+    w-full 
+    min-w-[360px] 
+    bg-background200 
+    font-pretendard;
   }
 
-  /* 마이페이지 페이지 레이아웃 최대 너비 없음으로 수정 */
-  .layout.mypage {
-    @apply max-w-none;
-  }
-
-  .layout.mypage.editPassword {
-    @apply max-w-none;
-  }
-
-  .layout.mypage.review {
-    @apply max-w-none;
-  }
-
-  .layout.mypage.editUser {
-    @apply max-w-none;
-  }
 
   :root {
     --background: 0 0% 100%;

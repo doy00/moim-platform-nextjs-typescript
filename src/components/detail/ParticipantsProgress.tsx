@@ -2,17 +2,17 @@
 
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Progress } from '@/components/detail/detail-progress';
+import { Progress } from '@/components/detail/DetailProgress';
 import { IParticipantsProgress } from '@/types/detail/i-participant';
 import { FireIcon } from './icons/FireIcon';
 
 export const ParticipantsProgress: React.FC<IParticipantsProgress> = ({
   currentCount,
-  maxCount,
+  maxParticipants,
   className
 }) => {
   // 실제 참여 인원수
-  const targetProgress = (currentCount / maxCount) * 100;
+  const targetProgress = (currentCount / maxParticipants) * 100;
 
   // 렌더링 시 progress bar가 채워지는 애니메이션 효과
   const [animatedProgress, setAnimatedProgress] = useState(0);
@@ -63,7 +63,7 @@ export const ParticipantsProgress: React.FC<IParticipantsProgress> = ({
           {"최소인원 3명"}
         </span>
         <span className="text-caption-normal font-medium text-gray500">
-          최대인원 {maxCount}명
+          최대인원 {maxParticipants}명
         </span>
       </div>
       

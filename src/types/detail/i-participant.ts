@@ -18,11 +18,18 @@ export interface IParticipant {
 // 컴포넌트에서 사용할 Props 타입
 export interface IDetailParticipants {
   participants: IParticipant[];
+  maxParticipants: number;
   className?: string;
 }
 
 export interface IParticipantsProgress {
   currentCount: number;
-  maxCount: number;
+  maxParticipants: number;
+  className?: string;
+}
+
+export interface IParticipantsList {
+  participants: IParticipant[];
+  maxParticipants: number;
   className?: string;
 }

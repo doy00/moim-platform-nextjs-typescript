@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import AuthButton from './AuthButton';
 import AuthKakao from './AuthKakao';
 import DothemeetCharacter from './DothemeetCharacter';
 import DothemeetLogo from './DothemeetLogo';
@@ -15,17 +14,21 @@ export default function AuthSelectEmailKakao({ children }: AuthSelectEmailKakaoP
         <DothemeetLogo />
       </div>
       <div className="flex-1 flex items-center justify-center">
-        <DothemeetCharacter />
+        <DothemeetCharacter isFull />
       </div>
       <div className="w-full 2xl:w-[584px] flex flex-col items-center justify-center gap-4 pb-12 2xl:pb-[100px]">
         <div className="w-full flex flex-col items-center justify-center gap-2">
-          <Link href="/auth/signin?type=kakao" className="w-full">
-            <AuthButton>
-              <AuthKakao className="w-5 h-5" /> 카카오로 시작하기
-            </AuthButton>
+          <Link
+            href="/auth/signin?type=kakao"
+            className="w-full flex flex-row items-center justify-center h-[58px] bg-gray100 rounded-[20px] gap-3 font-medium"
+          >
+            <AuthKakao className="w-5 h-5" /> 카카오로 시작하기
           </Link>
-          <Link href="/auth/signup" className="w-full">
-            <AuthButton>이메일로 시작하기</AuthButton>
+          <Link
+            href="/auth/signup"
+            className="w-full flex flex-row items-center justify-center h-[58px] bg-gray100 rounded-[20px] gap-3 font-medium"
+          >
+            이메일로 시작하기
           </Link>
         </div>
         {children}

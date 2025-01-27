@@ -1,12 +1,7 @@
 import axiosInstance from '@/apis/axiosInstance';
-import { IGathering } from '@/types/mypage/gathering.type';
+import { IOwnMoim } from '@/types/mypage/moim.type';
 
-export const getOwnMoim = async (): Promise<IGathering[]> => {
+export const getOwnMoim = async (): Promise<IOwnMoim> => {
   const { data } = await axiosInstance.get('/moim/own', {});
-  return data;
-};
-
-export const getGatherings = async (): Promise<IGathering[]> => {
-  const { data } = await axiosInstance.get('/gatherings', {});
   return data;
 };

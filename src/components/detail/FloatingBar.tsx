@@ -5,7 +5,7 @@ import { ToasterDark } from "./ToasterDark";
 
 interface IFloatingBar {
   onHeartClick: () => void;
-  onJoinClick: () => void;  // [ ] Promise<{success: boolean; message: string}> 제거
+  onJoinClick: () => void;  
   isJoining?: boolean;
   isLiked?: boolean;
   actionLabel?: string;
@@ -21,7 +21,14 @@ export const FloatingBar = ({
   disabled = false
 }: IFloatingBar) => {
   return (
-    <div className="fixed bottom-0 left-0 right-0 z-50 w-full max-w-[500px] mx-auto h-19 p-4 bg-background200">
+    <div className="
+      fixed bottom-0 left-0 right-0 z-50 w-full mx-auto h-19 p-4 bg-background200 shadow-2xl rounded-2xl
+      xs:max-w-screen-xs
+      sm:max-w-screen-sm
+      md:max-w-screen-md
+      lg:max-w-screen-lg
+      "
+    >
       <div className="flex items-center gap-3">
         {/* 찜하기 버튼 */}
         <button
@@ -61,8 +68,8 @@ export const FloatingBar = ({
         >
           {actionLabel}
         </button>
-        <ToasterDark position="bottom-center" duration={2000} />
       </div>
+      <ToasterDark position="bottom-center" duration={2000} />
     </div>
   );
 };

@@ -1,7 +1,7 @@
 'use client';
 
 import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
-import { IGathering } from '@/types/mypage/gathering.type';
+import { IMyMoim } from '@/types/mypage/moim.type';
 import { IUser } from '@/types/mypage/user';
 import close from '@images/mypage/close.svg';
 import badOff from '@images/mypage/dude-grade-bad-off.svg';
@@ -12,11 +12,11 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface Props {
-  gathering: IGathering;
+  moim: IMyMoim;
   user: IUser;
 }
 
-export default function CreateReview({ gathering, user }: Props) {
+export default function CreateReview({ moim, user }: Props) {
   const [showModal, setShowModal] = useState(false);
   const router = useRouter();
 
@@ -41,11 +41,11 @@ export default function CreateReview({ gathering, user }: Props) {
         </div>
 
         <span className="text-heading1 text-gray800 font-semibold">
-          {user?.name}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
+          {user?.data.nickname}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
         </span>
       </div>
       <div>
-        <GatheringCard gathering={gathering} />
+        <GatheringCard moim={moim.data[0]} />
       </div>
       <div className="flex flex-col gap-6">
         <span>모임은 어땠나요?</span>

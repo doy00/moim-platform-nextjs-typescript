@@ -3,7 +3,7 @@ import profileDefault from '@images/mypage/profile-default.svg';
 import Image from 'next/image';
 
 interface Props {
-  review: IReview;
+  review: IReview['data'][0];
 }
 
 const ReviewWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -14,19 +14,19 @@ export function ReviewCard({ review }: Props) {
   return (
     <ReviewWrapper>
       <div className="flex flex-col gap-1">
-        <span>{review?.score}</span>
+        <span>{review?.emotion}</span>
         <div className="flex items-center justify-start gap-2">
-          <span className="font-normal text-caption-normal text-gray300 ">
-            {review?.Gathering?.name}
-          </span>
+          <span className="font-normal text-caption-normal text-gray300 ">{review?.moimTitle}</span>
           <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
           <span className="font-normal text-caption-normal text-gray300 ">
             {new Date(review?.createdAt).toLocaleDateString()}
           </span>
         </div>
       </div>
-      <span className="font-normal text-label-reading text-gray400">{review?.comment}</span>
-      <div className="flex items-center justify-end gap-2">
+      <span className="font-normal text-label-reading text-gray400">{review?.contents}</span>
+
+      {/* api 미완성으로 인해 주석처리 */}
+      {/* <div className="flex items-center justify-end gap-2">
         <Image src={review?.User?.image ?? profileDefault} alt="profile" width={24} height={24} />
         <div className="flex justify-between items-center gap-2">
           <span className="font-normal text-caption-normal text-gray300">{review?.User?.name}</span>
@@ -35,7 +35,7 @@ export function ReviewCard({ review }: Props) {
             {new Date(review?.createdAt).toLocaleDateString()}
           </span>
         </div>
-      </div>
+      </div> */}
     </ReviewWrapper>
   );
 }
