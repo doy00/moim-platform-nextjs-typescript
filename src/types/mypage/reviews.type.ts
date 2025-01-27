@@ -1,29 +1,21 @@
 export interface IReview {
-  teamId: number;
-  id: number;
-  score: number;
-  comment: string;
-  createdAt: string;
-  Gathering: {
-    teamId: number;
-    id: number;
-    type: string;
-    name: string;
-    dateTime: string;
-    location: string;
-    image: string;
-  };
-  User: {
-    teamId: number;
-    id: number;
-    name: string;
-    image: string;
-  };
+  isSuccess: boolean;
+  message: string;
+  status: number;
+  data: [
+    {
+      moimTitle: string;
+      moimStartDate: string;
+      moimEndDate: string;
+      nickname: string;
+      contents: string;
+      emotion: string;
+      createdAt: string;
+    },
+  ];
 }
-
-export interface IReviewResponse {
-  data: IReview[];
-  totalItemCount: number;
-  currentPage: number;
-  totalPages: number;
+export interface IReviewPost {
+  moimId: number;
+  emotion: string;
+  content: string;
 }
