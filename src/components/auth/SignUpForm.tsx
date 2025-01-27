@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth, useSignUpMutation } from '@/hooks/auth/auth.hook';
+import { useAuth, useSignUpMutation } from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import { useQueryClient } from '@tanstack/react-query';
@@ -35,8 +36,7 @@ export default function SignUpForm() {
     error: signUpError,
     reset: signUpReset,
   } = useSignUpMutation();
-
-  const { me, isMeLoading } = useAuth();
+  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signUpError) return;
@@ -47,8 +47,12 @@ export default function SignUpForm() {
       position: data.position,
       introduction: data.introduction || null,
       tags: data.tags?.map((tag) => tag.value) || null,
+      introduction: data.introduction || null,
+      tags: data.tags?.map((tag) => tag.value) || null,
     };
-    signUp(signUpData);
+    await signUp(signUpData);
+
+    setIsReadyToGetMe(true);
   };
 
   const isDisabled =
@@ -64,7 +68,17 @@ export default function SignUpForm() {
 
   useEffect(() => {
     if (!signUpError) return;
-    methods.setError('email', { type: 'manual', message: '이미 가입된 계정이에요' });
+    if (signUpError.message === 'User already registered') {
+      methods.setError('email', { type: 'manual', message: '이미 가입된 계정이에요' });
+      methods.setFocus('email');
+      return;
+    }
+    if (signUpError.message === '이미 사용중인 닉네임입니다') {
+      methods.setError('nickname', { type: 'manual', message: '중복되는 닉네임이 있어요' });
+      methods.setFocus('nickname');
+      return;
+    }
+    methods.setError('email', { type: 'manual', message: signUpError.message });
     methods.setFocus('email');
   }, [signUpError, methods]);
 
@@ -78,6 +92,7 @@ export default function SignUpForm() {
 
   return (
     <>
+      {(isSignUpPending || isMeLoading) && <AuthLoading />}
       {(isSignUpPending || isMeLoading) && <AuthLoading />}
 
       <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background100">
@@ -111,6 +126,10 @@ export default function SignUpForm() {
                           required: '닉네임을 입력해주세요',
                         }}
                         mutationReset={signUpReset}
+                        registerOptions={{
+                          required: '닉네임을 입력해주세요',
+                        }}
+                        mutationReset={signUpReset}
                       />
 
                       <AuthLabelWithInput
@@ -124,6 +143,7 @@ export default function SignUpForm() {
                             message: '올바른 이메일 형식을 입력해 주세요',
                           },
                         }}
+                        mutationReset={signUpReset}
                         mutationReset={signUpReset}
                       />
 
@@ -144,6 +164,7 @@ export default function SignUpForm() {
                             }
                           },
                         }}
+                        mutationReset={signUpReset}
                         mutationReset={signUpReset}
                         additionalErrors={
                           !methods.formState.errors.password && (
@@ -171,6 +192,7 @@ export default function SignUpForm() {
                             return '비밀번호가 일치하지 않아요';
                           },
                         }}
+                        mutationReset={signUpReset}
                         mutationReset={signUpReset}
                         additionalErrors={
                           (isPasswordConfirmed &&
@@ -233,6 +255,7 @@ export default function SignUpForm() {
                             message: '최대 20자까지 입력 가능해요',
                           },
                         }}
+                        mutationReset={signUpReset}
                         mutationReset={signUpReset}
                         additionalErrors={
                           !methods.formState.errors.introduction && (

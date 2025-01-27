@@ -1,6 +1,7 @@
 'use client';
 
 import { useAuth, useSignInMutation } from '@/hooks/auth/auth.hook';
+import { useAuth, useSignInMutation } from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import Link from 'next/link';
@@ -22,7 +23,8 @@ export default function SignInForm() {
     error: signInError,
     reset: signInReset,
   } = useSignInMutation();
-  const { me, isMeLoading } = useAuth();
+  const [isReadyToGetMe, setIsReadyToGetMe] = useState(false);
+  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signInError) return;
@@ -30,7 +32,8 @@ export default function SignInForm() {
       email: data.email,
       password: data.password,
     };
-    signIn(signInData);
+    await signIn(signInData);
+    setIsReadyToGetMe(true);
   };
 
   const isDisabled =
@@ -42,11 +45,6 @@ export default function SignInForm() {
 
   useEffect(() => {
     if (!signInError) return;
-    if (signInError.message === '비밀번호를 확인해주세요') {
-      methods.setError('password', { type: 'manual', message: signInError.message });
-      methods.setFocus('password');
-      return;
-    }
     methods.setError('email', { type: 'manual', message: signInError.message });
     methods.setFocus('email');
   }, [signInError, methods]);
@@ -58,6 +56,7 @@ export default function SignInForm() {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-center bg-background200 md:bg-background100">
+      {(isSignInPending || isMeLoading) && <AuthLoading />}
       {(isSignInPending || isMeLoading) && <AuthLoading />}
 
       <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
