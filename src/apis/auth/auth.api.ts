@@ -32,3 +32,8 @@ export const putMe = (data: TPutMeInputs) => {
   const url = '/api/auth/me';
   return api.put<TMe, TMe>(url, data);
 };
+
+export const getProviderLogin = (provider: string, next?: string) => {
+  const url = `/api/auth/provider?provider=${provider}&next=${next}`;
+  return api.get<{ message: string }, { message: string }>(url);
+};

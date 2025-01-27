@@ -28,7 +28,7 @@ export async function GET() {
   }
 
   const { data: userData, error: userError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('id', user.id).single();
+    await supabase.from('users').select('*').eq('email', user.email).single();
 
   if (userError) {
     return NextResponse.json({ message: userError?.message }, { status: 401 });
