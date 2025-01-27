@@ -91,7 +91,8 @@ interface UseAuthProps {
 }
 
 // me 객체 접근과, 로그아웃을 편리하게 사용하기 위한 훅
-export function useAuth({ enabled = true }: UseAuthProps) {
+export function useAuth(props?: UseAuthProps) {
+  const { enabled = true } = props || {};
   const queryClient = useQueryClient();
   const { data: me, isLoading: isMeLoading, error } = useMeQuery(enabled);
   const router = useRouter();
