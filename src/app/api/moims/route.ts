@@ -1,15 +1,12 @@
-import { TMoims, TParticipatedMoims, TReviews } from '@/types/supabase/supabase-custom.type';
+import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+import convertToWebP from '@/utils/common/converToWebp';
+import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 const MOIMS_ITEMS_PER_PAGE = 8;
-
-type TMoimsJoined = TMoims & {
-  reviews: TReviews[];
-  participated_moims: TParticipatedMoims[];
-};
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -24,11 +21,11 @@ export async function GET(req: NextRequest) {
 
   if (countError) {
     console.error(countError);
-    return NextResponse.json({ error: countError?.message }, { status: 401 });
+    return NextResponse.json({ message: countError?.message }, { status: 401 });
   }
 
   if (!totalItems) {
-    return NextResponse.json({ error: '아이템이 하나도 없어요' }, { status: 404 });
+    return NextResponse.json({ message: '아이템이 하나도 없어요' }, { status: 404 });
   }
 
   if (pageQuery !== 'null') {
@@ -50,19 +47,20 @@ export async function GET(req: NextRequest) {
 
     if (moimError) {
       console.error(moimError);
-      return NextResponse.json({ error: moimError?.message }, { status: 401 });
+      return NextResponse.json({ message: moimError?.message }, { status: 401 });
     }
 
     if (!moims) {
-      return NextResponse.json({ error: '모임이 하나도 없어요' }, { status: 404 });
+      return NextResponse.json({ message: '모임이 하나도 없어요' }, { status: 404 });
     }
 
-    // 총 페이지 수를 계산합니다.
     const totalPages = Math.ceil(totalItems / MOIMS_ITEMS_PER_PAGE);
+
+    const moimsToClient: TMoimClient[] = mapMoimsToClient(moims);
 
     return NextResponse.json(
       {
-        data: moims,
+        data: moimsToClient,
         pagination: {
           totalItems,
           totalPages,
@@ -87,18 +85,19 @@ export async function GET(req: NextRequest) {
 
   if (moimError) {
     console.error(moimError);
-    return NextResponse.json({ error: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
   }
   if (!moims) {
-    return NextResponse.json({ error: '모임이 하나도 없어요' }, { status: 404 });
+    return NextResponse.json({ message: '모임이 하나도 없어요' }, { status: 404 });
   }
 
-  // 총 페이지 수를 계산합니다.
   const totalPages = Math.ceil(totalItems / MOIMS_ITEMS_PER_PAGE);
+
+  const moimsToClient: TMoimClient[] = mapMoimsToClient(moims);
 
   return NextResponse.json(
     {
-      data: moims,
+      data: moimsToClient,
       pagination: {
         totalItems,
         totalPages,
@@ -107,4 +106,105 @@ export async function GET(req: NextRequest) {
     },
     { status: 200 },
   );
+}
+
+export async function POST(req: NextRequest) {
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    return NextResponse.json({ message: error?.message }, { status: 401 });
+  }
+
+  const formData = await req.formData();
+  const moimDataString = formData.get('moim_json'); // 클라이언트에서 json으로 묶어줘야 함
+  const moimImageFile = formData.get('moim_image') as File;
+  const moimDataOrigin = JSON.parse(moimDataString as string);
+
+  // const deadlineDate = new Date(moimDataOrigin.recruitmentDeadline);
+  // const startDate = new Date(moimDataOrigin.startDate);
+  // const endDate = new Date(moimDataOrigin.endDate);
+
+  // const isDeadlinePassed = deadlineDate < new Date();
+  // const isStartDatePassed = startDate < new Date();
+  // const isEndDatePassed = endDate < new Date();
+
+  // let status = '';
+  // if (isDeadlinePassed) {
+  //   status = 'RECRUIT';
+  // } else if (isStartDatePassed) {
+  //   status = 'PROGRESS';
+  // } else if (isEndDatePassed) {
+  //   status = 'END';
+  // }
+
+  const moimData: Partial<TMoims> = {
+    title: moimDataOrigin.title,
+    content: moimDataOrigin.content,
+    address: moimDataOrigin.roadAddress,
+    recruitment_deadline: moimDataOrigin.recruitmentDeadline,
+    start_date: moimDataOrigin.startDate,
+    end_date: moimDataOrigin.endDate,
+    min_participants: moimDataOrigin.minParticipants,
+    max_participants: moimDataOrigin.maxParticipants,
+    category: moimDataOrigin.moimType,
+    status: moimDataOrigin.status,
+    master_email: user?.email,
+    images: [],
+  };
+
+  if (!moimDataString) {
+    return NextResponse.json({ message: '모임 데이터가 없어요' }, { status: 404 });
+  }
+
+  // 현재는 이미지 한개인 상황
+  // 이미지 여러개 추가 시 수정 필요
+  if (moimImageFile && moimData) {
+    const imageBuffer = await convertToWebP(moimImageFile, 1080);
+    const filePath = `moims_${Date.now()}.webp`;
+
+    if (!imageBuffer) {
+      return NextResponse.json({ message: '이미지 변환 중 오류 발생' }, { status: 500 });
+    }
+
+    const { data: imageData, error: imageError } = await supabase.storage
+      .from('moims')
+      .upload(filePath, imageBuffer, {
+        contentType: 'image/webp',
+      });
+
+    if (imageError) {
+      return NextResponse.json({ message: '이미지 업로드 중 오류 발생' }, { status: 500 });
+    }
+
+    const { data: imageUrlData } = supabase.storage.from('moims').getPublicUrl(filePath);
+    moimData.images = [imageUrlData.publicUrl];
+
+    // 'moims' 테이블에 모임 데이터를 삽입
+    const {
+      data: moim,
+      error: moimError,
+    }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
+      .from('moims')
+      .upsert({ ...moimData })
+      .select('*, reviews (*), participated_moims (*)')
+      .single();
+
+    if (moimError) {
+      return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    }
+
+    if (!moim) {
+      return NextResponse.json({ message: '모임 생성 실패' }, { status: 404 });
+    }
+
+    const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
+
+    return NextResponse.json(moimsToClient[0], { status: 200 });
+  }
 }
