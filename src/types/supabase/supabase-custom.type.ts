@@ -25,4 +25,9 @@ export type TMoimClient = {
 export type TMoimsJoined = TMoims & {
   reviews: TReviews[];
   participated_moims: TParticipatedMoims[];
+  liked_moims?: TLikedMoims[];
+};
+
+export type TLikedMoimsJoined = TLikedMoims & {
+  moims: TMoims;
 };
