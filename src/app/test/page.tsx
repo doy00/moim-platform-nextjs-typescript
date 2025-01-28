@@ -1,21 +1,22 @@
 'use client';
 
 import api from '@/apis/auth/axios.api';
+import { useState } from 'react';
 
-function page() {
-  const handleClick = async () => {
-    const response = await api.get('/api/moims/likes?page=1');
-    console.log(response);
-  };
+// function page() {
+//   const handleClick = async () => {
+//     const response = await api.get('/api/moims/likes?page=1');
+//     console.log(response);
+//   };
 
-  return (
-    <div>
-      <button onClick={handleClick}>테스트</button>
-    </div>
-  );
-}
+//   return (
+//     <div>
+//       <button onClick={handleClick}>테스트</button>
+//     </div>
+//   );
+// }
 
-export default page;
+// export default page;
 
 // export const postMoims = (data: any) => {
 //   const url = '/api/moims';
@@ -69,3 +70,50 @@ export default page;
 // }
 
 // export default page;
+
+export const postMoims = (data: any) => {
+  const url = '/api/auth/me';
+  return api.put<any, any>(url, data, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+function page() {
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setFile(file);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!file) return;
+    const formData = new FormData();
+
+    const meData = {
+      nickname: 'testUser123',
+      position: 'BACKEND',
+      introduction: '다시테스트소개소개',
+      tags: ['다시', '테스트'],
+    };
+
+    formData.append('me_image', file);
+    formData.append('me_json', JSON.stringify(meData));
+    const response = await postMoims(formData);
+    console.log(response);
+  };
+
+  return (
+    <form onSubmit={handleSubmit}>
+      <input type="file" onChange={handleFileChange} />
+      <button type="submit">제출</button>
+    </form>
+  );
+}
+
+export default page;
