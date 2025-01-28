@@ -46,11 +46,11 @@ export type TParticipatedMoimsJoined = TParticipatedMoims & {
   };
 };
 
-export type TReview = {
+export type TReviewInput = {
   review: string;
   rate: ERate;
 };
 
-export type TReviewWithMoim = TReview & {
+export type TReviewWithMoim = TReviews & {
   moims: TMoims;
 };
