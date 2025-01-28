@@ -162,33 +162,12 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: '모임 데이터가 없어요' }, { status: 404 });
   }
 
-  if (!moimImageFile && moimData) {
-    // 이미지 파일이 없어도 'moims' 테이블에 모임 데이터를 삽입
-    const {
-      data: moim,
-      error: moimError,
-    }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
-      .from('moims')
-      .upsert({ ...moimData })
-      .select('*, reviews (*), participated_moims (*)')
-      .single();
-
-    if (moimError) {
-      return NextResponse.json({ message: moimError?.message }, { status: 401 });
-    }
-
-    if (!moim) {
-      return NextResponse.json({ message: '모임 생성 실패' }, { status: 404 });
-    }
-
-    const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
-
-    return NextResponse.json(moimsToClient[0], { status: 200 });
+  if (!moimImageFile && !moimData) {
+    return NextResponse.json({ message: '모임 데이터가 없어요' }, { status: 404 });
   }
 
-  // 현재는 이미지 한개인 상황
-  // 이미지 여러개 추가 시 수정 필요
-  if (moimImageFile && moimData) {
+  // 이미지 파일이 있는 경우
+  if (moimImageFile) {
     const imageBuffer = await convertToWebP(moimImageFile, 1080);
     const filePath = `moims_${Date.now()}.webp`;
 
@@ -208,29 +187,27 @@ export async function POST(req: NextRequest) {
 
     const { data: imageUrlData } = supabase.storage.from('moims').getPublicUrl(filePath);
     moimData.images = [imageUrlData.publicUrl];
-
-    // 'moims' 테이블에 모임 데이터를 삽입
-    const {
-      data: moim,
-      error: moimError,
-    }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
-      .from('moims')
-      .upsert({ ...moimData })
-      .select('*, reviews (*), participated_moims (*)')
-      .single();
-
-    if (moimError) {
-      return NextResponse.json({ message: moimError?.message }, { status: 401 });
-    }
-
-    if (!moim) {
-      return NextResponse.json({ message: '모임 생성 실패' }, { status: 404 });
-    }
-
-    const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
-
-    return NextResponse.json(moimsToClient[0], { status: 200 });
   }
 
-  return NextResponse.json({ message: '모임 생성 실패' }, { status: 404 });
+  // 이미지 파일이 없어도 'moims' 테이블에 모임 데이터를 삽입
+  const {
+    data: moim,
+    error: moimError,
+  }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
+    .from('moims')
+    .upsert({ ...moimData })
+    .select('*, reviews (*), participated_moims (*)')
+    .single();
+
+  if (moimError) {
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+  }
+
+  if (!moim) {
+    return NextResponse.json({ message: '모임 생성 실패' }, { status: 404 });
+  }
+
+  const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
+
+  return NextResponse.json(moimsToClient[0], { status: 200 });
 }
