@@ -4,7 +4,7 @@ import api from '@/apis/auth/axios.api';
 
 function page() {
   const handleClick = async () => {
-    const response = await api.get('/api/moims/my');
+    const response = await api.get('/api/moims/participated');
     console.log(response);
   };
 
