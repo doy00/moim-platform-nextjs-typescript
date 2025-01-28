@@ -13,7 +13,7 @@ export async function POST(request: NextRequest) {
 
   if (!email || !password || !nickname) {
     return NextResponse.json(
-      { message: '이메일, 비밀번호, 닉네임은 필수 입력 항목입니다.' },
+      { message: '이메일, 비밀번호, 닉네임은 필수 입력 항목입니다' },
       { status: 400 },
     );
   }
@@ -29,7 +29,7 @@ export async function POST(request: NextRequest) {
   const existingUserNickname = existingUsers.find((user) => user.nickname === nickname);
 
   if (existingUserNickname) {
-    return NextResponse.json({ message: '이미 사용중인 닉네임입니다' }, { status: 400 });
+    return NextResponse.json({ message: '중복되는 닉네임이 있어요' }, { status: 400 });
   }
 
   const {
@@ -47,6 +47,9 @@ export async function POST(request: NextRequest) {
 
   if (error) {
     console.log('error ====>', error);
+    if (error.message === 'User already registered') {
+      return NextResponse.json({ message: '이미 가입된 계정이에요' }, { status: 400 });
+    }
     return NextResponse.json({ message: error?.message }, { status: 401 });
   }
 

@@ -64,17 +64,7 @@ export default function SignUpForm() {
 
   useEffect(() => {
     if (!signUpError) return;
-    if (signUpError.message === 'User already registered') {
-      methods.setError('email', { type: 'manual', message: '이미 가입된 계정이에요' });
-      methods.setFocus('email');
-      return;
-    }
-    if (signUpError.message === '이미 사용중인 닉네임입니다') {
-      methods.setError('nickname', { type: 'manual', message: '중복되는 닉네임이 있어요' });
-      methods.setFocus('nickname');
-      return;
-    }
-    methods.setError('email', { type: 'manual', message: signUpError.message });
+    methods.setError('email', { type: 'manual', message: '이미 가입된 계정이에요' });
     methods.setFocus('email');
   }, [signUpError, methods]);
 
