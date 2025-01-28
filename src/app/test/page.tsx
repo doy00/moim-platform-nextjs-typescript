@@ -4,7 +4,7 @@ import api from '@/apis/auth/axios.api';
 
 function page() {
   const handleClick = async () => {
-    const response = await api.post('/api/moims/cb2cf966-02e3-4d71-bfb2-e14c60dbb85a/join');
+    const response = await api.get('/api/moims/likes?page=1');
     console.log(response);
   };
 
