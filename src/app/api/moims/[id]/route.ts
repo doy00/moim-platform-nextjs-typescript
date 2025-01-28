@@ -1,4 +1,5 @@
 import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+import convertToWebP from '@/utils/common/converToWebp';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
@@ -67,12 +68,34 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     images: [],
   };
 
+  if (moimImageFile) {
+    const imageBuffer = await convertToWebP(moimImageFile, 1080);
+    const filePath = `moims_${Date.now()}.webp`;
+
+    if (!imageBuffer) {
+      return NextResponse.json({ message: '이미지 변환 중 오류 발생' }, { status: 500 });
+    }
+
+    const { data: imageData, error: imageError } = await supabase.storage
+      .from('moims')
+      .upload(filePath, imageBuffer, {
+        contentType: 'image/webp',
+      });
+
+    if (imageError) {
+      return NextResponse.json({ message: '이미지 업로드 중 오류 발생' }, { status: 500 });
+    }
+
+    const { data: imageUrlData } = supabase.storage.from('moims').getPublicUrl(filePath);
+    moimData.images = [imageUrlData.publicUrl];
+  }
+
   const {
     data: updatedMoim,
     error: updatedMoimError,
   }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
     .from('moims')
-    .upsert(moimData)
+    .upsert({ ...moimData })
     .select('*, reviews (*), participated_moims (*)')
     .single();
 
