@@ -45,6 +45,11 @@ export default function SignInForm() {
 
   useEffect(() => {
     if (!signInError) return;
+    if (signInError.message === '비밀번호를 확인해주세요') {
+      methods.setError('password', { type: 'manual', message: signInError.message });
+      methods.setFocus('password');
+      return;
+    }
     methods.setError('email', { type: 'manual', message: signInError.message });
     methods.setFocus('email');
   }, [signInError, methods]);
