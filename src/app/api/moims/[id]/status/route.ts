@@ -30,7 +30,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     error: updatedMoimError,
   }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
     .from('moims')
-    .update({ status, updated_at: new Date().toISOString() })
+    .update({ status })
     .eq('id', id)
     .select('*, participated_moims(*), reviews(*)')
     .single();
