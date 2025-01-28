@@ -1,3 +1,4 @@
+import { MOIMS_ITEMS_PER_PAGE } from '@/constants/common/common.const';
 import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
 import convertToWebP from '@/utils/common/converToWebp';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
@@ -5,8 +6,6 @@ import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
-
-const MOIMS_ITEMS_PER_PAGE = 8;
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
