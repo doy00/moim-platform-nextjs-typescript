@@ -1,12 +1,14 @@
-import { TMe } from '@/types/auth/auth.type';
-import { TMoimClient, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+import {
+  TMoimClient,
+  TMoimsJoined,
+  TParticipatedMoimsJoined,
+} from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
-// 내가 만든 모임 조회
 export async function GET() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
@@ -24,35 +26,29 @@ export async function GET() {
     return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
   }
 
-  const { data: me, error: meError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('email', user.email).single();
-
-  if (meError) {
-    return NextResponse.json({ message: meError?.message }, { status: 401 });
-  }
-
-  if (!me) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
-  }
-
   const {
-    data: myMoims,
-    error: myMoimsError,
-  }: { data: TMoimsJoined[] | null; error: PostgrestError | null } = await supabase
-    .from('moims')
-    .select('*, reviews (*), participated_moims (*)')
-    .eq('master_email', me.email)
-    .order('created_at', { ascending: false });
+    data: participatedMoims,
+    error: participatedMoimsError,
+  }: { data: TParticipatedMoimsJoined[] | null; error: PostgrestError | null } = await supabase
+    .from('participated_moims')
+    .select('*, moims (*, reviews (*), participated_moims (*))')
+    .eq('user_uuid', user.id);
 
-  if (myMoimsError) {
-    return NextResponse.json({ message: myMoimsError?.message }, { status: 401 });
+  if (participatedMoimsError) {
+    return NextResponse.json({ message: participatedMoimsError?.message }, { status: 401 });
   }
 
-  if (!myMoims) {
-    return NextResponse.json({ message: '내가 만든 모임이 없습니다' }, { status: 401 });
+  if (!participatedMoims) {
+    return NextResponse.json({ message: '참여한 모임이 없어요' }, { status: 404 });
   }
 
-  const moimsToClient: TMoimClient[] = mapMoimsToClient(myMoims);
+  const mappedMoims: TMoimsJoined[] = participatedMoims.map((participatedMoim) => ({
+    ...participatedMoim.moims,
+    reviews: participatedMoim.moims.reviews,
+    participated_moims: participatedMoim.moims.participated_moims,
+  }));
+
+  const moimsToClient: TMoimClient[] = mapMoimsToClient(mappedMoims);
 
   return NextResponse.json(moimsToClient, { status: 200 });
 }

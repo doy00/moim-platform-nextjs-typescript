@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
     error: moimsError,
   }: { data: TLikedMoimsJoined[] | null; error: PostgrestError | null } = await supabase
     .from('liked_moims')
-    .select('*, moims (*)')
+    .select('*, moims (*, reviews (*), participated_moims (*))')
     .eq('user_uuid', foundUser.id)
     .order('created_at', { ascending: false });
 
@@ -61,30 +61,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: '좋아요한 모임이 없어요' }, { status: 404 });
   }
 
-  const { data: reviews, error: reviewsError } = await supabase
-    .from('reviews')
-    .select('*')
-    .eq('user_uuid', foundUser.id)
-    .order('created_at', { ascending: false });
-
-  if (reviewsError) {
-    return NextResponse.json({ message: reviewsError?.message }, { status: 401 });
-  }
-
-  const { data: participatedMoims, error: participatedMoimsError } = await supabase
-    .from('participated_moims')
-    .select('*')
-    .eq('user_uuid', foundUser.id)
-    .order('created_at', { ascending: false });
-
-  if (participatedMoimsError) {
-    return NextResponse.json({ message: participatedMoimsError?.message }, { status: 401 });
-  }
-
   const mappedMoims: TMoimsJoined[] = moims.map((moim) => ({
     ...moim.moims,
-    reviews: reviews,
-    participated_moims: participatedMoims,
+    reviews: moim.moims.reviews,
+    participated_moims: moim.moims.participated_moims,
   }));
 
   const moimsToClient: TMoimClient[] = mapMoimsToClient(mappedMoims);

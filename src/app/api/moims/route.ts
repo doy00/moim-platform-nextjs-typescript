@@ -125,23 +125,6 @@ export async function POST(req: NextRequest) {
   const moimImageFile = formData.get('moim_image') as File;
   const moimDataOrigin = JSON.parse(moimDataString as string);
 
-  // const deadlineDate = new Date(moimDataOrigin.recruitmentDeadline);
-  // const startDate = new Date(moimDataOrigin.startDate);
-  // const endDate = new Date(moimDataOrigin.endDate);
-
-  // const isDeadlinePassed = deadlineDate < new Date();
-  // const isStartDatePassed = startDate < new Date();
-  // const isEndDatePassed = endDate < new Date();
-
-  // let status = '';
-  // if (isDeadlinePassed) {
-  //   status = 'RECRUIT';
-  // } else if (isStartDatePassed) {
-  //   status = 'PROGRESS';
-  // } else if (isEndDatePassed) {
-  //   status = 'END';
-  // }
-
   const moimData: Partial<TMoims> = {
     title: moimDataOrigin.title,
     content: moimDataOrigin.content,
@@ -210,3 +193,20 @@ export async function POST(req: NextRequest) {
 
   return NextResponse.json(moimsToClient[0], { status: 200 });
 }
+
+// const deadlineDate = new Date(moimDataOrigin.recruitmentDeadline);
+// const startDate = new Date(moimDataOrigin.startDate);
+// const endDate = new Date(moimDataOrigin.endDate);
+
+// const isDeadlinePassed = deadlineDate < new Date();
+// const isStartDatePassed = startDate < new Date();
+// const isEndDatePassed = endDate < new Date();
+
+// let status = '';
+// if (isDeadlinePassed) {
+//   status = 'RECRUIT';
+// } else if (isStartDatePassed) {
+//   status = 'PROGRESS';
+// } else if (isEndDatePassed) {
+//   status = 'END';
+// }
