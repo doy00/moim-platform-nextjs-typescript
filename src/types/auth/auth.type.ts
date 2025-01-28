@@ -33,7 +33,6 @@ export type TSignOutResponse = {
 
 export type TPutMeInputs = {
   nickname: string;
-  image: string;
   introduction?: string;
   position?: string;
   tags?: string[];
