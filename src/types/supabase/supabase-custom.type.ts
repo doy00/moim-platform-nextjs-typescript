@@ -1,10 +1,14 @@
-import { Tables } from './supabase';
+import { Enums, Tables } from './supabase';
 
 export type TMoims = Tables<'moims'>;
 export type TUsers = Tables<'users'>;
 export type TReviews = Tables<'reviews'>;
 export type TLikedMoims = Tables<'liked_moims'>;
 export type TParticipatedMoims = Tables<'participated_moims'>;
+
+export type ERate = Enums<'review_status'>;
+export type ECategory = Enums<'moim_category'>;
+export type EMoimStatus = Enums<'moim_status'>;
 
 export type TMoimClient = {
   title: string;
@@ -40,4 +44,9 @@ export type TParticipatedMoimsJoined = TParticipatedMoims & {
     reviews: TReviews[];
     participated_moims: TParticipatedMoims[];
   };
+};
+
+export type TReview = {
+  review: string;
+  rate: ERate;
 };
