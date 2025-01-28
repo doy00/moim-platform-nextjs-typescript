@@ -4,10 +4,13 @@ import api from '@/apis/auth/axios.api';
 
 function page() {
   const handleClick = async () => {
-    const response = await api.post('/api/moims/afc6d714-7b35-48ca-91b4-e5085cc171c4/review', {
-      review: '테스트리뷰',
-      rate: 'SOSO',
-    });
+    const response = await api.put(
+      '/api/moims/afc6d714-7b35-48ca-91b4-e5085cc171c4/review/63f50ca4-14cb-4a58-b8d4-cbb9bdc1bb8f',
+      {
+        review: '테스트리뷰2',
+        rate: 'GOOD',
+      },
+    );
     console.log(response);
   };
 
