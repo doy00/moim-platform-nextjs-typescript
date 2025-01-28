@@ -1,0 +1,78 @@
+import { createClient } from '@/utils/supabase/server';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const id = (await params).id;
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    return NextResponse.json({ message: error?.message }, { status: 401 });
+  }
+
+  if (!user) {
+    return NextResponse.json({ message: '로그인 후 이용해주세요' }, { status: 401 });
+  }
+
+  const { data: foundUser, error: foundUserError } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', user.email)
+    .single();
+
+  if (foundUserError) {
+    return NextResponse.json({ message: foundUserError?.message }, { status: 401 });
+  }
+
+  if (!foundUser) {
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+  }
+
+  const { data: existingLike } = await supabase
+    .from('participated_moims')
+    .select('*')
+    .eq('moim_uuid', id)
+    .eq('user_uuid', foundUser.id)
+    .single();
+
+  if (existingLike) {
+    return NextResponse.json({ message: '이미 참여한 모임이에요' }, { status: 401 });
+  }
+
+  const { data: participatedData, error: participatedError } = await supabase
+    .from('participated_moims')
+    .upsert({ moim_uuid: id, user_uuid: foundUser.id })
+    .select();
+
+  if (participatedError) {
+    return NextResponse.json({ message: participatedError?.message }, { status: 401 });
+  }
+
+  if (!participatedData) {
+    return NextResponse.json({ message: '모임 참여 실패' }, { status: 401 });
+  }
+
+  const { data: participated, error: participatedSelectError } = await supabase
+    .from('participated_moims')
+    .select('*')
+    .eq('moim_uuid', id);
+
+  if (participatedSelectError) {
+    return NextResponse.json({ message: participatedSelectError?.message }, { status: 401 });
+  }
+
+  const response = {
+    message: '모임 참여가 성공적으로 완료되었습니다',
+    data: {
+      moimId: id,
+      participated: participated?.length,
+    },
+  };
+
+  return NextResponse.json(response, { status: 200 });
+}
