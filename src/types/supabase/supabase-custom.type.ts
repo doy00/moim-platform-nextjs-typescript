@@ -50,3 +50,7 @@ export type TReview = {
   review: string;
   rate: ERate;
 };
+
+export type TReviewWithMoim = TReview & {
+  moims: TMoims;
+};
