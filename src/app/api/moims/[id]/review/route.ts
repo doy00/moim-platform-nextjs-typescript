@@ -1,4 +1,4 @@
-import { TReview } from '@/types/supabase/supabase-custom.type';
+import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -10,7 +10,10 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const { data: reviews, error: reviewsError } = await supabase
+  const {
+    data: reviews,
+    error: reviewsError,
+  }: { data: TReviews[] | null; error: PostgrestError | null } = await supabase
     .from('reviews')
     .select('*')
     .eq('moim_uuid', id)
@@ -20,7 +23,7 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ message: reviewsError?.message }, { status: 401 });
   }
 
-  return NextResponse.json({ data: reviews }, { status: 200 });
+  return NextResponse.json(reviews, { status: 200 });
 }
 
 // 리뷰 작성
@@ -28,7 +31,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const id = (await params).id;
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
-  const { review, rate }: TReview = await req.json();
+  const { review, rate }: TReviewInput = await req.json();
 
   const {
     data: { user },
@@ -46,7 +49,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const {
     data: postedReview,
     error: postedReviewError,
-  }: { data: TReview | null; error: PostgrestError | null } = await supabase
+  }: { data: TReviews | null; error: PostgrestError | null } = await supabase
     .from('reviews')
     .upsert({
       moim_uuid: id,
@@ -59,6 +62,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
   if (postedReviewError) {
     return NextResponse.json({ message: postedReviewError?.message }, { status: 401 });
+  }
+
+  if (!postedReview) {
+    return NextResponse.json({ message: '리뷰 작성에 실패했습니다' }, { status: 401 });
   }
 
   return NextResponse.json(postedReview, { status: 200 });
