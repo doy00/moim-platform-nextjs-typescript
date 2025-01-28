@@ -5,6 +5,7 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+// 내가 만든 모임 조회
 export async function GET() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);

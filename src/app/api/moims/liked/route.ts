@@ -10,6 +10,7 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
+// 내가 좋아요한 모임 조회
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const pageQuery = searchParams.get('page');
