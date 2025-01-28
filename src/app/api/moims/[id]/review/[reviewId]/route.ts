@@ -1,4 +1,4 @@
-import { TReview } from '@/types/supabase/supabase-custom.type';
+import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -12,7 +12,7 @@ export async function PUT(
   const reviewId = (await params).reviewId;
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
-  const { review, rate }: TReview = await req.json();
+  const { review, rate }: TReviewInput = await req.json();
 
   const {
     data: { user },
@@ -30,7 +30,7 @@ export async function PUT(
   const {
     data: updatedReview,
     error: updatedReviewError,
-  }: { data: TReview | null; error: PostgrestError | null } = await supabase
+  }: { data: TReviews | null; error: PostgrestError | null } = await supabase
     .from('reviews')
     .update({ review, rate })
     .eq('id', reviewId)
@@ -55,11 +55,25 @@ export async function DELETE(
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
+  const {
+    data: { user },
+    error,
+  } = await supabase.auth.getUser();
+
+  if (error) {
+    return NextResponse.json({ message: error?.message }, { status: 401 });
+  }
+
+  if (!user) {
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+  }
+
   const { data: deletedReview, error: deletedReviewError } = await supabase
     .from('reviews')
     .delete()
     .eq('id', reviewId)
     .eq('moim_uuid', id)
+    .eq('user_uuid', user.id)
     .select()
     .single();
 
