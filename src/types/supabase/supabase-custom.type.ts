@@ -29,5 +29,15 @@ export type TMoimsJoined = TMoims & {
 };
 
 export type TLikedMoimsJoined = TLikedMoims & {
-  moims: TMoims;
+  moims: TMoims & {
+    reviews: TReviews[];
+    participated_moims: TParticipatedMoims[];
+  };
+};
+
+export type TParticipatedMoimsJoined = TParticipatedMoims & {
+  moims: TMoims & {
+    reviews: TReviews[];
+    participated_moims: TParticipatedMoims[];
+  };
 };
