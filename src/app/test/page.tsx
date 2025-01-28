@@ -1,16 +1,18 @@
 'use client';
 
-import { useAuth } from '@/hooks/auth/auth.hook';
+import { useEffect } from 'react';
 
-export default function TestPage() {
-  const { me, isMeLoading, signOut } = useAuth();
+function page() {
+  useEffect(() => {
+    const fetchData = async () => {
+      const response = await fetch('/api/moims?page=1');
+      const data = await response.json();
+      console.log(data);
+    };
+    fetchData();
+  }, []);
 
-  return (
-    <div>
-      <button onClick={signOut}>로그아웃</button>
-      <div>
-        <p>{me?.email}</p>
-      </div>
-    </div>
-  );
+  return <div>page</div>;
 }
+
+export default page;
