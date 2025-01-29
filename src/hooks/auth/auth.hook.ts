@@ -8,7 +8,7 @@ import {
   postSignUp,
   putMe,
 } from '@/apis/auth/auth.api';
-import { PROVIDERS, QUERY_KEY_ME } from '@/constants/auth/auth.const';
+import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
   TAuthSignInInputs,
   TAuthSignInResponse,
@@ -106,9 +106,11 @@ export function useMeQuery(enabled: boolean = true): UseQueryResult<TMe, TError>
   });
 }
 
-export function useProviderLoginMutation() {
-  return useMutation<{ message: string }, TError, { provider: string; next: string }>({
-    mutationFn: ({ provider, next }) => getProviderLogin(provider, next),
+export function useProviderLoginQuery({ provider, next }: { provider: string; next: string }) {
+  return useQuery<{ message: string }, TError, { provider: string; next: string }>({
+    queryKey: [QUERY_KEY_ME, provider, next],
+    queryFn: () => getProviderLogin(provider, next),
+    enabled: !!provider && !!next,
   });
 }
 
@@ -128,18 +130,6 @@ export function useAuth() {
     isPending: isUpdateMePending,
     error: updateMeError,
   } = usePutMeMutation();
-  const {
-    mutate: providerLogin,
-    isPending: isProviderLoginPending,
-    error: providerLoginError,
-  } = useProviderLoginMutation();
-
-  const loginWithProvider = useCallback(
-    (next: string) => {
-      providerLogin({ provider: PROVIDERS.kakao, next });
-    },
-    [providerLogin],
-  );
 
   const signOut = useCallback(() => {
     signOutMutation();
@@ -157,15 +147,15 @@ export function useAuth() {
   }, []);
 
   useEffect(() => {
-    if (!meError && !signOutError && !updateMeError && !providerLoginError) return;
-    console.log(meError || signOutError || updateMeError || providerLoginError);
-    setError(meError || signOutError || updateMeError || providerLoginError);
-  }, [meError, signOutError, updateMeError, providerLoginError]);
+    if (!meError && !signOutError && !updateMeError) return;
+    console.log(meError || signOutError || updateMeError);
+    setError(meError || signOutError || updateMeError);
+  }, [meError, signOutError, updateMeError]);
 
   useEffect(() => {
-    if (!isSignOutPending && !isUpdateMePending && !isProviderLoginPending) return;
+    if (!isSignOutPending && !isUpdateMePending) return;
     setIsMutationPending(true);
-  }, [isSignOutPending, isUpdateMePending, isProviderLoginPending]);
+  }, [isSignOutPending, isUpdateMePending]);
 
   // 임시 콘솔 로그
   useEffect(() => {
@@ -176,7 +166,6 @@ export function useAuth() {
     me,
     signOut,
     updateMe,
-    loginWithProvider,
     isMeLoading,
     isMutationPending,
     error,
