@@ -5,14 +5,26 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
-export async function GET() {
+export async function GET(request: NextRequest) {
+  const { searchParams } = new URL(request.url);
+  const jwt = searchParams.get('jwt');
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const auth = supabase.auth;
+  let user;
+  let error;
+  if (jwt) {
+    ({
+      data: { user },
+      error,
+    } = await auth.getUser(jwt));
+  } else {
+    ({
+      data: { user },
+      error,
+    } = await auth.getUser());
+  }
 
   if (error) {
     // if (error.message === 'Auth session missing!')
@@ -28,18 +40,18 @@ export async function GET() {
     return NextResponse.json({ message: '로그인된 사용자가 없습니다' }, { status: 404 });
   }
 
-  const { data: userData, error: userError }: { data: TMe | null; error: PostgrestError | null } =
+  const { data: me, error: meError }: { data: TMe | null; error: PostgrestError | null } =
     await supabase.from('users').select('*').eq('email', user.email).single();
 
-  if (userError) {
-    return NextResponse.json({ message: userError?.message }, { status: 401 });
+  if (meError) {
+    return NextResponse.json({ message: meError?.message }, { status: 401 });
   }
 
-  if (!userData) {
+  if (!me) {
     return NextResponse.json({ message: '사용자 정보를 찾을 수 없습니다' }, { status: 404 });
   }
 
-  return NextResponse.json(userData, { status: 200 });
+  return NextResponse.json(me, { status: 200 });
 }
 
 export async function PUT(req: NextRequest) {

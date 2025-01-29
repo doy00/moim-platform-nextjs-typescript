@@ -1,5 +1,6 @@
 import type {
   TAuthSignInInputs,
+  TAuthSignInResponse,
   TAuthSignUpInputs,
   TMe,
   TPutMeInputs,
@@ -15,7 +16,7 @@ export const postSignUp = (data: TAuthSignUpInputs) => {
 
 export const postSignIn = (data: TAuthSignInInputs) => {
   const url = '/api/auth/signin';
-  return api.post<TMe, TMe>(url, data);
+  return api.post<TAuthSignInResponse, TAuthSignInResponse>(url, data);
 };
 
 export const deleteSignOut = () => {
@@ -23,8 +24,9 @@ export const deleteSignOut = () => {
   return api.delete<TSignOutResponse, TSignOutResponse>(url);
 };
 
-export const getMe = async () => {
-  const url = '/api/auth/me';
+export const getMe = async (jwt?: string) => {
+  let url = '/api/auth/me';
+  if (jwt) url = `/api/auth/me?jwt=${jwt}`;
   return await api.get<TMe, TMe>(url);
 };
 

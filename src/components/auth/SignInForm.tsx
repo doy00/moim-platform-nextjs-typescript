@@ -5,7 +5,7 @@ import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthLabelWithInput from './AuthLabelWithInput';
@@ -17,13 +17,12 @@ export default function SignInForm() {
   const router = useRouter();
   const methods = useForm<TAuthFormValues>();
   const {
-    mutateAsync: signIn,
+    mutate: signIn,
     isPending: isSignInPending,
     error: signInError,
     reset: signInReset,
   } = useSignInMutation();
-  const [isReadyToGetMe, setIsReadyToGetMe] = useState(false);
-  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
+  const { me, isMeLoading } = useAuth();
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signInError) return;
@@ -31,8 +30,7 @@ export default function SignInForm() {
       email: data.email,
       password: data.password,
     };
-    await signIn(signInData);
-    setIsReadyToGetMe(true);
+    signIn(signInData);
   };
 
   const isDisabled =
