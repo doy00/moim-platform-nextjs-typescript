@@ -2,6 +2,7 @@ import { PUBLIC_URL } from '@/constants/auth/auth.const';
 import { createClient } from '@/utils/supabase/server';
 import { Provider } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -39,5 +40,6 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: error?.message }, { status: 401 });
   }
 
-  return NextResponse.json({ message: '로그인 성공' }, { status: 200 });
+  // return NextResponse.json({ message: '로그인 성공' }, { status: 200 });
+  redirect(data.url);
 }

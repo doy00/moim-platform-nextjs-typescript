@@ -9,6 +9,7 @@ export type TParticipatedMoims = Tables<'participated_moims'>;
 export type ERate = Enums<'review_status'>;
 export type ECategory = Enums<'moim_category'>;
 export type EMoimStatus = Enums<'moim_status'>;
+export type EPosition = Enums<'user_position'>;
 
 export type TMoimClient = {
   title: string;

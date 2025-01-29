@@ -1,4 +1,5 @@
 import { TMe } from '@/types/auth/auth.type';
+import { setCookie } from '@/utils/auth/auth-server.util';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -24,7 +25,7 @@ export async function POST(request: Request) {
   }
 
   const {
-    data: { user },
+    data: { user, session },
     error,
   } = await supabase.auth.signInWithPassword({
     email,
@@ -52,5 +53,14 @@ export async function POST(request: Request) {
     return NextResponse.json({ message: '로그인에 실패했습니다' }, { status: 404 });
   }
 
-  return NextResponse.json(me, { status: 200 });
+  setCookie({
+    name: 'access_token',
+    value: session?.access_token,
+    maxAge: 60 * 60,
+  });
+
+  return NextResponse.json(
+    { me, tokens: { accessToken: session?.access_token, refreshToken: session?.refresh_token } },
+    { status: 200 },
+  );
 }

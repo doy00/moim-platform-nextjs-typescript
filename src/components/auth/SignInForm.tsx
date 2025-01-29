@@ -22,8 +22,7 @@ export default function SignInForm() {
     error: signInError,
     reset: signInReset,
   } = useSignInMutation();
-  const [isReadyToGetMe, setIsReadyToGetMe] = useState(false);
-  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
+  const { me, isMeLoading } = useAuth();
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signInError) return;
@@ -31,8 +30,7 @@ export default function SignInForm() {
       email: data.email,
       password: data.password,
     };
-    await signIn(signInData);
-    setIsReadyToGetMe(true);
+    signIn(signInData);
   };
 
   const isDisabled =

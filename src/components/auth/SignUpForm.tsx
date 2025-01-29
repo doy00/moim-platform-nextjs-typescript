@@ -35,7 +35,8 @@ export default function SignUpForm() {
     error: signUpError,
     reset: signUpReset,
   } = useSignUpMutation();
-  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
+
+  const { me, isMeLoading } = useAuth();
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signUpError) return;
@@ -47,9 +48,7 @@ export default function SignUpForm() {
       introduction: data.introduction || null,
       tags: data.tags?.map((tag) => tag.value) || null,
     };
-    await signUp(signUpData);
-
-    setIsReadyToGetMe(true);
+    signUp(signUpData);
   };
 
   const isDisabled =

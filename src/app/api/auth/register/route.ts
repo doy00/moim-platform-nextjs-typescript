@@ -1,4 +1,5 @@
 import { TAuthSignUpInputs, TMe } from '@/types/auth/auth.type';
+import { setCookie } from '@/utils/auth/auth-server.util';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -23,6 +24,7 @@ export async function POST(request: NextRequest) {
     .select('*');
 
   if (existingUsersError) {
+    console.log('existingUsersError ====>', existingUsersError);
     return NextResponse.json({ message: '서버에 문제가 발생했습니다' }, { status: 500 });
   }
 
@@ -33,7 +35,7 @@ export async function POST(request: NextRequest) {
   }
 
   const {
-    data: { user },
+    data: { user, session },
     error,
   } = await supabase.auth.signUp({
     email,
@@ -67,7 +69,10 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: '이미 가입된 이메일입니다' }, { status: 400 });
   }
 
-  if (existingUserError) {
+  if (
+    existingUserError &&
+    existingUserError.message !== 'JSON object requested, multiple (or no) rows returned'
+  ) {
     return NextResponse.json({ message: '서버에 문제가 발생했습니다' }, { status: 500 });
   }
 
@@ -93,7 +98,19 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
   }
 
-  // console.log('userData ====>', userData);
+  if (session?.access_token) {
+    setCookie({
+      name: 'access_token',
+      value: session.access_token,
+      maxAge: 60 * 60,
+    });
+  }
 
-  return NextResponse.json({ message: '회원가입 성공' }, { status: 200 });
+  return NextResponse.json(
+    {
+      me: userData,
+      tokens: { accessToken: session?.access_token, refreshToken: session?.refresh_token },
+    },
+    { status: 200 },
+  );
 }
