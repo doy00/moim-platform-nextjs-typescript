@@ -1,3 +1,4 @@
+import { deleteCookie } from '@/utils/auth/auth-server.util';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -7,6 +8,8 @@ export async function DELETE() {
   const supabase = createClient(cookieStore);
 
   const { error } = await supabase.auth.signOut();
+
+  deleteCookie('access_token');
 
   if (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });

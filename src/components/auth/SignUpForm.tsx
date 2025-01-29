@@ -3,6 +3,7 @@
 import { useAuth, useSignUpMutation } from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useEffect, useId, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -20,21 +21,22 @@ export default function SignUpForm() {
   const positionId = useId();
 
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
-  const [isReadyToGetMe, setIsReadyToGetMe] = useState(false);
 
+  const queryClient = useQueryClient();
   const methods = useForm<TAuthFormValues>({
     defaultValues: {
-      tags: [{ id: 0, value: '' }],
+      tags: [{ value: '' }],
     },
   });
 
   const {
-    mutateAsync: signUp,
+    mutate: signUp,
     isPending: isSignUpPending,
     error: signUpError,
     reset: signUpReset,
   } = useSignUpMutation();
-  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
+
+  const { me, isMeLoading } = useAuth();
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signUpError) return;
@@ -46,9 +48,7 @@ export default function SignUpForm() {
       introduction: data.introduction || null,
       tags: data.tags?.map((tag) => tag.value) || null,
     };
-    await signUp(signUpData);
-
-    setIsReadyToGetMe(true);
+    signUp(signUpData);
   };
 
   const isDisabled =

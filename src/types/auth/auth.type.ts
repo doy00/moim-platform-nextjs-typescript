@@ -1,14 +1,14 @@
-import { TUsers } from '../supabase/supabase-custom.type';
+import { EPosition, TUsers } from '../supabase/supabase-custom.type';
 
 export type TTags = {
-  id: number;
+  id?: string;
   value: string;
 };
 
 type TAuthValuesDefault = {
   email: string;
   nickname: string;
-  position: string;
+  position: EPosition;
   password: string;
   passwordConfirm?: string;
   introduction?: string;
@@ -23,10 +23,6 @@ export type TAuthSignInInputs = {
   password: string;
 };
 
-export type TSignUpResponse = {
-  message: string;
-};
-
 export type TSignOutResponse = {
   message: string;
 };
@@ -34,7 +30,7 @@ export type TSignOutResponse = {
 export type TPutMeInputs = {
   nickname: string;
   introduction?: string;
-  position?: string;
+  position?: EPosition;
   tags?: string[];
 };
 
@@ -42,4 +38,20 @@ export type TMe = Omit<TUsers, 'created_at' | 'updated_at'>;
 
 export type TAuthSignUpInputs = Omit<TMe, 'id' | 'image'> & {
   password: string;
+};
+
+export type TSignUpResponse = {
+  me: TMe;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export type TAuthSignInResponse = {
+  me: TMe;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
 };

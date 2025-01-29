@@ -109,15 +109,7 @@ export type Database = {
           title?: string
           updated_at?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "moims_master_email_fkey"
-            columns: ["master_email"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["email"]
-          },
-        ]
+        Relationships: []
       }
       participated_moims: {
         Row: {
@@ -211,7 +203,7 @@ export type Database = {
           image: string | null
           introduction: string | null
           nickname: string
-          position: string
+          position: Database["public"]["Enums"]["user_position"] | null
           tags: string[] | null
           updated_at: string
         }
@@ -222,7 +214,7 @@ export type Database = {
           image?: string | null
           introduction?: string | null
           nickname?: string
-          position?: string
+          position?: Database["public"]["Enums"]["user_position"] | null
           tags?: string[] | null
           updated_at?: string
         }
@@ -233,7 +225,7 @@ export type Database = {
           image?: string | null
           introduction?: string | null
           nickname?: string
-          position?: string
+          position?: Database["public"]["Enums"]["user_position"] | null
           tags?: string[] | null
           updated_at?: string
         }
@@ -250,6 +242,7 @@ export type Database = {
       moim_category: "PROJECT" | "STUDY" | "INTERVIEW"
       moim_status: "RECRUIT" | "PROGRESS" | "END"
       review_status: "SOSO" | "GOOD" | "RECOMMEND"
+      user_position: "BACKEND" | "FRONTEND" | "PM" | "DESIGNER"
     }
     CompositeTypes: {
       [_ in never]: never
