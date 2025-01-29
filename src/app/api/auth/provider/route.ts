@@ -40,6 +40,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: error?.message }, { status: 401 });
   }
 
-  // return NextResponse.json({ message: '로그인 성공' }, { status: 200 });
+  // return NextResponse.json(data, { status: 200 });
+  // console.log('data ====>', data);
   redirect(data.url);
 }
