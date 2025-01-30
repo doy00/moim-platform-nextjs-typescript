@@ -12,7 +12,7 @@ interface MoimDetailResult {
 }
 
 export const useMoimDetail = (moimId: number, tokekn?: string): MoimDetailResult => {
-  const { me, isMeLoading } = useAuth();
+  const { me, isMeLoading } = useAuth({ enabled: true });
   
   const detailQuery = useQuery<ApiDetailResponse | null, Error>({
     queryKey: ['detail', moimId],

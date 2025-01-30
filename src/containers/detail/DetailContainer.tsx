@@ -14,7 +14,7 @@ interface IDetailContainer {
 }
 
 export default function DetailContainer({ moimId, token }: IDetailContainer) {
-  const { me } = useAuth();    // useAuth 사용
+  const { me } = useAuth({ enabled: true});    // useAuth 사용
   const { detail: detailData, isLoading, error } = useMoimDetail(moimId, token);
 
 
