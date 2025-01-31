@@ -1,7 +1,6 @@
 'use client';
 
 import { useAuth } from '@/hooks/auth/auth.hook';
-import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -16,11 +15,11 @@ interface AuthSelectEmailKakaoProps {
 
 export default function AuthSelectEmailKakao({ children }: AuthSelectEmailKakaoProps) {
   const router = useRouter();
-  const queryClient = useQueryClient();
   const { me, isMeLoading, isMutationPending } = useAuth();
 
   const handleLoginWithProvider = () => {
-    router.push('/api/auth/provider?provider=kakao&next=/');
+    // router.push('/api/auth/provider?provider=kakao&next=/');
+    window.location.href = '/api/auth/provider?provider=kakao&next=/';
   };
 
   useEffect(() => {

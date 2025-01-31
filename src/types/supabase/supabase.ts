@@ -57,6 +57,7 @@ export type Database = {
           end_date: string
           id: string
           images: string[] | null
+          is_confirmed: boolean
           liked_counts: number
           master_email: string
           max_participants: number
@@ -77,6 +78,7 @@ export type Database = {
           end_date?: string
           id?: string
           images?: string[] | null
+          is_confirmed?: boolean
           liked_counts?: number
           master_email?: string
           max_participants?: number
@@ -97,6 +99,7 @@ export type Database = {
           end_date?: string
           id?: string
           images?: string[] | null
+          is_confirmed?: boolean
           liked_counts?: number
           master_email?: string
           max_participants?: number

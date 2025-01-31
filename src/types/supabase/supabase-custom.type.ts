@@ -12,6 +12,7 @@ export type EMoimStatus = Enums<'moim_status'>;
 export type EPosition = Enums<'user_position'>;
 
 export type TMoimClient = {
+  moimId: string;
   title: string;
   content: string;
   address: string;
@@ -25,6 +26,7 @@ export type TMoimClient = {
   likes: number;
   participants: number;
   reviewsCount: number;
+  isConfirmed: boolean;
 };
 
 export type TMoimsJoined = TMoims & {

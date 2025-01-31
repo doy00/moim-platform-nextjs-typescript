@@ -127,7 +127,7 @@ export async function PUT(req: NextRequest) {
     error: updatedUserError,
   }: { data: TMe | null; error: PostgrestError | null } = await supabase
     .from('users')
-    .update({ ...newUserData })
+    .update({ ...newUserData, updated_at: new Date().toISOString() })
     .eq('email', newUserData.email)
     .select('*')
     .single();
