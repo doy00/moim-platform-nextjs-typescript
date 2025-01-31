@@ -1,5 +1,6 @@
 import { TMe } from '@/types/auth/auth.type';
-import { TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+import { TMoimClient, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -47,5 +48,11 @@ export async function GET() {
     return NextResponse.json({ message: myMoimsError?.message }, { status: 401 });
   }
 
-  return NextResponse.json(myMoims, { status: 200 });
+  if (!myMoims) {
+    return NextResponse.json({ message: '내가 만든 모임이 없습니다' }, { status: 401 });
+  }
+
+  const moimsToClient: TMoimClient[] = mapMoimsToClient(myMoims);
+
+  return NextResponse.json(moimsToClient, { status: 200 });
 }
