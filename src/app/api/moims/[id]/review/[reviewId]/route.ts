@@ -32,7 +32,7 @@ export async function PUT(
     error: updatedReviewError,
   }: { data: TReviews | null; error: PostgrestError | null } = await supabase
     .from('reviews')
-    .update({ review, rate })
+    .update({ review, rate, updated_at: new Date().toISOString() })
     .eq('id', reviewId)
     .eq('user_uuid', user.id)
     .eq('moim_uuid', id)
