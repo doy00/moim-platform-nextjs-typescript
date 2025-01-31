@@ -3,7 +3,7 @@
 import { useDebounce } from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
-import { useId } from 'react';
+import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import AuthBar from './AuthBar';
 import AuthInput from './AuthInput';
@@ -15,7 +15,6 @@ interface AuthTagsProps {
 }
 
 export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
-  const tagsId = useId();
   const {
     control,
     register,
@@ -27,9 +26,11 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
     control,
     name: 'tags',
   });
+  // 한글 조합 여부 state
+  const [isComposing, setIsComposing] = useState(false);
 
   const handleAppendTag = () => {
-    if (fields.length < 3) append({ id: fields.length, value: '' });
+    if (fields.length < 3) append({ value: '' });
   };
 
   const handleRemoveTag = (index: number) => {
@@ -37,7 +38,20 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
     remove(index);
   };
 
+  // onCompositionStart / onCompositionEnd 이벤트 핸들러
+  const handleComposition = (e: React.CompositionEvent<HTMLInputElement>) => {
+    if (e.type === 'compositionstart') {
+      setIsComposing(true);
+    } else if (e.type === 'compositionend') {
+      setIsComposing(false);
+    }
+  };
+
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    // 한글 조합 중이라면 조합 완료 후에만 Enter/Tab 동작 처리
+    if ((e.nativeEvent as any).isComposing || isComposing) {
+      return;
+    }
     if (errors.tags) return;
     if (e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
@@ -52,9 +66,7 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
   return (
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
-        <label htmlFor={tagsId} className="text-body-2-normal font-medium">
-          태그
-        </label>
+        <label className="text-body-2-normal font-medium">태그</label>
         <p className="text-body-2-normal font-medium flex items-center gap-1">
           <span className="text-gray600">{fields.length}</span>
           <AuthBar />
@@ -69,8 +81,9 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
             placeholder="# 태그추가"
             name={`tags.${index}.value`}
             onKeyDown={handleKeyDown}
+            onCompositionStart={handleComposition}
+            onCompositionEnd={handleComposition}
             isArray
-            id={tagsId}
             className={cn(
               'h-[34px] w-[88px] text-xs',
               (errors.tags || signUpError) && 'focus-visible:ring-error',
