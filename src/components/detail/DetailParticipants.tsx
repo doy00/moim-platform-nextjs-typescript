@@ -1,12 +1,13 @@
 // 현재 참여 인원수와 참여 유저 목록을 알 수 있는 컴포넌트입니다.
 import React, { useState } from "react";
-import { cn } from "@/lib/utils";
-import { IDetailParticipants } from "@/types/detail";
+import { cn } from "@/utils/detail/cn";
+import { IDetailParticipants } from "@/types/detail/i-participant";
 import { ParticipantsProgress } from "./ParticipantsProgress";
 import { ParticipantsList } from "./ParticipantsList";
 
 export const DetailParticipants: React.FC<IDetailParticipants> = ({
   participants,
+  maxParticipants,
   className
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -18,13 +19,13 @@ export const DetailParticipants: React.FC<IDetailParticipants> = ({
         {/* 참여 인원수 Progress Bar */}
         <ParticipantsProgress
           currentCount={participants.length}
-          // maxCount={maxParticipants}
-          maxCount={12}
+          maxParticipants={maxParticipants}
         />
 
         {/* 참여 유저 목록 */}
         <ParticipantsList 
-          participants={participants}
+          participants={participants || []}
+          maxParticipants={maxParticipants}
         />
     </div>
   );

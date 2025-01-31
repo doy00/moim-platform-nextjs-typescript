@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import defaultProfile from '../../../../public/images/mypage/profile-default.svg';
+import defaultProfile from '@images/mypage/profile-default.svg';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 
 // 공통 래퍼 컴포넌트
@@ -14,17 +14,17 @@ const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function MyProfile() {
-  const { data: userInfo, isLoading } = useUserQuery();
+  const { data, isLoading } = useUserQuery();
 
   if (isLoading) {
     return (
       <ProfileWrapper>
         <div className="animate-pulse flex gap-2 justify-between">
           <div className="flex flex-col gap-2">
-            <div className="h-6 w-24 bg-gray-200 rounded"></div>
-            <div className="h-4 w-32 bg-gray-200 rounded"></div>
+            <div className="h-6 w-24 bg-gray-200 rounded" />
+            <div className="h-4 w-32 bg-gray-200 rounded" />
           </div>
-          <div className="w-16 h-16 bg-gray-200 rounded-full"></div>
+          <div className="w-16 h-16 bg-gray-200 rounded-full" />
         </div>
       </ProfileWrapper>
     );
@@ -32,13 +32,25 @@ export default function MyProfile() {
 
   return (
     <ProfileWrapper>
-      {userInfo && (
-        <div className="flex gap-2 justify-between">
-          <div className="flex flex-col gap-2">
-            <span className="text-lg font-semibold">{userInfo?.name}</span>
-            <span className="text-[13px] font-normal text-[#9E9892]">{userInfo?.companyName}</span>
+      {data && (
+        <div>
+          <div className="flex gap-2 justify-between">
+            <div className="flex flex-col gap-2">
+              <span className="text-lg font-semibold">{data?.data.nickname}</span>
+              <span className="text-[13px] font-normal text-[#9E9892]">
+                {data?.data.introduction}
+              </span>
+            </div>
+            {/* <Image src={data?.image ?? defaultProfile} alt="profile" width={64} height={64} /> */}
+            <Image src={defaultProfile} alt="profile" width={64} height={64} />
           </div>
-          <Image src={userInfo?.image ?? defaultProfile} alt="profile" width={64} height={64} />
+          <div className="flex gap-1">
+            <span className="rounded-[6px] bg-gray50 px-1.5 py-[3px] text-caption-normal font-medium text-gray400">
+              {data?.data.tags}
+            </span>
+            {/* <span>백엔드</span>
+            <span>기획</span> */}
+          </div>
         </div>
       )}
     </ProfileWrapper>

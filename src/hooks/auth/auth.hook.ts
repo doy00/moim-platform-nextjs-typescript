@@ -1,21 +1,32 @@
 'use client';
 
-import { getMe, postSignIn, postSignOut, postSignUp, putMe } from '@/apis/auth/auth.api';
+import {
+  deleteSignOut,
+  getMe,
+  getProviderLogin,
+  postSignIn,
+  postSignUp,
+  putMe,
+} from '@/apis/auth/auth.api';
 import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
-  TAuthInputs,
-  TMeResponse,
+  TAuthSignInInputs,
+  TAuthSignInResponse,
+  TAuthSignUpInputs,
+  TMe,
   TPutMeInputs,
-  TSignInResponse,
   TSignOutResponse,
   TSignUpResponse,
 } from '@/types/auth/auth.type';
 import type { TError } from '@/types/auth/error.type';
-import { removeLocalStorageItem, setLocalStorageItem } from '@/utils/auth/auth-client.util';
-import { deleteCookie, setCookie } from '@/utils/auth/auth-server.util';
+import {
+  getLocalStorageItem,
+  removeLocalStorageItem,
+  setLocalStorageItem,
+} from '@/utils/auth/auth-client.util';
 import type { UseMutationResult, UseQueryResult } from '@tanstack/react-query';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useCallback, useRef } from 'react';
+import { useCallback, useEffect, useRef, useState } from 'react';
 
 type Debounce<T extends unknown[]> = (...args: T) => void;
 
@@ -38,31 +49,30 @@ export const useDebounce = <T extends unknown[]>(
   );
 };
 
-export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthInputs> {
+export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthSignUpInputs> {
   const queryClient = useQueryClient();
-  return useMutation<TSignUpResponse, TError, TAuthInputs>({
+  return useMutation<TSignUpResponse, TError, TAuthSignUpInputs>({
     mutationFn: postSignUp,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
+    onSuccess: (data) => {
+      setLocalStorageItem('access_token', data.tokens.accessToken);
+      setLocalStorageItem('refresh_token', data.tokens.refreshToken);
+      queryClient.setQueryData([QUERY_KEY_ME], data.me);
     },
   });
 }
 
-export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, TAuthInputs> {
+export function useSignInMutation(): UseMutationResult<
+  TAuthSignInResponse,
+  TError,
+  TAuthSignInInputs
+> {
   const queryClient = useQueryClient();
-  return useMutation<TSignInResponse, TError, TAuthInputs>({
+  return useMutation<TAuthSignInResponse, TError, TAuthSignInInputs>({
     mutationFn: postSignIn,
     onSuccess: (data) => {
-      setLocalStorageItem('dothemeet-token', data.token);
-      setCookie({
-        name: 'dothemeet-token',
-        value: data.token,
-        maxAge: 60 * 60,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-      });
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
+      setLocalStorageItem('access_token', data.tokens.accessToken);
+      setLocalStorageItem('refresh_token', data.tokens.refreshToken);
+      queryClient.setQueryData([QUERY_KEY_ME], data.me);
     },
   });
 }
@@ -70,19 +80,17 @@ export function useSignInMutation(): UseMutationResult<TSignInResponse, TError, 
 export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError, void> {
   const queryClient = useQueryClient();
   return useMutation<TSignOutResponse, TError, void>({
-    mutationFn: postSignOut,
+    mutationFn: deleteSignOut,
     onSuccess: () => {
-      removeLocalStorageItem('dothemeet-token');
-      deleteCookie('dothemeet-token');
-      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
+      removeLocalStorageItem('access_token');
       queryClient.setQueryData([QUERY_KEY_ME], null);
     },
   });
 }
 
-export function usePutMeMutation(): UseMutationResult<TMeResponse, TError, TPutMeInputs> {
+export function usePutMeMutation(): UseMutationResult<TMe, TError, TPutMeInputs> {
   const queryClient = useQueryClient();
-  return useMutation<TMeResponse, TError, TPutMeInputs>({
+  return useMutation<TMe, TError, TPutMeInputs>({
     mutationFn: putMe,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
@@ -90,10 +98,76 @@ export function usePutMeMutation(): UseMutationResult<TMeResponse, TError, TPutM
   });
 }
 
-export function useMeQuery(enabled: boolean = true): UseQueryResult<TMeResponse, TError> {
-  return useQuery<TMeResponse, TError>({
+export function useMeQuery(enabled: boolean = true): UseQueryResult<TMe, TError> {
+  return useQuery<TMe, TError>({
     queryKey: [QUERY_KEY_ME],
-    queryFn: getMe,
+    queryFn: () => getMe(),
     enabled,
   });
+}
+
+export function useProviderLoginQuery({ provider, next }: { provider: string; next: string }) {
+  return useQuery<{ message: string }, TError, { provider: string; next: string }>({
+    queryKey: [QUERY_KEY_ME, provider, next],
+    queryFn: () => getProviderLogin(provider, next),
+    enabled: !!provider && !!next,
+  });
+}
+
+// me 객체 접근과, 로그아웃을 편리하게 사용하기 위한 훅
+export function useAuth() {
+  const [enabled, setEnabled] = useState(false);
+  const [error, setError] = useState<TError | null>(null);
+  const [isMutationPending, setIsMutationPending] = useState(false);
+  const { data: me, isLoading: isMeLoading, error: meError } = useMeQuery(enabled);
+  const {
+    mutate: signOutMutation,
+    isPending: isSignOutPending,
+    error: signOutError,
+  } = useSignOutMutation();
+  const {
+    mutate: updateMeMutation,
+    isPending: isUpdateMePending,
+    error: updateMeError,
+  } = usePutMeMutation();
+
+  const signOut = useCallback(() => {
+    signOutMutation();
+  }, [signOutMutation]);
+
+  const updateMe = useCallback(
+    (data: TPutMeInputs) => {
+      updateMeMutation(data);
+    },
+    [updateMeMutation],
+  );
+
+  useEffect(() => {
+    setEnabled(!!getLocalStorageItem('access_token'));
+  }, []);
+
+  useEffect(() => {
+    if (!meError && !signOutError && !updateMeError) return;
+    console.log(meError || signOutError || updateMeError);
+    setError(meError || signOutError || updateMeError);
+  }, [meError, signOutError, updateMeError]);
+
+  useEffect(() => {
+    if (!isSignOutPending && !isUpdateMePending) return;
+    setIsMutationPending(true);
+  }, [isSignOutPending, isUpdateMePending]);
+
+  // 임시 콘솔 로그
+  useEffect(() => {
+    console.log('me =====>', me);
+  }, [me]);
+
+  return {
+    me,
+    signOut,
+    updateMe,
+    isMeLoading,
+    isMutationPending,
+    error,
+  };
 }

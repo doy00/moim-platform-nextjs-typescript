@@ -1,19 +1,26 @@
-export type TAuthInputs = {
+import { EPosition, TUsers } from '../supabase/supabase-custom.type';
+
+export type TTags = {
+  id?: string;
+  value: string;
+};
+
+type TAuthValuesDefault = {
   email: string;
   nickname: string;
-  position: string;
+  position: EPosition;
   password: string;
   passwordConfirm?: string;
   introduction?: string;
-  tags?: string[];
 };
 
-export type TSignUpResponse = {
-  message: string;
+export type TAuthFormValues = TAuthValuesDefault & {
+  tags?: TTags[];
 };
 
-export type TSignInResponse = {
-  token: string;
+export type TAuthSignInInputs = {
+  email: string;
+  password: string;
 };
 
 export type TSignOutResponse = {
@@ -22,21 +29,29 @@ export type TSignOutResponse = {
 
 export type TPutMeInputs = {
   nickname: string;
-  image: string;
   introduction?: string;
-  position?: string;
+  position?: EPosition;
   tags?: string[];
 };
 
-export type TMeResponse = {
-  teamId: number | string;
-  id: number | string;
-  email: string;
-  nickname: string;
-  position: string;
-  introduction: string;
-  tags: string[];
-  image: string;
-  createdAt: string;
-  updatedAt: string;
+export type TMe = Omit<TUsers, 'created_at' | 'updated_at'>;
+
+export type TAuthSignUpInputs = Omit<TMe, 'id' | 'image'> & {
+  password: string;
+};
+
+export type TSignUpResponse = {
+  me: TMe;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
+};
+
+export type TAuthSignInResponse = {
+  me: TMe;
+  tokens: {
+    accessToken: string;
+    refreshToken: string;
+  };
 };

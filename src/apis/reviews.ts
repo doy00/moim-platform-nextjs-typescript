@@ -1,16 +1,12 @@
-import axiosInstance from './axiosInstance';
-import { IReviewResponse } from '@/types/reviews.type';
+import axiosInstance from '@/apis/axiosInstance';
+import { IReview, IReviewPost } from '@/types/mypage/reviews.type';
 
-export const getReviews = async (): Promise<IReviewResponse> => {
-  const token = localStorage.getItem('dudemeet-token');
-  if (!token) {
-    throw new Error('인증 토큰이 없습니다.');
-  }
+export const getReviews = async (): Promise<IReview> => {
+  const { data } = await axiosInstance.get('/review/my', {});
+  return data;
+};
 
-  const response = await axiosInstance.get('/reviews', {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return response.data;
+export const postReview = async (review: IReviewPost): Promise<IReview> => {
+  const { data } = await axiosInstance.post('/review/save', review);
+  return data;
 };

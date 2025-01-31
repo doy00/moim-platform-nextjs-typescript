@@ -1,40 +1,32 @@
-// API 요청 함수
-
+// 모임 상세 조회 API 요청
 import { axiosInstance } from './axios.api';
-import type { IDetailInfo, IParticipant, IDetailReview } from '@/types/detail';
+import { ApiDetailResponse } from '@/types/detail/i-moim';
 
-// 모임 정보 조회
-export const getDetailInfo = async (id: number): Promise<IDetailInfo> => {
-  const response = await axiosInstance.get(`/gatherings/${id}`);
-  return response.data;
+// 모임 상세 데이터(모임정보, 참여자 수, 리뷰) 전체 조회
+export const getDetail = async (moimId: number, token?: string) 
+: Promise<ApiDetailResponse | null> => {
+
+  try {
+    // SSR시 쿠키에서 토큰 가져오기
+    const response = await axiosInstance.get(`/moim/detail/${moimId}`, {
+      headers: token ? {
+        Authorization: `Bearer ${token}`
+      } : undefined
+    });
+    return response.data;
+  } catch (error: any) {
+    console.error('API error 모임 상세 전체 데이터 호출:', error.response || error);
+    throw error;    // 쿼리에서 에러 처리
+  }
 };
 
-// 모임 참여자 목록 조회
-export const getParticipants = async (id: number): Promise<IParticipant[]> => {
-  const response = await axiosInstance.get<IParticipant[]>(`/gathering/${id}/participants`);
-  return response.data;
-};
-
-// 모임 리뷰 목록 조회
-export const getDetailReviews = async (
-  id: number,
-  params: { limit?: number; offset?: number}
-): Promise<IDetailReview[]> => {
-  const response = await axiosInstance.get<IDetailReview[]>(`/reviews/${id}`, { 
-    params: {
-      ...params,
-      gatheringId: id, 
-    },
-  });
-  return response.data;
-}
 
 // 모임 신청하기
-export const joinMoim = async (id: number): Promise<void> => {
-  await axiosInstance.post(`/gatherings/${id}/join`);
+export const joinMoim = async (moimId: number): Promise<void> => {
+  await axiosInstance.post(`/moim/join?moimId=${moimId}`);
 };
 
-// 모임 취소하기
-export const cancelMoim = async (id: number): Promise<void> => {
-  await axiosInstance.put(`/gatherings/${id}/cancel`);
+// 모임 신청 취소하기
+export const leaveMoim = async (moimId: number): Promise<void> => {
+  await axiosInstance.post(`/moim/join?moimId=${moimId}`)
 }
