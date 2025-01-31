@@ -65,7 +65,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     category: moimDataOrigin.moimType,
     status: moimDataOrigin.status,
     master_email: existingMoim?.master_email,
-    images: [],
+    images: existingMoim?.images,
     updated_at: new Date().toISOString(),
   };
 

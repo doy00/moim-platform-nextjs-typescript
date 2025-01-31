@@ -137,7 +137,7 @@ export async function POST(req: NextRequest) {
     category: moimDataOrigin.moimType,
     status: moimDataOrigin.status,
     master_email: user?.email,
-    images: [],
+    images: null,
   };
 
   if (!moimDataString) {
