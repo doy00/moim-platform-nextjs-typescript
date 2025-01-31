@@ -1,13 +1,9 @@
 'use client';
 
-import {
-  useAuth,
-  useSetCookieMutation,
-  useSignInMutation,
-  useSignUpMutation,
-} from '@/hooks/auth/auth.hook';
+import { useAuth, useSignUpMutation } from '@/hooks/auth/auth.hook';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
+import { useQueryClient } from '@tanstack/react-query';
 import Link from 'next/link';
 import { useEffect, useId, useState } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
@@ -25,31 +21,22 @@ export default function SignUpForm() {
   const positionId = useId();
 
   const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
-  const [isReadyToGetMe, setIsReadyToGetMe] = useState(false);
 
+  const queryClient = useQueryClient();
   const methods = useForm<TAuthFormValues>({
     defaultValues: {
-      tags: [{ id: 0, value: '' }],
+      tags: [{ value: '' }],
     },
   });
 
   const {
-    mutateAsync: signUp,
+    mutate: signUp,
     isPending: isSignUpPending,
     error: signUpError,
     reset: signUpReset,
   } = useSignUpMutation();
-  const {
-    mutateAsync: signIn,
-    error: signInError,
-    isPending: isSignInPending,
-  } = useSignInMutation();
-  const {
-    mutateAsync: setCookie,
-    isPending: isSetCookiePending,
-    error: setCookieError,
-  } = useSetCookieMutation();
-  const { me, isMeLoading } = useAuth({ enabled: isReadyToGetMe });
+
+  const { me, isMeLoading } = useAuth();
 
   const onSubmit = async (data: TAuthFormValues) => {
     if (signUpError) return;
@@ -58,24 +45,14 @@ export default function SignUpForm() {
       password: data.password,
       nickname: data.nickname,
       position: data.position,
-      introduction: data.introduction,
-      tags: data.tags?.map((tag) => tag.value),
+      introduction: data.introduction || null,
+      tags: data.tags?.map((tag) => tag.value) || null,
     };
-    const response = await signUp(signUpData);
-    if (response.isSuccess) {
-      const { data: signInData } = await signIn({ email: data.email, password: data.password });
-      await setCookie({
-        accessToken: signInData.accessToken,
-        refreshToken: signInData.refreshToken,
-      });
-      setIsReadyToGetMe(true);
-    }
+    signUp(signUpData);
   };
 
   const isDisabled =
     isSignUpPending ||
-    isSignInPending ||
-    isSetCookiePending ||
     !!methods.formState.errors.password ||
     !!methods.formState.errors.email ||
     !!methods.formState.errors.position ||
@@ -83,16 +60,13 @@ export default function SignUpForm() {
     !!methods.formState.errors.passwordConfirm ||
     !!methods.formState.errors.tags ||
     !!signUpError ||
-    !!signInError ||
-    !!setCookieError ||
     !methods.formState.isValid;
 
   useEffect(() => {
-    if (signUpError) {
-      methods.setError('email', { type: 'manual', message: '중복되는 이메일이 있어요' });
-      methods.setFocus('email');
-    }
-  }, [signUpError, methods, signUpReset]);
+    if (!signUpError) return;
+    methods.setError('email', { type: 'manual', message: '이미 가입된 계정이에요' });
+    methods.setFocus('email');
+  }, [signUpError, methods]);
 
   useEffect(() => {
     if (methods.formState.errors.password) {
@@ -104,7 +78,7 @@ export default function SignUpForm() {
 
   return (
     <>
-      {(isSignUpPending || isSignInPending || isSetCookiePending || isMeLoading) && <AuthLoading />}
+      {(isSignUpPending || isMeLoading) && <AuthLoading />}
 
       <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background100">
         <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
@@ -133,7 +107,10 @@ export default function SignUpForm() {
                         name="nickname"
                         label="닉네임"
                         placeholder="dothemeet"
-                        registerOptions={{ required: '닉네임을 입력해주세요' }}
+                        registerOptions={{
+                          required: '닉네임을 입력해주세요',
+                        }}
+                        mutationReset={signUpReset}
                       />
 
                       <AuthLabelWithInput
@@ -147,6 +124,7 @@ export default function SignUpForm() {
                             message: '올바른 이메일 형식을 입력해 주세요',
                           },
                         }}
+                        mutationReset={signUpReset}
                       />
 
                       <AuthLabelWithInput
@@ -166,6 +144,7 @@ export default function SignUpForm() {
                             }
                           },
                         }}
+                        mutationReset={signUpReset}
                         additionalErrors={
                           !methods.formState.errors.password && (
                             <p className="text-label-normal text-gray300 font-semibold">
@@ -192,6 +171,7 @@ export default function SignUpForm() {
                             return '비밀번호가 일치하지 않아요';
                           },
                         }}
+                        mutationReset={signUpReset}
                         additionalErrors={
                           (isPasswordConfirmed &&
                             !methods.formState.errors.passwordConfirm?.message && (
@@ -253,6 +233,7 @@ export default function SignUpForm() {
                             message: '최대 20자까지 입력 가능해요',
                           },
                         }}
+                        mutationReset={signUpReset}
                         additionalErrors={
                           !methods.formState.errors.introduction && (
                             <p className="text-label-normal text-gray300 font-semibold">
