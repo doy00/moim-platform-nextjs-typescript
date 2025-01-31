@@ -2,7 +2,7 @@
 import { cn } from "@/utils/detail/cn";
 import Image from "next/image";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
-import { DEFAULT_IMAGE } from '@/constants/detail/images';
+import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 import { ChipSmallRound } from "./ChipSmallRound";
 
 interface IDetailHost {

@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/utils/detail/cn";
 import { IDetailReviewComponent, IReviewItem } from "@/types/detail/i-moim";
-import { DEFAULT_IMAGE } from "@/constants/detail/images";
+import { DEFAULT_IMAGE } from "@/constants/detail/detail.const";
 import { DuduEmpty } from "./icons/DuduEmpty";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
 

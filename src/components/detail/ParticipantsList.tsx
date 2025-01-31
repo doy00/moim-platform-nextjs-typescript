@@ -8,7 +8,7 @@ import {
   HoverCardTrigger,
 } from "@/components/ui/hover-card"
 import { IParticipant, IParticipantsList } from "@/types/detail/i-participant";
-import { DEFAULT_IMAGE } from '@/constants/detail/images';
+import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 
 export const ParticipantsList: React.FC<IParticipantsList> = ({
   participants,

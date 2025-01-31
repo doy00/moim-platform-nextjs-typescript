@@ -15,7 +15,7 @@ import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 import { DetailPresenterProps } from '@/types/detail/i-presenter';
 import { IMoimDetail, ReviewEmotion } from '@/types/detail/i-moim';
 // constants
-import { DEFAULT_IMAGE } from '@/constants/detail/images';
+import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 // uitls
 import { formatDate, formatDateRange } from '@/utils/detail/date';
 
@@ -133,9 +133,9 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
             DEFAULT_IMAGE.PROFILE}
         />
         {/* 리뷰 목록 */}
-          <DetailReview 
-            reviews={processedData?.reviews || []}
-          />
+        <DetailReview 
+          reviews={processedData?.reviews || []}
+        />
         <FloatingBar
           onHeartClick={onLikeToggle}
           onJoinClick={() => onJoin}
