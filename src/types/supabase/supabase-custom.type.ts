@@ -26,6 +26,7 @@ export type TMoimClient = {
   likes: number;
   participants: number;
   reviewsCount: number;
+  isConfirmed: boolean;
 };
 
 export type TMoimsJoined = TMoims & {
