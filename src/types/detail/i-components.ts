@@ -17,7 +17,7 @@ export interface IChipSmallSquircle {
 
 export interface IChipSmallRound {
   text: string;
-  variant: 'gray';
+  variant: 'gray' | 'soso' | 'good' | 'recommend';
   className?: string;
 }
 

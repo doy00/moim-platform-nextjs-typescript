@@ -8,7 +8,7 @@ import { DetailInfo } from '../../components/detail/DetailInfo';
 import { DetailParticipants } from '../../components/detail/DetailParticipants';
 import { DetailContent } from '../../components/detail/DetailContent';
 import { DetailHost } from '@/components/detail/DetailHost';
-import { DetailReview } from '../../components/detail/DetailReview';
+import { DetailReview, MOCK_REVIEWS } from '../../components/detail/DetailReview';
 import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 // types
@@ -96,7 +96,8 @@ const processedData = processDetailData(data);
         />
         {/* 리뷰 목록 */}
         <DetailReview 
-          reviews={processedData?.reviews || []}
+          reviews={processedData?.reviews}
+          // reviews={MOCK_REVIEWS}
         />
         <FloatingBar
           onHeartClick={onLikeToggle}

@@ -1,5 +1,5 @@
 // types/detail/t-moims.ts
-import { TReviews, TParticipatedMoims, TMoimClient, ERate, ECategory, EMoimStatus, EPosition } from "../supabase/supabase-custom.type";
+import { TReviews, TParticipatedMoims, TMoimClient, ERate, ECategory, EMoimStatus, EPosition, TUsers} from "../supabase/supabase-custom.type";
 
 // 모임 상세
 export interface IMoimDetail {
@@ -18,7 +18,7 @@ export interface IMoimDetail {
   participants: number;
   reviewsCount: number;
   participantsMoims: IParticipant[];
-  reviews: IReview[];
+  reviews: IReviewWithUser[];
 }
 
 // 모임 목록 응답
@@ -53,4 +53,8 @@ export interface IReview extends TReviews {
   moim_uuid: string;
   created_at: string;
   updated_at: string;
+}
+
+export interface IReviewWithUser extends IReview {
+  users: TUsers;
 }
