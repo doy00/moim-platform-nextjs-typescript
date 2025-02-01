@@ -1,13 +1,19 @@
 // 모임 참여 현황을 알 수 있는 Progress Bar 컴포넌트입니다.
-
 import * as React from 'react';
 import { useState, useEffect } from 'react';
 import { Progress } from '@/components/detail/DetailProgress';
-import { IParticipantsProgress } from '@/types/detail/i-participant';
 import { FireIcon } from './icons/FireIcon';
 
-export const ParticipantsProgress: React.FC<IParticipantsProgress> = ({
+interface IParticipantsProgressProps {
+  currentCount: number;
+  minParticipants: number;
+  maxParticipants: number;
+  className?: string;
+}
+
+export const ParticipantsProgress: React.FC<IParticipantsProgressProps> = ({
   currentCount,
+  minParticipants,
   maxParticipants,
   className
 }) => {

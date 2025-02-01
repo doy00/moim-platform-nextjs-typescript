@@ -1,6 +1,5 @@
 // types/detail/t-moims.ts
-
-import { TUsers, TReviews, TParticipatedMoims, TMoimClient, TLikedMoims, ERate, ECategory, EMoimStatus, EPosition } from "../supabase/supabase-custom.type";
+import { TReviews, TParticipatedMoims, TMoimClient, ERate, ECategory, EMoimStatus, EPosition } from "../supabase/supabase-custom.type";
 
 // 모임 상세
 export interface IMoimDetail {

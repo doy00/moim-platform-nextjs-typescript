@@ -4,8 +4,7 @@ import DetailContainer from '@/containers/detail/DetailContainer';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { Suspense } from "react";
 import { cookies } from 'next/headers';
-import { IMoimDetail, ApiResponse } from '@/types/detail/t-moim';
-
+import { IMoimDetail } from '@/types/detail/t-moim';
 
 interface DetailPageProps {
   params: Promise<{ id: string }>;

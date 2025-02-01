@@ -5,7 +5,6 @@ export interface IDetailPresenterProps {
   // 기본 데이터
   data: IMoimDetail | null;
   participants: IParticipant[];
-  // reviews: IDetailReviewResponse | undefined;
   reviews: IReview[] | undefined;
   
   // 상태

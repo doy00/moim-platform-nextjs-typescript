@@ -27,7 +27,7 @@ export interface IDetailInfoProps {
   recruitmentDeadline: string;
   startDate: string;
   endDate: string;
-  recruitmentPeriod: string;
+  // recruitmentPeriod: string;
   minParticipants: number;
   moimType: ECategory;           // Enum 타입 사용
   status: EMoimStatus;           // Enum 타입 사용

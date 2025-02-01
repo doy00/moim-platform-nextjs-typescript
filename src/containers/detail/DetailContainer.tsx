@@ -1,4 +1,5 @@
 'use client';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
 import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
@@ -16,12 +17,17 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
 
 
   // 로그인 상태 확인
-  // const [showDialog, setShowDialog] = useState(false);
+  const [showDialog, setShowDialog] = useState(false);
 
   // 찜하기 버튼 핸들러
   const handleLike = () => {
+    if (!me) {
+      setShowDialog(true);
+      return;
+    }
+    // [ ] 로그인된 경우 찜 토글
     // handleToggleLike();
-    // [ ]
+    // 
   };
 
   // 신청하기 버튼 핸들러
@@ -62,10 +68,10 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         onJoin={handleJoin} 
         onLikeToggle={handleLike}
       />
-      {/* <SignInDialog 
+      <SignInDialog 
         isOpen={showDialog}
         onClose={() => setShowDialog(false)}
-      /> */}
+      />
     </div>
   );
 }
