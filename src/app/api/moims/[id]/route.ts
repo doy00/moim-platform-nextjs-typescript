@@ -53,6 +53,19 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ message: existingMoimError?.message }, { status: 401 });
   }
 
+  // 현재 시간 가져오기 (UTC)
+  const now = new Date().toISOString();
+
+  // 상태 결정 로직
+  let status: 'RECRUIT' | 'PROGRESS' | 'END';
+  if (now < moimDataOrigin.recruitmentDeadline) {
+    status = 'RECRUIT';
+  } else if (now >= moimDataOrigin.startDate && now <= moimDataOrigin.endDate) {
+    status = 'PROGRESS';
+  } else {
+    status = 'END';
+  }
+
   const moimData: Partial<TMoims> = {
     title: moimDataOrigin.title,
     content: moimDataOrigin.content,
@@ -63,9 +76,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     min_participants: moimDataOrigin.minParticipants,
     max_participants: moimDataOrigin.maxParticipants,
     category: moimDataOrigin.moimType,
-    status: moimDataOrigin.status,
+    status,
     master_email: existingMoim?.master_email,
-    images: [],
+    images: existingMoim?.images,
     updated_at: new Date().toISOString(),
   };
 
