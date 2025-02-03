@@ -1,12 +1,14 @@
 'use client';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
 import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
 import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
 import DetailPresenter from '@/components/detail/DetailPresenter';
 import { SignInDialog } from '@/components/detail/SignInDialog';
-import { IReview } from '@/types/detail/t-moim';
+import { ToasterDark } from '@/components/detail/ToasterDark';
+import { toast } from 'sonner';
+
 interface IDetailContainerProps {
   moimId: string;
 }
@@ -14,20 +16,25 @@ interface IDetailContainerProps {
 export default function DetailContainer({ moimId }: IDetailContainerProps) {
   const { me, isMeLoading } = useAuth();    // 로그인 상태 확인
   const { detail: processedData, isLoading, error } = useMoimDetail(moimId, { enabled: !isMeLoading });
-
+  const { isLiked = false, handleToggleLike } = useLikeMoim(moimId);
 
   // 로그인 상태 확인
   const [showDialog, setShowDialog] = useState(false);
 
   // 찜하기 버튼 핸들러
-  const handleLike = () => {
+  const handleLike = async () => {
     if (!me) {
       setShowDialog(true);
       return;
     }
-    // [ ] 로그인된 경우 찜 토글
-    // handleToggleLike();
-    // 
+    try {
+      await handleToggleLike();
+      toast.success(
+        isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요"
+      );
+    } catch (error) {
+      toast.error("잠시후 다시 시도해주세요");
+    }
   };
 
   // 신청하기 버튼 핸들러
@@ -61,16 +68,20 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     <div>
       <DetailPresenter 
         data={processedData}
-        participants={[]} // 임시로 빈 배열 data?.participantsMoims
+        participants={processedData?.participantsMoims || []} 
         reviews={processedData?.reviews}
         isJoining={false} // 임시로 false
-        isLiked={false}   // 임시로 false
+        isLiked={isLiked}   // 임시로 false
         onJoin={handleJoin} 
         onLikeToggle={handleLike}
       />
       <SignInDialog 
         isOpen={showDialog}
         onClose={() => setShowDialog(false)}
+      />
+      <ToasterDark 
+        position="bottom-center"
+        duration={2000}
       />
     </div>
   );

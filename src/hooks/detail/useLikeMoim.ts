@@ -1,55 +1,74 @@
-// 찜하기 커스텀훅
+// 찜하기 커스텀 훅
 'use client';
-import { useCallback } from 'react';
-import { useFavoriteStore } from '@/stores/detail/favoriteStore';
-import { toast } from 'sonner';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { getDetail, likeApi } from '@/apis/detail/detail.api';
+import { useAuth } from '../auth/auth.hook';
 
-interface UseLikeMoimOptions {
-  successMessage?: string;
-  errorMessage?: string;
+interface IUseLikeMoimOptions {
   onSuccess?: () => void;
 }
+export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) => {
+  const { me, isMeLoading } = useAuth();
+  const queryClient = useQueryClient();
+  const { onSuccess } = options;
 
-export const useLikeMoim = (moimId: number, options: UseLikeMoimOptions = {}) => {
-  const {
-    successMessage = "찜하기가 완료되었어요",
-    errorMessage = "잠시후 다시 시도해주세요",
-    onSuccess: onSuccessCallback
-  }= options;
+  // 찜하기 상태 조회 쿼리
+  // const { data: moimDetail, isLoading: isLoadingStatus } = useQuery({
+  //   queryKey: ['moim-like', moimId],
+  //   queryFn: () => likeApi.checkLike(moimId),
+  // });
+
+  const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
+    queryKey: ['moim', moimId],
+    queryFn: () => getDetail(moimId),
+  })
+
+  const { data: myLikes } = useQuery({
+    queryKey: ['my-likes'],
+    queryFn: () => likeApi.getMyLikes(1),
+    enabled: !!me,
+  })
+
+  // 특정 모임이 내가 찜한 목록에 있는지 확인
+  const isLiked = myLikes?.data.some(moim => moim.id === moimId ?? false);
+
+  // 찜하기 뮤테이션
+  const { mutateAsync: toggleLike, isPending: isToggling } = useMutation({
+    mutationFn: async () => {
+      return isLiked ? likeApi.unlike(moimId) : likeApi.like(moimId);
+    },
+    onSuccess: (data) => {
+      // [ ] 모임 상세 데이터 업데이트
+      // [ ] 찜한 모임 목록 업데이트
+    },
+    onError: (error) => {
+      console.error('찜하기 토글 실패:', error)
+    },
+  });
+
+  const handleToggleLike = async () => {
+    try {
+      await toggleLike();
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  };
 
 
-  // 찜 초기상태 확인 useEffect 사용
-  // const [isLiked, setIsLiked] = useState(false);
-  // const [isProcessing, setIsProcessing] = useState(false);
-  const { favorites, isFavorite, toggleFavorite, isLoading } = useFavoriteStore();
-  const isLiked = favorites.has(moimId);
 
-  // useEffect(() => {
-  //   const loadLikeStatus = async () => {
-  //     try {
-  //       const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
-  //       setIsLiked(likedMoims.includes(moimId));
-        
-  //     } catch (error) {
-  //       console.error('찜하기 상태 로드 실패:', error);
-  //     }
-  //   };
-
-  //   loadLikeStatus();
-  // }, [moimId]);
-
-  const handleToggleLike = useCallback(async () => {
-    const {
-      successMessage = isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요",
-      errorMessage = "잠시후 다시 시도해주세요",
-      onSuccess
-    } = options;
+//   const handleToggleLike = useCallback(async () => {
+    // const {
+    //   successMessage = isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요",
+    //   errorMessage = "잠시후 다시 시도해주세요",
+    //   onSuccess
+    // } = options;
 
     // setIsProcessing(true);
-    try {
+    // try {
       // zustand
-      await toggleFavorite(moimId);
-      onSuccess?.();
+      // await toggleFavorite(moimId);
+      // onSuccess?.();
 
       // 로컬 스토리지 저장
       // const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
@@ -58,15 +77,15 @@ export const useLikeMoim = (moimId: number, options: UseLikeMoimOptions = {}) =>
       //   : [...likedMoims, moimId];
       // localStorage.setItem('likedMoims', JSON.stringify(updatedLikes));
       // setIsLiked(!isLiked);
-      toast.success(successMessage);
-    } catch (error) {
-      console.error('찜하기 토글 실패:', error);
-      toast.error(errorMessage);
-    } 
-  }, [moimId, toggleFavorite, isLiked]);
+  //   } catch (error) {
+  //     console.error('찜하기 토글 실패:', error);
+  //   } 
+  // }, [moimId, toggleFavorite, isLiked]);
 
   return { 
     isLiked,
     handleToggleLike,
+    isLoading: isLoadingDetail || isToggling,
+    likesCount: moimDetail?.likes ?? 0
   };
 };
