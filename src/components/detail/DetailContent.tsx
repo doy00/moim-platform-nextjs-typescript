@@ -14,7 +14,7 @@ export const DetailContent: React.FC<IDetailContent> = ({ className, content }) 
       </div>
 
       <div 
-        className={cn("relative flex flex-col gap-2.5 px-4 py-[18px] mt-4 bg-background400 rounded-2xl ", className)}
+        className={cn("relative flex flex-col gap-2.5 px-6 py-[18px] mt-4 bg-background400 rounded-2xl ", className)}
       >
         <p className="text-body-2-reading text-gray800">{content}</p>
       </div>

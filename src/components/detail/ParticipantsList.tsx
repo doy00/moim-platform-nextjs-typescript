@@ -6,7 +6,7 @@ import {
   HoverCard,
   HoverCardContent,
   HoverCardTrigger,
-} from "@/components/ui/hover-card"
+} from "@/components/detail/HoverCardUI"
 import { IParticipant } from '@/types/detail/t-moim';
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 
@@ -45,9 +45,7 @@ export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
                     <div className="absolute w-8 h-8 rounded-full border-2 border-background200 overflow-hidden">
                       <Image
                         src={participant.image || DEFAULT_IMAGE.PROFILE}
-                        // src={DEFAULT_IMAGE.PROFILE}
                         alt={participant.nickname || "참가자 프로필"}
-                        // alt="참가자 프로필"
                         width={32}
                         height={32}
                         className="object-cover"
@@ -67,7 +65,7 @@ export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
               </HoverCardTrigger>
 
               <HoverCardContent
-                className="w-64 p-2"
+                className="w-[156px] px-1.5 py-3 bg-background100"
                 align="start"
               >
                 <div className="space-y-2">
@@ -78,14 +76,12 @@ export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
                     >
                       <Image
                         src={participant.image || DEFAULT_IMAGE.PROFILE}
-                        // src={DEFAULT_IMAGE.PROFILE}
-                        alt={participant.user_uuid || 'user_uuid'}
-                        // alt="참가자 프로필"
+                        alt={participant.user_uuid || '참가자 프로필'}
                         width={24}
                         height={24}
                         className="rounded-full"
                       />
-                      <span className="text-caption-normal text-textNormal">
+                      <span className="text-caption-normal text-gray400 font-medium">
                         {/* 닉네임 */}
                         {participant.user_uuid || '닉네임'}
                       </span>
@@ -96,7 +92,7 @@ export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
             </HoverCard>
 
       {/* 추가 참가신청 가능 인원 */}
-      <span className="text-body-2-normal font-medium text-brown400">
+      <span className="text-body-2-normal font-semibold text-orange200">
         {availableCount}명 더 참여할 수 있어요
       </span>
     </div>

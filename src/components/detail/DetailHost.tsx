@@ -46,7 +46,7 @@ export const DetailHost = ({
                   </span>
                   <ChipSmallRound 
                     variant="gray"
-                    text="Label"  
+                    text="PM"  
                     />
               </div>
               <span className="text-label-normal text-gray400">
