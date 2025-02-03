@@ -122,11 +122,16 @@ export async function POST(req: NextRequest) {
 
   const formData = await req.formData();
   const moimDataString = formData.get('moim_json'); // 클라이언트에서 json으로 묶어줘야 함
+
+  if (!moimDataString) {
+    return NextResponse.json({ message: 'formData에 moim_json이 없습니다' }, { status: 400 });
+  }
+
   const moimImageFile = formData.get('moim_image') as File;
   const moimDataOrigin = JSON.parse(moimDataString as string);
 
-  if (!moimDataString) {
-    return NextResponse.json({ message: '모임 데이터가 없어요' }, { status: 404 });
+  if (!moimDataOrigin) {
+    return NextResponse.json({ message: '잘못된 페이로드 입니다' }, { status: 400 });
   }
 
   // 현재 시간 가져오기 (UTC)

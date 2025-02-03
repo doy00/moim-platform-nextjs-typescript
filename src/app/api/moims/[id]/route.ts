@@ -40,8 +40,17 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   const formData = await req.formData();
   const moimDataString = formData.get('moim_json');
+
+  if (!moimDataString) {
+    return NextResponse.json({ message: 'formData에 moim_json이 없습니다' }, { status: 400 });
+  }
+
   const moimImageFile = formData.get('moim_image') as File;
   const moimDataOrigin = JSON.parse(moimDataString as string);
+
+  if (!moimDataOrigin) {
+    return NextResponse.json({ message: '잘못된 페이로드 입니다' }, { status: 400 });
+  }
 
   const { data: existingMoim, error: existingMoimError } = await supabase
     .from('moims')
