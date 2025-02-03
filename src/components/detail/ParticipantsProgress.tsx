@@ -35,7 +35,7 @@ export const ParticipantsProgress: React.FC<IParticipantsProgressProps> = ({
   const isMinimumMet = currentCount >= 3;   // 모임 개설 최소인원 3명
 
   return (
-    <div className="w-full space-y-3">
+    <div className="w-full space-y-2">
       {/* 참여 신청한 인원 */}
       <div className="flex flex-col">
         <span className="font-semibold text-body-2-normal text-gray800">

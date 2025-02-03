@@ -15,7 +15,7 @@ export const DetailParticipants: React.FC<IDetailParticipantsProps> = ({
 }) => {
   return (
     <div 
-      className={cn("relative flex flex-col gap-2.5 px-6 py-8 mt-5 bg-background400 rounded-2xl items-center", className)}
+      className={cn("relative flex flex-col gap-4 px-5 py-5 mt-5 lg:px-6 lg:py-8 lg:mt-8 bg-background400 rounded-2xl items-center", className)}
     >
         {/* 참여 인원수 Progress Bar */}
         <ParticipantsProgress

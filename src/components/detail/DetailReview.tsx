@@ -1,11 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { cn } from "@/utils/detail/cn";
-import { IMoimDetail, IReview, IReviewWithUser } from "@/types/detail/t-moim";
+import { IReviewWithUser } from "@/types/detail/t-moim";
 import { DEFAULT_IMAGE } from "@/constants/detail/detail.const";
 import { DuduEmpty } from "./icons/DuduEmpty";
 import { ChipSmallRound } from "./ChipSmallRound";
 import { formatDate } from "@/utils/detail/date";
+import { getRate } from "@/utils/detail/enums";
 
 export const MOCK_REVIEWS: IReviewWithUser[] = [
   {
@@ -83,15 +84,14 @@ const ReviewItem: React.FC<IReviewItemProps> = ({ review, className }) => {
   };
   return (
     <div
-      className={cn("relative flex flex-col gap-3 px-4 py-5 mt-4 bg-background400 rounded-2xl", className)}
+      className={cn("relative flex flex-col min-h-[124px] gap-3 px-4 py-[18px] lg:px-6 lg:py-7 mt-4 bg-background400 rounded-2xl", className)}
     >
         {/* 감정표현 칩 */}
         <div className="flex gap-0.5">
           <ChipSmallRound 
             variant="soso"
             // variant={review.rate.toLowerCase()}
-            // text={review.emotion}
-            text={`평점텍스트`}
+            text={getRate(review.rate)}
           />
         </div>
 
@@ -103,7 +103,6 @@ const ReviewItem: React.FC<IReviewItemProps> = ({ review, className }) => {
         {/* 리뷰 작성자 정보*/}
         <div className="flex items-center justify-end gap-2">
           {/* 작성자 프로핊사진 */}
-          {/* {review.users.nickname && ( */}
             <div className="h-6 w-6 overflow-hidden rounded-full">
               <Image 
                 // src={review.users.nickname}
@@ -115,7 +114,6 @@ const ReviewItem: React.FC<IReviewItemProps> = ({ review, className }) => {
                 onError={handleImageError}
               />
           </div>
-        {/* )} */}
 
           {/* 작성자 이름 */}
           <div className="flex items-center gap-2 text-caption-normal text-gray300">
@@ -159,7 +157,7 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
           return (
             <div className="relative flex flex-col">
               {/* 타이틀 */} 
-                  <div className="relative w-fit mt-5 px-2 font-semibold text-gray800 text-[16px]">
+                  <div className="relative w-fit mt-4 lg:mt-8 px-2 font-semibold text-gray800 text-body-1-reading">
                     {"모임 후기"}
                     <span className="ml-2 text-orange200">
                       {reviews.length}
@@ -179,7 +177,7 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
         return (
           <div className="relative flex flex-col">
             {/* 타이틀 */}
-            <div className="relative w-fit mt-5 px-2 font-semibold text-gray800 text-body-1-reading">
+            <div className="relative w-fit mt-5 lg:mt-8 px-2 font-semibold text-gray800 text-body-1-reading">
               {"모임 후기"}
               <span className="ml-2 text-orange200">
                 {reviews.length}
@@ -195,7 +193,7 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
 
             <button 
               onClick={handleLoadMore}
-              className="mt-6 w-full h-12 rounded-xl py-[14px] text-body-2-normal font-semibold text-gray400 bg-gray100"
+              className="mt-6 w-full h-12 rounded-[14px] py-[14px] text-body-2-normal font-semibold text-gray400 bg-gray100"
               disabled={!hasMoreReivews}
             >
               후기 더보기

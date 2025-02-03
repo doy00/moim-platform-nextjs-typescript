@@ -26,7 +26,7 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
 
   return (
     <div className={cn(
-      "relative flex flex-col gap-2.5 px-4 py-5 mt-5 bg-background400 rounded-2xl",
+      "relative flex flex-col gap-2.5 px-4 py-5 mt-4 lg:px-6 lg:py-8 lg:mt-8 bg-background400 rounded-2xl",
       className
     )}
     >
