@@ -1,5 +1,5 @@
 import { getMyMoim } from '@/apis/myMoim';
-import { getOwnMoim } from '@/apis/ownMoim';
+import { getParticipatedMoim } from '@/apis/participatedMoim';
 import { getReviews } from '@/apis/reviews';
 import { getUserInfo } from '@/apis/userInfo';
 import MypageContainer from '@/containers/mypage/MypageContainer';
@@ -22,8 +22,8 @@ export default async function Mypage() {
       queryFn: getMyMoim,
     }),
     queryClient.prefetchQuery({
-      queryKey: ['getOwnMoim'],
-      queryFn: getOwnMoim,
+      queryKey: ['getParticipatedMoim'],
+      queryFn: getParticipatedMoim,
     }),
     queryClient.prefetchQuery({
       queryKey: ['getReviews'],

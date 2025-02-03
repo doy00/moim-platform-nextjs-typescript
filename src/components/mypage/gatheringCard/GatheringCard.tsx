@@ -1,11 +1,11 @@
-import { IOwnMoim, IMyMoim } from '@/types/mypage/moim.type';
+import { IParticipatedMoim, IMyMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
 import puzzle from '@images/mypage/puzzle-on.svg';
 import emptyHeart from '@images/mypage/empty-heart.svg';
 import Link from 'next/link';
 
 interface Props {
-  moim: IOwnMoim['data'][number] | IMyMoim['data'][number];
+  moim: IMyMoim | IParticipatedMoim;
   isReviewed?: boolean;
 }
 
@@ -28,7 +28,7 @@ export function GatheringCard({ moim, isReviewed }: Props) {
                 <p className="font-medium text-body-1-normal color-[#2B2926]">{moim?.title}</p>
                 <div className="flex gap-2 items-center">
                   <span className="font-medium text-label-reading text-[#9E9892]">
-                    {moim?.district}
+                    {moim?.address}
                   </span>
                   <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
                   <span className="font-medium text-label-reading text-[#9E9892]">

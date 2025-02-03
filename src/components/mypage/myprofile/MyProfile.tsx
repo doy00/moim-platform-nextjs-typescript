@@ -36,17 +36,15 @@ export default function MyProfile() {
         <div>
           <div className="flex gap-2 justify-between">
             <div className="flex flex-col gap-2">
-              <span className="text-lg font-semibold">{data?.data.nickname}</span>
-              <span className="text-[13px] font-normal text-[#9E9892]">
-                {data?.data.introduction}
-              </span>
+              <span className="text-lg font-semibold">{data?.nickname}</span>
+              <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
             </div>
             {/* <Image src={data?.image ?? defaultProfile} alt="profile" width={64} height={64} /> */}
             <Image src={defaultProfile} alt="profile" width={64} height={64} />
           </div>
           <div className="flex gap-1">
             <span className="rounded-[6px] bg-gray50 px-1.5 py-[3px] text-caption-normal font-medium text-gray400">
-              {data?.data.tags}
+              {data?.tags}
             </span>
             {/* <span>백엔드</span>
             <span>기획</span> */}
