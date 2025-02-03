@@ -96,8 +96,8 @@ const processedData = processDetailData(data);
         />
         {/* 리뷰 목록 */}
         <DetailReview 
-          reviews={processedData?.reviews}
-          // reviews={MOCK_REVIEWS}
+          // reviews={processedData?.reviews}
+          reviews={MOCK_REVIEWS}
         />
         <FloatingBar
           onHeartClick={onLikeToggle}

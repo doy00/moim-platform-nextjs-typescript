@@ -12,9 +12,9 @@ export const ChipSmallRound: React.FC<IChipSmallRound> = ({
       className={cn(
         'px-2 py-1 rounded-full text-caption-normal font-medium text-[12px] text-gray600', 
         variant === 'gray' && 'bg-gray200',
-        variant === 'soso' && 'bg-red100 text-red200 font-semibold',
-        variant === 'good' && 'bg-orange100 text-orange200 font-semibold',
-        variant === 'recommend' && 'bg-olive100 text-olive200 font-semibold',
+        variant === 'soso' && 'bg-background300 text-red200 font-semibold',
+        variant === 'good' && 'bg-background300 text-orange200 font-semibold',
+        variant === 'recommend' && 'bg-background300 text-olive200 font-semibold',
 
         className
       )}

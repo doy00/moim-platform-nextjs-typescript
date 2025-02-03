@@ -6,7 +6,7 @@ import { DEFAULT_IMAGE } from "@/constants/detail/detail.const";
 import { DuduEmpty } from "./icons/DuduEmpty";
 import { ChipSmallRound } from "./ChipSmallRound";
 import { formatDate } from "@/utils/detail/date";
-import { getRate } from "@/utils/detail/enums";
+import { getRate, getRateVariant } from "@/utils/detail/enums";
 
 export const MOCK_REVIEWS: IReviewWithUser[] = [
   {
@@ -89,8 +89,8 @@ const ReviewItem: React.FC<IReviewItemProps> = ({ review, className }) => {
         {/* 감정표현 칩 */}
         <div className="flex gap-0.5">
           <ChipSmallRound 
-            variant="soso"
-            // variant={review.rate.toLowerCase()}
+            // variant="soso"
+            variant={getRateVariant(review.rate)}
             text={getRate(review.rate)}
           />
         </div>
