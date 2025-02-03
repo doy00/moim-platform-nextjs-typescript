@@ -53,6 +53,10 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ message: existingMoimError?.message }, { status: 401 });
   }
 
+  if (!existingMoim) {
+    return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 401 });
+  }
+
   // 현재 시간 가져오기 (UTC)
   const now = new Date().toISOString();
 
@@ -67,6 +71,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   }
 
   const moimData: Partial<TMoims> = {
+    id: existingMoim.id,
     title: moimDataOrigin.title,
     content: moimDataOrigin.content,
     address: moimDataOrigin.roadAddress,
@@ -109,7 +114,8 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     error: updatedMoimError,
   }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
     .from('moims')
-    .upsert({ ...moimData })
+    .update({ ...moimData })
+    .eq('id', id)
     .select('*, reviews (*), participated_moims (*)')
     .single();
 
