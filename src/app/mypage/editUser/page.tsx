@@ -9,22 +9,19 @@ import Link from 'next/link';
 import { useEffect, useState } from 'react';
 import { useEditUserMutation } from '@/hooks/mypage/queries/useUserQuery';
 
-interface EditUserResponse {
-  success: boolean;
-  message: string;
-}
-
 export default function EditUser() {
   const { data, isLoading } = useUserQuery();
-  // const { mutate: editUser, isPending: editUserLoading } = useEditUserMutation();
+  const { mutate: editUser, isPending: isEditing } = useEditUserMutation();
+
   const [emailInputValue, setEmailInputValue] = useState('');
   const [nicknameInputValue, setNicknameInputValue] = useState('');
   const [textareaValue, setTextareaValue] = useState('');
+  const [tags, setTags] = useState<string[]>([]);
+  const [tagInputValue, setTagInputValue] = useState('');
+
   const [isEmailInputExceeded, setIsEmailInputExceeded] = useState(false);
   const [isNicknameInputExceeded, setIsNicknameInputExceeded] = useState(false);
   const [isTextAreaExceeded, setIsTextAreaExceeded] = useState(false);
-  const [tags, setTags] = useState<string[]>([]);
-  const [inputValue, setInputValue] = useState('');
 
   useEffect(() => {
     if (data) {
@@ -74,10 +71,10 @@ export default function EditUser() {
       //마지막 글자가 확정되지 않은 상태에서 엔터키를 누르면 글자가 다음 태그로 넘어가는 문제가 발생(IME(Input Method Editor) 이슈) 추가함.
       if (e.nativeEvent.isComposing) return;
 
-      const newTag = inputValue.trim();
-      if (newTag && !tags.includes(newTag)) {
+      const newTag = tagInputValue.trim();
+      if (newTag && !tags.includes(newTag) && tags.length < 3) {
         setTags([...tags, newTag]);
-        setInputValue('');
+        setTagInputValue('');
       }
     }
   };
@@ -85,12 +82,20 @@ export default function EditUser() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
+
+    editUser({
+      email: emailInputValue,
+      nickname: nicknameInputValue,
+      introduction: textareaValue,
+      tags: tags,
+      password: '',
+      position: data?.position || '', // 기존 position 유지
+    });
   };
 
   const isFormValid = tags.length > 0 && tags.length <= 3 && textareaValue;
 
-  //스켈레톤으로 구현하는 것이 더 나아보임, 추후 수정 예정
-  if (isLoading) {
+  if (isLoading || isEditing) {
     return (
       <div className="flex flex-col gap-5 justify-center items-center h-screen">
         <LoadingAnimation />
@@ -142,7 +147,7 @@ export default function EditUser() {
                 <input
                   type="text"
                   id="nickName"
-                  placeholder="두두두두"
+                  placeholder="두두씨"
                   className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
                     isNicknameInputExceeded ? 'border-2 border-error focus:border-error' : ''
                   }`}
@@ -194,15 +199,15 @@ export default function EditUser() {
                   <input
                     type="text"
                     id="tag"
-                    value={inputValue}
-                    onChange={(e) => setInputValue(e.target.value)}
-                    onKeyUp={handleTagInput}
+                    value={tagInputValue}
+                    onChange={(e) => setTagInputValue(e.target.value)}
+                    onKeyDown={handleTagInput}
                     maxLength={5}
                     placeholder="# 태그추가"
                     className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-caption-normal font-medium placeholder:text-gray300 w-[90px] "
                   />
 
-                  {data?.tags?.map((tag, index) => (
+                  {tags?.map((tag, index) => (
                     <div
                       key={index}
                       className="flex items-center gap-2 px-4 bg-background400 rounded-xl justify-between"
@@ -234,6 +239,7 @@ export default function EditUser() {
             </div>
             <button
               type="submit"
+              disabled={isEditing}
               className={`rounded-2xl px-[141px] py-[17px] ${
                 isFormValid ? 'bg-orange200' : 'bg-gray950'
               }`}

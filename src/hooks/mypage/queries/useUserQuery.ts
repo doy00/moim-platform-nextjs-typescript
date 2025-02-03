@@ -16,10 +16,7 @@ export const useEditUserMutation = () => {
   const { data: user } = useUserQuery();
 
   return useMutation({
-    mutationFn: (editData: IUserEdit) => {
-      if (!user?.id) throw new Error('User ID not found');
-      return editUserInfo(user.id, editData);
-    },
+    mutationFn: (editData: IUserEdit) => editUserInfo(editData),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     },
