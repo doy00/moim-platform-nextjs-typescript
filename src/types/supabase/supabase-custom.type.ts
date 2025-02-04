@@ -27,25 +27,30 @@ export type TMoimClient = {
   participants: number;
   reviewsCount: number;
   isConfirmed: boolean;
+  likedUsers: string[];
+  participatedUsers: Partial<TParticipatedMoims>[];
+  reviews: Partial<TReviews>[];
 };
 
 export type TMoimsJoined = TMoims & {
-  reviews: TReviews[];
-  participated_moims: TParticipatedMoims[];
-  liked_moims?: TLikedMoims[];
+  reviews: Partial<TReviews>[];
+  participated_moims: Partial<TParticipatedMoims>[];
+  liked_moims: Partial<TLikedMoims>[];
 };
 
 export type TLikedMoimsJoined = TLikedMoims & {
   moims: TMoims & {
-    reviews: TReviews[];
-    participated_moims: TParticipatedMoims[];
+    reviews: Partial<TReviews>[];
+    participated_moims: Partial<TParticipatedMoims>[];
+    liked_moims: Partial<TLikedMoims>[];
   };
 };
 
 export type TParticipatedMoimsJoined = TParticipatedMoims & {
   moims: TMoims & {
-    reviews: TReviews[];
-    participated_moims: TParticipatedMoims[];
+    reviews: Partial<TReviews>[];
+    participated_moims: Partial<TParticipatedMoims>[];
+    liked_moims: Partial<TLikedMoims>[];
   };
 };
 
