@@ -75,11 +75,17 @@ export async function GET(request: Request) {
         name: 'access_token',
         value: data.session?.access_token,
         maxAge: 60 * 60,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
       });
       setCookie({
         name: 'refresh_token',
         value: data.session?.refresh_token,
         maxAge: 60 * 60 * 24 * 30,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
       });
 
       // console.log('data when not error ===========>', data);
