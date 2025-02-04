@@ -8,17 +8,14 @@ import { DetailInfo } from '../../components/detail/DetailInfo';
 import { DetailParticipants } from '../../components/detail/DetailParticipants';
 import { DetailContent } from '../../components/detail/DetailContent';
 import { DetailHost } from '@/components/detail/DetailHost';
-import { DetailReview } from '../../components/detail/DetailReview';
+import { DetailReview, MOCK_REVIEWS } from '../../components/detail/DetailReview';
 import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 // types
-import { DetailPresenterProps } from '@/types/detail/i-presenter';
-import { IMoimDetail, ReviewEmotion } from '@/types/detail/i-moim';
+import { IDetailPresenterProps } from '@/types/detail/i-presenter';
+import { IMoimDetail } from '@/types/detail/t-moim';
 // constants
-import { DEFAULT_IMAGE } from '@/constants/detail/images';
-// uitls
-import { formatDate, formatDateRange } from '@/utils/detail/date';
-
+import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 
 export default function DetailPresenter({
   data,
@@ -29,65 +26,34 @@ export default function DetailPresenter({
   onJoin,
   onLikeToggle,
   className,
-}: DetailPresenterProps) {
-
-
+}: IDetailPresenterProps) {
   // 데이터 처리 함수
-  const processDetailData = (data: IMoimDetail | undefined): IMoimDetail => {
-  // 데이터가 없을때 기본값
-  if (!data) {
-    return {
-      moimId: 0,
-      title: '모임 타이틀이 들어갑니다.',
-      content: '모임 내용이 들어갑니다.',
-      moimType: '프로젝트',
-      moimStatus: '',
-      si: '',
-      district: '',
-      roadAddress: '주소를 불러오는 중입니다.',
-      startDate: '',
-      endDate: '',
-      // participants: [],
-      participants: 0,
-      minParticipants: 0,
-      maxParticipants: 12,
-      reviews: [],
-      
-      // [ ] 이미지 - 보류
-      image: DEFAULT_IMAGE.MOIM,
-    };
-  }
-
-  return {
-    ...data,
-    // API에서 전체 URL을 제공하는 경우
-    image: data.image?.startsWith('http') 
-      ? data.image 
-      : data.image 
-      ? `${process.env.NEXT_PUBLIC_API_URL}/${data.image}`
-      : DEFAULT_IMAGE.MOIM
+  const processDetailData = (data: IMoimDetail | null): IMoimDetail => {
+    // 데이터가 없을때 기본값
+    if (!data) {
+      return {
+        moimId: '',
+        title: '모임 타이틀이 들어갑니다.',
+        content: '모임 내용이 들어갑니다.',
+        address: '주소를 불러오는 중입니다.',
+        recruitmentDeadline: new Date().toISOString(),
+        startDate: new Date().toISOString(),
+        endDate: new Date().toISOString(),
+        minParticipants: 0,
+        maxParticipants: 12,
+        moimType: 'PROJECT',
+        status: 'RECRUIT',
+        likes: 0,
+        participants: 0,
+        reviewsCount: 0,
+        participantsMoims: [],
+        reviews: []
+      };
+    }
+    return data
   };
-};
 
 const processedData = processDetailData(data);
-
-// 주소 조합
-const fullAddress = processedData ? 
-`${processedData.si} ${processedData.district} ${processedData.roadAddress}`.trim() : 
-"주소를 불러오는 중입니다.";
-
-// 평점: emotion 문자열을 ReviewEmotion 타입으로 안전하게 변환하는 함수
-// [ ] 리팩토링
-const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
-  switch (emotion) {
-    case '그냥그래요':
-      return '그냥그래요';
-    case '추천해요':
-      return '추천해요';
-    default:
-      return '괜찮아요'; // 기본값
-  }
-};
 
   return (
     <div className="
@@ -104,22 +70,18 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
         <DetailShare />
         <ImageBox image={DEFAULT_IMAGE.MOIM} />
         <DetailInfo 
-          title={processedData?.title }
-          location={fullAddress}
-          recruitmentPeriod={
-            processedData?.startDate && processedData?.endDate
-            ? formatDateRange(processedData.startDate, processedData.endDate)
-            : "모집 일정이 들어갑니다." }
-          meetingDate={
-            processedData?.endDate
-            ? formatDate(processedData.endDate)
-            : "모임 날짜가 들어갑니다." }
+          title={processedData?.title}
+          address={processedData?.address}
+          startDate={processedData?.startDate}
+          recruitmentDeadline={processedData?.recruitmentDeadline}
+          endDate={processedData?.endDate}        
           participants={processedData?.participants || 0}
           minParticipants={processedData?.minParticipants || 3 }
+          moimType={processedData?.moimType}
+          status={processedData?.status}
         />
         <DetailParticipants 
-          participants={participants || []}
-          maxParticipants={processedData?.maxParticipants}
+          data={processedData}
         />
         <DetailContent 
           content={processedData?.content}
@@ -133,9 +95,10 @@ const convertToReviewEmotion = (emotion: string): ReviewEmotion => {
             DEFAULT_IMAGE.PROFILE}
         />
         {/* 리뷰 목록 */}
-          <DetailReview 
-            reviews={processedData?.reviews || []}
-          />
+        <DetailReview 
+          // reviews={processedData?.reviews}
+          reviews={MOCK_REVIEWS}
+        />
         <FloatingBar
           onHeartClick={onLikeToggle}
           onJoinClick={() => onJoin}

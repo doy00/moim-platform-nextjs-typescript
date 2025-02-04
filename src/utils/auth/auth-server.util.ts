@@ -26,12 +26,16 @@ export async function setCookie(options: ResponseCookie): Promise<void> {
 
 export const prefetchMe = async () => {
   const queryClient = new QueryClient();
+  const accessToken = await getCookie('access_token');
+
+  if (!accessToken) return { me: null, dehydratedState: null };
 
   await queryClient.prefetchQuery({
     queryKey: [QUERY_KEY_ME],
-    queryFn: () => getMe(),
+    queryFn: () => getMe(accessToken),
   });
   const me = await queryClient.getQueryData([QUERY_KEY_ME]);
   const dehydratedState = dehydrate(queryClient);
+
   return { me, dehydratedState };
 };

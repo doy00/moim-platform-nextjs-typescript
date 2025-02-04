@@ -1,18 +1,23 @@
 import React from "react";
-import { cn } from "@/utils/detail/cn";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
 import { ChipSmallRound } from "@/components/detail/ChipSmallRound";
 import { Separator } from "@/components/ui/separator"
-import { IDetailInfoAPIResponse } from "@/types/detail/i-moim";
+import { IDetailInfoProps } from "@/types/detail/i-components";
+import { cn } from "@/utils/detail/cn";
+import { getMoimTypeText } from "@/utils/detail/enums";
+import { formatDate, getDeadlineText } from "@/utils/detail/date";
 
-export const DetailInfo: React.FC<IDetailInfoAPIResponse> = ({
+export const DetailInfo: React.FC<IDetailInfoProps> = ({
   title,
-  location,
-  recruitmentPeriod,
-  meetingDate,
-  className,
+  address,
+  recruitmentDeadline,
+  startDate,
+  endDate,
   participants,
   minParticipants,
+  moimType,
+  status,
+  className,
 }) => {
   // 개설 확정 여부 확인
   const isConfirmed = () => {
@@ -21,7 +26,7 @@ export const DetailInfo: React.FC<IDetailInfoAPIResponse> = ({
 
   return (
     <div className={cn(
-      "relative flex flex-col gap-2.5 px-4 py-5 mt-5 bg-background400 rounded-2xl",
+      "relative flex flex-col gap-2.5 px-4 py-5 mt-4 lg:px-6 lg:py-8 lg:mt-8 bg-background400 rounded-2xl",
       className
     )}
     >
@@ -30,7 +35,7 @@ export const DetailInfo: React.FC<IDetailInfoAPIResponse> = ({
         <div className="flex gap-1.5">
           <ChipSmallSquircle 
             variant="light"
-            text="프로젝트"
+            text={getMoimTypeText(moimType)}
           />
           {isConfirmed() && (
           <ChipSmallSquircle 
@@ -46,7 +51,7 @@ export const DetailInfo: React.FC<IDetailInfoAPIResponse> = ({
             {title}
           </h3>
           <p className="text-caption-normal text-gray500 font-medium truncate">
-            {location}
+            {address}
           </p>
         </div>
 
@@ -57,12 +62,12 @@ export const DetailInfo: React.FC<IDetailInfoAPIResponse> = ({
             </span>
             <Separator orientation="vertical" className="h-2 bg-gray200" />
             <span className="text-caption-normal font-medium text-gray500">
-              {recruitmentPeriod}
+              {`${formatDate(recruitmentDeadline)} - ${formatDate(recruitmentDeadline)}`}
             </span>
             <span>
               <ChipSmallRound 
                 variant="gray"
-                text="마감 D-10"  // [ ] API 연결
+                text={getDeadlineText(recruitmentDeadline)}   // text="마감 D-10"
               />
             </span>
           </div>
@@ -73,7 +78,7 @@ export const DetailInfo: React.FC<IDetailInfoAPIResponse> = ({
             </span>
             <Separator orientation="vertical" className="h-2 bg-gray200" />
             <span className="text-caption-normal font-medium text-gray500 flex-1">
-              {meetingDate}
+            {`${formatDate(startDate)} - ${formatDate(endDate)}`}
             </span>
           </div>
         </div>
