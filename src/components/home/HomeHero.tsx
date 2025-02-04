@@ -4,13 +4,16 @@
 import React from 'react';
 import Image from 'next/image';
 
-//Components
+// Components
 import FilterDrawer from './FilterDrawer';
-//Shadcn
+
+// Shadcn
 import { Switch } from '@/components/ui/switch';
-//Store
+
+// Store
 import { useFilterStore } from '@/stores/home/filterStore';
-//Type
+
+// Type
 import { TFilterState } from '@/types/home/t-filterState';
 
 import {
@@ -22,29 +25,32 @@ import {
 } from '@/components/ui/select';
 
 export default function HomeHero() {
-  const { confirmed, sortOrder, setSortOrder, toggleConfirmed } = useFilterStore();
+  const { sortOrder, setSortOrder, isConfirmed, toggleConfirmed } = useFilterStore();
 
+  // ✅ 정렬 필터 (sortOrder)
   const renderedSelect = (
     <Select
-      value={sortOrder} // Zustand 상태 연결
+      value={sortOrder}
       onValueChange={(value) => {
-        console.log('Selected sort order:', value); // 상태 업데이트 디버깅
-        setSortOrder(value as TFilterState['sortOrder']);
+        const upperCaseValue = value.toUpperCase(); // ✅ 선택값을 대문자로 변환
+        console.log('🔄 Selected sort order:', upperCaseValue);
+        setSortOrder(upperCaseValue as TFilterState['sortOrder']);
       }}
     >
       <SelectTrigger className="w-[112px]">
         <SelectValue placeholder="최신순" />
       </SelectTrigger>
       <SelectContent className="w-[112px]">
-        <SelectItem value="latest">최신순</SelectItem>
-        <SelectItem value="likes">찜 많은순</SelectItem>
-        <SelectItem value="deadline">마감일 빠른순</SelectItem>
+        <SelectItem value="LATEST">최신순</SelectItem>
+        <SelectItem value="LIKES">찜 많은순</SelectItem>
+        <SelectItem value="DEADLINE">마감일 빠른순</SelectItem>
       </SelectContent>
     </Select>
   );
 
   return (
     <section>
+      {/* 히어로 영역 */}
       <article className="px-4 pt-2">
         <div className="flex items-center justify-start w-full h-[58px] bg-background400 rounded-xl pl-4 py-[13px] space-x-2.5">
           <Image
@@ -59,21 +65,24 @@ export default function HomeHero() {
           </p>
         </div>
       </article>
+
+      {/* 필터 & 정렬 */}
       <article className="px-4 pt-5 flex items-center justify-between">
-        {/* 필터 */}
         <div className="flex items-center gap-x-1.5">
+          {/* 필터 드로어 */}
           <div className="w-[52px] h-[42px] border border-background400 rounded-xl flex items-center justify-center bg-background100">
             <FilterDrawer />
           </div>
           {renderedSelect}
         </div>
-        {/* SWITCH 토글 */}
+
+        {/* 개설 확정 토글 */}
         <div className="flex items-center space-x-[6px]">
           <span className="text-body-2-reading text-[#9E9892]">개설확정</span>
           <Switch
-            checked={confirmed === true}
+            checked={isConfirmed === true}
             onCheckedChange={() => {
-              console.log('Switch 상태 변경 이벤트 발생:', confirmed);
+              console.log('🔄 Switch 상태 변경:', !isConfirmed);
               toggleConfirmed();
             }}
           />

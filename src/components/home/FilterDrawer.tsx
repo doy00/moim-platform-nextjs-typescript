@@ -18,7 +18,7 @@ import { IFilterTabMenu } from '@/types/home/i-filtertab';
 import { CATEGORY_ITEMS } from '@/constants/home/filter-category';
 import { REGION_ITEMS } from '@/constants/home/filter-region';
 import { STATUS_ITEMS } from '@/constants/home/filter-status';
-// Compontes-icon
+// Components - Icons
 import FilterActivateIcon from './icons/FilterActivateIcon';
 import DeleteIcon from './icons/DeleteIcon';
 import ResetIcon from './icons/ResetIcon';
@@ -28,22 +28,22 @@ const FilterDrawer: React.FC = () => {
   const {
     moimType,
     region,
-    moimStatus,
+    status, // ✅ 기존 moimStatus -> status 로 변경
     setMoimType,
-    setMoimStatus,
+    setStatus, // ✅ 기존 setMoimStatus -> setStatus 로 변경
     toggleRegion,
-    resetFilters
+    resetFilters,
   } = useFilterStore();
-
+  
+  // 필터 적용
   const handleApplyFilters = () => {
-    console.log('Applied Filters:', { moimType, region, moimStatus });
-    // API 코드보고 코드 추가(?)
+    console.log('🛠 [Applied Filters]:', { moimType, region, status });
   };
 
   const isRegionSelected = (id: string) => region.includes(id);
 
   const handleRegionToggle = (regionId: string) => {
-    toggleRegion(regionId)
+    toggleRegion(regionId);
   };
 
   const renderContent = () => {
@@ -72,10 +72,11 @@ const FilterDrawer: React.FC = () => {
             })}
           </div>
         );
+
       case 'region':
         return (
           <div>
-            {/* Region 그리드 */}
+            {/* Region Grid */}
             <div className="px-3 grid grid-cols-2 gap-x-[7px] gap-y-[11px] text-body-2-normal mb-[18px]">
               {REGION_ITEMS.map((item) => (
                 <button
@@ -91,8 +92,11 @@ const FilterDrawer: React.FC = () => {
                 </button>
               ))}
             </div>
-              {/* Region Select  */}
-            <p className='ml-3 px-3 pt-3 text-caption-normal text-gray300'><strong className='text-gray800'>{region.length}</strong>/{REGION_ITEMS.length}</p>
+
+            {/* Selected Regions */}
+            <p className='ml-3 px-3 pt-3 text-caption-normal text-gray300'>
+              <strong className='text-gray800'>{region.length}</strong>/{REGION_ITEMS.length}
+            </p>
             <div className="mt-2 flex flex-wrap items-center gap-2 px-3 text-caption-reading">
               {region.length > 0 ? (
                 region.map((regionId) => (
@@ -110,12 +114,13 @@ const FilterDrawer: React.FC = () => {
             </div>
           </div>
         );
+
       case 'status':
         return (
           <div className="flex flex-col space-y-[11px] items-center justify-between px-3">
             {STATUS_ITEMS.map((item) => {
               const Icon = item.icon;
-              const isSelected = moimStatus === item.id;
+              const isSelected = status === item.id;
 
               return (
                 <div
@@ -123,7 +128,7 @@ const FilterDrawer: React.FC = () => {
                   className={`flex items-center space-x-2.5 w-full h-16 px-6 py-5 cursor-pointer rounded-md ${
                     isSelected ? 'bg-background400 text-black' : 'bg-transparent text-[#9e9892]'
                   }`}
-                  onClick={() => setMoimStatus(item.id)}
+                  onClick={() => setStatus(item.id)}
                 >
                   <Icon className={`w-6 h-6 ${isSelected ? 'fill-black' : 'fill-[#9e9892]'}`} />
                   <span>{item.label}</span>
@@ -132,6 +137,7 @@ const FilterDrawer: React.FC = () => {
             })}
           </div>
         );
+
       default:
         return null;
     }
@@ -139,7 +145,7 @@ const FilterDrawer: React.FC = () => {
 
   return (
     <Drawer>
-      {/* 필터 아이콘을 트리거로 사용 */}
+      {/* 필터 아이콘 버튼 */}
       <DrawerTrigger>
         <FilterActivateIcon className="fill-gray200" />
       </DrawerTrigger>
@@ -150,7 +156,7 @@ const FilterDrawer: React.FC = () => {
         </VisuallyHidden>
 
         <div className="">
-          {/* 닫기버튼 */}
+          {/* 닫기 버튼 */}
           <DrawerClose asChild>
             <div className="w-full h-8 px-5 flex items-center justify-end">
               <DeleteIcon className="fill-gray200 w-6 h-6" />
@@ -199,4 +205,3 @@ const FilterDrawer: React.FC = () => {
 };
 
 export default FilterDrawer;
-
