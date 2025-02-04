@@ -1,6 +1,5 @@
 import { IParticipatedMoim, IMyMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
-import emptyHeart from '@images/mypage/empty-heart.svg';
 import Link from 'next/link';
 import { moimTypeTag, moimTypeIcon } from '@/utils/mypage/statusTags';
 interface Props {
@@ -9,7 +8,7 @@ interface Props {
 }
 
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="bg-background100 rounded-[14px] shadow-md">{children}</div>
+  <div className="bg-background100 rounded-[14px] shadow-md cursor-pointer">{children}</div>
 );
 
 export function GatheringCard({ moim, isReviewed }: Props) {
@@ -19,7 +18,7 @@ export function GatheringCard({ moim, isReviewed }: Props) {
   return (
     <GatheringWrapper>
       <div className="flex flex-col">
-        <div className="flex items-center gap-5 p-4 justify-between">
+        <div className="flex gap-5 p-4 justify-between">
           <div className="flex gap-5 items-start">
             <Image src={moimTypeIcon(moim)} alt="puzzle" width={36} height={36} />
             <div className="flex flex-col gap-2">
@@ -46,9 +45,6 @@ export function GatheringCard({ moim, isReviewed }: Props) {
                 </span>
               </div>
             </div>
-          </div>
-          <div className="absolute top-4 right-4">
-            <Image src={emptyHeart} alt="emptyHeart" width={24} height={24} />
           </div>
         </div>
         {showReviewButton ? (
