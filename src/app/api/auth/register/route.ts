@@ -19,6 +19,11 @@ export async function POST(request: NextRequest) {
     );
   }
 
+  let tagsArray: string[] | null = null;
+  if (tags && tags.length > 0) {
+    tagsArray = tags.filter((tag) => tag !== '');
+  }
+
   const { data: existingUsers, error: existingUsersError } = await supabase
     .from('users')
     .select('*');
@@ -84,7 +89,7 @@ export async function POST(request: NextRequest) {
         nickname,
         position,
         introduction,
-        tags,
+        tags: tagsArray,
       })
       .select()
       .single();
