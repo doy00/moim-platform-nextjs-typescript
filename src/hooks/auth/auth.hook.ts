@@ -83,6 +83,7 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
     mutationFn: deleteSignOut,
     onSuccess: () => {
       removeLocalStorageItem('access_token');
+      removeLocalStorageItem('refresh_token');
       queryClient.setQueryData([QUERY_KEY_ME], null);
     },
   });

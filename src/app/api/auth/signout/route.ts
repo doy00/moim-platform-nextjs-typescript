@@ -10,6 +10,7 @@ export async function DELETE() {
   const { error } = await supabase.auth.signOut();
 
   deleteCookie('access_token');
+  deleteCookie('refresh_token');
 
   if (error) {
     return NextResponse.json({ message: error.message }, { status: 500 });
