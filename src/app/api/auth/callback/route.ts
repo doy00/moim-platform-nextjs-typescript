@@ -93,17 +93,26 @@ export async function GET(request: Request) {
       const isLocalEnv = process.env.NODE_ENV === 'development';
       const tokenParams = `token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}`;
       if (isLocalEnv) {
-        if (next) return NextResponse.redirect(`${origin}/auth/temp?next=${next}&${tokenParams}`);
+        if (next)
+          return NextResponse.redirect(
+            `${origin}/auth/temp?next=${next}&token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}`,
+          );
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-        return NextResponse.redirect(`${origin}/auth/temp?${tokenParams}`);
+        return NextResponse.redirect(
+          `${origin}/auth/temp?token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}`,
+        );
       } else if (forwardedHost) {
         if (next)
           return NextResponse.redirect(
-            `https://${forwardedHost}/auth/temp?next=${next}&${tokenParams}`,
+            `https://${forwardedHost}/auth/temp?next=${next}&token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}`,
           );
-        return NextResponse.redirect(`https://${forwardedHost}/auth/temp?${tokenParams}`);
+        return NextResponse.redirect(
+          `https://${forwardedHost}/auth/temp?token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}`,
+        );
       } else {
-        return NextResponse.redirect(`${origin}/auth/temp?${tokenParams}`);
+        return NextResponse.redirect(
+          `${origin}/auth/temp?next=${next}&token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}`,
+        );
       }
     }
   }
