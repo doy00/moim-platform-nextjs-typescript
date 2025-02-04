@@ -58,6 +58,11 @@ export async function POST(request: Request) {
     value: session?.access_token,
     maxAge: 60 * 60,
   });
+  setCookie({
+    name: 'refresh_token',
+    value: session?.refresh_token,
+    maxAge: 60 * 60 * 24 * 30,
+  });
 
   return NextResponse.json(
     { me, tokens: { accessToken: session?.access_token, refreshToken: session?.refresh_token } },

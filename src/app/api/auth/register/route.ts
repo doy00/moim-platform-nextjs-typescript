@@ -110,6 +110,13 @@ export async function POST(request: NextRequest) {
       maxAge: 60 * 60,
     });
   }
+  if (session?.refresh_token) {
+    setCookie({
+      name: 'refresh_token',
+      value: session.refresh_token,
+      maxAge: 60 * 60 * 24 * 30,
+    });
+  }
 
   return NextResponse.json(
     {
