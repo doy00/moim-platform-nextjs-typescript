@@ -39,15 +39,18 @@ export default function MyProfile() {
               <span className="text-lg font-semibold">{data?.nickname}</span>
               <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
             </div>
-            {/* <Image src={data?.image ?? defaultProfile} alt="profile" width={64} height={64} /> */}
-            <Image src={defaultProfile} alt="profile" width={64} height={64} />
+            <Image src={data?.image ?? defaultProfile} alt="profile" width={64} height={64} />
+            {/* <Image src={defaultProfile} alt="profile" width={64} height={64} /> */}
           </div>
           <div className="flex gap-1">
-            <span className="rounded-[6px] bg-gray50 px-1.5 py-[3px] text-caption-normal font-medium text-gray400">
-              {data?.tags}
-            </span>
-            {/* <span>백엔드</span>
-            <span>기획</span> */}
+            {data?.tags?.map((tag) => (
+              <span
+                key={tag}
+                className="rounded-[6px] bg-gray50 px-1.5 py-[3px] text-caption-normal font-medium text-gray400"
+              >
+                {tag}
+              </span>
+            ))}
           </div>
         </div>
       )}
