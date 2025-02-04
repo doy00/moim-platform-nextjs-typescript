@@ -40,7 +40,9 @@ export async function GET() {
     error: myMoimsError,
   }: { data: TMoimsJoined[] | null; error: PostgrestError | null } = await supabase
     .from('moims')
-    .select('*, reviews (*), participated_moims (*)')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
     .eq('master_email', me.email)
     .order('created_at', { ascending: false });
 

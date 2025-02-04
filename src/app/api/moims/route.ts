@@ -40,7 +40,9 @@ export async function GET(req: NextRequest) {
       error: PostgrestError | null;
     } = await supabase
       .from('moims')
-      .select('*, reviews (*), participated_moims (*)')
+      .select(
+        '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+      )
       .order('created_at', { ascending: false })
       .range(start, end);
 
@@ -79,7 +81,9 @@ export async function GET(req: NextRequest) {
     error: PostgrestError | null;
   } = await supabase
     .from('moims')
-    .select('*, reviews (*), participated_moims (*)')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
     .order('created_at', { ascending: false });
 
   if (moimError) {
@@ -193,7 +197,9 @@ export async function POST(req: NextRequest) {
   }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
     .from('moims')
     .upsert({ ...moimData })
-    .select('*, reviews (*), participated_moims (*)')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
     .single();
 
   if (moimError) {
