@@ -46,7 +46,7 @@ export default function SignUpForm() {
       nickname: data.nickname,
       position: data.position,
       introduction: data.introduction || null,
-      tags: data.tags?.map((tag) => tag.value) || null,
+      tags: data.tags?.filter((tag) => tag.value !== '').map((tag) => tag.value) || null,
     };
     signUp(signUpData);
   };

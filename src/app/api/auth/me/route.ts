@@ -71,6 +71,11 @@ export async function PUT(req: NextRequest) {
 
   const { nickname, position, introduction, tags }: TPutMeInputs = meDataOrigin;
 
+  let tagsArray: string[] | null = null;
+  if (tags && tags.length > 0) {
+    tagsArray = tags.filter((tag) => tag !== '');
+  }
+
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -102,7 +107,7 @@ export async function PUT(req: NextRequest) {
     nickname,
     position,
     introduction,
-    tags,
+    tags: tagsArray,
   };
 
   if (meImageFile) {

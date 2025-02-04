@@ -43,7 +43,7 @@ export async function POST(request: Request) {
   }
 
   const { data: me, error: userError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('id', user.id).single();
+    await supabase.from('users').select('*').eq('email', user.email).single();
 
   if (userError) {
     console.error(userError);
