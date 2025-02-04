@@ -123,6 +123,9 @@ export type Database = {
           id: string
           moim_uuid: string | null
           updated_at: string
+          user_email: string
+          user_image: string | null
+          user_nickname: string | null
           user_uuid: string | null
         }
         Insert: {
@@ -130,6 +133,9 @@ export type Database = {
           id?: string
           moim_uuid?: string | null
           updated_at?: string
+          user_email: string
+          user_image?: string | null
+          user_nickname?: string | null
           user_uuid?: string | null
         }
         Update: {
@@ -137,6 +143,9 @@ export type Database = {
           id?: string
           moim_uuid?: string | null
           updated_at?: string
+          user_email?: string
+          user_image?: string | null
+          user_nickname?: string | null
           user_uuid?: string | null
         }
         Relationships: [
@@ -146,6 +155,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "moims"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "participated_moims_user_email_fkey"
+            columns: ["user_email"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["email"]
+          },
+          {
+            foreignKeyName: "participated_moims_user_image_fkey"
+            columns: ["user_image"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["image"]
+          },
+          {
+            foreignKeyName: "participated_moims_user_nickname_fkey"
+            columns: ["user_nickname"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
           },
           {
             foreignKeyName: "\bparticipated_moims_user_uuid_fkey"
@@ -164,6 +194,9 @@ export type Database = {
           rate: Database["public"]["Enums"]["review_status"]
           review: string
           updated_at: string
+          user_email: string
+          user_image: string | null
+          user_nickname: string
           user_uuid: string
         }
         Insert: {
@@ -173,6 +206,9 @@ export type Database = {
           rate?: Database["public"]["Enums"]["review_status"]
           review?: string
           updated_at?: string
+          user_email: string
+          user_image?: string | null
+          user_nickname: string
           user_uuid?: string
         }
         Update: {
@@ -182,6 +218,9 @@ export type Database = {
           rate?: Database["public"]["Enums"]["review_status"]
           review?: string
           updated_at?: string
+          user_email?: string
+          user_image?: string | null
+          user_nickname?: string
           user_uuid?: string
         }
         Relationships: [
@@ -191,6 +230,27 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "moims"
             referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "reviews_user_email_fkey"
+            columns: ["user_email"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["email"]
+          },
+          {
+            foreignKeyName: "reviews_user_image_fkey"
+            columns: ["user_image"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["image"]
+          },
+          {
+            foreignKeyName: "reviews_user_nickname_fkey"
+            columns: ["user_nickname"]
+            isOneToOne: false
+            referencedRelation: "users"
+            referencedColumns: ["nickname"]
           },
           {
             foreignKeyName: "reviews_user_uuid_fkey"
