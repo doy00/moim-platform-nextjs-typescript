@@ -1,9 +1,8 @@
 import { IParticipatedMoim, IMyMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
-import puzzle from '@images/mypage/puzzle-on.svg';
 import emptyHeart from '@images/mypage/empty-heart.svg';
 import Link from 'next/link';
-
+import { moimTypeTag, moimTypeIcon } from '@/utils/mypage/statusTags';
 interface Props {
   moim: IMyMoim | IParticipatedMoim;
   isReviewed?: boolean;
@@ -21,9 +20,14 @@ export function GatheringCard({ moim, isReviewed }: Props) {
     <GatheringWrapper>
       <div className="flex flex-col">
         <div className="flex items-center gap-5 p-4 justify-between">
-          <div className="flex gap-5">
-            <Image src={puzzle} alt="puzzle" width={36} height={36} />
+          <div className="flex gap-5 items-start">
+            <Image src={moimTypeIcon(moim)} alt="puzzle" width={36} height={36} />
             <div className="flex flex-col gap-2">
+              <div>
+                <span className="h-[24px] bg-background400 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray800">
+                  {moimTypeTag(moim)}
+                </span>
+              </div>
               <div className="flex flex-col gap-2">
                 <p className="font-medium text-body-1-normal color-[#2B2926]">{moim?.title}</p>
                 <div className="flex gap-2 items-center">
@@ -43,7 +47,7 @@ export function GatheringCard({ moim, isReviewed }: Props) {
               </div>
             </div>
           </div>
-          <div>
+          <div className="absolute top-4 right-4">
             <Image src={emptyHeart} alt="emptyHeart" width={24} height={24} />
           </div>
         </div>
