@@ -65,13 +65,8 @@ export default function EditUser() {
   };
 
   const textAreaHandleInput = () => {
-    if (textareaValue) {
-      const text = textareaValue;
-      setIsTextAreaExceeded(text.length > 20);
-      if (text.length > 20) {
-        setTextareaValue(text.slice(0, 20));
-      }
-    }
+    const text = textareaValue;
+    setIsTextAreaExceeded(text.length > 20);
   };
 
   const nicknameInputHandleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -137,7 +132,7 @@ export default function EditUser() {
     console.log('폼 제출 데이터:', editData);
 
     if (!editData.email || !editData.nickname || !editData.position) {
-      console.error('필수 필드가 누락되었습니다');
+      console.error('필수 필드가 누락');
       return;
     }
 
@@ -258,6 +253,7 @@ export default function EditUser() {
               </div>
             </div>
 
+            {/* TODO: 비밀번호 수정 기능 추가 수정 필요 */}
             {/* <div className="flex flex-col gap-3">
               <label htmlFor="password" className="flex justify-start items-center gap-[2px]">
                 <span className="text-body-2-nomal font-medium text-gray-800">비밀번호</span>
@@ -309,13 +305,15 @@ export default function EditUser() {
                 <textarea
                   id="textarea"
                   value={textareaValue}
-                  onChange={(e) => setTextareaValue(e.target.value)}
+                  onChange={(e) => {
+                    setTextareaValue(e.target.value);
+                    setIsTextAreaExceeded(e.target.value.length >= 20);
+                  }}
                   placeholder="소개를 입력해주세요"
                   className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 resize-none outline-none ${
                     isTextAreaExceeded ? 'border-2 border-error focus:border-error' : ''
                   }`}
                   maxLength={20}
-                  onInput={textAreaHandleInput}
                 />
                 <span
                   className={`text-label-normal font-medium ${
@@ -328,11 +326,17 @@ export default function EditUser() {
             </div>
 
             <div className="flex flex-col gap-3">
-              <div>
+              <div className="flex items-center justify-between">
                 <label htmlFor="tag" className="text-body-2-nomal font-medium text-gray-800">
                   태그
                 </label>
-                <div />
+                <div className="flex items-center gap-1.5">
+                  <span className="text-gray600 font-medium text-caption-normal">
+                    {tags.length}
+                  </span>
+                  <hr className="w-[1px] h-1.5 bg-gray300" />
+                  <span className="text-gray300 font-medium text-caption-normal">3</span>
+                </div>
               </div>
               <div className="relative flex flex-col gap-2">
                 <div className="flex flex-wrap gap-2">
@@ -368,9 +372,10 @@ export default function EditUser() {
                     </div>
                   ))}
                 </div>
+                {/* TODO: 태그 글자수 초과 시 에러 메시지 표시 수정 */}
                 <span
                   className={`text-label-normal font-medium ${
-                    tags.length > 3 ? 'text-error' : 'text-gray300'
+                    tags.values.length > 5 ? 'text-error' : 'text-gray300'
                   }`}
                 >
                   최대 5글자까지 입력 가능해요
