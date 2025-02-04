@@ -10,6 +10,15 @@ export interface IUser {
   updated_at: string;
 }
 
+export interface IMeJsonData {
+  email: string;
+  password: string;
+  nickname: string;
+  position: string;
+  introduction: string;
+  tags: string[];
+}
+
 export interface IUserEdit {
   email: string;
   password: string;
@@ -17,6 +26,7 @@ export interface IUserEdit {
   position: string;
   introduction: string;
   tags: string[];
+  image?: File;
 }
 
 export interface IEditUserResponse {
@@ -29,4 +39,13 @@ export interface IEditUserResponse {
   position: string;
   tags: string[] | null;
   updated_at: string;
+}
+
+export interface IMeJsonData {
+  email: string;
+  password: string;
+  nickname: string;
+  position: string;
+  introduction: string;
+  tags: string[];
 }

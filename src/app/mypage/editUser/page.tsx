@@ -6,31 +6,63 @@ import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import defaultProfile from '@images/mypage/profile-edit-default.svg';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useEditUserMutation } from '@/hooks/mypage/queries/useUserQuery';
+import { Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
+import AuthSelect from '@/components/auth/AuthSelect';
+import { cn } from '@/utils/auth/ui.util';
+import { TAuthFormValues } from '@/types/auth/auth.type';
+import { IUserEdit } from '@/types/mypage/user';
 
 export default function EditUser() {
-  const { data, isLoading } = useUserQuery();
+  const { data, isLoading, error } = useUserQuery();
   const { mutate: editUser, isPending: isEditing } = useEditUserMutation();
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
+  const [previewImage, setPreviewImage] = useState<string | null>(null);
+  const [image, setImage] = useState<File | null>(null);
   const [emailInputValue, setEmailInputValue] = useState('');
   const [nicknameInputValue, setNicknameInputValue] = useState('');
   const [textareaValue, setTextareaValue] = useState('');
   const [tags, setTags] = useState<string[]>([]);
   const [tagInputValue, setTagInputValue] = useState('');
+  const [position, setPosition] = useState('');
+
+  const [passwordInputValue, setPasswordInputValue] = useState('');
 
   const [isEmailInputExceeded, setIsEmailInputExceeded] = useState(false);
   const [isNicknameInputExceeded, setIsNicknameInputExceeded] = useState(false);
   const [isTextAreaExceeded, setIsTextAreaExceeded] = useState(false);
 
+  const methods = useForm<TAuthFormValues>({
+    defaultValues: {
+      tags: [{ value: '' }],
+    },
+  });
+
   useEffect(() => {
     if (data) {
-      setEmailInputValue(data?.email || '');
-      setNicknameInputValue(data?.nickname || '');
-      setTextareaValue(data?.introduction || '');
-      setTags(data?.tags || []);
+      setEmailInputValue(data.email || '');
+      setNicknameInputValue(data.nickname || '');
+      setPosition(data.position || '');
+      setTextareaValue(data.introduction || '');
+      setTags(data.tags || []);
     }
   }, [data]);
+
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (file) {
+      setImage(file);
+      const imageUrl = URL.createObjectURL(file);
+      setPreviewImage(imageUrl);
+    }
+  };
 
   const textAreaHandleInput = () => {
     if (textareaValue) {
@@ -79,18 +111,37 @@ export default function EditUser() {
     }
   };
 
+  const handlePositionChange = (value: string) => {
+    setPosition(value);
+  };
+
+  // const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const text = e.target.value;
+  //   setPasswordInputValue(text);
+  // };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
 
-    editUser({
+    const editData: IUserEdit = {
       email: emailInputValue,
       nickname: nicknameInputValue,
-      introduction: textareaValue,
-      tags: tags,
-      password: '',
-      position: data?.position || '', // 기존 position 유지
-    });
+      introduction: textareaValue || '',
+      tags: tags || [],
+      password: passwordInputValue || '',
+      position: position || '',
+      image: image || undefined,
+    };
+
+    console.log('폼 제출 데이터:', editData);
+
+    if (!editData.email || !editData.nickname || !editData.position) {
+      console.error('필수 필드가 누락되었습니다');
+      return;
+    }
+
+    editUser(editData);
   };
 
   const isFormValid = tags.length > 0 && tags.length <= 3 && textareaValue;
@@ -103,13 +154,51 @@ export default function EditUser() {
     );
   }
 
+  if (error) {
+    return (
+      <div className="flex flex-col gap-5 justify-center items-center h-screen">
+        <p className="text-error">사용자 정보를 불러오는데 실패했습니다.</p>
+        <Link href="/mypage" className="text-orange200">
+          마이페이지로 돌아가기
+        </Link>
+      </div>
+    );
+  }
+
+  if (!data) {
+    return (
+      <div className="flex flex-col gap-5 justify-center items-center h-screen">
+        <p>사용자 정보가 없습니다.</p>
+        <Link href="/mypage" className="text-orange200">
+          마이페이지로 돌아가기
+        </Link>
+      </div>
+    );
+  }
+
   return (
     <>
       <Header />
       <div className="h-auto flex flex-col gap-4 mx-auto max-w-[584px] md:bg-background300 md:rounded-[32px] md:px-11 md:py-10 md:my-14 lg:my-10">
         <div className="py-10 px-4">
           <div className="flex flex-col items-center gap-6">
-            <Image src={data?.image ?? defaultProfile} alt="profile" width={86} height={86} />
+            <div>
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileChange}
+                accept="image/*"
+                className="hidden"
+              />
+              <Image
+                src={previewImage || data?.image || defaultProfile}
+                alt="profile"
+                width={86}
+                height={86}
+                className="cursor-pointer rounded-full"
+                onClick={handleImageClick}
+              />
+            </div>
             <Link
               href="/mypage/editPassword"
               className="text-label-normal font-medium text-orange200"
@@ -120,7 +209,9 @@ export default function EditUser() {
 
           <form className="flex flex-col gap-6 mt-8" onSubmit={handleSubmit}>
             <div className="flex flex-col gap-3">
-              <label htmlFor="email">이메일 주소</label>
+              <label htmlFor="email" className="text-body-2-nomal font-medium text-gray-800">
+                이메일 주소
+              </label>
               <input
                 type="text"
                 id="email"
@@ -142,7 +233,9 @@ export default function EditUser() {
             )}
 
             <div className="flex flex-col gap-3">
-              <label htmlFor="nickName">닉네임</label>
+              <label htmlFor="nickName" className="text-body-2-nomal font-medium text-gray-800">
+                닉네임
+              </label>
               <div className="flex flex-col gap-1.5">
                 <input
                   type="text"
@@ -165,8 +258,53 @@ export default function EditUser() {
               </div>
             </div>
 
+            {/* <div className="flex flex-col gap-3">
+              <label htmlFor="password" className="flex justify-start items-center gap-[2px]">
+                <span className="text-body-2-nomal font-medium text-gray-800">비밀번호</span>
+              </label>
+              <input
+                type="password"
+                id="password"
+                placeholder="비밀번호를 입력해주세요"
+                className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none"
+                value={passwordInputValue}
+                onChange={handlePasswordChange}
+              />
+            </div> */}
+
             <div className="flex flex-col gap-3">
-              <label htmlFor="textarea">소개</label>
+              <label htmlFor="position" className="flex justify-start items-center gap-[2px]">
+                <span className="text-body-2-nomal font-medium text-gray-800">직군</span>
+                <span className="text-body-2-nomal font-medium text-error pt-1">*</span>
+              </label>
+              <Controller
+                name="position"
+                control={methods.control}
+                render={({ field: { onChange, value } }) => (
+                  <AuthSelect
+                    options={[
+                      { value: 'PM', label: 'PM' },
+                      { value: 'DESIGNER', label: '디자이너' },
+                      { value: 'FRONTEND', label: '프론트 개발자' },
+                      { value: 'BACKEND', label: '백엔드 개발자' },
+                    ]}
+                    className={cn(
+                      'h-[54px]',
+                      methods.formState.errors.position && 'focus-visible:ring-error',
+                    )}
+                    placeholder="직군을 선택해주세요"
+                    value={position}
+                    onChange={handlePositionChange}
+                  />
+                )}
+                rules={{ required: '직군을 선택해주세요' }}
+              />
+            </div>
+
+            <div className="flex flex-col gap-3">
+              <label htmlFor="textarea" className="text-body-2-nomal font-medium text-gray-800">
+                소개
+              </label>
               <div className="flex flex-col gap-1.5">
                 <textarea
                   id="textarea"
@@ -191,7 +329,9 @@ export default function EditUser() {
 
             <div className="flex flex-col gap-3">
               <div>
-                <label htmlFor="tag">태그</label>
+                <label htmlFor="tag" className="text-body-2-nomal font-medium text-gray-800">
+                  태그
+                </label>
                 <div />
               </div>
               <div className="relative flex flex-col gap-2">

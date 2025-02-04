@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUserInfo, editUserInfo } from '@/apis/userInfo';
-import { IUser, IUserEdit } from '@/types/mypage/user';
-
+import { IUserEdit, IEditUserResponse } from '@/types/mypage/user';
+import { useRouter } from 'next/navigation';
 export const useUserQuery = () => {
   return useQuery({
     queryKey: ['getUserInfo'],
@@ -13,12 +13,19 @@ export const useUserQuery = () => {
 
 export const useEditUserMutation = () => {
   const queryClient = useQueryClient();
-  const { data: user } = useUserQuery();
+  const router = useRouter();
 
-  return useMutation({
+  return useMutation<IEditUserResponse, Error, IUserEdit>({
     mutationFn: (editData: IUserEdit) => editUserInfo(editData),
-    onSuccess: () => {
+    onSuccess: (data: IEditUserResponse) => {
       queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
+      router.push('/mypage');
+    },
+    onError: (error: any) => {
+      console.error('수정오류:', error);
+      console.error('에러응답:', error.response?.data);
+      console.error('에러상태:', error.response?.status);
+      console.error('에러헤더:', error.response?.headers);
     },
   });
 };
