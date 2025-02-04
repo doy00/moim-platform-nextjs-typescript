@@ -4,8 +4,6 @@ import { useAuth } from '@/hooks/auth/auth.hook';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import { useRouter } from 'next/navigation';
-import { useEffect } from 'react';
 import AuthKakao from './AuthKakao';
 import AuthLoading from './AuthLoading';
 import DothemeetCharacter from './DothemeetCharacter';
