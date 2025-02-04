@@ -19,5 +19,6 @@ export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
     participantsMoims: moim.participated_moims,
     reviews: moim.reviews,
     isConfirmed: moim.is_confirmed,
+    online: moim.online,
   }));
 }

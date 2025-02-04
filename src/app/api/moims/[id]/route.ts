@@ -94,6 +94,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     master_email: existingMoim?.master_email,
     images: existingMoim?.images,
     updated_at: new Date().toISOString(),
+    online: moimDataOrigin.online,
   };
 
   if (moimImageFile) {
