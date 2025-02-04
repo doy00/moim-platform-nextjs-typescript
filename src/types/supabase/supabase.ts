@@ -62,6 +62,7 @@ export type Database = {
           master_email: string
           max_participants: number
           min_participants: number
+          online: boolean
           participants_counts: number
           recruitment_deadline: string
           reviews_counts: number
@@ -83,6 +84,7 @@ export type Database = {
           master_email?: string
           max_participants?: number
           min_participants?: number
+          online?: boolean
           participants_counts?: number
           recruitment_deadline?: string
           reviews_counts?: number
@@ -104,6 +106,7 @@ export type Database = {
           master_email?: string
           max_participants?: number
           min_participants?: number
+          online?: boolean
           participants_counts?: number
           recruitment_deadline?: string
           reviews_counts?: number
