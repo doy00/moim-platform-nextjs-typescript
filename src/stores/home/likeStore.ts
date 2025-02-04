@@ -1,45 +1,58 @@
 import { create } from 'zustand';
-import axiosInstance from '@/libs/home/home-axios';
-import { LikeState } from '@/types/home/t-likeState';
+import { createClient } from '@/utils/supabase/client';
+
+const supabase = createClient();
+
+interface LikeState {
+  likes: Set<string>;
+  toggleLike: (moimId: string) => Promise<void>;
+  fetchLikes: () => Promise<void>;
+}
 
 export const useLikeStore = create<LikeState>((set, get) => ({
   likes: new Set(),
 
-  toggleLike: async (moimId: number) => {
-    const likes = new Set(get().likes);
-    const isLiked = likes.has(moimId);
+  toggleLike: async (moimId: string) => {
+    const currentLikes = new Set(get().likes);
+    const isLiked = currentLikes.has(moimId);
+    const user = (await supabase.auth.getUser()).data.user;
 
-    // 낙관적 업데이트
-    if (isLiked) {
-      likes.delete(moimId); // 찜 해제
-    } else {
-      likes.add(moimId); // 찜 추가
-    }
-    set({ likes });
+    if (!user) return;
 
     try {
       if (isLiked) {
-        await axiosInstance.delete(`/moim/like/${moimId}`);
+        await supabase
+          .from('liked_moims')
+          .delete()
+          .eq('moim_uuid', moimId)
+          .eq('user_uuid', user.id);
+        currentLikes.delete(moimId);
       } else {
-        await axiosInstance.post(`/moim/like`, { moimId });
+        await supabase
+          .from('liked_moims')
+          .insert({ moim_uuid: moimId, user_uuid: user.id });
+        currentLikes.add(moimId);
       }
+
+      set({ likes: new Set(currentLikes) });
     } catch (error) {
       console.error('Failed to toggle like:', error);
-
-      // 실패 시 롤백
-      if (isLiked) {
-        likes.add(moimId);
-      } else {
-        likes.delete(moimId);
-      }
-      set({ likes });
     }
   },
 
   fetchLikes: async () => {
     try {
-      const response = await axiosInstance.get<{ moimId: number }[]>('/moim/likes');
-      const likes = new Set(response.data.map((item) => item.moimId));
+      const user = (await supabase.auth.getUser()).data.user;
+      if (!user) return;
+
+      const { data, error } = await supabase
+        .from('liked_moims')
+        .select('moim_uuid')
+        .eq('user_uuid', user.id);
+
+      if (error) throw error;
+
+      const likes = new Set(data.map((item) => item.moim_uuid));
       set({ likes });
     } catch (error) {
       console.error('Failed to fetch likes:', error);
