@@ -44,8 +44,8 @@ export type TMoimClient = {
   reviewsCount: number;
   isConfirmed: boolean;
   likedUsers: string[];
-  participatedUsers: Partial<TParticipatedMoims>[];
-  reviews: Partial<TReviews>[];
+  participatedUsers: TParticipatedUserClient[];
+  reviews: TReviewClient[];
 };
 
 export type TMoimsJoined = TMoims & {
