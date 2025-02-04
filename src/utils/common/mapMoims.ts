@@ -1,4 +1,9 @@
-import { TMoimClient, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+import {
+  TMoimClient,
+  TMoimsJoined,
+  TParticipatedUserClient,
+  TReviewClient,
+} from '@/types/supabase/supabase-custom.type';
 
 export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
   return moims.map((moim) => ({
@@ -16,8 +21,26 @@ export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
     likes: moim.liked_counts,
     participants: moim.participants_counts,
     reviewsCount: moim.reviews_counts,
-    participatedUsers: moim.participated_moims,
-    reviews: moim.reviews,
+    participatedUsers: moim.participated_moims.map(
+      (participatedUser) =>
+        ({
+          userUuid: participatedUser.user_uuid,
+          userEmail: participatedUser.user_email,
+          userImage: participatedUser.user_image,
+          userNickname: participatedUser.user_nickname,
+        }) as TParticipatedUserClient,
+    ),
+    reviews: moim.reviews.map(
+      (review) =>
+        ({
+          userUuid: review.user_uuid,
+          review: review.review,
+          rate: review.rate,
+          userEmail: review.user_email,
+          userImage: review.user_image,
+          userNickname: review.user_nickname,
+        }) as TReviewClient,
+    ),
     isConfirmed: moim.is_confirmed,
     online: moim.online,
     likedUsers: moim.liked_moims.map((likedMoim) => likedMoim.user_uuid as string),
