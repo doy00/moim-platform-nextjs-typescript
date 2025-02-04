@@ -69,11 +69,6 @@ export async function POST(request: Request) {
     secure: process.env.NODE_ENV === 'production',
     sameSite: 'strict',
   });
-  setCookie({
-    name: 'refresh_token',
-    value: session?.refresh_token,
-    maxAge: 60 * 60 * 24 * 30,
-  });
 
   return NextResponse.json(
     { me, tokens: { accessToken: session?.access_token, refreshToken: session?.refresh_token } },

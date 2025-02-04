@@ -87,11 +87,6 @@ export async function GET(request: Request) {
         secure: process.env.NODE_ENV === 'production',
         sameSite: 'strict',
       });
-      setCookie({
-        name: 'refresh_token',
-        value: data.session?.refresh_token,
-        maxAge: 60 * 60 * 24 * 30,
-      });
 
       // console.log('data when not error ===========>', data);
       const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
