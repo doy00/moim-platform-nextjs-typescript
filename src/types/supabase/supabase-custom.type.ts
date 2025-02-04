@@ -44,11 +44,14 @@ export type TMoimClient = {
   reviewsCount: number;
   isConfirmed: boolean;
   likedUsers: string[];
-  participatedUsers: TParticipatedUserClient[];
-  reviews: TReviewClient[];
+  participatedUsers: Partial<TParticipatedMoims>[];
+  reviews: Partial<TReviews>[];
 };
 
 export type TMoimsJoined = TMoims & {
+  reviews: Partial<TReviews>[];
+  participated_moims: Partial<TParticipatedMoims>[];
+  liked_moims: Partial<TLikedMoims>[];
   reviews: Partial<TReviews>[];
   participated_moims: Partial<TParticipatedMoims>[];
   liked_moims: Partial<TLikedMoims>[];
@@ -59,11 +62,17 @@ export type TLikedMoimsJoined = TLikedMoims & {
     reviews: Partial<TReviews>[];
     participated_moims: Partial<TParticipatedMoims>[];
     liked_moims: Partial<TLikedMoims>[];
+    reviews: Partial<TReviews>[];
+    participated_moims: Partial<TParticipatedMoims>[];
+    liked_moims: Partial<TLikedMoims>[];
   };
 };
 
 export type TParticipatedMoimsJoined = TParticipatedMoims & {
   moims: TMoims & {
+    reviews: Partial<TReviews>[];
+    participated_moims: Partial<TParticipatedMoims>[];
+    liked_moims: Partial<TLikedMoims>[];
     reviews: Partial<TReviews>[];
     participated_moims: Partial<TParticipatedMoims>[];
     liked_moims: Partial<TLikedMoims>[];
