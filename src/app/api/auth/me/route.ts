@@ -57,6 +57,11 @@ export async function GET(request: NextRequest) {
 export async function PUT(req: NextRequest) {
   const formData = await req.formData();
   const meDataString = formData.get('me_json');
+
+  if (!meDataString) {
+    return NextResponse.json({ message: 'formData에 me_json이 없습니다' }, { status: 400 });
+  }
+
   const meImageFile = formData.get('me_image') as File;
   const meDataOrigin = JSON.parse(meDataString as string);
 
