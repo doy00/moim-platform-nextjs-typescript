@@ -2,6 +2,7 @@
 import { HeartIcon } from "./icons/HeartIcon";
 import { HeartEmptyIcon } from "./icons/HeartEmptyIcon";
 import { ToasterDark } from "./ToasterDark";
+import { LikeButton } from "./LikeButton";
 
 interface IFloatingBar {
   onHeartClick: () => void;
@@ -31,7 +32,12 @@ export const FloatingBar = ({
     >
       <div className="flex items-center gap-3">
         {/* 찜하기 버튼 */}
-        <button
+        <LikeButton 
+          onHeartClick={onHeartClick}
+          isLiked={isLiked}
+          
+        />
+        {/* <button
           onClick={onHeartClick}
           className={`flex items-center justify-center w-[72px] h-14 p-4 rounded-2xl bg-gray100 transition-all duration-200 hover:bg-gray200    
           
@@ -58,7 +64,7 @@ export const FloatingBar = ({
               <HeartEmptyIcon />
             </div>
           </div>
-        </button>
+        </button> */}
 
         {/* 신청하기 버튼 */}
         <button 

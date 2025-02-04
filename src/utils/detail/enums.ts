@@ -26,7 +26,7 @@ export const getMoimStatusText = (moimStatus: EMoimStatus): string => {
   return statusMap[moimStatus] || statusMap.RECRUIT
 }
 
-// 3. review_status Enum을 rate(리뷰평점) 텍스트로 변환하는 함수
+// 3-1. review_status Enum을 rate(리뷰평점) 텍스트로 변환하는 함수
 export const getRate = (reviewStatus: ERate): string => {
   // 리뷰 평점별 매핑 객체를 만들어 관리
   const rateMap: Record<ERate, string> = {
@@ -36,6 +36,16 @@ export const getRate = (reviewStatus: ERate): string => {
   };
   // 매핑된 값을 반환. 매핑되지 않은 값이 들어오면 'GOOD'의 값을 기본으로 반환
   return rateMap[reviewStatus] || rateMap.GOOD
+}
+
+// 3-2. review.rate Chip 컴포넌트 variant prop과 매칭되도록 변환하는 함수
+export const getRateVariant = (rate: ERate): 'soso' | 'good' | 'recommend' => {
+  const variantMap: Record<ERate, 'soso' | 'good' | 'recommend'> = {
+    SOSO: 'soso',
+    GOOD: 'good',
+    RECOMMEND: 'recommend'
+  };
+  return variantMap[rate] || 'good';
 }
 
 // 4. user_position Enum을 position(직군) 텍스트로 변환하는 함수
