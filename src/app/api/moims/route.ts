@@ -160,6 +160,7 @@ export async function POST(req: NextRequest) {
     status,
     master_email: user?.email,
     images: null,
+    online: moimDataOrigin.online,
   };
 
   // 이미지 파일이 있는 경우
