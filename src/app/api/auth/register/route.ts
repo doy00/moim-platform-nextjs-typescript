@@ -108,6 +108,9 @@ export async function POST(request: NextRequest) {
       name: 'access_token',
       value: session.access_token,
       maxAge: 60 * 60,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
     });
   }
   if (session?.refresh_token) {
@@ -115,6 +118,9 @@ export async function POST(request: NextRequest) {
       name: 'refresh_token',
       value: session.refresh_token,
       maxAge: 60 * 60 * 24 * 30,
+      httpOnly: true,
+      secure: process.env.NODE_ENV === 'production',
+      sameSite: 'strict',
     });
   }
 
