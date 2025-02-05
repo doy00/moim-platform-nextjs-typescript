@@ -39,7 +39,13 @@ export default function MyProfile() {
               <span className="text-lg font-semibold">{data?.nickname}</span>
               <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
             </div>
-            <Image src={data?.image ?? defaultProfile} alt="profile" width={64} height={64} />
+            <Image
+              src={data?.image ?? defaultProfile}
+              alt="profile"
+              width={64}
+              height={64}
+              className="rounded-full w-16 h-16"
+            />
             {/* <Image src={defaultProfile} alt="profile" width={64} height={64} /> */}
           </div>
           <div className="flex gap-1">

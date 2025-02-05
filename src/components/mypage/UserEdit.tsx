@@ -201,7 +201,7 @@ export default function UserEdit() {
                 alt="profile"
                 width={86}
                 height={86}
-                className="cursor-pointer rounded-full"
+                className="cursor-pointer rounded-full w-16 h-16"
                 onClick={handleImageClick}
               />
             </div>
