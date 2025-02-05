@@ -1,7 +1,7 @@
 // 모임 신청하기 커스텀 훅
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { joinMoim } from "@/apis/detail/detail.api";
-import { toast } from "sonner";
+import { joinMoim } from '@/apis/detail/detail.api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { toast } from 'sonner';
 
 interface UseJoinMoimOptions {
   successMessage?: string;
@@ -10,18 +10,18 @@ interface UseJoinMoimOptions {
 }
 
 export const useJoinMoim = (options: UseJoinMoimOptions = {}) => {
-  // const [isJoined, setIsJoined] = useState(false); 
+  // const [isJoined, setIsJoined] = useState(false);
   const queryClient = useQueryClient();
 
   // const joinMoim = useCallback(async (moimId: number) => {
-  const { 
-    successMessage = "모임 신청이 완료되었어요", 
-    errorMessage = "잠시후 다시 시도해주세요",
-    onSuccess: onSuccessCallback
+  const {
+    successMessage = '모임 신청이 완료되었어요',
+    errorMessage = '잠시후 다시 시도해주세요',
+    onSuccess: onSuccessCallback,
   } = options;
 
   const mutation = useMutation({
-    mutationFn: (moimId: number) => joinMoim(moimId),
+    mutationFn: (moimId: string) => joinMoim(moimId),
     onSuccess: () => {
       // [ ] 더알아보기: 관련된 쿼리 무효화
       queryClient.invalidateQueries({ queryKey: ['detail-info'] });
@@ -30,14 +30,13 @@ export const useJoinMoim = (options: UseJoinMoimOptions = {}) => {
 
       toast.success(successMessage);
       onSuccessCallback?.();
-
     },
     onError: (error: Error) => {
       console.error('모임 신청하기 실패:', error);
       toast.error(errorMessage);
-    }
+    },
   });
-  
+
   /* useCallback 사용
   // const handleJoinClick = async () => {
     setIsJoined(true);
@@ -61,9 +60,9 @@ export const useJoinMoim = (options: UseJoinMoimOptions = {}) => {
 }, [options]);
 */
 
-  return { 
+  return {
     joinMoim: mutation.mutate,
-    isJoining: mutation.isPending,  // 로딩 상태
-    error: mutation.error          // 에러 상태
+    isJoining: mutation.isPending, // 로딩 상태
+    error: mutation.error, // 에러 상태
   };
 };
