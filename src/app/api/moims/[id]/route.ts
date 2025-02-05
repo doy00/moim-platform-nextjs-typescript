@@ -16,7 +16,9 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     error: moimError,
   }: { data: TMoimsJoined | null; error: PostgrestError | null } = await supabase
     .from('moims')
-    .select('*, reviews (*), participated_moims (*)')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
     .eq('id', id)
     .single();
 
@@ -126,7 +128,9 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     .from('moims')
     .update({ ...moimData })
     .eq('id', id)
-    .select('*, reviews (*), participated_moims (*)')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
     .single();
 
   if (updatedMoimError) {

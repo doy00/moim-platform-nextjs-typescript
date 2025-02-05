@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import { getMyMoim } from '@/apis/myMoim';
-import { getOwnMoim } from '@/apis/ownMoim';
+import { getParticipatedMoim } from '@/apis/participatedMoim';
 
 export const useMyMoimQuery = () => {
   return useQuery({
@@ -11,10 +11,10 @@ export const useMyMoimQuery = () => {
   });
 };
 
-export const useOwnMoimQuery = () => {
+export const useParticipatedMoimQuery = () => {
   return useQuery({
-    queryKey: ['getOwnMoim'],
-    queryFn: getOwnMoim,
+    queryKey: ['getParticipatedMoim'],
+    queryFn: getParticipatedMoim,
     staleTime: 1000 * 60,
     refetchOnMount: false,
   });

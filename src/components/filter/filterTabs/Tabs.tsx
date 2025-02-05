@@ -8,7 +8,7 @@ import wavingHand from '@images/mypage/waving-hand.svg';
 
 const TabWrapper = ({ children }: { children: React.ReactNode }) => {
   return (
-    <div className="flex items-center justify-start gap-2.5 bg-background300 border border-gray100 rounded-2xl px-6 py-4 hover:bg-background400 hover:border-gray200 ">
+    <div className="flex items-center justify-start gap-2.5 bg-background300 border border-gray100 rounded-2xl px-6 py-4 hover:bg-background400 hover:border-gray200 cursor-pointer">
       {children}
     </div>
   );

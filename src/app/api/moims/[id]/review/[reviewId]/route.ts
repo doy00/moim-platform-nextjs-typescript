@@ -1,4 +1,5 @@
 import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
+import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -43,7 +44,28 @@ export async function PUT(
     return NextResponse.json({ message: updatedReviewError?.message }, { status: 401 });
   }
 
-  return NextResponse.json(updatedReview, { status: 200 });
+  const { data: moim, error: moimError } = await supabase
+    .from('moims')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
+    .eq('id', id)
+    .single();
+
+  if (moimError) {
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+  }
+
+  if (!moim) {
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+  }
+
+  const response = {
+    message: '리뷰 수정이 성공적으로 완료되었습니다',
+    data: mapMoimsToClient([moim])[0],
+  };
+
+  return NextResponse.json(response, { status: 200 });
 }
 
 export async function DELETE(
@@ -81,5 +103,26 @@ export async function DELETE(
     return NextResponse.json({ message: deletedReviewError?.message }, { status: 401 });
   }
 
-  return NextResponse.json({ data: deletedReview, message: '리뷰 삭제 완료' }, { status: 200 });
+  const { data: moim, error: moimError } = await supabase
+    .from('moims')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
+    .eq('id', id)
+    .single();
+
+  if (moimError) {
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+  }
+
+  if (!moim) {
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+  }
+
+  const response = {
+    message: '리뷰 삭제가 성공적으로 완료되었습니다',
+    data: mapMoimsToClient([moim])[0],
+  };
+
+  return NextResponse.json(response, { status: 200 });
 }

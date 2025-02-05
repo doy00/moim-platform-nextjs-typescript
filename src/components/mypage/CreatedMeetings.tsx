@@ -2,18 +2,19 @@ import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringC
 import Image from 'next/image';
 import emptyDudu from '@images/mypage/dudu-empty.svg';
 import Link from 'next/link';
-import { useOwnMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
+import { useMyMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { motion } from 'framer-motion';
-import { IOwnMoim } from '@/types/mypage/moim.type';
+import emptyHeart from '@images/mypage/empty-heart.svg';
+// import fullHeart from '@images/mypage/heart.svg';
 
 export default function CreatedMeetings() {
-  const { data, isLoading } = useOwnMoimQuery();
+  const { data, isLoading } = useMyMoimQuery();
 
   if (isLoading) {
     return <GatheringSkeleton />;
   }
 
-  if (!data?.data || data?.data.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center h-full gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
@@ -25,7 +26,7 @@ export default function CreatedMeetings() {
           whileTap={{ scale: 0.9 }}
           transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         >
-          <Link href="/moim/create" className="rounded-xl bg-gray950 px-5 py-2">
+          <Link href="/create" className="rounded-xl bg-gray950 px-5 py-2">
             <span className="font-semibold text-label-normal text-gray50">모임 개설하기</span>
           </Link>
         </motion.div>
@@ -35,8 +36,15 @@ export default function CreatedMeetings() {
 
   return (
     <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
-      {data.data.map((moim) => (
-        <GatheringCard key={moim.moimId} moim={moim} />
+      {data.map((moim) => (
+        <div key={moim.moimId} className="relative">
+          <div className="absolute top-4 right-4 z-10">
+            <Image src={emptyHeart} alt="Heart" width={24} height={24} />
+          </div>
+          <Link href={`/detail/${moim.moimId}`}>
+            <GatheringCard moim={moim} />
+          </Link>
+        </div>
       ))}
     </div>
   );

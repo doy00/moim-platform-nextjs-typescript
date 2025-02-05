@@ -24,9 +24,6 @@ export default function Filter() {
       <DrawerContent className="h-[80vh] max-w-[960px] rounded-3xl mx-auto bg-background300 ">
         <DrawerHeader>
           <DrawerTitle className="sr-only">필터 옵션</DrawerTitle>
-          {/* <div className="border border-background400 rounded-xl bg-background100 px-3.5 py-3">
-            <Image src={filterIcon} alt="filter" width={24} height={24} />
-          </div> */}
           <DrawerClose className="flex justify-end">
             <Image src={closeIcon} alt="close" width={24} height={24} />
           </DrawerClose>

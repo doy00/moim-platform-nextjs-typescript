@@ -11,6 +11,22 @@ export type ECategory = Enums<'moim_category'>;
 export type EMoimStatus = Enums<'moim_status'>;
 export type EPosition = Enums<'user_position'>;
 
+export type TParticipatedUserClient = {
+  userUuid: string;
+  userEmail: string;
+  userImage: string;
+  userNickname: string;
+};
+
+export type TReviewClient = {
+  userUuid: string;
+  review: string;
+  rate: ERate;
+  userEmail: string;
+  userImage: string;
+  userNickname: string;
+};
+
 export type TMoimClient = {
   moimId: string;
   title: string;
@@ -27,25 +43,30 @@ export type TMoimClient = {
   participants: number;
   reviewsCount: number;
   isConfirmed: boolean;
+  likedUsers: string[];
+  participatedUsers: TParticipatedUserClient[];
+  reviews: TReviewClient[];
 };
 
 export type TMoimsJoined = TMoims & {
-  reviews: TReviews[];
-  participated_moims: TParticipatedMoims[];
-  liked_moims?: TLikedMoims[];
+  reviews: Partial<TReviews>[];
+  participated_moims: Partial<TParticipatedMoims>[];
+  liked_moims: Partial<TLikedMoims>[];
 };
 
 export type TLikedMoimsJoined = TLikedMoims & {
   moims: TMoims & {
-    reviews: TReviews[];
-    participated_moims: TParticipatedMoims[];
+    reviews: Partial<TReviews>[];
+    participated_moims: Partial<TParticipatedMoims>[];
+    liked_moims: Partial<TLikedMoims>[];
   };
 };
 
 export type TParticipatedMoimsJoined = TParticipatedMoims & {
   moims: TMoims & {
-    reviews: TReviews[];
-    participated_moims: TParticipatedMoims[];
+    reviews: Partial<TReviews>[];
+    participated_moims: Partial<TParticipatedMoims>[];
+    liked_moims: Partial<TLikedMoims>[];
   };
 };
 

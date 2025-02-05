@@ -1,5 +1,5 @@
-import SwitchFilter from '@/components/mypage/filterBar/switch/SwitchFilter';
-import DropDown from '@/components/mypage/filterBar/dropDown/DropDown';
+import SwitchFilter from '@/components/mypage/filterBar/SwitchFilter';
+import DropDown from '@/components/mypage/filterBar/DropDown';
 import Filter from '@/components/filter/Filter';
 
 export default function FilterBar() {

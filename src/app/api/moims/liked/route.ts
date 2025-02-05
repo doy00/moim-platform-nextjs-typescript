@@ -49,7 +49,9 @@ export async function GET(req: NextRequest) {
     error: moimsError,
   }: { data: TLikedMoimsJoined[] | null; error: PostgrestError | null } = await supabase
     .from('liked_moims')
-    .select('*, moims (*, reviews (*), participated_moims (*))')
+    .select(
+      '*, moims (*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
+    )
     .eq('user_uuid', foundUser.id)
     .order('created_at', { ascending: false });
 
@@ -66,6 +68,7 @@ export async function GET(req: NextRequest) {
     ...moim.moims,
     reviews: moim.moims.reviews,
     participated_moims: moim.moims.participated_moims,
+    liked_moims: moim.moims.liked_moims,
   }));
 
   const moimsToClient: TMoimClient[] = mapMoimsToClient(mappedMoims);
