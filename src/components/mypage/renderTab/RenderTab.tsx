@@ -46,7 +46,7 @@ export default function RenderTab() {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-3 mb-[68px] lg:mb-0 overflow-hidden">
+    <div className="flex flex-col gap-4 px-3 mb-[68px] lg:mb-0">
       <div className="flex px-4 justify-evenly items-center">
         <button
           className={`w-1/3 py-3.5 px-4 font-semibold text-sm ${
