@@ -14,7 +14,12 @@ const TabWrapper = ({ children }: { children: React.ReactNode }) => {
   );
 };
 
-export function CategoryTab() {
+interface CategoryStatusTabProps {
+  onCategorySelect: (category: string | null) => void;
+  onStatusSelect: (status: string | null) => void;
+}
+
+export function CategoryTab({ onCategorySelect }: CategoryStatusTabProps) {
   return (
     <div className="flex flex-col gap-[11px]">
       <TabWrapper>
@@ -68,7 +73,7 @@ export function LocationTab() {
   );
 }
 
-export function StatusTab() {
+export function StatusTab({ onStatusSelect }: CategoryStatusTabProps) {
   return (
     <div className="flex flex-col gap-[11px]">
       <TabWrapper>
