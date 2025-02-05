@@ -6,6 +6,7 @@ import { HoverCard, HoverCardContent, HoverCardTrigger, } from "@/components/det
 import { IParticipant } from '@/types/detail/t-moim';
 import { TParticipatedUserClient } from '@/types/supabase/supabase-custom.type';
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
+import { ProfileImage } from './ProfileImage';
 
 interface IPartcipantsListProps {
   participants: TParticipatedUserClient[];
@@ -45,13 +46,13 @@ export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
                     className="relative w-8 h-8"
                   >
                     <div className="absolute w-8 h-8 rounded-full border-2 border-background200 overflow-hidden">
-                      <Image
-                        src={participant.userImage || DEFAULT_IMAGE.PROFILE}
+                      <ProfileImage
+                        src={participant.userImage } // || DEFAULT_IMAGE.PROFILE
                         alt={participant.userNickname || "참가자 프로필"}
                         width={32}
                         height={32}
                         className="object-cover"
-                        onError={handleImageError}
+                        // onError={handleImageError}
                       />
                     </div>
                   </div>
@@ -68,18 +69,18 @@ export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
               </HoverCardTrigger>
 
               <HoverCardContent
-                className="w-[156px] h-[36px] px-1.5 py-3 bg-background100"
+                className="w-[156px] px-1.5 py-3 bg-background100"
                 align="start"
               >
                 <div className="space-y-2">
                   {participants.map((participant) => (
                     <div
                       key={participant.userUuid}
-                      className="flex items-center gap-2 p-1"
+                      className="flex items-center gap-2 p-1 h-[36px]"
                     >
-                      <Image
-                        src={participant.userImage || DEFAULT_IMAGE.PROFILE}
-                        alt={participant.userUuid || '참가자 프로필'}
+                      <ProfileImage
+                        src={participant.userImage}
+                        alt={participant.userNickname || '참가자 프로필'}
                         width={24}
                         height={24}
                         className="rounded-full"

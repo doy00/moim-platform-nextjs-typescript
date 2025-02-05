@@ -37,7 +37,7 @@ export const DetailHost: React.FC<IDetailHostProps> = ({
               {/* 프로필 이미지 */}
               <div className="w-12 h-12 shrink-0 relative rounded-full overflow-hidden">
                 <Image
-                  src={image || DEFAULT_IMAGE.PROFILE}
+                  src={DEFAULT_IMAGE.PROFILE}
                   alt={"주최자 프로필 이미지"}
                   fill
                   className="object-cover"
