@@ -11,16 +11,16 @@ import PendingReview from '@/components/mypage/myReview/PendingReview';
 
 export default function RenderTab() {
   const [activeTab, setActiveTab] = useState('meetings');
-  // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
-  // const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
 
-  // const handleCategorySelect = (category: string | null) => {
-  //   setSelectedCategory(category);
-  // };
+  const handleCategorySelect = (category: string | null) => {
+    setSelectedCategory(category);
+  };
 
-  // const handleStatusSelect = (status: string | null) => {
-  //   setSelectedStatus(status);
-  // };
+  const handleStatusSelect = (status: string | null) => {
+    setSelectedStatus(status);
+  };
 
   const renderTab = () => {
     return (
