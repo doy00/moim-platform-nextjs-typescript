@@ -23,7 +23,7 @@ export type TReviewClient = {
   review: string;
   rate: ERate;
   userEmail: string;
-  userImage: string;
+  userImage: string | null;
   userNickname: string;
 };
 
@@ -57,26 +57,18 @@ export type TMoimsJoined = TMoims & {
   liked_moims: Partial<TLikedMoims>[];
 };
 
+type TReviewParticipatedLikedMoim = {
+  reviews: Partial<TReviews>[];
+  participated_moims: Partial<TParticipatedMoims>[];
+  liked_moims: Partial<TLikedMoims>[];
+};
+
 export type TLikedMoimsJoined = TLikedMoims & {
-  moims: TMoims & {
-    reviews: Partial<TReviews>[];
-    participated_moims: Partial<TParticipatedMoims>[];
-    liked_moims: Partial<TLikedMoims>[];
-    reviews: Partial<TReviews>[];
-    participated_moims: Partial<TParticipatedMoims>[];
-    liked_moims: Partial<TLikedMoims>[];
-  };
+  moims: TMoims & TReviewParticipatedLikedMoim;
 };
 
 export type TParticipatedMoimsJoined = TParticipatedMoims & {
-  moims: TMoims & {
-    reviews: Partial<TReviews>[];
-    participated_moims: Partial<TParticipatedMoims>[];
-    liked_moims: Partial<TLikedMoims>[];
-    reviews: Partial<TReviews>[];
-    participated_moims: Partial<TParticipatedMoims>[];
-    liked_moims: Partial<TLikedMoims>[];
-  };
+  moims: TMoims & TReviewParticipatedLikedMoim;
 };
 
 export type TReviewInput = {
@@ -85,5 +77,9 @@ export type TReviewInput = {
 };
 
 export type TReviewWithMoim = TReviews & {
-  moims: TMoims;
+  moims: TMoims & TReviewParticipatedLikedMoim;
+};
+
+export type TReviewWithMoimClient = TReviewClient & {
+  moims: TMoimClient;
 };
