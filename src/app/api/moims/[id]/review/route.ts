@@ -1,3 +1,4 @@
+import { TMe } from '@/types/auth/auth.type';
 import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
@@ -61,15 +62,35 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   }
 
   const {
+    data: foundUser,
+    error: foundUserError,
+  }: { data: TMe | null; error: PostgrestError | null } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', user.email)
+    .single();
+
+  if (foundUserError) {
+    return NextResponse.json({ message: foundUserError?.message }, { status: 401 });
+  }
+
+  if (!foundUser) {
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+  }
+
+  const {
     data: postedReview,
     error: postedReviewError,
   }: { data: TReviews | null; error: PostgrestError | null } = await supabase
     .from('reviews')
     .upsert({
       moim_uuid: id,
-      user_uuid: user.id,
+      user_uuid: foundUser.id,
       review,
       rate,
+      user_email: foundUser.email,
+      user_image: foundUser.image,
+      user_nickname: foundUser.nickname,
     })
     .select()
     .single();
