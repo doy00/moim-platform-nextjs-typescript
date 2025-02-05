@@ -30,7 +30,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   });
 
   // 특정 모임이 내가 찜한 목록에 있는지 확인
-  const isLiked = myLikes?.data.some((moim) => moim.moimId === moimId ?? false);
+  const isLiked = myLikes?.data.some((moim) => moim.moimId === moimId);
 
   // 찜하기 뮤테이션
   const { mutateAsync: toggleLike, isPending: isToggling } = useMutation({
