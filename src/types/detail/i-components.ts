@@ -16,6 +16,21 @@ export interface IChipSmallSquircle {
 
 export interface IChipSmallRound {
   text: string;
-  variant: 'gray';
+  variant: 'gray' | 'soso' | 'good' | 'recommend';
   className?: string;
 }
+
+// export interface IDetailInfoProps {
+//   title: string;
+//   address: string;
+//   recruitmentDeadline: string;
+//   startDate: string;
+//   endDate: string;
+//   // recruitmentPeriod: string;
+//   minParticipants: number;
+//   moimType: ECategory;           // Enum 타입 사용
+//   status: EMoimStatus;           // Enum 타입 사용
+//   participants: number;
+//   online:
+//   className?: string;
+// }

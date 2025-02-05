@@ -12,7 +12,7 @@ const nextConfig: NextConfig = {
         hostname: 'kabbnwozubbpbafvlolf.supabase.co',
       },
       {
-        protocol: 'https',
+        protocol: 'http',
         hostname: 'k.kakaocdn.net',
       },
     ],

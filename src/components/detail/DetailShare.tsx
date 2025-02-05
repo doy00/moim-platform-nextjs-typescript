@@ -29,7 +29,7 @@ export const DetailShare: React.FC<IDetailShare> = ({ className }) => {
     <div className="relative flex flex-col">
       <button 
         onClick={handleCopyLink}
-        className={cn("justify-between items-center flex w-full min-h-19 gap-2.5 p-3 mt-3 mb-4 bg-background400 rounded-2xl ", className)}
+        className={cn("justify-between items-center flex w-full min-h-19 gap-2.5 p-3 mt-3 mb-4 lg:mb-5 bg-background400 rounded-2xl ", className)}
       >
         <div className="flex w-full items-center">
                     {/* 이미지 */}
