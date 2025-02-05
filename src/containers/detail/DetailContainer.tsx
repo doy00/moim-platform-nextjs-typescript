@@ -1,5 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
 import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
