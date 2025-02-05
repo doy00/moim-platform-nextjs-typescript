@@ -41,7 +41,7 @@ export async function GET(req: NextRequest) {
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const {
@@ -57,7 +57,7 @@ export async function GET(req: NextRequest) {
 
   if (moimsError) {
     // console.error(moimsError);
-    return NextResponse.json({ message: moimsError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimsError?.message }, { status: 500 });
   }
 
   if (!moims) {

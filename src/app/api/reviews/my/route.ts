@@ -21,7 +21,7 @@ export async function GET() {
   }
 
   if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
   }
 
   const {
@@ -38,7 +38,7 @@ export async function GET() {
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const {
@@ -53,7 +53,7 @@ export async function GET() {
     .order('created_at', { ascending: false });
 
   if (reviewsError) {
-    return NextResponse.json({ message: reviewsError?.message }, { status: 401 });
+    return NextResponse.json({ message: reviewsError?.message }, { status: 500 });
   }
 
   if (!reviewsWithMoim) {

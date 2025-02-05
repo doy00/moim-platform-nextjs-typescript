@@ -31,7 +31,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const { data: existingLike } = await supabase
@@ -42,7 +42,7 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     .single();
 
   if (existingLike) {
-    return NextResponse.json({ message: '이미 찜한 모임이에요' }, { status: 401 });
+    return NextResponse.json({ message: '이미 찜한 모임이에요' }, { status: 400 });
   }
 
   const { data: likeData, error: likeError } = await supabase
@@ -51,11 +51,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     .select();
 
   if (likeError) {
-    return NextResponse.json({ message: likeError?.message }, { status: 401 });
+    return NextResponse.json({ message: likeError?.message }, { status: 500 });
   }
 
   if (!likeData) {
-    return NextResponse.json({ message: '모임 찜하기 실패' }, { status: 401 });
+    return NextResponse.json({ message: '모임 찜하기 실패' }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -67,11 +67,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {
@@ -110,7 +110,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const { data: deletedLike, error: deletedLikeError } = await supabase
@@ -122,11 +122,11 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     .single();
 
   if (deletedLikeError) {
-    return NextResponse.json({ message: deletedLikeError?.message }, { status: 401 });
+    return NextResponse.json({ message: deletedLikeError?.message }, { status: 500 });
   }
 
   if (!deletedLike) {
-    return NextResponse.json({ message: '찜한 모임이 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '찜한 모임이 없어요' }, { status: 404 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -138,11 +138,11 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {
