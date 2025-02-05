@@ -1,12 +1,15 @@
-import { IUser } from '@/types/mypage/user';
-import axiosInstance from '@/apis/axiosInstance';
+import { IUser, IUserEdit, IEditUserResponse } from '@/types/mypage/user';
+import axiosInstance from '@/apis/auth/axios.api';
+import { useUserFormData } from '@/hooks/mypage/useUserFormData';
 
-export const getUserInfo = async (): Promise<IUser> => {
-  const { data } = await axiosInstance.get('/user/detail');
-  return data;
+export const getUserInfo = async () => {
+  const url = '/api/auth/me';
+  return await axiosInstance.get<IUser, IUser>(url);
 };
 
-export const editUserInfo = async (id: number, editUser: IUser): Promise<IUser> => {
-  const { data } = await axiosInstance.put(`/user/detail`, editUser);
-  return data;
+export const editUserInfo = async (editUser: IUserEdit) => {
+  const { createFormData } = useUserFormData();
+  const formData = createFormData(editUser);
+  const url = '/api/auth/me';
+  return await axiosInstance.put<IEditUserResponse, IEditUserResponse>(url, formData);
 };

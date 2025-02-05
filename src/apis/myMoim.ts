@@ -1,7 +1,7 @@
-import axiosInstance from '@/apis/axiosInstance';
+import axiosInstance from '@/apis/auth/axios.api';
 import { IMyMoim } from '@/types/mypage/moim.type';
 
-export const getMyMoim = async (): Promise<IMyMoim> => {
-  const { data } = await axiosInstance.get('/moim/my', {});
-  return data;
+export const getMyMoim = async () => {
+  const url = '/api/moims/my';
+  return await axiosInstance.get<IMyMoim[], IMyMoim[]>(url);
 };
