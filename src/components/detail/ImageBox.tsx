@@ -1,8 +1,8 @@
 'use client';
 import React, { useState } from "react"
 import { IImageBox } from "@/types/detail/i-components"
-import { IMAGE_SIZE } from "@/constants/detail/images";
-import { DEFAULT_IMAGE } from "@/constants/detail/images";
+import { IMAGE_SIZE } from "@/constants/detail/detail.const";
+import { DEFAULT_IMAGE } from "@/constants/detail/detail.const";
 import Image, { StaticImageData } from "next/image";
 import { cn } from "@/utils/detail/cn";
 
