@@ -102,7 +102,7 @@ export default {
         brown300: '#38342D',
         brown400: '#FF8820',
 
-        orange100: '#FFFBF5',
+        orange100: '#FFF8EB',
         orange200: '#ED9141',
         orange300: '#3D332B',
         orange400: '#292521',
