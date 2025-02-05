@@ -24,7 +24,7 @@ export default function CompletedReview() {
   }
 
   return (
-    <div>
+    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
       {/* TODO : 고유식별자 reviewId가 없어 임시로 index로 지정 */}
       {data.map((review, index) => (
         <ReviewCard key={index} review={review} />
