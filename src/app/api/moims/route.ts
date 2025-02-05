@@ -13,7 +13,6 @@ export async function GET(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  // 총 아이템 수를 가져옵니다.
   const { count: totalItems, error: countError } = await supabase
     .from('moims')
     .select('id', { count: 'exact', head: true });
@@ -27,52 +26,10 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({ message: '아이템이 하나도 없어요' }, { status: 404 });
   }
 
-  if (pageQuery !== 'null') {
-    const page = Number(pageQuery);
-    const start = page === 1 || page === 0 ? 0 : (page - 1) * MOIMS_ITEMS_PER_PAGE;
-    const end = start + MOIMS_ITEMS_PER_PAGE - 1;
+  const page = Math.max(1, Number(pageQuery) || 1); // 최소 1 보장
+  const start = (page - 1) * MOIMS_ITEMS_PER_PAGE;
+  const end = start + MOIMS_ITEMS_PER_PAGE - 1;
 
-    const {
-      data: moims,
-      error: moimError,
-    }: {
-      data: TMoimsJoined[] | null;
-      error: PostgrestError | null;
-    } = await supabase
-      .from('moims')
-      .select(
-        '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
-      )
-      .order('created_at', { ascending: false })
-      .range(start, end);
-
-    if (moimError) {
-      console.error(moimError);
-      return NextResponse.json({ message: moimError?.message }, { status: 500 });
-    }
-
-    if (!moims) {
-      return NextResponse.json({ message: '모임이 하나도 없어요' }, { status: 404 });
-    }
-
-    const totalPages = Math.ceil(totalItems / MOIMS_ITEMS_PER_PAGE);
-
-    const moimsToClient: TMoimClient[] = mapMoimsToClient(moims);
-
-    return NextResponse.json(
-      {
-        data: moimsToClient,
-        pagination: {
-          totalItems,
-          totalPages,
-          currentPage: page, // 1부터 시작하는 페이지 번호
-        },
-      },
-      { status: 200 },
-    );
-  }
-
-  // 페이지 파라미터가 없는 경우 전체 데이터를 가져옵니다.
   const {
     data: moims,
     error: moimError,
@@ -84,12 +41,14 @@ export async function GET(req: NextRequest) {
     .select(
       '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
     )
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(start, end);
 
   if (moimError) {
     console.error(moimError);
     return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
+
   if (!moims) {
     return NextResponse.json({ message: '모임이 하나도 없어요' }, { status: 404 });
   }
@@ -104,7 +63,7 @@ export async function GET(req: NextRequest) {
       pagination: {
         totalItems,
         totalPages,
-        currentPage: 1, // 페이지 파라미터가 없으므로 첫 번째 페이지로 간주
+        currentPage: page,
       },
     },
     { status: 200 },
