@@ -1,5 +1,5 @@
 import { IMoim } from '@/types/mypage/moim.type';
-import Image from 'next/image';
+import { IReview } from '@/types/mypage/reviews.type';
 import projectIcon from '@images/mypage/puzzle-on.svg';
 import studyIcon from '@images/mypage/open-book.svg';
 import interviewIcon from '@images/mypage/conversation-icon.svg';
@@ -11,6 +11,16 @@ export const getStatusTag = (moim: IMoim) => {
     return '진행중';
   } else if (moim.status === 'END') {
     return '종료';
+  }
+};
+
+export const reviewRateTag = (review: IReview) => {
+  if (review.rate === 'SOSO') {
+    return '그냥그래요';
+  } else if (review.rate === 'GOOD') {
+    return '괜찮아요';
+  } else if (review.rate === 'RECOMMEND') {
+    return '추천해요';
   }
 };
 

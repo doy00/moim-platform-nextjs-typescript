@@ -10,6 +10,8 @@ export default function CompletedReview() {
     return <ReviewSkeleton />;
   }
 
+  console.log(data);
+
   if (!data || data.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center h-full gap-6">
@@ -23,8 +25,9 @@ export default function CompletedReview() {
 
   return (
     <div>
-      {data.map((review) => (
-        <ReviewCard key={review.moim.moimId} review={review} moim={review.moim} />
+      {/* TODO : 고유식별자 reviewId가 없어 임시로 index로 지정 */}
+      {data.map((review, index) => (
+        <ReviewCard key={index} review={review} />
       ))}
     </div>
   );

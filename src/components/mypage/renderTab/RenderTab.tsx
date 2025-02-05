@@ -4,10 +4,8 @@ import { useState } from 'react';
 import Meetings from '@/components/mypage/Meetings';
 import CreatedMeetings from '@/components/mypage/CreatedMeetings';
 import FilterBar from '@/components/mypage/filterBar/FilterBar';
-// import CompletedReviewCard from '@/components/mypage/myReview/CompletedReview';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReviewTabs from '@/components/mypage/myReview/ReviewTabs';
-import PendingReview from '@/components/mypage/myReview/PendingReview';
 
 export default function RenderTab() {
   const [activeTab, setActiveTab] = useState('meetings');
@@ -36,8 +34,8 @@ export default function RenderTab() {
           >
             {activeTab === 'meetings' ? (
               <Meetings />
-            ) : activeTab === 'reviews' ? (
-              <PendingReview />
+            ) : activeTab === 'my-reviews' ? (
+              <ReviewTabs />
             ) : activeTab === 'created-meetings' ? (
               <CreatedMeetings />
             ) : null}
