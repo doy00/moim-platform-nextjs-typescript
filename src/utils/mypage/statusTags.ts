@@ -4,7 +4,7 @@ import projectIcon from '@images/mypage/puzzle-on.svg';
 import studyIcon from '@images/mypage/open-book.svg';
 import interviewIcon from '@images/mypage/conversation-icon.svg';
 
-export const getStatusTag = (moim: IMoim) => {
+export const statusTag = (moim: IMoim) => {
   if (moim.status === 'RECRUIT') {
     return '모집중';
   } else if (moim.status === 'PROGRESS') {
