@@ -16,7 +16,7 @@ import {
 import DeleteIcon from "../home/icons/DeleteIcon";
 
 interface MakeCancelProps {
-  onLeave: () => void; // "나가기" 버튼 동작
+  onLeave: () => void; 
 }
 
 export default function MakeCancel({ onLeave }: MakeCancelProps) {
@@ -29,7 +29,7 @@ export default function MakeCancel({ onLeave }: MakeCancelProps) {
           <DeleteIcon className="fill-black"/>
         </button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="w-[283px] h-[180px] rounded-[24px] p-6">
+      <AlertDialogContent className="w-[283px] h-[180px] p-6 rounded-3xl">
         <AlertDialogHeader>
           <AlertDialogTitle className="text-body-1-normal">취소하고 나갈까요?</AlertDialogTitle>
           <AlertDialogDescription className="text-body-2-normal text-gray400">
@@ -40,7 +40,7 @@ export default function MakeCancel({ onLeave }: MakeCancelProps) {
           <div className="flex items-center justify-center space-x-2">
             <AlertDialogCancel
               className="w-[114px] h-12 m-0 rounded-[14px] text-gray500 bg-gray200"
-              onClick={() => router.push("/home")} 
+              onClick={() => router.push("/")} 
             >
               나가기
             </AlertDialogCancel>

@@ -4,7 +4,7 @@ export type TFilterState = {
   status: string;
   sortOrder: 'LATEST' | 'LIKES' | 'DEADLINE';
   isConfirmed: boolean | null;
-  setSortOrder: (sortOrder: 'latest' | 'likes' | 'deadline') => void;
+  setSortOrder: (sortOrder: 'LATEST' | 'LIKES' | 'DEADLINE') => void;
   setMoimType: (moimType: string) => void;
   setStatus: (status: string) => void;
   toggleRegion: (region: string) => void;
