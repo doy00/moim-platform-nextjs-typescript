@@ -20,7 +20,7 @@ export async function GET(req: NextRequest) {
 
   if (countError) {
     console.error(countError);
-    return NextResponse.json({ message: countError?.message }, { status: 401 });
+    return NextResponse.json({ message: countError?.message }, { status: 500 });
   }
 
   if (!totalItems) {
@@ -48,7 +48,7 @@ export async function GET(req: NextRequest) {
 
     if (moimError) {
       console.error(moimError);
-      return NextResponse.json({ message: moimError?.message }, { status: 401 });
+      return NextResponse.json({ message: moimError?.message }, { status: 500 });
     }
 
     if (!moims) {
@@ -88,7 +88,7 @@ export async function GET(req: NextRequest) {
 
   if (moimError) {
     console.error(moimError);
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
   if (!moims) {
     return NextResponse.json({ message: '모임이 하나도 없어요' }, { status: 404 });
@@ -203,31 +203,14 @@ export async function POST(req: NextRequest) {
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 생성 실패' }, { status: 404 });
+    return NextResponse.json({ message: '모임 생성 실패' }, { status: 500 });
   }
 
   const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
 
   return NextResponse.json(moimsToClient[0], { status: 200 });
 }
-
-// const deadlineDate = new Date(moimDataOrigin.recruitmentDeadline);
-// const startDate = new Date(moimDataOrigin.startDate);
-// const endDate = new Date(moimDataOrigin.endDate);
-
-// const isDeadlinePassed = deadlineDate < new Date();
-// const isStartDatePassed = startDate < new Date();
-// const isEndDatePassed = endDate < new Date();
-
-// let status = '';
-// if (isDeadlinePassed) {
-//   status = 'RECRUIT';
-// } else if (isStartDatePassed) {
-//   status = 'PROGRESS';
-// } else if (isEndDatePassed) {
-//   status = 'END';
-// }

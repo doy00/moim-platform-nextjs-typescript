@@ -1,5 +1,7 @@
+import { TMe } from '@/types/auth/auth.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
+import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
@@ -20,14 +22,17 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ message: '로그인 후 이용해주세요' }, { status: 401 });
   }
 
-  const { data: foundUser, error: foundUserError } = await supabase
+  const {
+    data: foundUser,
+    error: foundUserError,
+  }: { data: TMe | null; error: PostgrestError | null } = await supabase
     .from('users')
     .select('*')
     .eq('email', user.email)
     .single();
 
   if (foundUserError) {
-    return NextResponse.json({ message: foundUserError?.message }, { status: 401 });
+    return NextResponse.json({ message: foundUserError?.message }, { status: 500 });
   }
 
   if (!foundUser) {
@@ -42,20 +47,26 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     .single();
 
   if (existingLike) {
-    return NextResponse.json({ message: '이미 참여한 모임이에요' }, { status: 401 });
+    return NextResponse.json({ message: '이미 참여한 모임이에요' }, { status: 400 });
   }
 
   const { data: participatedData, error: participatedError } = await supabase
     .from('participated_moims')
-    .upsert({ moim_uuid: id, user_uuid: foundUser.id })
+    .upsert({
+      moim_uuid: id,
+      user_uuid: foundUser.id,
+      user_email: foundUser.email,
+      user_image: foundUser.image,
+      user_nickname: foundUser.nickname,
+    })
     .select();
 
   if (participatedError) {
-    return NextResponse.json({ message: participatedError?.message }, { status: 401 });
+    return NextResponse.json({ message: participatedError?.message }, { status: 500 });
   }
 
   if (!participatedData) {
-    return NextResponse.json({ message: '모임 참여 실패' }, { status: 401 });
+    return NextResponse.json({ message: '모임 참여 실패' }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -67,11 +78,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {

@@ -1,3 +1,4 @@
+import { TMe } from '@/types/auth/auth.type';
 import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
@@ -25,7 +26,24 @@ export async function PUT(
   }
 
   if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
+  }
+
+  const {
+    data: foundUser,
+    error: foundUserError,
+  }: { data: TMe | null; error: PostgrestError | null } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', user.email)
+    .single();
+
+  if (foundUserError) {
+    return NextResponse.json({ message: foundUserError?.message }, { status: 401 });
+  }
+
+  if (!foundUser) {
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const {
@@ -35,13 +53,13 @@ export async function PUT(
     .from('reviews')
     .update({ review, rate, updated_at: new Date().toISOString() })
     .eq('id', reviewId)
-    .eq('user_uuid', user.id)
+    .eq('user_uuid', foundUser.id)
     .eq('moim_uuid', id)
     .select()
     .single();
 
   if (updatedReviewError) {
-    return NextResponse.json({ message: updatedReviewError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedReviewError?.message }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -53,11 +71,11 @@ export async function PUT(
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {
@@ -87,7 +105,24 @@ export async function DELETE(
   }
 
   if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
+  }
+
+  const {
+    data: foundUser,
+    error: foundUserError,
+  }: { data: TMe | null; error: PostgrestError | null } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', user.email)
+    .single();
+
+  if (foundUserError) {
+    return NextResponse.json({ message: foundUserError?.message }, { status: 401 });
+  }
+
+  if (!foundUser) {
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const { data: deletedReview, error: deletedReviewError } = await supabase
@@ -95,12 +130,12 @@ export async function DELETE(
     .delete()
     .eq('id', reviewId)
     .eq('moim_uuid', id)
-    .eq('user_uuid', user.id)
+    .eq('user_uuid', foundUser.id)
     .select()
     .single();
 
   if (deletedReviewError) {
-    return NextResponse.json({ message: deletedReviewError?.message }, { status: 401 });
+    return NextResponse.json({ message: deletedReviewError?.message }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -112,11 +147,11 @@ export async function DELETE(
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {

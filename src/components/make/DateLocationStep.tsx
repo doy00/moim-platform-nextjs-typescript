@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { StepDateRange } from "./StepDateRange";
 import { StepDatePicker } from "./StepDatePicker";
 
+
 export default function DateLocationStep() {
   const {
     roadAddress, // 스토어 필드 `roadAddress` 사용
@@ -22,14 +23,19 @@ export default function DateLocationStep() {
   const handleAddressSearch = () => {
     if (typeof window !== "undefined" && window.daum) {
       new window.daum.Postcode({
-        oncomplete: (data: { address: string }) => {
-          if (data.address) {
-            setRoadAddress(data.address); // 상태 업데이트
+        oncomplete: (data: any) => {
+          console.log('Daum Postcode API 데이터:', data);
+          const newAddress = data.roadAddress || data.jibunAddress || data.address;
+          if (newAddress && newAddress !== "") {
+            setRoadAddress(newAddress);
+            console.log('업데이트된 주소:', newAddress);
           } else {
-            alert("유효한 주소를 선택해주세요."); // 유효하지 않은 주소 처리
+            alert("유효한 주소를 선택해주세요.");
           }
-        },
+        }
       }).open();
+    } else {
+      alert("주소 검색 기능을 사용할 수 없습니다.");
     }
   };
 
@@ -68,6 +74,7 @@ export default function DateLocationStep() {
             setEndDate(dates.end ? dates.end.toISOString() : ""); // 모집 종료 상태 업데이트
           }}
         />
+        <p className="text-label-normal text-gray300 ml-2 mt-[5px]">모임을 만들면 바로 모집이 시작돼요</p>
       </div>
 
       {/* 모임 날짜 선택 */}
