@@ -32,12 +32,11 @@ export default function HomeHero() {
     <Select
       value={sortOrder}
       onValueChange={(value) => {
-        const upperCaseValue = value.toUpperCase(); // ✅ 선택값을 대문자로 변환
-        console.log('🔄 Selected sort order:', upperCaseValue);
-        setSortOrder(upperCaseValue as TFilterState['sortOrder']);
+        console.log('🔄 Selected sort order:', value);
+        setSortOrder(value as TFilterState['sortOrder']);
       }}
     >
-      <SelectTrigger className="w-[112px]">
+      <SelectTrigger className="w-[112px] bg-white">
         <SelectValue placeholder="최신순" />
       </SelectTrigger>
       <SelectContent className="w-[112px]">

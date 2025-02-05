@@ -74,6 +74,7 @@ export default function DateLocationStep() {
             setEndDate(dates.end ? dates.end.toISOString() : ""); // 모집 종료 상태 업데이트
           }}
         />
+        <p className="text-label-normal text-gray300 ml-2 mt-[5px]">모임을 만들면 바로 모집이 시작돼요</p>
       </div>
 
       {/* 모임 날짜 선택 */}

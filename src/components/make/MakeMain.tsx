@@ -41,7 +41,7 @@ export default function MakeMain() {
   };
 
   return (
-    <main className="flex flex-col space-y-6">
+    <main className="flex flex-col space-y-6 h-screen">
       {/* 헤더 영역 */}
       <div className="flex flex-col items-start w-full h-16 space-y-4">
         <div className="px-5 w-full flex items-center justify-between">
@@ -53,10 +53,10 @@ export default function MakeMain() {
       {/* Step 영역 */}
       <div>{renderStep()}</div>
       {/* Button 영역 */}
-      <div className="flex space-x-3 px-5 pb-[62px]">
+      <div className="flex space-x-3 px-5">
         {step > 1 && (
           <button onClick={handlePrevStep} className="flex items-center justify-center px-6 py-4 h-[56px] bg-background400 rounded-2xl">
-            <ArrowLeftLine className="fill-gray300" />
+            <ArrowLeftLine className="fill-transparent stroke-slate-500" />
           </button>
         )}
         {step < 4 ? (

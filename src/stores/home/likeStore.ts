@@ -1,59 +1,54 @@
 import { create } from 'zustand';
-import { createClient } from '@/utils/supabase/client';
-
-const supabase = createClient();
+import axiosHomeInstance from '@/libs/home/home-axios';
 
 interface LikeState {
   likes: Set<string>;
+  likeDeltas: Record<string, number>;
   toggleLike: (moimId: string) => Promise<void>;
   fetchLikes: () => Promise<void>;
 }
 
 export const useLikeStore = create<LikeState>((set, get) => ({
   likes: new Set(),
+  likeDeltas: {},
 
   toggleLike: async (moimId: string) => {
     const currentLikes = new Set(get().likes);
+    const currentDeltas = { ...get().likeDeltas };
     const isLiked = currentLikes.has(moimId);
-    const user = (await supabase.auth.getUser()).data.user;
-
-    if (!user) return;
 
     try {
       if (isLiked) {
-        await supabase
-          .from('liked_moims')
-          .delete()
-          .eq('moim_uuid', moimId)
-          .eq('user_uuid', user.id);
-        currentLikes.delete(moimId);
+        await axiosHomeInstance.delete(`/moims/${moimId}/like`);
       } else {
-        await supabase
-          .from('liked_moims')
-          .insert({ moim_uuid: moimId, user_uuid: user.id });
-        currentLikes.add(moimId);
+        await axiosHomeInstance.post(`/moims/${moimId}/like`);
       }
-
-      set({ likes: new Set(currentLikes) });
-    } catch (error) {
-      console.error('Failed to toggle like:', error);
+      
+      if (isLiked) {
+        currentLikes.delete(moimId);
+        currentDeltas[moimId] = (currentDeltas[moimId] || 0) - 1;
+      } else {
+        currentLikes.add(moimId);
+        currentDeltas[moimId] = (currentDeltas[moimId] || 0) + 1;
+      }
+      set({ likes: currentLikes, likeDeltas: currentDeltas });
+    } catch (error: any) {
+      // API 에러가 "이미 찜한 모임이에요"인 경우, 클라이언트 상태를 보정합니다.
+      if (error.response?.data?.message === '이미 찜한 모임이에요') {
+        currentLikes.add(moimId);
+        currentDeltas[moimId] = (currentDeltas[moimId] || 0) + 0; // 변화 없음
+        set({ likes: currentLikes, likeDeltas: currentDeltas });
+      } else {
+        console.error('Failed to toggle like:', error);
+      }
     }
   },
 
   fetchLikes: async () => {
     try {
-      const user = (await supabase.auth.getUser()).data.user;
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('liked_moims')
-        .select('moim_uuid')
-        .eq('user_uuid', user.id);
-
-      if (error) throw error;
-
-      const likes = new Set(data.map((item) => item.moim_uuid));
-      set({ likes });
+      const response = await axiosHomeInstance.get('/moims/liked');
+      const likedIds: string[] = response.data.likedMoimIds;
+      set({ likes: new Set(likedIds), likeDeltas: {} });
     } catch (error) {
       console.error('Failed to fetch likes:', error);
     }
