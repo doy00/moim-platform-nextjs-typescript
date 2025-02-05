@@ -54,7 +54,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     error: updatedUserError,
   }: { data: TMe | null; error: PostgrestError | null } = await supabase
     .from('users')
-    .update({ image: user.image })
+    .update({ image: user.image, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
     .single();
