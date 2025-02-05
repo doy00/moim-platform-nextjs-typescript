@@ -26,7 +26,7 @@ export async function PUT(
   }
 
   if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
   }
 
   const {
@@ -43,7 +43,7 @@ export async function PUT(
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const {
@@ -59,7 +59,7 @@ export async function PUT(
     .single();
 
   if (updatedReviewError) {
-    return NextResponse.json({ message: updatedReviewError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedReviewError?.message }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -71,11 +71,11 @@ export async function PUT(
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {
@@ -105,7 +105,7 @@ export async function DELETE(
   }
 
   if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
   }
 
   const {
@@ -122,7 +122,7 @@ export async function DELETE(
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const { data: deletedReview, error: deletedReviewError } = await supabase
@@ -135,7 +135,7 @@ export async function DELETE(
     .single();
 
   if (deletedReviewError) {
-    return NextResponse.json({ message: deletedReviewError?.message }, { status: 401 });
+    return NextResponse.json({ message: deletedReviewError?.message }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -147,11 +147,11 @@ export async function DELETE(
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {
