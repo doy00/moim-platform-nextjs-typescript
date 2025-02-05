@@ -31,7 +31,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const { data: deletedParticipated, error: deletedParticipatedError } = await supabase
@@ -43,11 +43,11 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     .single();
 
   if (deletedParticipatedError) {
-    return NextResponse.json({ message: deletedParticipatedError?.message }, { status: 401 });
+    return NextResponse.json({ message: deletedParticipatedError?.message }, { status: 500 });
   }
 
   if (!deletedParticipated) {
-    return NextResponse.json({ message: '참여하지 않은 모임이에요' }, { status: 401 });
+    return NextResponse.json({ message: '참여하지 않은 모임이에요' }, { status: 404 });
   }
 
   const { data: moim, error: moimError } = await supabase
@@ -59,11 +59,11 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {

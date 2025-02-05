@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!user) {
-    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
+    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 500 });
   }
 
   const { data: existingUser, error: existingUserError } = await supabase
@@ -96,11 +96,11 @@ export async function POST(request: NextRequest) {
 
   if (userError) {
     // console.log('userError ====>', userError);
-    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
+    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 500 });
   }
 
   if (!userData) {
-    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
+    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 500 });
   }
 
   if (session?.access_token) {

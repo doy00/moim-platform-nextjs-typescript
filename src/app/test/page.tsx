@@ -44,6 +44,7 @@ export default function TestPage() {
         <button onClick={handleTest}>리뷰작성테스트</button>
         <button onClick={handleUpdateImage}>플필사진만업데이트테스트</button>
       </div>
+      <div>{me?.image && <img src={me?.image} alt="프로필 사진" />}</div>
     </div>
   );
 }

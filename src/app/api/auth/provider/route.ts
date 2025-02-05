@@ -14,7 +14,7 @@ export async function GET(request: NextRequest) {
   const supabase = await createClient(cookieStore);
 
   if (!PUBLIC_URL) {
-    return NextResponse.json({ message: 'PUBLIC_URL is not set' }, { status: 401 });
+    return NextResponse.json({ message: 'PUBLIC_URL is not set' }, { status: 400 });
   }
 
   const getURL = () => {
