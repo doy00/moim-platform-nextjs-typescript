@@ -18,11 +18,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 401 });
+    return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 404 });
   }
 
   const {
@@ -38,11 +38,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     .single();
 
   if (updatedMoimError) {
-    return NextResponse.json({ message: updatedMoimError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedMoimError?.message }, { status: 500 });
   }
 
   if (!updatedMoim) {
-    return NextResponse.json({ message: '모임 상태 업데이트 실패' }, { status: 401 });
+    return NextResponse.json({ message: '모임 상태 업데이트 실패' }, { status: 500 });
   }
 
   const moimToClient: TMoimClient[] = mapMoimsToClient([updatedMoim]);

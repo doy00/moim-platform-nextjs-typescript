@@ -26,7 +26,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   }
 
   if (!meImageFile) {
-    return NextResponse.json({ message: '이미지 파일이 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '이미지 파일이 없어요' }, { status: 400 });
   }
 
   const imageBuffer = await convertToWebP(meImageFile, 1080);
@@ -60,11 +60,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     .single();
 
   if (updatedUserError) {
-    return NextResponse.json({ message: updatedUserError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedUserError?.message }, { status: 500 });
   }
 
   if (!updatedUser) {
-    return NextResponse.json({ message: '프로필 이미지 변경 실패' }, { status: 401 });
+    return NextResponse.json({ message: '프로필 이미지 변경 실패' }, { status: 500 });
   }
 
   return NextResponse.json(

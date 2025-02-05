@@ -21,7 +21,7 @@ export async function GET() {
   }
 
   if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
   }
 
   const { data: me, error: meError }: { data: TMe | null; error: PostgrestError | null } =
@@ -32,7 +32,7 @@ export async function GET() {
   }
 
   if (!me) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
   }
 
   const {
@@ -47,11 +47,11 @@ export async function GET() {
     .order('created_at', { ascending: false });
 
   if (myMoimsError) {
-    return NextResponse.json({ message: myMoimsError?.message }, { status: 401 });
+    return NextResponse.json({ message: myMoimsError?.message }, { status: 500 });
   }
 
   if (!myMoims) {
-    return NextResponse.json({ message: '내가 만든 모임이 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '내가 만든 모임이 없습니다' }, { status: 404 });
   }
 
   const moimsToClient: TMoimClient[] = mapMoimsToClient(myMoims);

@@ -24,7 +24,7 @@ export async function GET() {
   }
 
   if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
   }
 
   const {
@@ -38,7 +38,7 @@ export async function GET() {
     .eq('user_uuid', user.id);
 
   if (participatedMoimsError) {
-    return NextResponse.json({ message: participatedMoimsError?.message }, { status: 401 });
+    return NextResponse.json({ message: participatedMoimsError?.message }, { status: 500 });
   }
 
   if (!participatedMoims) {

@@ -23,11 +23,11 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 401 });
+    return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 404 });
   }
 
   const moimToClient: TMoimClient[] = mapMoimsToClient([moim]);
@@ -61,11 +61,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     .single();
 
   if (existingMoimError) {
-    return NextResponse.json({ message: existingMoimError?.message }, { status: 401 });
+    return NextResponse.json({ message: existingMoimError?.message }, { status: 500 });
   }
 
   if (!existingMoim) {
-    return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 401 });
+    return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 404 });
   }
 
   // 현재 시간 가져오기 (UTC)
@@ -134,11 +134,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     .single();
 
   if (updatedMoimError) {
-    return NextResponse.json({ message: updatedMoimError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedMoimError?.message }, { status: 500 });
   }
 
   if (!updatedMoim) {
-    return NextResponse.json({ message: '모임 수정 실패' }, { status: 404 });
+    return NextResponse.json({ message: '모임 수정 실패' }, { status: 500 });
   }
 
   const moimsToClient: TMoimClient[] = mapMoimsToClient([updatedMoim]);
@@ -158,7 +158,7 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     .select();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   return NextResponse.json({ message: '모임 삭제 성공' }, { status: 200 });

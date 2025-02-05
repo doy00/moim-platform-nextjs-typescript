@@ -143,7 +143,7 @@ export async function PUT(req: NextRequest) {
     .single();
 
   if (updatedUserError) {
-    return NextResponse.json({ message: updatedUserError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedUserError?.message }, { status: 500 });
   }
 
   return NextResponse.json(updatedUser, { status: 200 });
