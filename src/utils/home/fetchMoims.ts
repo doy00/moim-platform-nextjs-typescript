@@ -25,6 +25,7 @@ export const fetchMoims = async ({ pageParam = 1 }: { pageParam: number }) => {
         moimId: moim.id, 
         title: moim.title,
         content: moim.content,
+        createdAt: moim.created_at,
         address: moim.address,
         isConfirmed: moim.is_confirmed ?? false,
         recruitmentDeadline: moim.recruitment_deadline,

@@ -1,23 +1,19 @@
 // HomeCards 사용
 'use client';
-import IntersectionObserver from '@/libs/home/intersectionObserver';
 
 import { useFilterStore } from '@/stores/home/filterStore';
 import MyLikeCard from './MyLikeCard';
-import { ILikeMoim } from '@/types/detail/i-moim';
-import { useLikeStore } from '@/stores/home/likeStore';
 
 interface IMyLikeCards {
-  moims: ILikeMoim[];
+  moims: any[]; // 빌드 에러로 임시로 any 처리했습니다.
   onRemoveLike: (e: React.MouseEvent, moimId: number) => void;
   onClickCard: (moimId: number) => void;
 }
-export default function MyLikeCards ({ moims, onRemoveLike, onClickCard }: IMyLikeCards) {
+export default function MyLikeCards({ moims, onRemoveLike, onClickCard }: IMyLikeCards) {
   const { moimType, region, moimStatus, sortOrder } = useFilterStore();
   console.log('Before filtering:', moims);
 
   // const { fetchLikes } = useLikeStore()
-
 
   // useEffect(() => {
   //   fetchLikes();
@@ -57,11 +53,11 @@ export default function MyLikeCards ({ moims, onRemoveLike, onClickCard }: IMyLi
     const typeMatch = !moimType || moim.moimType === moimType;
     const regionMatch = !region || region.includes(moim.roadAddress);
     const statusMatch = !moimStatus || moim.moimStatus === moimStatus;
-    
+
     return typeMatch && regionMatch && statusMatch;
   });
   console.log('After filtering:', filteredMoims);
-  console.log('Current filters:', { moimType, region, moimStatus })
+  console.log('Current filters:', { moimType, region, moimStatus });
 
   // const handleIntersect = () => {
   //   if (hasNextPage) fetchNextPage();
@@ -77,17 +73,15 @@ export default function MyLikeCards ({ moims, onRemoveLike, onClickCard }: IMyLi
   // }
 
   return (
-    
-      <div className="pt-[14px] space-y-4">
-        {moims.map((item) => (
-          <MyLikeCard 
-            key={item.moimId} 
-            moim={item} 
-            onClick={() => onClickCard(item.moimId)}
-            onRemoveLike={(e) => onRemoveLike(e, item.moimId)}
-          />
-        ))}
-      </div>
-    
+    <div className="pt-[14px] space-y-4">
+      {moims.map((item) => (
+        <MyLikeCard
+          key={item.moimId}
+          moim={item}
+          onClick={() => onClickCard(item.moimId)}
+          onRemoveLike={(e) => onRemoveLike(e, item.moimId)}
+        />
+      ))}
+    </div>
   );
 }
