@@ -1,3 +1,4 @@
+import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -57,21 +58,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ message: '모임 찜하기 실패' }, { status: 401 });
   }
 
-  const { data: likes, error: likesError } = await supabase
-    .from('liked_moims')
-    .select('*')
-    .eq('moim_uuid', id);
+  const { data: moim, error: moimError } = await supabase
+    .from('moims')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
+    .eq('id', id)
+    .single();
 
-  if (likesError) {
-    return NextResponse.json({ message: likesError?.message }, { status: 401 });
+  if (moimError) {
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+  }
+
+  if (!moim) {
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
   }
 
   const response = {
     message: '모임 찜하기가 성공적으로 완료되었습니다',
-    data: {
-      moimId: id,
-      likes: likes?.length,
-    },
+    data: mapMoimsToClient([moim])[0],
   };
 
   return NextResponse.json(response, { status: 200 });
@@ -124,21 +129,25 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
     return NextResponse.json({ message: '찜한 모임이 없어요' }, { status: 401 });
   }
 
-  const { data: likes, error: likesError } = await supabase
-    .from('liked_moims')
-    .select('*')
-    .eq('moim_uuid', id);
+  const { data: moim, error: moimError } = await supabase
+    .from('moims')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
+    .eq('id', id)
+    .single();
 
-  if (likesError) {
-    return NextResponse.json({ message: likesError?.message }, { status: 401 });
+  if (moimError) {
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+  }
+
+  if (!moim) {
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
   }
 
   const response = {
     message: '모임 찜 해제가 성공적으로 완료되었습니다',
-    data: {
-      moimId: id,
-      likes: likes?.length,
-    },
+    data: mapMoimsToClient([moim])[0],
   };
 
   return NextResponse.json(response, { status: 200 });

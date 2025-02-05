@@ -13,6 +13,7 @@ export default function AuthTempPage() {
   const queryClient = useQueryClient();
   const next = searchParams.get('next');
   const token = searchParams.get('token');
+  const refreshToken = searchParams.get('refresh_token');
   const { data: me } = useMeQuery(true);
 
   useEffect(() => {
@@ -20,7 +21,10 @@ export default function AuthTempPage() {
       setLocalStorageItem('access_token', token);
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
     }
-  }, [token, router, next, queryClient]);
+    if (refreshToken) {
+      setLocalStorageItem('refresh_token', refreshToken);
+    }
+  }, [token, refreshToken, router, next, queryClient]);
 
   useEffect(() => {
     if (!me) return;

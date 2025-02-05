@@ -1,11 +1,10 @@
 import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
 import emptyDudu from '@images/mypage/dudu-empty.svg';
-import { useMyMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
-import { IMyMoim } from '@/types/mypage/moim.type';
+import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 
 export default function Meetings() {
-  const { data, isLoading } = useMyMoimQuery();
+  const { data, isLoading } = useParticipatedMoimQuery();
 
   if (isLoading) {
     return <GatheringSkeleton />;
@@ -13,7 +12,7 @@ export default function Meetings() {
 
   console.log(data);
 
-  if (!data?.data || data?.data.length === 0) {
+  if (!data || data.length === 0) {
     return (
       <div className="flex flex-col justify-center items-center h-full gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
@@ -26,7 +25,7 @@ export default function Meetings() {
 
   return (
     <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
-      {data.data.map((moim) => (
+      {data.map((moim) => (
         <GatheringCard key={moim.moimId} moim={moim} />
       ))}
     </div>

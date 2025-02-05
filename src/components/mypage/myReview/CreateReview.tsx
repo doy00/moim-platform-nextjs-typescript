@@ -41,11 +41,11 @@ export default function CreateReview({ moim, user }: Props) {
         </div>
 
         <span className="text-heading1 text-gray800 font-semibold">
-          {user?.data.nickname}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
+          {user?.nickname}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
         </span>
       </div>
       <div>
-        <GatheringCard moim={moim.data[0]} />
+        <GatheringCard moim={moim} />
       </div>
       <div className="flex flex-col gap-6">
         <span>모임은 어땠나요?</span>
