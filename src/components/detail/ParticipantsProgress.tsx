@@ -32,14 +32,14 @@ export const ParticipantsProgress: React.FC<IParticipantsProgressProps> = ({
     return () => clearTimeout(timer);
   }, [targetProgress]);
 
-  const isMinimumMet = currentCount >= 3;   // 모임 개설 최소인원 3명
+  const isMinimumMet = currentCount >= minParticipants;   // 모임 개설 최소인원 3명
 
   return (
     <div className="w-full space-y-2">
       {/* 참여 신청한 인원 */}
       <div className="flex flex-col">
         <span className="font-semibold text-body-2-normal text-gray800">
-          {currentCount}명 참여중
+          {`${currentCount}명 참여중`}
         </span>
       </div>
 
@@ -66,10 +66,11 @@ export const ParticipantsProgress: React.FC<IParticipantsProgressProps> = ({
       {/* 최소, 최대 인원 */}
       <div className="flex justify-between text-xs">
         <span className="text-caption-normal font-medium text-gray500">
-          {"최소인원 3명"}
+          {/* {"최소인원 3명"} */}
+          {`최소인원 ${minParticipants}명`}
         </span>
         <span className="text-caption-normal font-medium text-gray500">
-          최대인원 {maxParticipants}명
+          {`최대인원 ${maxParticipants}명`}
         </span>
       </div>
       

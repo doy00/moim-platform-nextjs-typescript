@@ -1,5 +1,6 @@
 // components/detail/DetailPresenter.tsx 
 // 상세페이지 전체 UI 렌더링을 담당하는 컴포넌트
+'use client';
 import Link from 'next/link';
 // components 
 import { DetailShare } from '@/components/detail/DetailShare';
@@ -16,6 +17,7 @@ import { IDetailPresenterProps } from '@/types/detail/i-presenter';
 import { IMoimDetail } from '@/types/detail/t-moim';
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
+import SignOutButton from './SignoutBtn';
 
 export default function DetailPresenter({
   data,
@@ -27,33 +29,32 @@ export default function DetailPresenter({
   onLikeToggle,
   className,
 }: IDetailPresenterProps) {
-  // 데이터 처리 함수
-  const processDetailData = (data: IMoimDetail | null): IMoimDetail => {
+  if (!data) {
+    return null; // 또는 loading/error UI
     // 데이터가 없을때 기본값
-    if (!data) {
-      return {
-        moimId: '',
-        title: '모임 타이틀이 들어갑니다.',
-        content: '모임 내용이 들어갑니다.',
-        address: '주소를 불러오는 중입니다.',
-        recruitmentDeadline: new Date().toISOString(),
-        startDate: new Date().toISOString(),
-        endDate: new Date().toISOString(),
-        minParticipants: 0,
-        maxParticipants: 12,
-        moimType: 'PROJECT',
-        status: 'RECRUIT',
-        likes: 0,
-        participants: 0,
-        reviewsCount: 0,
-        participantsMoims: [],
-        reviews: []
-      };
-    }
-    return data
-  };
-
-const processedData = processDetailData(data);
+    // return {
+    //   moimId: '',
+    //   title: '모임 타이틀이 들어갑니다.',
+    //   content: '모임 내용이 들어갑니다.',
+    //   address: '주소를 불러오는 중입니다.',
+    //   recruitmentDeadline: new Date().toISOString(),
+    //   startDate: new Date().toISOString(),
+    //   endDate: new Date().toISOString(),
+    //   minParticipants: 3,
+    //   maxParticipants: 12,
+    //   moimType: 'PROJECT',
+    //   status: 'RECRUIT',
+    //   likes: 0,
+    //   participants: 0,
+    //   reviewsCount: 0,
+    //   participatedUsers: [],
+    //   reviews: [],
+    //   isConfirmed: false,
+    //   online: false,
+    //   likedUsers: [],
+    // };
+  }
+  
 
   return (
     <div className="
@@ -64,46 +65,55 @@ const processedData = processDetailData(data);
       lg:max-w-screen-lg
       "
     >
+        <SignOutButton />
         <Link href="/" className="w-full h-14 py-[10px] flex items-center">
           <DothemeetLogo />
         </Link>
         <DetailShare />
         <ImageBox image={DEFAULT_IMAGE.MOIM} />
         <DetailInfo 
-          title={processedData?.title}
-          address={processedData?.address}
-          startDate={processedData?.startDate}
-          recruitmentDeadline={processedData?.recruitmentDeadline}
-          endDate={processedData?.endDate}        
-          participants={processedData?.participants || 0}
-          minParticipants={processedData?.minParticipants || 3 }
-          moimType={processedData?.moimType}
-          status={processedData?.status}
+          title={data.title}
+          address={data.address}
+          startDate={data.startDate}
+          recruitmentDeadline={data.recruitmentDeadline}
+          endDate={data.endDate}        
+          participants={data.participants}
+          minParticipants={data.minParticipants}
+          moimType={data.moimType}
+          isConfirmed={data.isConfirmed}
+          status={data.status}
+          online={data.online}
         />
         <DetailParticipants 
-          data={processedData}
+          participants={data.participatedUsers}
+          maxParticipants={data.maxParticipants}
+          minParticipants={data.minParticipants}
+          currentParticipants={data.participants}
         />
         <DetailContent 
-          content={processedData?.content}
+          content={data.content}
         />
         <DetailHost 
-          name="두두씨"
+          nickname="두두씨"
+          // name={data.participatedUsers[0]?.userNickname }
           introduction="안녕하세요! 기획하는 두두입니다."
-          hostTag={['기획', '마케팅', '자기계발']}
-          profileImage={
+          tags={['기획', '마케팅', '자기계발']}
+          image={
             // data?.image || 
             DEFAULT_IMAGE.PROFILE}
         />
         {/* 리뷰 목록 */}
         <DetailReview 
-          // reviews={processedData?.reviews}
-          reviews={MOCK_REVIEWS}
+          reviews={data.reviews}
+          totalReviews={data.reviewsCount}
+          // reviews={MOCK_REVIEWS}
         />
         <FloatingBar
           onHeartClick={onLikeToggle}
           onJoinClick={() => onJoin}
           isLiked={isLiked}
           isJoining={isJoining}
+          // stauts={data.status}
         />
     </div>
   );

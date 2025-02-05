@@ -2,11 +2,25 @@ import React from "react";
 import { ChipSmallSquircle } from "./ChipSmallSquircle";
 import { ChipSmallRound } from "@/components/detail/ChipSmallRound";
 import { Separator } from "@/components/ui/separator"
-import { IDetailInfoProps } from "@/types/detail/i-components";
 import { cn } from "@/utils/detail/cn";
 import { getMoimTypeText } from "@/utils/detail/enums";
 import { formatDate, getDeadlineText } from "@/utils/detail/date";
+import { ECategory, EMoimStatus } from "@/types/supabase/supabase-custom.type";
 
+interface IDetailInfoProps {
+  title: string;
+  address: string;
+  recruitmentDeadline: string;
+  startDate: string;
+  endDate: string;
+  participants: number;
+  minParticipants: number;
+  moimType: ECategory;
+  status: EMoimStatus;
+  isConfirmed: boolean;
+  online: boolean;
+  className?: string;
+}
 export const DetailInfo: React.FC<IDetailInfoProps> = ({
   title,
   address,
@@ -17,12 +31,14 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
   minParticipants,
   moimType,
   status,
+  isConfirmed,
+  online,
   className,
 }) => {
   // 개설 확정 여부 확인
-  const isConfirmed = () => {
-    return participants >= minParticipants;
-  };
+  // const isConfirmed = () => {
+  //   return participants >= minParticipants;
+  // };
 
   return (
     <div className={cn(
@@ -37,11 +53,23 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
             variant="light"
             text={getMoimTypeText(moimType)}
           />
-          {isConfirmed() && (
+          {isConfirmed && (
           <ChipSmallSquircle 
             variant="dark"
             text="개설 확정"
           />
+          )}
+          {online && (
+            <ChipSmallSquircle 
+              variant="light"
+              text="온라인"
+            />
+          )}
+          {status === "END" && (
+            <ChipSmallSquircle 
+              variant="dark"
+              text="모집 마감"
+            />
           )}
         </div>
       
