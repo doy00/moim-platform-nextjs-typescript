@@ -13,7 +13,9 @@ const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
 
 export function GatheringCard({ moim, isReviewed }: Props) {
   const isGatheringEnded = new Date(moim.endDate) < new Date();
-  const showReviewButton = isGatheringEnded && !isReviewed;
+  // moim 타입이 Union 타입이기 때문에 타입 가드를 사용함
+  const isParticipatedMoim = 'isParticipated' in moim;
+  const showReviewButton = isGatheringEnded && !isReviewed && isParticipatedMoim;
 
   return (
     <GatheringWrapper>

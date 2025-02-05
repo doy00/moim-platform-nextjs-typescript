@@ -17,5 +17,10 @@ export interface IMoim {
   reviews: [];
 }
 
-export type IMyMoim = IMoim;
-export type IParticipatedMoim = IMoim;
+export interface IMyMoim extends IMoim {
+  isOwner: boolean;
+}
+
+export interface IParticipatedMoim extends IMoim {
+  isParticipated: boolean;
+}
