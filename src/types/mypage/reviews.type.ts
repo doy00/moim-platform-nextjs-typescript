@@ -1,11 +1,12 @@
+import { IMoim } from '@/types/mypage/moim.type';
+
 export interface IReview {
-  created_at: string;
-  updated_at: string;
-  id: string;
-  moim_uuid: string;
   rate: 'SOSO' | 'GOOD' | 'RECOMMEND';
   review: string;
-  user_uuid: string;
+  userUuid: string;
+  userEmail: string;
+  userNickname: string;
+  moim: IMoim;
 }
 export interface IReviewPost {
   review: string;

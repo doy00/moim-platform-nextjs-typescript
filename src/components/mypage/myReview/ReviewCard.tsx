@@ -1,41 +1,47 @@
 import { IReview } from '@/types/mypage/reviews.type';
-import profileDefault from '@images/mypage/profile-default.svg';
-import Image from 'next/image';
+import { IMoim } from '@/types/mypage/moim.type';
+// import profileDefault from '@images/mypage/profile-default.svg';
+// import Image from 'next/image';
 
 interface Props {
-  review: IReview['data'][0];
+  review: IReview;
+  moim: IMoim;
 }
 
 const ReviewWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="flex flex-col bg-background100 rounded-xl px-4 py-[18px] gap-3">{children}</div>
 );
 
-export function ReviewCard({ review }: Props) {
+export function ReviewCard({ review, moim }: Props) {
   return (
     <ReviewWrapper>
       <div className="flex flex-col gap-1">
-        <span>{review?.emotion}</span>
+        <span>{review?.rate}</span>
         <div className="flex items-center justify-start gap-2">
-          <span className="font-normal text-caption-normal text-gray300 ">{review?.moimTitle}</span>
+          <span className="font-normal text-caption-normal text-gray300 ">{moim?.title}</span>
           <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
           <span className="font-normal text-caption-normal text-gray300 ">
-            {new Date(review?.createdAt).toLocaleDateString()}
+            {/* //리뷰 작성 날짜 추가 필요 */}
+            {new Date(moim?.startDate).toLocaleDateString()}
           </span>
         </div>
       </div>
-      <span className="font-normal text-label-reading text-gray400">{review?.contents}</span>
+      <span className="font-normal text-label-reading text-gray400">{review?.review}</span>
 
       {/* api 미완성으로 인해 주석처리 */}
-      {/* <div className="flex items-center justify-end gap-2">
-        <Image src={review?.User?.image ?? profileDefault} alt="profile" width={24} height={24} />
+      <div className="flex items-center justify-end gap-2">
+        {/* <Image src={review?.User?.image ?? profileDefault} alt="profile" width={24} height={24} /> */}
         <div className="flex justify-between items-center gap-2">
-          <span className="font-normal text-caption-normal text-gray300">{review?.User?.name}</span>
+          <span className="font-normal text-caption-normal text-gray300">
+            {review?.userNickname}
+          </span>
           <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
           <span className="font-normal text-caption-normal text-gray300">
-            {new Date(review?.createdAt).toLocaleDateString()}
+            {/* //리뷰 작성 날짜 추가 필요 */}
+            {new Date(moim?.startDate).toLocaleDateString()}
           </span>
         </div>
-      </div> */}
+      </div>
     </ReviewWrapper>
   );
 }

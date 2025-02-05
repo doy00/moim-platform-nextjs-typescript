@@ -11,10 +11,20 @@ import PendingReview from '@/components/mypage/myReview/PendingReview';
 
 export default function RenderTab() {
   const [activeTab, setActiveTab] = useState('meetings');
+  // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  // const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+
+  // const handleCategorySelect = (category: string | null) => {
+  //   setSelectedCategory(category);
+  // };
+
+  // const handleStatusSelect = (status: string | null) => {
+  //   setSelectedStatus(status);
+  // };
 
   const renderTab = () => {
     return (
-      <div className="relative overflow-hidden">
+      <div className="relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -66,7 +76,9 @@ export default function RenderTab() {
           만든 모임
         </button>
       </div>
-      {(activeTab === 'meetings' || activeTab === 'created-meetings') && <FilterBar />}
+      {(activeTab === 'meetings' || activeTab === 'created-meetings') && (
+        <FilterBar onCategorySelect={handleCategorySelect} onStatusSelect={handleStatusSelect} />
+      )}
       {activeTab === 'reviews' && <ReviewTabs />}
       {renderTab()}
     </div>
