@@ -1,7 +1,7 @@
 'use client';
 
 import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
-import { IMyMoim } from '@/types/mypage/moim.type';
+import { IMoim } from '@/types/mypage/moim.type';
 import { IUser } from '@/types/mypage/user';
 import close from '@images/mypage/close.svg';
 import badOff from '@images/mypage/dude-grade-bad-off.svg';
@@ -12,7 +12,7 @@ import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 
 interface Props {
-  moim: IMyMoim;
+  moim: IMoim;
   user: IUser;
 }
 
@@ -45,7 +45,7 @@ export default function CreateReview({ moim, user }: Props) {
         </span>
       </div>
       <div>
-        <GatheringCard moim={moim} />
+        <GatheringCard moim={{ ...moim, isParticipated: true }} isReviewed={true} />
       </div>
       <div className="flex flex-col gap-6">
         <span>모임은 어땠나요?</span>
