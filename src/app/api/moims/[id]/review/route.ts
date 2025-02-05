@@ -1,4 +1,5 @@
 import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
+import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
@@ -23,7 +24,20 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ message: reviewsError?.message }, { status: 401 });
   }
 
-  return NextResponse.json(reviews, { status: 200 });
+  if (!reviews) {
+    return NextResponse.json({ message: '리뷰가 없어요' }, { status: 401 });
+  }
+
+  const mappedReviews = reviews?.map((review) => ({
+    userUuid: review.user_uuid,
+    review: review.review,
+    rate: review.rate,
+    userEmail: review.user_email,
+    userImage: review.user_image,
+    userNickname: review.user_nickname,
+  }));
+
+  return NextResponse.json(mappedReviews, { status: 200 });
 }
 
 // 리뷰 작성
@@ -68,5 +82,26 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ message: '리뷰 작성에 실패했습니다' }, { status: 401 });
   }
 
-  return NextResponse.json(postedReview, { status: 200 });
+  const { data: moim, error: moimError } = await supabase
+    .from('moims')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
+    .eq('id', id)
+    .single();
+
+  if (moimError) {
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+  }
+
+  if (!moim) {
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+  }
+
+  const response = {
+    message: '리뷰 작성이 성공적으로 완료되었습니다',
+    data: mapMoimsToClient([moim])[0],
+  };
+
+  return NextResponse.json(response, { status: 200 });
 }
