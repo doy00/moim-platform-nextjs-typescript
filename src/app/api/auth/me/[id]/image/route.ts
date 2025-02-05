@@ -7,10 +7,12 @@ import { NextResponse } from 'next/server';
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id;
-  const cookieStore = await cookies();
-  const supabase = createClient(cookieStore);
+
   const formData = await req.formData();
   const meImageFile = formData.get('me_image') as File;
+
+  const cookieStore = await cookies();
+  const supabase = createClient(cookieStore);
 
   const { data: user, error: userError }: { data: TMe | null; error: PostgrestError | null } =
     await supabase.from('users').select('*').eq('id', id).single();
