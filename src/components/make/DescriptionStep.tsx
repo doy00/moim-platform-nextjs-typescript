@@ -22,11 +22,7 @@ export default function DescriptionStep() {
   const handleImageUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result as string); // setImage가 정확히 작동하도록 수정
-      };
-      reader.readAsDataURL(file);
+      setImage(file); 
     }
   };
 
@@ -69,9 +65,9 @@ export default function DescriptionStep() {
         <div className="relative w-[120px] h-[120px] mt-2 bg-background400 rounded-md flex items-center justify-center">
           {image ? (
             <div className="relative w-full h-full group">
-              <img src={image} alt="uploaded" className="w-full h-full object-cover rounded-2xl" />
+              <img src={URL.createObjectURL(image)} alt="uploaded" className="w-full h-full object-cover rounded-2xl" />
               <button
-                onClick={() => setImage('')} // 이미지 삭제 시 setImage(null) 호출
+                onClick={() => setImage(null)} // 이미지 삭제 시 setImage(null) 호출
                 className="absolute top-0 hidden group-hover:flex bg-gray900 bg-opacity-40 w-full h-full rounded-2xl text-white text-lg items-center justify-center"
               >
                 <DeleteFillIcon className="fill-[#c4c4c4]" />

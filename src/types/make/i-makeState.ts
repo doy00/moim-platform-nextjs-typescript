@@ -1,16 +1,17 @@
+// /types/make/i-makeState.ts
 interface IMakeState {
-  type: string; // 모임 카테고리
-  title: string; // 모임 제목 (기존 name)
-  content: string; // 모임 설명 (기존 description)
-  si: string; // 시 (도시)
-  district: string; // 구
-  roadAddress: string; // 도로명 주소
-  recruitmentDeadline: string; // 모집 종료 날짜
-  startDate: string; // 모임 시작 날짜
-  endDate: string; // 모임 종료 날짜
-  minParticipants: number; // 최소 참가자 수
-  maxParticipants: number; // 최대 참가자 수
-  image: string | null; // 이미지 경로
+  type: string; // 모임 카테고리 (예: 'PROJECT' | 'STUDY' | 'INTERVIEW')
+  title: string;
+  content: string;
+  si: string;
+  district: string;
+  roadAddress: string;
+  recruitmentDeadline: string;
+  startDate: string;
+  endDate: string;
+  minParticipants: number;
+  maxParticipants: number;
+  image: File | null; // File | null
 }
 
 export interface MakeStoreState extends IMakeState {
@@ -25,6 +26,6 @@ export interface MakeStoreState extends IMakeState {
   setEndDate: (endDate: string) => void;
   setMinParticipants: (minParticipants: number) => void;
   setMaxParticipants: (maxParticipants: number) => void;
-  setImage: (image: string | null) => void; // 수정된 타입
-  reset: () => void; // 상태 초기화
+  setImage: (image: File | null) => void;
+  reset: () => void;
 }
