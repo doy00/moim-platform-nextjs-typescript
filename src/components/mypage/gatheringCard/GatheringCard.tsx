@@ -8,7 +8,7 @@ interface Props {
 }
 
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
-  <div className="bg-background100 rounded-[14px] shadow-md cursor-pointer">{children}</div>
+  <div className="bg-background100 rounded-[14px] shadow-sm cursor-pointer">{children}</div>
 );
 
 export function GatheringCard({ moim, isReviewed }: Props) {
