@@ -75,30 +75,35 @@ export async function GET(request: Request) {
         name: 'access_token',
         value: data.session?.access_token,
         maxAge: 60 * 60,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      });
+      setCookie({
+        name: 'refresh_token',
+        value: data.session?.refresh_token,
+        maxAge: 60 * 60 * 24 * 30,
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
       });
 
       // console.log('data when not error ===========>', data);
       const forwardedHost = request.headers.get('x-forwarded-host'); // original origin before load balancer
       const isLocalEnv = process.env.NODE_ENV === 'development';
+      const tokenParams = `token=${data.session?.access_token}&refresh_token=${data.session?.refresh_token}`;
       if (isLocalEnv) {
-        if (next)
-          return NextResponse.redirect(
-            `${origin}/auth/temp?next=${next}&token=${data.session?.access_token}`,
-          );
+        if (next) return NextResponse.redirect(`${origin}/auth/temp?next=${next}&${tokenParams}`);
         // we can be sure that there is no load balancer in between, so no need to watch for X-Forwarded-Host
-        return NextResponse.redirect(`${origin}/auth/temp?token=${data.session?.access_token}`);
+        return NextResponse.redirect(`${origin}/auth/temp?${tokenParams}`);
       } else if (forwardedHost) {
         if (next)
           return NextResponse.redirect(
-            `https://${forwardedHost}/auth/temp?next=${next}&token=${data.session?.access_token}`,
+            `https://${forwardedHost}/auth/temp?next=${next}&${tokenParams}`,
           );
-        return NextResponse.redirect(
-          `https://${forwardedHost}/auth/temp?token=${data.session?.access_token}`,
-        );
+        return NextResponse.redirect(`https://${forwardedHost}/auth/temp?${tokenParams}`);
       } else {
-        return NextResponse.redirect(
-          `${origin}/auth/temp?next=${next}&token=${data.session?.access_token}`,
-        );
+        return NextResponse.redirect(`${origin}/auth/temp?${tokenParams}`);
       }
     }
   }
