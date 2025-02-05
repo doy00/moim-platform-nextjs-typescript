@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
 import IntersectionObserver from '@/libs/home/intersectionObserver';
 import { useFilterStore } from '@/stores/home/filterStore';
-import HomeCard from './HomeCard';
-import { IMoim } from '@/types/home/i-moim';
 import { useLikeStore } from '@/stores/home/likeStore';
+import { IMoim } from '@/types/home/i-moim';
+import { useEffect } from 'react';
+import HomeCard from './HomeCard';
 
 interface HomeCardsProps {
   data: any; // HomeContainer에서 받은 데이터
@@ -33,7 +33,7 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
           (status === 'all' || status.toUpperCase() === moim.status.toUpperCase()) &&
           (isConfirmed === null || moim.isConfirmed === isConfirmed) // ✅ isConfirmed === null이면 true/false 모두 포함
         );
-      })
+      }),
     ) || [];
 
   // ✅ 정렬 적용 (sortedMoims 유지)
