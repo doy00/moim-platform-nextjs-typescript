@@ -1,3 +1,4 @@
+import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
@@ -57,21 +58,25 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ message: '모임 참여 실패' }, { status: 401 });
   }
 
-  const { data: participated, error: participatedSelectError } = await supabase
-    .from('participated_moims')
-    .select('*')
-    .eq('moim_uuid', id);
+  const { data: moim, error: moimError } = await supabase
+    .from('moims')
+    .select(
+      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+    )
+    .eq('id', id)
+    .single();
 
-  if (participatedSelectError) {
-    return NextResponse.json({ message: participatedSelectError?.message }, { status: 401 });
+  if (moimError) {
+    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+  }
+
+  if (!moim) {
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
   }
 
   const response = {
     message: '모임 참여가 성공적으로 완료되었습니다',
-    data: {
-      moimId: id,
-      participated: participated?.length,
-    },
+    data: mapMoimsToClient([moim])[0],
   };
 
   return NextResponse.json(response, { status: 200 });
