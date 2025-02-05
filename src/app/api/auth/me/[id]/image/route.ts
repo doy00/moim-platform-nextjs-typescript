@@ -30,7 +30,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   }
 
   const imageBuffer = await convertToWebP(meImageFile, 1080);
-  const filePath = `users_${Date.now()}.webp`;
+  const filePath = `users/${user.email}/${Date.now()}.webp`;
 
   if (!imageBuffer) {
     return NextResponse.json({ message: '이미지 변환 중 오류 발생' }, { status: 500 });
@@ -46,7 +46,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ message: '이미지 업로드 중 오류 발생' }, { status: 500 });
   }
 
-  const { data: imageUrlData } = supabase.storage.from('moims').getPublicUrl(filePath);
+  const { data: imageUrlData } = supabase.storage.from('users').getPublicUrl(filePath);
   user.image = imageUrlData.publicUrl;
 
   const {
