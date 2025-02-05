@@ -3,7 +3,7 @@ import { Database } from '@/types/supabase/supabase';
 
 const supabase = createClient<Database>(
   process.env.NEXT_PUBLIC_SUPABASE_URL!,
-  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+  process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
 );
 
 const ITEMS_PER_PAGE = 10;
@@ -19,12 +19,13 @@ export const fetchMoims = async ({ pageParam = 1 }: { pageParam: number }) => {
     if (error) throw error;
 
     console.log('📌 [API Response] fetchMoims data:', data);
-    
+
     return {
       data: data.map((moim) => ({
-        moimId: moim.id, 
+        moimId: moim.id,
         title: moim.title,
         content: moim.content,
+        createdAt: moim.created_at,
         address: moim.address,
         isConfirmed: moim.is_confirmed ?? false,
         recruitmentDeadline: moim.recruitment_deadline,

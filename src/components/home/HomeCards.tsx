@@ -1,16 +1,19 @@
 'use client';
 
-import { useEffect } from 'react';
-import { useInfiniteQuery } from '@tanstack/react-query';
-
 import IntersectionObserver from '@/libs/home/intersectionObserver';
-import { fetchMoims } from '@/utils/home/fetchMoims';
 import { useFilterStore } from '@/stores/home/filterStore';
-import HomeCard from './HomeCard';
-import { IMoim } from '@/types/home/i-moim';
 import { useLikeStore } from '@/stores/home/likeStore';
+import { IMoim } from '@/types/home/i-moim';
+import { useEffect } from 'react';
+import HomeCard from './HomeCard';
 
-export default function HomeCards() {
+interface HomeCardsProps {
+  data: any; // HomeContainer에서 받은 데이터
+  fetchNextPage: () => void;
+  hasNextPage: boolean;
+}
+
+export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCardsProps) {
   const { sortOrder, moimType, region, status, isConfirmed } = useFilterStore();
   const { fetchLikes } = useLikeStore();
 
@@ -18,21 +21,11 @@ export default function HomeCards() {
     fetchLikes();
   }, [fetchLikes]);
 
-  const { data, fetchNextPage, hasNextPage } = useInfiniteQuery({
-    queryKey: ['moims'],
-    queryFn: ({ pageParam = 1 }) => fetchMoims({ pageParam }),
-    getNextPageParam: (lastPage) =>
-      lastPage.pagination.current_page < lastPage.pagination.total_pages
-        ? lastPage.pagination.current_page + 1
-        : undefined,
-    initialPageParam: 1,
-  });
-
   console.log('📌 [Before Filtering] HomeCards data:', data);
 
-  // 클라이언트 필터링 적용
+  // ✅ 클라이언트 필터링 적용
   const filteredMoims =
-    data?.pages.flatMap((page) =>
+    data?.pages.flatMap((page: any) =>
       page.data.filter((moim: IMoim) => {
         return (
           (moimType === 'all' || moimType.toUpperCase() === moim.moimType.toUpperCase()) &&
@@ -43,6 +36,7 @@ export default function HomeCards() {
       }),
     ) || [];
 
+  // ✅ 정렬 적용 (sortedMoims 유지)
   const sortedMoims = [...filteredMoims].sort((a, b) => {
     if (sortOrder === 'LATEST') {
       return new Date(b.startDate).getTime() - new Date(a.startDate).getTime(); // 최신순 (startDate 기준)
@@ -55,8 +49,6 @@ export default function HomeCards() {
     }
     return 0;
   });
-
-  console.log('✅ [After Filtering] Filtered Moims:', filteredMoims);
 
   console.log('✅ [After Filtering] Filtered Moims:', filteredMoims);
 

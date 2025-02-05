@@ -23,7 +23,7 @@ export const useLikeStore = create<LikeState>((set, get) => ({
       } else {
         await axiosHomeInstance.post(`/moims/${moimId}/like`);
       }
-      
+
       if (isLiked) {
         currentLikes.delete(moimId);
         currentDeltas[moimId] = (currentDeltas[moimId] || 0) - 1;
@@ -47,7 +47,10 @@ export const useLikeStore = create<LikeState>((set, get) => ({
   fetchLikes: async () => {
     try {
       const response = await axiosHomeInstance.get('/moims/liked');
-      const likedIds: string[] = response.data.likedMoimIds;
+      const likedMoims = response.data.data;
+
+      const likedIds = likedMoims.map((moim: any) => moim.moimId);
+
       set({ likes: new Set(likedIds), likeDeltas: {} });
     } catch (error) {
       console.error('Failed to fetch likes:', error);

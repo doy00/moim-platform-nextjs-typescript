@@ -52,9 +52,6 @@ export type TMoimsJoined = TMoims & {
   reviews: Partial<TReviews>[];
   participated_moims: Partial<TParticipatedMoims>[];
   liked_moims: Partial<TLikedMoims>[];
-  reviews: Partial<TReviews>[];
-  participated_moims: Partial<TParticipatedMoims>[];
-  liked_moims: Partial<TLikedMoims>[];
 };
 
 type TReviewParticipatedLikedMoim = {

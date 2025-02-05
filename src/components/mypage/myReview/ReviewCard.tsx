@@ -1,11 +1,6 @@
-import { IReview } from '@/types/mypage/reviews.type';
-import { IMoim } from '@/types/mypage/moim.type';
-// import profileDefault from '@images/mypage/profile-default.svg';
-// import Image from 'next/image';
-
 interface Props {
-  review: IReview;
-  moim: IMoim;
+  // review: IReview['data'][0];
+  review: any; // 빌드 에러로 임시로 any 처리했습니다.
 }
 
 const ReviewWrapper = ({ children }: { children: React.ReactNode }) => (

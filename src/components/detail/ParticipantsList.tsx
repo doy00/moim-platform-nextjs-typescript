@@ -2,15 +2,18 @@
 import React, { useState } from 'react';
 import { cn } from "@/utils/detail/cn";
 import Image from "next/image";
-import {
-  HoverCard,
-  HoverCardContent,
-  HoverCardTrigger,
-} from "@/components/ui/hover-card"
-import { IParticipant, IParticipantsList } from "@/types/detail/i-participant";
-import { DEFAULT_IMAGE } from '@/constants/detail/images';
+import { HoverCard, HoverCardContent, HoverCardTrigger, } from "@/components/detail/HoverCardUI"
+import { IParticipant } from '@/types/detail/t-moim';
+import { TParticipatedUserClient } from '@/types/supabase/supabase-custom.type';
+import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
+import { ProfileImage } from './ProfileImage';
 
-export const ParticipantsList: React.FC<IParticipantsList> = ({
+interface IPartcipantsListProps {
+  participants: TParticipatedUserClient[];
+  maxParticipants: number;
+  className?: string;
+}
+export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
   participants,
   maxParticipants,
   className,
@@ -23,6 +26,11 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
   // 추가 참가신청 가능 인원수 계산
   const availableCount = Math.max(0, maxParticipants - participants.length);
 
+  // 작성자 이미지 로딩 실패시 기본 이미지를 보여줌
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+    e.currentTarget.src = DEFAULT_IMAGE.PROFILE;
+  };
+
     return (
       <div className="flex justify-between items-center w-full">
             <HoverCard closeDelay={300}>
@@ -34,18 +42,17 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
                 >
                   {visibleParticipants.map((participant) => (
                   <div
-                    key={participant.userId}
+                    key={participant.userUuid}
                     className="relative w-8 h-8"
                   >
                     <div className="absolute w-8 h-8 rounded-full border-2 border-background200 overflow-hidden">
-                      <Image
-                        // src={participant.User?.image || '/svgs/profile.svg'}
-                        src={DEFAULT_IMAGE.PROFILE}
-                        // alt={participant.User?name || "Anonymous"}
-                        alt="Anonymous"
+                      <ProfileImage
+                        src={participant.userImage } // || DEFAULT_IMAGE.PROFILE
+                        alt={participant.userNickname || "참가자 프로필"}
                         width={32}
                         height={32}
                         className="object-cover"
+                        // onError={handleImageError}
                       />
                     </div>
                   </div>
@@ -62,27 +69,25 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
               </HoverCardTrigger>
 
               <HoverCardContent
-                className="w-64 p-2"
+                className="w-[156px] px-1.5 py-3 bg-background100"
                 align="start"
               >
                 <div className="space-y-2">
                   {participants.map((participant) => (
                     <div
-                      key={participant.userId}
-                      className="flex items-center gap-2 p-1"
+                      key={participant.userUuid}
+                      className="flex items-center gap-2 p-1 h-[36px]"
                     >
-                      <Image
-                        // src={participant.User?.image || '/svgs/profile.svg'}
-                        src={DEFAULT_IMAGE.PROFILE}
-                        // alt={participant.User?.name || 'Anonymous'}
-                        alt="Anonymous"
+                      <ProfileImage
+                        src={participant.userImage}
+                        alt={participant.userNickname || '참가자 프로필'}
                         width={24}
                         height={24}
                         className="rounded-full"
                       />
-                      <span className="text-caption-normal text-textNormal">
-                        {/* [ ] {participant.User?.name || 'Anonymous'} */}
-                        Anonymous
+                      <span className="text-caption-normal text-gray400 font-medium">
+                        {/* 닉네임 */}
+                        {participant.userNickname || '닉네임'}
                       </span>
                     </div>
                   ))}
@@ -91,7 +96,7 @@ export const ParticipantsList: React.FC<IParticipantsList> = ({
             </HoverCard>
 
       {/* 추가 참가신청 가능 인원 */}
-      <span className="text-body-2-normal font-medium text-brown400">
+      <span className="text-body-2-normal font-semibold text-orange200">
         {availableCount}명 더 참여할 수 있어요
       </span>
     </div>

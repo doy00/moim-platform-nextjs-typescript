@@ -44,6 +44,5 @@ export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
     isConfirmed: moim.is_confirmed,
     online: moim.online,
     likedUsers: moim.liked_moims.map((likedMoim) => likedMoim.user_uuid as string),
-    likedUsers: moim.liked_moims.map((likedMoim) => likedMoim.user_uuid as string),
   }));
 }

@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import { TFilterState } from '@/types/home/t-filterState';
+import { create } from 'zustand';
 
 export const useFilterStore = create<TFilterState>((set) => ({
   moimType: 'all', // 기본값: 모든 카테고리 (소문자 유지)
@@ -7,12 +7,12 @@ export const useFilterStore = create<TFilterState>((set) => ({
   status: 'all', // 기본값: 모든 상태 (소문자 유지)
   sortOrder: 'LATEST', // 기본값: 최신순
   isConfirmed: null, // ✅ 기본값을 `null`로 설정 (초기엔 모든 데이터)
-
+  moimStatus: null, // 잘 모르겠어서 임시로 null 로 설정했습니다.
   // ✅ 정렬 방식 설정 (소문자 'all' 제외)
   setSortOrder: (sortOrder: string) => {
     const formattedSortOrder = sortOrder === 'LATEST' ? 'LATEST' : sortOrder.toUpperCase();
     console.log('🛠 [setSortOrder]:', formattedSortOrder);
-    set({ sortOrder: formattedSortOrder });
+    set({ sortOrder: formattedSortOrder as 'LATEST' | 'LIKES' | 'DEADLINE' });
   },
 
   // ✅ 모임 카테고리 설정 (소문자 'all' 제외)
