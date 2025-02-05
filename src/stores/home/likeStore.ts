@@ -1,46 +1,54 @@
 import { create } from 'zustand';
-import axiosInstance from '@/libs/home/home-axios';
-import { LikeState } from '@/types/home/t-likeState';
+import axiosHomeInstance from '@/libs/home/home-axios';
+
+interface LikeState {
+  likes: Set<string>;
+  likeDeltas: Record<string, number>;
+  toggleLike: (moimId: string) => Promise<void>;
+  fetchLikes: () => Promise<void>;
+}
 
 export const useLikeStore = create<LikeState>((set, get) => ({
   likes: new Set(),
+  likeDeltas: {},
 
-  toggleLike: async (moimId: number) => {
-    const likes = new Set(get().likes);
-    const isLiked = likes.has(moimId);
-
-    // 낙관적 업데이트
-    if (isLiked) {
-      likes.delete(moimId); // 찜 해제
-    } else {
-      likes.add(moimId); // 찜 추가
-    }
-    set({ likes });
+  toggleLike: async (moimId: string) => {
+    const currentLikes = new Set(get().likes);
+    const currentDeltas = { ...get().likeDeltas };
+    const isLiked = currentLikes.has(moimId);
 
     try {
       if (isLiked) {
-        await axiosInstance.delete(`/moim/like/${moimId}`);
+        await axiosHomeInstance.delete(`/moims/${moimId}/like`);
       } else {
-        await axiosInstance.post(`/moim/like`, { moimId });
+        await axiosHomeInstance.post(`/moims/${moimId}/like`);
       }
-    } catch (error) {
-      console.error('Failed to toggle like:', error);
-
-      // 실패 시 롤백
+      
       if (isLiked) {
-        likes.add(moimId);
+        currentLikes.delete(moimId);
+        currentDeltas[moimId] = (currentDeltas[moimId] || 0) - 1;
       } else {
-        likes.delete(moimId);
+        currentLikes.add(moimId);
+        currentDeltas[moimId] = (currentDeltas[moimId] || 0) + 1;
       }
-      set({ likes });
+      set({ likes: currentLikes, likeDeltas: currentDeltas });
+    } catch (error: any) {
+      // API 에러가 "이미 찜한 모임이에요"인 경우, 클라이언트 상태를 보정합니다.
+      if (error.response?.data?.message === '이미 찜한 모임이에요') {
+        currentLikes.add(moimId);
+        currentDeltas[moimId] = (currentDeltas[moimId] || 0) + 0; // 변화 없음
+        set({ likes: currentLikes, likeDeltas: currentDeltas });
+      } else {
+        console.error('Failed to toggle like:', error);
+      }
     }
   },
 
   fetchLikes: async () => {
     try {
-      const response = await axiosInstance.get<{ moimId: number }[]>('/moim/likes');
-      const likes = new Set(response.data.map((item) => item.moimId));
-      set({ likes });
+      const response = await axiosHomeInstance.get('/moims/liked');
+      const likedIds: string[] = response.data.likedMoimIds;
+      set({ likes: new Set(likedIds), likeDeltas: {} });
     } catch (error) {
       console.error('Failed to fetch likes:', error);
     }
