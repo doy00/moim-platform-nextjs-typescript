@@ -1,7 +1,7 @@
 import { IParticipatedMoim, IMyMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
 import Link from 'next/link';
-import { moimTypeTag, moimTypeIcon } from '@/utils/mypage/statusTags';
+import { moimTypeTag, moimTypeIcon, statusTag } from '@/utils/mypage/statusTags';
 interface Props {
   moim: IMyMoim | IParticipatedMoim;
   isReviewed?: boolean;
@@ -24,9 +24,12 @@ export function GatheringCard({ moim, isReviewed }: Props) {
           <div className="flex gap-5 items-start">
             <Image src={moimTypeIcon(moim)} alt="puzzle" width={36} height={36} />
             <div className="flex flex-col gap-2">
-              <div>
+              <div className="flex gap-1">
                 <span className="h-[24px] bg-background400 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray800">
                   {moimTypeTag(moim)}
+                </span>
+                <span className="h-[24px] bg-gray800 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray50">
+                  {statusTag(moim)}
                 </span>
               </div>
               <div className="flex flex-col gap-2">
@@ -44,6 +47,8 @@ export function GatheringCard({ moim, isReviewed }: Props) {
               <div className="flex items-center justify-between gap-2">
                 <span className="font-medium text-caption-normal text-[#837C74]">
                   {new Date(moim?.startDate).toLocaleDateString()}
+                  {''} - {''}
+                  {new Date(moim?.endDate).toLocaleDateString()}
                 </span>
               </div>
             </div>
