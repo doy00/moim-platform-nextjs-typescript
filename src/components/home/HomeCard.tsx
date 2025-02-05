@@ -2,12 +2,15 @@
 'use client';
 
 import React from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import HeartIcon from './icons/HeartIcon';
 import { IMoim } from '@/types/home/i-moim';
 import { useLikeStore } from '@/stores/home/likeStore';
 
 export default function HomeCard({ data }: { data: IMoim }) {
+  const router = useRouter()
+
   const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } = data;
   
   const { likes: likedMoims, toggleLike, likeDeltas } = useLikeStore();
@@ -29,8 +32,15 @@ export default function HomeCard({ data }: { data: IMoim }) {
     toggleLike(String(moimId));
   };
 
+  const handleNavigate = () => {
+    router.push(`/detail/${moimId}`)
+  }
+
   return (
-    <article className="flex min-w-[343px] h-[174px] bg-white p-4 space-x-5">
+    <article 
+      className="flex min-w-[343px] h-[174px] bg-white p-4 space-x-5 cursor-pointer"
+      onClick={handleNavigate}
+    >
       <section className="w-9 h-9">
         <Image
           src={`/svgs/ic_color-${moimType}.svg`}

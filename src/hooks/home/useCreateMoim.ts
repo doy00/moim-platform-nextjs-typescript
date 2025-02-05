@@ -1,18 +1,18 @@
-// src/hooks/useCreateMoim.ts
 import { useRouter } from "next/navigation";
 import axiosHomeInstance from "@/libs/home/home-axios";
 import { useMakeStore } from "@/stores/make/makeStore";
+import { useQueryClient } from "@tanstack/react-query"; // ✅ React Query 클라이언트 추가
 
 export function useCreateMoim() {
   const router = useRouter();
+  const queryClient = useQueryClient(); // ✅ React Query 클라이언트 가져오기
 
   const createMoim = async () => {
-    // 제출 시점에 최신 상태를 읽습니다.
     const currentState = useMakeStore.getState();
     const moimData = {
       title: currentState.title,
       content: currentState.content,
-      roadAddress: currentState.roadAddress, // "roadAddress"로 변경
+      roadAddress: currentState.roadAddress,
       recruitmentDeadline: currentState.recruitmentDeadline,
       startDate: currentState.startDate,
       endDate: currentState.endDate,
@@ -23,7 +23,6 @@ export function useCreateMoim() {
     };
 
     const formData = new FormData();
-    // 이제 서버에서는 moimDataOrigin.roadAddress 로 값을 찾게 됩니다.
     formData.append('moim_json', JSON.stringify(moimData));
     if (currentState.image) {
       formData.append('moim_image', currentState.image);
@@ -33,8 +32,13 @@ export function useCreateMoim() {
       const response = await axiosHomeInstance.post('/moims', formData, {
         headers: { 'Content-Type': 'multipart/form-data' },
       });
+
       if (response.data && response.data.moimId) {
         alert('모임 생성에 성공했습니다!');
+        
+        // 새로운 모임 데이터가 즉시 반영되도록 캐시 무효화
+        await queryClient.invalidateQueries({ queryKey: ['moims'] });
+
         useMakeStore.getState().reset();
         router.push('/');
       } else {
