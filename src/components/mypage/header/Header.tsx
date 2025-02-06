@@ -14,7 +14,7 @@ export default function Header() {
 
   return (
     <div className="flex justify-between items-center px-5 py-4 gap-2.5">
-      <div className="flex items-center gap-4 justify-between">
+      <div className="flex items-center justify-between">
         <Link href="/">
           <Image src={logo} alt="logo" width={120} height={30} />
         </Link>

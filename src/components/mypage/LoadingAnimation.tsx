@@ -4,6 +4,7 @@ const Lottie = dynamic(() => import('lottie-react'), {
 });
 
 import duduLoading from '@images/dudu_loading.json';
+import duduLogo from '@images/dudu_logo_animation.json';
 
 export const LoadingAnimation = () => {
   return (
@@ -15,8 +16,8 @@ export const LoadingAnimation = () => {
 
 export const HeaderAnimation = () => {
   return (
-    <div className="rounded-3xl overflow-hidden">
-      <Lottie animationData={duduLoading} loop={true} style={{ width: 50, height: 50 }} />
+    <div className="rounded-3xl overflow-hidden mt-2">
+      <Lottie animationData={duduLogo} loop={true} style={{ width: 60, height: 60 }} />
     </div>
   );
 };
