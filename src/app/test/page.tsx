@@ -49,6 +49,18 @@ export default function TestPage() {
         <button onClick={handleUpdateImage}>플필사진만업데이트테스트</button>
       </div>
       <div>{me?.image && <img src={me?.image} alt="프로필 사진" />}</div>
+      <div>
+        <button
+          onClick={() => {
+            fetch('/api/auth/send-recovery-email', {
+              method: 'POST',
+              body: JSON.stringify({ email: me?.email }),
+            });
+          }}
+        >
+          보내기
+        </button>
+      </div>
     </div>
   );
 }
