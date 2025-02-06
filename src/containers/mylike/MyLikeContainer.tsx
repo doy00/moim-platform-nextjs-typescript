@@ -11,10 +11,12 @@ import { toast } from 'sonner';
 import { GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import { DuduEmpty } from '@/components/detail/icons/DuduEmpty';
 import { Header } from '@/components/mylike/Header';
+import { useAuth } from '@/hooks/auth/auth.hook';
 
 export default function MyLikeContainer () {
   const router = useRouter();
   const queryClient = useQueryClient();
+  const { me, isMeLoading } = useAuth();
 
   const { moimType, status} = useFilterStore();
   const { removeLike } = mylikeStore();
