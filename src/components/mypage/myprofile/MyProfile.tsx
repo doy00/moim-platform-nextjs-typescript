@@ -1,7 +1,7 @@
 'use client';
 
 import Image from 'next/image';
-import defaultProfile from '@images/mypage/profile-default.svg';
+import defaultProfile from '@public/images/mypage/profile-default.svg';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 
 // 공통 래퍼 컴포넌트

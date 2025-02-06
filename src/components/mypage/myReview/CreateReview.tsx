@@ -3,10 +3,10 @@
 import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
 import { IMoim } from '@/types/mypage/moim.type';
 import { IUser } from '@/types/mypage/user';
-import close from '@images/mypage/close.svg';
-import badOff from '@images/mypage/dude-grade-bad-off.svg';
-import greatOff from '@images/mypage/dude-grade-best-off.svg';
-import goodOff from '@images/mypage/dude-grade-good-off.svg';
+import close from '@public/images/mypage/close.svg';
+import badOff from '@public/images/mypage/dude-grade-bad-off.svg';
+import greatOff from '@public/images/mypage/dude-grade-best-off.svg';
+import goodOff from '@public/images/mypage/dude-grade-good-off.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';

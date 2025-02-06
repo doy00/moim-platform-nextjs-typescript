@@ -1,7 +1,7 @@
 import { ReviewCard, ReviewSkeleton } from '@/components/mypage/myReview/ReviewCard';
 import Image from 'next/image';
 import { useReviewQuery } from '@/hooks/mypage/queries/useReviewQuery';
-import emptyDudu from '@images/mypage/dudu-empty.svg';
+import emptyDudu from '@public/images/mypage/dudu-empty.svg';
 
 export default function CompletedReview() {
   const { data, isLoading } = useReviewQuery();

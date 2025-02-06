@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import logo from '@images/mypage/logo.svg';
-import edit from '@images/mypage/edit.svg';
-import close from '@images/mypage/close.svg';
+import logo from '@public/images/mypage/logo.svg';
+import edit from '@public/images/mypage/edit.svg';
+import close from '@public/images/mypage/close.svg';
 import Link from 'next/link';
 // import { useState } from 'react';
 import { usePathname } from 'next/navigation';

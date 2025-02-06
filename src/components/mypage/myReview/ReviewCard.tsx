@@ -1,6 +1,6 @@
 import { IReview } from '@/types/mypage/reviews.type';
 import Image from 'next/image';
-import profileDefault from '@images/mypage/profile-default.svg';
+import profileDefault from '@public/images/mypage/profile-default.svg';
 import { reviewRateTag } from '@/utils/mypage/statusTags';
 interface Props {
   review: IReview;
@@ -13,7 +13,7 @@ const ReviewWrapper = ({ children }: { children: React.ReactNode }) => (
 const ReviewRateTagColor = ({ rate }: { rate: IReview['rate'] }) => {
   if (rate === 'SOSO') {
     return (
-      <span className="h-[26px] bg-background100 px-2 py-1 rounded-[20px] text-caption-normal font-semibold text-red200">
+      <span className="h-[26px] bg-background300 px-2 py-1 rounded-[20px] text-caption-normal font-semibold text-red200">
         {reviewRateTag({ rate } as IReview)}
       </span>
     );

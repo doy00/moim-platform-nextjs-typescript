@@ -1,10 +1,10 @@
 import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
 import Link from 'next/link';
-import emptyDudu from '@images/mypage/dudu-empty.svg';
+import emptyDudu from '@public/images/mypage/dudu-empty.svg';
 import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
-import emptyHeart from '@images/mypage/empty-heart.svg';
-// import fullHeart from '@images/mypage/heart.svg';
+import emptyHeart from '@public/images/mypage/empty-heart.svg';
+// import fullHeart from '@public/images/mypage/heart.svg';
 
 export default function Meetings() {
   const { data, isLoading } = useParticipatedMoimQuery();
