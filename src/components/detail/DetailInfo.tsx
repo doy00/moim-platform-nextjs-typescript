@@ -6,6 +6,7 @@ import { cn } from "@/utils/detail/cn";
 import { getMoimTypeText } from "@/utils/detail/enums";
 import { formatDate, getDeadlineText } from "@/utils/detail/date";
 import { ECategory, EMoimStatus } from "@/types/supabase/supabase-custom.type";
+import { IMoimDetail } from "@/types/detail/t-moim";
 
 interface IDetailInfoProps {
   title: string;
@@ -15,6 +16,7 @@ interface IDetailInfoProps {
   endDate: string;
   participants: number;
   minParticipants: number;
+  maxParticipants: number;
   moimType: ECategory;
   status: EMoimStatus;
   isConfirmed: boolean;
@@ -28,6 +30,7 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
   startDate,
   endDate,
   participants,
+  maxParticipants,
   minParticipants,
   moimType,
   status,
@@ -35,11 +38,16 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
   online,
   className,
 }) => {
-  // 개설 확정 여부 확인
-  // const isConfirmed = () => {
-  //   return participants >= minParticipants;
-  // };
-
+  const getStatusTag = (status: EMoimStatus): string => {
+    if (status === 'END') {
+      return '종료';
+    } else if (maxParticipants === participants) {
+      return '모집완료';
+    } else if (isConfirmed === false) {
+      return '모집중';
+    };
+    return '모집중';
+  }
   return (
     <div className={cn(
       "relative flex flex-col gap-2.5 px-4 py-5 mt-4 lg:px-6 lg:py-8 lg:mt-8 bg-background400 rounded-2xl",
@@ -65,10 +73,10 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
               text="온라인"
             />
           )}
-          {status === "END" && (
-            <ChipSmallSquircle 
-              variant="dark"
-              text="모집 마감"
+          {getStatusTag  && (
+            <ChipSmallSquircle
+              variant="light"
+              text={getStatusTag(status)}
             />
           )}
         </div>
