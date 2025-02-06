@@ -1,8 +1,8 @@
 import { TMe, TPutMeInputs } from '@/types/auth/auth.type';
 import convertToWebP from '@/utils/common/converToWebp';
 import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
+import { cookies, headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(request: NextRequest) {
@@ -10,20 +10,23 @@ export async function GET(request: NextRequest) {
   const jwt = searchParams.get('jwt');
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
+  const authorization = (await headers()).get('authorization');
+  const token = authorization?.split(' ')[1] ?? null;
 
-  const auth = supabase.auth;
-  let user;
-  let error;
-  if (jwt) {
+  const jwtToken = jwt ?? token;
+
+  let user: User | null;
+  let error: AuthError | null;
+  if (jwtToken) {
     ({
       data: { user },
       error,
-    } = await auth.getUser(jwt));
+    } = await supabase.auth.getUser(jwtToken));
   } else {
     ({
       data: { user },
       error,
-    } = await auth.getUser());
+    } = await supabase.auth.getUser());
   }
 
   if (error) {
@@ -79,10 +82,22 @@ export async function PUT(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const authorization = (await headers()).get('authorization');
+  const token = authorization?.split(' ')[1] ?? null;
+
+  let user: User | null;
+  let error: AuthError | null;
+  if (token) {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token));
+  } else {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser());
+  }
 
   if (error) {
     return NextResponse.json({ message: error?.message }, { status: 401 });
