@@ -3,8 +3,8 @@ import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-cus
 import convertToWebP from '@/utils/common/converToWebp';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
+import { cookies, headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 export async function GET(req: NextRequest) {
@@ -39,7 +39,7 @@ export async function GET(req: NextRequest) {
   } = await supabase
     .from('moims')
     .select(
-      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+      '*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
     )
     .order('created_at', { ascending: false })
     .range(start, end);
@@ -74,10 +74,22 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const authorization = (await headers()).get('authorization');
+  const token = authorization?.split(' ')[1] ?? null;
+
+  let user: User | null;
+  let error: AuthError | null;
+  if (token) {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token));
+  } else {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser());
+  }
 
   if (error) {
     return NextResponse.json({ message: error?.message }, { status: 401 });
@@ -157,7 +169,7 @@ export async function POST(req: NextRequest) {
     .from('moims')
     .upsert({ ...moimData })
     .select(
-      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+      '*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
     )
     .single();
 

@@ -19,6 +19,7 @@ export type TParticipatedUserClient = {
 };
 
 export type TReviewClient = {
+  createdAt: string;
   userUuid: string;
   review: string;
   rate: ERate;

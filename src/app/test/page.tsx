@@ -31,6 +31,10 @@ export default function TestPage() {
     console.log(data);
   };
 
+  // useEffect(() => {
+  //   throw new Error('test');
+  // }, []);
+
   return (
     <div>
       <button onClick={signOut}>로그아웃</button>
