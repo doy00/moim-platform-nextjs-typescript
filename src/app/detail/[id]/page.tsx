@@ -3,7 +3,6 @@ import { getDetail } from '@/apis/detail/detail.api';
 import DetailContainer from '@/containers/detail/DetailContainer';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { Suspense } from "react";
-import { cookies } from 'next/headers';
 import { IMoimDetail } from '@/types/detail/t-moim';
 
 interface DetailPageProps {
@@ -14,12 +13,7 @@ export default async function DetailPage({ params } : DetailPageProps) {
   const queryClient = new QueryClient();
 
   // Dynamic route parameters 사용을 위해 비동기 처리
-  // const { id } = await Promise.resolve(params);  
-  // const moimId = parseInt(id)
   const { id: moimId } = await Promise.resolve(params);
-
-  const cookieStore = await cookies();
-  const token = cookieStore.get('access_token')?.value;
 
   // 서버에서 초기 데이터 prefetching
   try {
