@@ -1,5 +1,6 @@
 import { IReview } from './reviews.type';
 import { IParticipatedUser } from './user';
+
 export interface IMoim {
   moimId: string;
   title: string;
