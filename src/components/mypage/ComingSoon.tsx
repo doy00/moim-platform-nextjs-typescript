@@ -1,4 +1,3 @@
-'use client';
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
 import Link from 'next/link';
 import { motion } from 'framer-motion';

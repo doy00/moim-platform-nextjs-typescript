@@ -2,7 +2,12 @@ import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { CategoryTab, LocationTab, StatusTab } from './Tabs';
 
-export default function FilterTabs() {
+interface FilterTabsProps {
+  onCategorySelect: (category: string | null) => void;
+  onStatusSelect: (status: string | null) => void;
+}
+
+export default function FilterTabs({ onCategorySelect, onStatusSelect }: FilterTabsProps) {
   const [activeTab, setActiveTab] = useState('category');
 
   const filterTab = () => {
@@ -18,11 +23,11 @@ export default function FilterTabs() {
             className="absolute w-full"
           >
             {activeTab === 'category' ? (
-              <CategoryTab />
+              <CategoryTab onCategorySelect={onCategorySelect} onStatusSelect={onStatusSelect} />
             ) : activeTab === 'location' ? (
               <LocationTab />
             ) : (
-              <StatusTab />
+              <StatusTab onStatusSelect={onStatusSelect} onCategorySelect={onCategorySelect} />
             )}
           </motion.div>
         </AnimatePresence>

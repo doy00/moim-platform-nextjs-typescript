@@ -1,7 +1,9 @@
-import { useState } from 'react';
-// import PendingReview from './PendingReview';
-// import CompletedReview from './CompletedReview';
+'use client';
 
+import { useState } from 'react';
+import PendingReview from './PendingReview';
+import CompletedReview from './CompletedReview';
+import { AnimatePresence, motion } from 'framer-motion';
 type TReviewTab = '작성 가능한 리뷰' | '작성한 리뷰';
 
 export default function ReviewTabs() {
@@ -17,11 +19,23 @@ export default function ReviewTabs() {
     }`;
   };
 
-  const getReviewCard = () => {
-    if (click === '작성한 리뷰') {
-      // return <CompletedReview />;
-    }
-    // return <PendingReview />;
+  const reviewRenderTab = () => {
+    return (
+      <div className="relative">
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={click}
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.2 }}
+            className="relative w-full"
+          >
+            {click === '작성한 리뷰' ? <CompletedReview /> : <PendingReview />}
+          </motion.div>
+        </AnimatePresence>
+      </div>
+    );
   };
 
   return (
@@ -42,7 +56,7 @@ export default function ReviewTabs() {
           </button>
         </div>
       </div>
-      {/* {getReviewCard()} */}
+      {reviewRenderTab()}
     </div>
   );
 }

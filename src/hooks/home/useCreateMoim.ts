@@ -1,7 +1,7 @@
-import { useRouter } from "next/navigation";
-import axiosHomeInstance from "@/libs/home/home-axios";
-import { useMakeStore } from "@/stores/make/makeStore";
-import { useQueryClient } from "@tanstack/react-query"; // ✅ React Query 클라이언트 추가
+import { useRouter } from 'next/navigation';
+import axiosHomeInstance from '@/libs/home/home-axios';
+import { useMakeStore } from '@/stores/make/makeStore';
+import { useQueryClient } from '@tanstack/react-query'; // ✅ React Query 클라이언트 추가
 
 export function useCreateMoim() {
   const router = useRouter();
@@ -35,7 +35,7 @@ export function useCreateMoim() {
 
       if (response.data && response.data.moimId) {
         alert('모임 생성에 성공했습니다!');
-        
+
         // 새로운 모임 데이터가 즉시 반영되도록 캐시 무효화
         await queryClient.invalidateQueries({ queryKey: ['moims'] });
 

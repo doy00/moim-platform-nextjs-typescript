@@ -113,35 +113,35 @@ export type Database = {
       };
       participated_moims: {
         Row: {
-          created_at: string
-          id: string
-          moim_uuid: string | null
-          updated_at: string
-          user_email: string
-          user_image: string | null
-          user_nickname: string | null
-          user_uuid: string | null
-        }
+          created_at: string;
+          id: string;
+          moim_uuid: string | null;
+          updated_at: string;
+          user_email: string;
+          user_image: string | null;
+          user_nickname: string | null;
+          user_uuid: string | null;
+        };
         Insert: {
-          created_at?: string
-          id?: string
-          moim_uuid?: string | null
-          updated_at?: string
-          user_email: string
-          user_image?: string | null
-          user_nickname?: string | null
-          user_uuid?: string | null
-        }
+          created_at?: string;
+          id?: string;
+          moim_uuid?: string | null;
+          updated_at?: string;
+          user_email: string;
+          user_image?: string | null;
+          user_nickname?: string | null;
+          user_uuid?: string | null;
+        };
         Update: {
-          created_at?: string
-          id?: string
-          moim_uuid?: string | null
-          updated_at?: string
-          user_email?: string
-          user_image?: string | null
-          user_nickname?: string | null
-          user_uuid?: string | null
-        }
+          created_at?: string;
+          id?: string;
+          moim_uuid?: string | null;
+          updated_at?: string;
+          user_email?: string;
+          user_image?: string | null;
+          user_nickname?: string | null;
+          user_uuid?: string | null;
+        };
         Relationships: [
           {
             foreignKeyName: '\bparticipated_moims_moim_uuid_fkey';
@@ -151,72 +151,72 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "participated_moims_user_email_fkey"
-            columns: ["user_email"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["email"]
+            foreignKeyName: 'participated_moims_user_email_fkey';
+            columns: ['user_email'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['email'];
           },
           {
-            foreignKeyName: "participated_moims_user_image_fkey"
-            columns: ["user_image"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["image"]
+            foreignKeyName: 'participated_moims_user_image_fkey';
+            columns: ['user_image'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['image'];
           },
           {
-            foreignKeyName: "participated_moims_user_nickname_fkey"
-            columns: ["user_nickname"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["nickname"]
+            foreignKeyName: 'participated_moims_user_nickname_fkey';
+            columns: ['user_nickname'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['nickname'];
           },
           {
-            foreignKeyName: "\bparticipated_moims_user_uuid_fkey"
-            columns: ["user_uuid"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: '\bparticipated_moims_user_uuid_fkey';
+            columns: ['user_uuid'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           },
         ];
       };
       reviews: {
         Row: {
-          created_at: string
-          id: string
-          moim_uuid: string
-          rate: Database["public"]["Enums"]["review_status"]
-          review: string
-          updated_at: string
-          user_email: string
-          user_image: string | null
-          user_nickname: string
-          user_uuid: string
-        }
+          created_at: string;
+          id: string;
+          moim_uuid: string;
+          rate: Database['public']['Enums']['review_status'];
+          review: string;
+          updated_at: string;
+          user_email: string;
+          user_image: string | null;
+          user_nickname: string;
+          user_uuid: string;
+        };
         Insert: {
-          created_at?: string
-          id?: string
-          moim_uuid?: string
-          rate?: Database["public"]["Enums"]["review_status"]
-          review?: string
-          updated_at?: string
-          user_email: string
-          user_image?: string | null
-          user_nickname: string
-          user_uuid?: string
-        }
+          created_at?: string;
+          id?: string;
+          moim_uuid?: string;
+          rate?: Database['public']['Enums']['review_status'];
+          review?: string;
+          updated_at?: string;
+          user_email: string;
+          user_image?: string | null;
+          user_nickname: string;
+          user_uuid?: string;
+        };
         Update: {
-          created_at?: string
-          id?: string
-          moim_uuid?: string
-          rate?: Database["public"]["Enums"]["review_status"]
-          review?: string
-          updated_at?: string
-          user_email?: string
-          user_image?: string | null
-          user_nickname?: string
-          user_uuid?: string
-        }
+          created_at?: string;
+          id?: string;
+          moim_uuid?: string;
+          rate?: Database['public']['Enums']['review_status'];
+          review?: string;
+          updated_at?: string;
+          user_email?: string;
+          user_image?: string | null;
+          user_nickname?: string;
+          user_uuid?: string;
+        };
         Relationships: [
           {
             foreignKeyName: 'reviews_moim_uuid_fkey';
@@ -226,32 +226,32 @@ export type Database = {
             referencedColumns: ['id'];
           },
           {
-            foreignKeyName: "reviews_user_email_fkey"
-            columns: ["user_email"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["email"]
+            foreignKeyName: 'reviews_user_email_fkey';
+            columns: ['user_email'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['email'];
           },
           {
-            foreignKeyName: "reviews_user_image_fkey"
-            columns: ["user_image"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["image"]
+            foreignKeyName: 'reviews_user_image_fkey';
+            columns: ['user_image'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['image'];
           },
           {
-            foreignKeyName: "reviews_user_nickname_fkey"
-            columns: ["user_nickname"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["nickname"]
+            foreignKeyName: 'reviews_user_nickname_fkey';
+            columns: ['user_nickname'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['nickname'];
           },
           {
-            foreignKeyName: "reviews_user_uuid_fkey"
-            columns: ["user_uuid"]
-            isOneToOne: false
-            referencedRelation: "users"
-            referencedColumns: ["id"]
+            foreignKeyName: 'reviews_user_uuid_fkey';
+            columns: ['user_uuid'];
+            isOneToOne: false;
+            referencedRelation: 'users';
+            referencedColumns: ['id'];
           },
         ];
       };
