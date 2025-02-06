@@ -11,7 +11,7 @@ import AuthButton from './AuthButton';
 import AuthLabelWithInput from './AuthLabelWithInput';
 import AuthLoading from './AuthLoading';
 import AuthQuestions from './AuthQuestions';
-import DothemeetLogo from './DothemeetLogo';
+import { DothemeetLogo } from './icons';
 
 export default function SignInForm() {
   const router = useRouter();
