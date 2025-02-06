@@ -2,8 +2,7 @@
 
 import { cn } from '@/lib/utils';
 import { KeyboardEvent, useRef, useState } from 'react';
-import AuthDropDown from './AuthDropDown';
-import AuthDropUp from './AuthDropUp';
+import { AuthDropDown, AuthDropUp } from './icons';
 
 interface Option {
   value: string;

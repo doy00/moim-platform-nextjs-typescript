@@ -39,6 +39,7 @@ export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
           userEmail: review.user_email,
           userImage: review.user_image,
           userNickname: review.user_nickname,
+          createdAt: review.created_at,
         }) as TReviewClient,
     ),
     isConfirmed: moim.is_confirmed,

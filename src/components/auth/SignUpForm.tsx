@@ -15,7 +15,7 @@ import AuthQuestions from './AuthQuestions';
 import AuthSelect from './AuthSelect';
 import AuthSignUpComplete from './AuthSignUpComplete';
 import AuthTags from './AuthTags';
-import DothemeetLogo from './DothemeetLogo';
+import { DothemeetLogo } from './icons';
 
 export default function SignUpForm() {
   const positionId = useId();

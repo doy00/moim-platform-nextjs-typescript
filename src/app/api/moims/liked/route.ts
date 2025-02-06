@@ -6,8 +6,8 @@ import {
 } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
+import { cookies, headers } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
 
 // 내가 좋아요한 모임 조회
@@ -16,11 +16,22 @@ export async function GET(req: NextRequest) {
   const pageQuery = searchParams.get('page');
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
+  const authorization = (await headers()).get('authorization');
+  const token = authorization?.split(' ')[1] ?? null;
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  let user: User | null;
+  let error: AuthError | null;
+  if (token) {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token));
+  } else {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser());
+  }
 
   if (error) {
     return NextResponse.json({ message: error?.message }, { status: 401 });
@@ -54,7 +65,7 @@ export async function GET(req: NextRequest) {
   }: { data: TLikedMoimsJoined[] | null; error: PostgrestError | null } = await supabase
     .from('liked_moims')
     .select(
-      '*, moims (*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
+      '*, moims (*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
     )
     .eq('user_uuid', foundUser.id)
     .order('created_at', { ascending: false })

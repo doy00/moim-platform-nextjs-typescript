@@ -2,19 +2,30 @@ import { TMe } from '@/types/auth/auth.type';
 import { TReviewWithMoim, TReviewWithMoimClient } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
+import { cookies, headers } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 // 내가 작성한 모든 리뷰 조회
 export async function GET() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
+  const authorization = (await headers()).get('authorization');
+  const token = authorization?.split(' ')[1] ?? null;
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  let user: User | null;
+  let error: AuthError | null;
+  if (token) {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser(token));
+  } else {
+    ({
+      data: { user },
+      error,
+    } = await supabase.auth.getUser());
+  }
 
   if (error) {
     return NextResponse.json({ message: error?.message }, { status: 401 });
@@ -47,7 +58,7 @@ export async function GET() {
   }: { data: TReviewWithMoim[] | null; error: PostgrestError | null } = await supabase
     .from('reviews')
     .select(
-      '*, moims (*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
+      '*, moims (*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
     )
     .eq('user_uuid', foundUser.id)
     .order('created_at', { ascending: false });
@@ -67,6 +78,7 @@ export async function GET() {
     userEmail: review.user_email,
     userImage: review.user_image,
     userNickname: review.user_nickname,
+    createdAt: review.created_at,
     moims: mapMoimsToClient([review.moims])[0],
   }));
 

@@ -4,7 +4,7 @@ import { TMe } from '@/types/auth/auth.type';
 import { useRouter } from 'next/navigation';
 import AuthButton from './AuthButton';
 import DothemeetCharacter from './DothemeetCharacter';
-import DothemeetLogo from './DothemeetLogo';
+import { DothemeetLogo } from './icons';
 
 interface AuthSignUpCompleteProps {
   me: TMe;
