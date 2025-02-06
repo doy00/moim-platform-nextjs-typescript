@@ -12,7 +12,7 @@ export default function HomeGnb() {
   const pathname = usePathname();
 
   // GNB를 표시할 경로 목록
-  const showGnbPaths = ['/', '/favorites', '/mypage'];
+  const showGnbPaths = ['/', '/favorites', '/mypage', '/mylike'];
   const shouldShowGnb = showGnbPaths.includes(pathname);
 
   if (!shouldShowGnb) return null;
