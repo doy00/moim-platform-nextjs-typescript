@@ -1,20 +1,15 @@
 'use client';
-// import IntersectionObserver from '@/libs/home/intersectionObserver';
 // import { useFilterStore } from '@/stores/home/filterStore';
 import MyLikeCard from './MyLikeCard';
 import { IMoimDetail } from '@/types/detail/t-moim';
 
 interface IMyLikeCards {
   moims: IMoimDetail[];
+  // moims: any[];
   onRemoveLike: (e: React.MouseEvent, moimId: string) => void;
   onClickCard: (moimId: string) => void;
 }
-export default function MyLikeCards (
-  {
-    moims,
-    onRemoveLike,
-    onClickCard,
-  }: IMyLikeCards) {
+export default function MyLikeCards({ moims, onRemoveLike, onClickCard }: IMyLikeCards) {
 
   return (
       <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 pt-[14px]">

@@ -1,23 +1,21 @@
-// components/detail/DetailPresenter.tsx 
+// components/detail/DetailPresenter.tsx
 // 상세페이지 전체 UI 렌더링을 담당하는 컴포넌트
 'use client';
 import Link from 'next/link';
-// components 
-import { DetailShare } from '@/components/detail/DetailShare';
-import { ImageBox } from '@/components/detail/ImageBox';
-import { DetailInfo } from '../../components/detail/DetailInfo';
-import { DetailParticipants } from '../../components/detail/DetailParticipants';
-import { DetailContent } from '../../components/detail/DetailContent';
+// components
 import { DetailHost } from '@/components/detail/DetailHost';
-import { DetailReview, MOCK_REVIEWS } from '../../components/detail/DetailReview';
+import { DetailShare } from '@/components/detail/DetailShare';
 import { FloatingBar } from '@/components/detail/FloatingBar';
 import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
+import { ImageBox } from '@/components/detail/ImageBox';
+import { DetailContent } from '../../components/detail/DetailContent';
+import { DetailInfo } from '../../components/detail/DetailInfo';
+import { DetailParticipants } from '../../components/detail/DetailParticipants';
+import { DetailReview } from '../../components/detail/DetailReview';
 // types
 import { IDetailPresenterProps } from '@/types/detail/i-presenter';
-import { IMoimDetail } from '@/types/detail/t-moim';
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
-import SignOutButton from './SignoutBtn';
 
 export default function DetailPresenter({
   data,
@@ -30,42 +28,10 @@ export default function DetailPresenter({
   className,
 }: IDetailPresenterProps) {
   if (!data) {
-    return null; // 또는 loading/error UI
-    // 데이터가 없을때 기본값
-    // return {
-    //   moimId: '',
-    //   title: '모임 타이틀이 들어갑니다.',
-    //   content: '모임 내용이 들어갑니다.',
-    //   address: '주소를 불러오는 중입니다.',
-    //   recruitmentDeadline: new Date().toISOString(),
-    //   startDate: new Date().toISOString(),
-    //   endDate: new Date().toISOString(),
-    //   minParticipants: 3,
-    //   maxParticipants: 12,
-    //   moimType: 'PROJECT',
-    //   status: 'RECRUIT',
-    //   likes: 0,
-    //   participants: 0,
-    //   reviewsCount: 0,
-    //   participatedUsers: [],
-    //   reviews: [],
-    //   isConfirmed: false,
-    //   online: false,
-    //   likedUsers: [],
-    // };
+    return null;
   }
-  
-
   return (
-    <div className="
-      w-full min-h-screen mx-auto px-4 pb-[92px] bg-background200
-      xs:max-w-screen-xs
-      sm:max-w-screen-sm
-      md:max-w-screen-md
-      lg:max-w-screen-lg
-      "
-    >
-        <SignOutButton />
+    <div className="w-full min-h-screen mx-auto px-4 pb-[92px] bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
         <Link href="/" className="w-full h-14 py-[10px] flex items-center">
           <DothemeetLogo />
         </Link>
@@ -106,7 +72,6 @@ export default function DetailPresenter({
         <DetailReview 
           reviews={data.reviews}
           totalReviews={data.reviewsCount}
-          // reviews={MOCK_REVIEWS}
         />
         <FloatingBar
           onHeartClick={onLikeToggle}

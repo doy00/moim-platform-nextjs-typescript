@@ -1,7 +1,7 @@
-import { getMyMoim } from '@/apis/myMoim';
-import { getParticipatedMoim } from '@/apis/participatedMoim';
-import { getReviews } from '@/apis/reviews';
-import { getUserInfo } from '@/apis/userInfo';
+// import { getMyMoim } from '@/apis/myMoim';
+// import { getParticipatedMoim } from '@/apis/participatedMoim';
+// import { getReviews } from '@/apis/reviews';
+// import { getUserInfo } from '@/apis/userInfo';
 import MypageContainer from '@/containers/mypage/MypageContainer';
 import { getQueryClient } from '@/hooks/mypage/queries/getQueryClient';
 import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
@@ -12,24 +12,25 @@ import { HydrationBoundary, dehydrate } from '@tanstack/react-query';
 export default async function Mypage() {
   const queryClient = getQueryClient();
 
-  await Promise.all([
-    queryClient.prefetchQuery({
-      queryKey: ['getUserInfo'],
-      queryFn: getUserInfo,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ['getMyMoim'],
-      queryFn: getMyMoim,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ['getParticipatedMoim'],
-      queryFn: getParticipatedMoim,
-    }),
-    queryClient.prefetchQuery({
-      queryKey: ['getReviews'],
-      queryFn: getReviews,
-    }),
-  ]);
+  // 빌드 에러 무한 빌딩 으로 주석처리
+  // await Promise.all([
+  //   queryClient.prefetchQuery({
+  //     queryKey: ['getUserInfo'],
+  //     queryFn: getUserInfo,
+  //   }),
+  //   queryClient.prefetchQuery({
+  //     queryKey: ['getMyMoim'],
+  //     queryFn: getMyMoim,
+  //   }),
+  //   queryClient.prefetchQuery({
+  //     queryKey: ['getParticipatedMoim'],
+  //     queryFn: getParticipatedMoim,
+  //   }),
+  //   queryClient.prefetchQuery({
+  //     queryKey: ['getReviews'],
+  //     queryFn: getReviews,
+  //   }),
+  // ]);
 
   const dehydratedState = dehydrate(queryClient);
 

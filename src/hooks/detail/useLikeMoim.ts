@@ -1,7 +1,7 @@
 // 찜하기 커스텀 훅
 'use client';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { getDetail, likeApi } from '@/apis/detail/detail.api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth.hook';
 import { IMoimDetail } from '@/types/detail/t-moim';
 
@@ -21,7 +21,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   });
 
   // 현재 유저가 이 모임을 찜했는지 확인
-  const isLiked = me && moimDetail?.likedUsers?.includes(me.id);
+  const isLiked = me && moimDetail?.likedUsers?.includes(me.id);  // [ ] 빌드에러 확인해봤는데 TMe에 moimId가 없음
   
   const { mutateAsync: toggleLike, isPending: isToggling } = useMutation({
     mutationFn: async () => {
@@ -34,7 +34,6 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: ['moim', moimId] });  // 진행중인 모든 관련 쿼리 취소
       const previousMoim = queryClient.getQueryData<IMoimDetail>(['moim', moimId]);  // 현재 캐시된 데이터 저장
-      
       // 캐시 낙관적 업데이트
       if (previousMoim && me) {
         queryClient.setQueryData<IMoimDetail>(['moim', moimId], {
@@ -51,7 +50,6 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
 
     // 서버 응답 성공 시
     onSuccess: (response) => {
-      
       // 모임 상세 데이터 캐시 업데이트
       queryClient.setQueryData<IMoimDetail>(['moim', moimId], (oldData) => {
         if (!oldData || !me) return oldData;
@@ -90,10 +88,10 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
       throw error;
     }
   };
-  return { 
+  return {
     isLiked: !!isLiked,
     handleToggleLike,
     isLoading: isLoadingDetail || isToggling || isMeLoading,
-    likesCount: moimDetail?.likes ?? 0
+    likesCount: moimDetail?.likes ?? 0,
   };
 };

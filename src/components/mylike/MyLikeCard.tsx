@@ -1,13 +1,13 @@
 'use client';
-
-import React from 'react';
-import { cn } from '@/utils/detail/cn';
-import { HeartIcon } from '../detail/icons/HeartIcon';
 import { useLikeStore } from '@/stores/home/likeStore';
-import { ConversationIcon } from './icons/ConversationIcon';
-import { PuzzleIcon } from './icons/PuzzleIcon';
-import { OpenBookIcon } from './icons/OpenBookIcon';
+import { cn } from '@/utils/detail/cn';
+import React from 'react';
 import { ChipSmallSquircle } from '../detail/ChipSmallSquircle';
+import { HeartIcon } from '../detail/icons/HeartIcon';
+import { OpenBookIcon } from './icons/OpenBookIcon';
+import { PuzzleIcon } from './icons/PuzzleIcon';
+
+import { ConversationIcon } from './icons/ConversationIcon';
 import { Separator } from '../ui/separator';
 import { formatDate, getDeadlineText } from '@/utils/detail/date';
 import { getMoimTypeText } from '@/utils/detail/enums';
@@ -15,11 +15,12 @@ import { IMoimDetail } from '@/types/detail/t-moim';
 
 interface IMyLikeCardProps {
   moim: IMoimDetail;
+  // moim: any;
   onClick: () => void;
   onRemoveLike: (e: React.MouseEvent) => void;
 }
 
-export default function MyLikeCard ({ moim, onClick, onRemoveLike }: IMyLikeCardProps) {
+export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardProps) {
   const {
     moimId,
     moimType,
@@ -64,21 +65,9 @@ export default function MyLikeCard ({ moim, onClick, onRemoveLike }: IMyLikeCard
             <div className="flex flex-col gap-2">
               <div className="flex justify-between items-start">
                 <div className="flex gap-1 flex-wrap">
-                  <ChipSmallSquircle 
-                    // text={moimType}
-                    text={getMoimTypeText(moimType)}
-                    variant="light"
-                  />
-                  <ChipSmallSquircle
-                    text={getDeadlineText(recruitmentDeadline)}
-                    variant="light"
-                  />
-                  {isConfirmed && (
-                    <ChipSmallSquircle
-                      text="개설확정"
-                      variant="dark"
-                    />
-                  )}
+                  <ChipSmallSquircle text={getMoimTypeText(moimType)} variant="light" />
+                  <ChipSmallSquircle text={getDeadlineText(recruitmentDeadline)} variant="light" />
+                  {isConfirmed && ( <ChipSmallSquircle text="개설확정" variant="dark" /> )}
                   </div>
 
                   {/* 찜버튼 */}
@@ -108,17 +97,15 @@ export default function MyLikeCard ({ moim, onClick, onRemoveLike }: IMyLikeCard
                     </div>
                   </div>
 
-                </div>
-
                 {/* 날짜 */}
                 <div className="text-caption-normal text-gray500">
                   {`${formatDate(startDate)} - ${formatDate(endDate)}`}
                 </div>
-
               </div>
             </div>
           </div>
-
         </div>
+      </div>
+    
   );
 }

@@ -1,7 +1,7 @@
 'use client';
+import MyLikePresenter from '@/components/mylike/MyLikePresenter';
+import { useRouter } from 'next/navigation';
 import React from 'react';
-import { useRouter } from "next/navigation";
-import MyLikePresenter from "@/components/mylike/MyLikePresenter";
 import { mylikeStore } from '@/stores/detail/mylikeStore';
 import { useLikedMoims } from '@/hooks/mylike/useLikedMoims';
 import { useFilterStore } from '@/stores/home/filterStore';
@@ -46,7 +46,7 @@ export default function MyLikeContainer () {
   const handleClickCard = (moimId: string) => {
     router.push(`/detail/${moimId}`);
   };
-  
+
   const handleRemoveLike = async (e: React.MouseEvent, moimId: string) => {
     e.stopPropagation();
     try {
@@ -84,4 +84,4 @@ export default function MyLikeContainer () {
       onClickCard={handleClickCard}
     />
   );
-};
+}
