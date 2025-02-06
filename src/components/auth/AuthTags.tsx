@@ -5,9 +5,8 @@ import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
 import { useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
-import AuthBar from './AuthBar';
 import AuthInput from './AuthInput';
-import AuthX from './AuthX';
+import { AuthBar, AuthX } from './icons';
 
 interface AuthTagsProps {
   signUpError: boolean;

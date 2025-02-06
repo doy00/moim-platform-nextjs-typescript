@@ -4,10 +4,9 @@ import { useAuth } from '@/hooks/auth/auth.hook';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
-import AuthKakao from './AuthKakao';
 import AuthLoading from './AuthLoading';
 import DothemeetCharacter from './DothemeetCharacter';
-import DothemeetLogo from './DothemeetLogo';
+import { AuthKakao, DothemeetLogo } from './icons';
 
 interface AuthSelectEmailKakaoProps {
   children: React.ReactNode;
@@ -32,7 +31,9 @@ export default function AuthSelectEmailKakao({ children }: AuthSelectEmailKakaoP
       {(isMeLoading || isMutationPending) && <AuthLoading />}
       <div className="w-[327px] md:w-[584px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center">
         <div className="hidden md:flex w-full h-14 items-center">
-          <DothemeetLogo />
+          <Link href="/" className="cursor-pointer">
+            <DothemeetLogo />
+          </Link>
         </div>
         <div className="flex-1 flex items-center justify-center">
           <DothemeetCharacter isFull />

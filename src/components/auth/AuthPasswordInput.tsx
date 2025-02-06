@@ -3,8 +3,7 @@
 import { cn } from '@/utils/auth/ui.util';
 import { useState } from 'react';
 import { UseFormRegisterReturn } from 'react-hook-form';
-import AuthEye from './AuthEye';
-import AuthEyeSlash from './AuthEyeSlash';
+import { AuthEye, AuthEyeSlash } from './icons';
 
 interface AuthPasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
