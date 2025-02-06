@@ -54,6 +54,7 @@ export async function GET(request: Request) {
           introduction: null,
           tags: null,
           image: data.user.user_metadata.avatar_url,
+          is_social: true,
         })
         .select()
         .single();
