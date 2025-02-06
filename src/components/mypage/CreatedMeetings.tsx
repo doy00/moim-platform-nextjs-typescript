@@ -10,6 +10,8 @@ import emptyHeart from '@public/images/mypage/empty-heart.svg';
 export default function CreatedMeetings() {
   const { data, isLoading } = useMyMoimQuery();
 
+  console.log(data);
+
   if (isLoading) {
     return <GatheringSkeleton />;
   }
@@ -41,9 +43,7 @@ export default function CreatedMeetings() {
           <div className="absolute top-4 right-4 z-10">
             <Image src={emptyHeart} alt="Heart" width={24} height={24} />
           </div>
-          <Link href={`/detail/${moim.moimId}`}>
-            <GatheringCard moim={moim} />
-          </Link>
+          <GatheringCard moim={moim} />
         </div>
       ))}
     </div>
