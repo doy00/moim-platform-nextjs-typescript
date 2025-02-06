@@ -1,39 +1,16 @@
 import CreateReview from '@/components/mypage/myReview/CreateReview';
 import { IMoim } from '@/types/mypage/moim.type';
 import { IUser } from '@/types/mypage/user';
-interface PageProps {
-  params: {
-    moim: IMoim;
-  };
-  searchParams: {
-    user: IUser;
-  };
+
+interface Props {
+  moim: IMoim;
+  user: IUser;
 }
 
-// import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-// import Link from 'next/link';
-// import { motion } from 'framer-motion';
-
-export default function Review({ params, searchParams }: PageProps) {
-  const { moim } = params;
-  const { user } = searchParams;
-
+export default function Review({ moim, user }: Props) {
   return (
     <div>
       <CreateReview moim={moim} user={user} />
-      {/* <div className="flex flex-col gap-5 justify-center items-center h-screen">
-        <LoadingAnimation />
-        <p className="text-heading-2 text-gray500">리뷰페이지 개발중입니다</p>
-        <motion.div
-          whileHover={{ scale: 1.2 }}
-          whileTap={{ scale: 0.9 }}
-          transition={{ type: 'spring', stiffness: 400, damping: 17 }}
-        >
-          <Link href="/mypage" className="rounded-xl bg-gray950 px-5 py-2">
-            <span className="font-semibold text-label-normal text-gray50">뒤로가기</span>
-          </Link>
-        </motion.div>
-      </div> */}
     </div>
   );
 }
