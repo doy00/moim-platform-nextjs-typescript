@@ -13,7 +13,12 @@ import closeIcon from '@images/mypage/close.svg';
 import FilterTabs from './filterTabs/FilterTabs';
 import resetIcon from '@images/mypage/reset.svg';
 
-export default function Filter() {
+interface FilterProps {
+  onCategorySelect: (category: string | null) => void;
+  onStatusSelect: (status: string | null) => void;
+}
+
+export default function Filter({ onCategorySelect, onStatusSelect }: FilterProps) {
   return (
     <Drawer shouldScaleBackground={false} modal={false} dismissible={true} noBodyStyles={true}>
       <DrawerTrigger>
@@ -27,7 +32,7 @@ export default function Filter() {
           <DrawerClose className="flex justify-end">
             <Image src={closeIcon} alt="close" width={24} height={24} />
           </DrawerClose>
-          <FilterTabs />
+          <FilterTabs onCategorySelect={onCategorySelect} onStatusSelect={onStatusSelect} />
         </DrawerHeader>
 
         <DrawerFooter className="flex flex-row gap-[11px] items-center justify-center">
@@ -35,6 +40,7 @@ export default function Filter() {
             <Image src={resetIcon} alt="reset" width={24} height={24} />
           </div>
           <button className="flex bg-gray950 rounded-2xl py-4 px-12 font-semibold text-body-1-normal text-gray200">
+            {/* {data.length} */}
             개의 모임 보기
           </button>
         </DrawerFooter>

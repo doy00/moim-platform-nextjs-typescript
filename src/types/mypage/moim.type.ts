@@ -1,8 +1,12 @@
+import { IReview } from './reviews.type';
+import { IParticipatedUser } from './user';
+
 export interface IMoim {
   moimId: string;
   title: string;
   content: string;
   address: string;
+  isConfirmed: boolean;
   recruitmentDeadline: Date;
   startDate: Date;
   endDate: Date;
@@ -14,8 +18,14 @@ export interface IMoim {
   participants: number;
   reviewsCount: number;
   participantsMoims: [];
-  reviews: [];
+  participatedUsers: IParticipatedUser[];
+  reviews: IReview[];
 }
 
-export type IMyMoim = IMoim;
-export type IParticipatedMoim = IMoim;
+export interface IMyMoim extends IMoim {
+  isOwner?: boolean;
+}
+
+export interface IParticipatedMoim extends IMoim {
+  isParticipated: boolean;
+}

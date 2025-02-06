@@ -1,14 +1,16 @@
 import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
-import emptyDudu from '@images/mypage/dudu-empty.svg';
+import emptyDudu from '@public/images/mypage/dudu-empty.svg';
 import Link from 'next/link';
 import { useMyMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { motion } from 'framer-motion';
-import emptyHeart from '@images/mypage/empty-heart.svg';
-// import fullHeart from '@images/mypage/heart.svg';
+import emptyHeart from '@public/images/mypage/empty-heart.svg';
+// import fullHeart from '@public/images/mypage/heart.svg';
 
 export default function CreatedMeetings() {
   const { data, isLoading } = useMyMoimQuery();
+
+  console.log(data);
 
   if (isLoading) {
     return <GatheringSkeleton />;
@@ -26,7 +28,7 @@ export default function CreatedMeetings() {
           whileTap={{ scale: 0.9 }}
           transition={{ type: 'spring', stiffness: 400, damping: 17 }}
         >
-          <Link href="/create" className="rounded-xl bg-gray950 px-5 py-2">
+          <Link href="/make" className="rounded-xl bg-gray950 px-5 py-2">
             <span className="font-semibold text-label-normal text-gray50">모임 개설하기</span>
           </Link>
         </motion.div>
@@ -41,9 +43,7 @@ export default function CreatedMeetings() {
           <div className="absolute top-4 right-4 z-10">
             <Image src={emptyHeart} alt="Heart" width={24} height={24} />
           </div>
-          <Link href={`/detail/${moim.moimId}`}>
-            <GatheringCard moim={moim} />
-          </Link>
+          <GatheringCard moim={moim} />
         </div>
       ))}
     </div>
