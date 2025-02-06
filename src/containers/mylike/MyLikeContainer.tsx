@@ -10,6 +10,7 @@ import { likeApi } from '@/apis/detail/detail.api';
 import { toast } from 'sonner';
 import { GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import { DuduEmpty } from '@/components/detail/icons/DuduEmpty';
+import { Header } from '@/components/mylike/Header';
 
 export default function MyLikeContainer () {
   const router = useRouter();
@@ -69,7 +70,7 @@ export default function MyLikeContainer () {
   console.log('me 찜한 모임:', moims);
 
   if (isLoading) {
-    return <div><GatheringSkeleton /></div>
+    return <div className="w-full min-h-screen mx-auto px-4 bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg"><Header /><GatheringSkeleton /></div>
   }
 
   if (error) {
