@@ -45,7 +45,7 @@ export default function CreateReview({ moim, user }: Props) {
         </span>
       </div>
       <div>
-        <GatheringCard moim={{ ...moim, isParticipated: true }} isReviewed={true} />
+        <GatheringCard moim={moim} />
       </div>
       <div className="flex flex-col gap-6">
         <span>모임은 어땠나요?</span>

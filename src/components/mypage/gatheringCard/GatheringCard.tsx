@@ -1,70 +1,80 @@
-import { IParticipatedMoim, IMyMoim } from '@/types/mypage/moim.type';
+import { IMyMoim } from '@/types/mypage/moim.type';
+import { IParticipatedUser } from '@/types/mypage/user';
 import Image from 'next/image';
 import Link from 'next/link';
 import { moimTypeTag, moimTypeIcon, statusTag } from '@/utils/mypage/statusTags';
+
 interface Props {
-  moim: IMyMoim | IParticipatedMoim;
-  isReviewed?: boolean;
+  moim: IMyMoim;
+  participatedUser?: IParticipatedUser;
 }
 
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-background100 rounded-[14px] shadow-sm cursor-pointer">{children}</div>
 );
 
-export function GatheringCard({ moim, isReviewed }: Props) {
-  const isGatheringEnded = new Date(moim.endDate) < new Date();
-  // moim 타입이 Union 타입이기 때문에 타입 가드를 사용함
-  const isParticipatedMoim = 'isParticipated' in moim;
-  const showReviewButton = isGatheringEnded && !isReviewed && isParticipatedMoim;
+export function GatheringCard({ moim, participatedUser }: Props) {
+  const isMoimEnded = moim?.status === 'END';
+  const isParticipatedUser = moim?.participatedUsers.some(
+    (participatedUser) => participatedUser.userUuid === participatedUser?.userUuid,
+  );
+  const isReviewer = moim?.reviews.some((review) => review.userUuid === participatedUser?.userUuid);
+  const showReviewButton = isMoimEnded && isParticipatedUser && !isReviewer;
+
+  console.log('isMoimEnded : ', isMoimEnded);
+  console.log('isParticipatedUser : ', isParticipatedUser);
+  console.log('isReviewer : ', isReviewer);
 
   return (
     <GatheringWrapper>
-      <div className="flex flex-col">
-        <div className="flex gap-5 p-4 justify-between">
-          <div className="flex gap-5 items-start">
-            <Image src={moimTypeIcon(moim)} alt="puzzle" width={36} height={36} />
-            <div className="flex flex-col gap-2">
-              <div className="flex gap-1">
-                <span className="h-[24px] bg-background400 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray800">
-                  {moimTypeTag(moim)}
-                </span>
-                <span className="h-[24px] bg-gray800 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray50">
-                  {statusTag(moim)}
-                </span>
-              </div>
+      <Link href={`/detail/${moim?.moimId}`}>
+        <div className="flex flex-col">
+          <div className="flex gap-5 p-4 justify-between">
+            <div className="flex gap-5 items-start">
+              <Image src={moimTypeIcon(moim)} alt="puzzle" width={36} height={36} />
               <div className="flex flex-col gap-2">
-                <p className="font-medium text-body-1-normal color-[#2B2926]">{moim?.title}</p>
-                <div className="flex gap-2 items-center">
-                  <span className="font-medium text-label-reading text-[#9E9892]">
-                    {moim?.address}
+                <div className="flex gap-1">
+                  <span className="h-[24px] bg-background400 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray800">
+                    {moimTypeTag(moim)}
                   </span>
-                  <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
-                  <span className="font-medium text-label-reading text-[#9E9892]">
-                    {moim?.participants}명 참여
+                  <span className="h-[24px] bg-gray800 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray50">
+                    {statusTag(moim)}
                   </span>
                 </div>
-              </div>
-              <div className="flex items-center justify-between gap-2">
-                <span className="font-medium text-caption-normal text-[#837C74]">
-                  {new Date(moim?.startDate).toLocaleDateString()}
-                  {''} - {''}
-                  {new Date(moim?.endDate).toLocaleDateString()}
-                </span>
+                <div className="flex flex-col gap-2">
+                  <p className="font-medium text-body-1-normal color-[#2B2926]">{moim?.title}</p>
+                  <div className="flex gap-2 items-center">
+                    <span className="font-medium text-label-reading text-[#9E9892]">
+                      {moim?.address}
+                    </span>
+                    <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
+                    <span className="font-medium text-label-reading text-[#9E9892]">
+                      {moim?.participants}명 참여
+                    </span>
+                  </div>
+                </div>
+                <div className="flex items-center justify-between gap-2">
+                  <span className="font-medium text-caption-normal text-[#837C74]">
+                    {new Date(moim?.startDate).toLocaleDateString()}
+                    {''} - {''}
+                    {new Date(moim?.endDate).toLocaleDateString()}
+                  </span>
+                </div>
               </div>
             </div>
           </div>
         </div>
-        {showReviewButton ? (
-          <div className="p-4 pt-0">
-            <Link
-              href={`/mypage/review/${moim.moimId}`}
-              className="w-full py-4 px-4 bg-gray100 rounded-[14px] text-body-2-normal font-semibold text-gray800 hover:bg-gray200 block text-center"
-            >
-              리뷰작성
-            </Link>
-          </div>
-        ) : null}
-      </div>
+      </Link>
+      {showReviewButton && (
+        <div className="p-4 pt-0">
+          <Link
+            href={`/mypage/review/${moim.moimId}`}
+            className="w-full py-4 px-4 bg-gray100 rounded-[14px] text-body-2-normal font-semibold text-gray800 hover:bg-gray200 block text-center"
+          >
+            리뷰작성
+          </Link>
+        </div>
+      )}
     </GatheringWrapper>
   );
 }
