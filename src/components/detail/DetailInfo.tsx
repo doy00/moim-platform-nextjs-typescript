@@ -6,7 +6,6 @@ import { cn } from "@/utils/detail/cn";
 import { getMoimTypeText } from "@/utils/detail/enums";
 import { formatDate, getDeadlineText } from "@/utils/detail/date";
 import { ECategory, EMoimStatus } from "@/types/supabase/supabase-custom.type";
-import { IMoimDetail } from "@/types/detail/t-moim";
 
 interface IDetailInfoProps {
   title: string;
@@ -55,32 +54,12 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
     )}
     >
       <div className="flex flex-col gap-4 w-full">
-      
         <div className="flex gap-1.5">
-          <ChipSmallSquircle 
-            variant="light"
-            text={getMoimTypeText(moimType)}
-          />
-          {isConfirmed && (
-          <ChipSmallSquircle 
-            variant="dark"
-            text="개설 확정"
-          />
-          )}
-          {online && (
-            <ChipSmallSquircle 
-              variant="light"
-              text="온라인"
-            />
-          )}
-          {getStatusTag  && (
-            <ChipSmallSquircle
-              variant="light"
-              text={getStatusTag(status)}
-            />
-          )}
+          <ChipSmallSquircle variant="light" text={getMoimTypeText(moimType)} />
+          {isConfirmed && ( <ChipSmallSquircle variant="dark" text="개설 확정" /> )}
+          {online && ( <ChipSmallSquircle variant="light" text="온라인" /> )}
+          {getStatusTag  && ( <ChipSmallSquircle variant="light" text={getStatusTag(status)} /> )}
         </div>
-      
         <div className="flex flex-col gap-1.5">
           <h3 className="text-body-1-normal font-medium text-textNormal truncate"
           >
@@ -101,13 +80,9 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
               {`${formatDate(recruitmentDeadline)} - ${formatDate(recruitmentDeadline)}`}
             </span>
             <span>
-              <ChipSmallRound 
-                variant="gray"
-                text={getDeadlineText(recruitmentDeadline)}   // text="마감 D-10"
-              />
+              <ChipSmallRound variant="gray" text={getDeadlineText(recruitmentDeadline)} />
             </span>
           </div>
-          
           <div className="flex items-center gap-2 max-w-[255px]">
             <span className="text-caption-normal font-medium text-gray500">
               {"모임 날짜"}
