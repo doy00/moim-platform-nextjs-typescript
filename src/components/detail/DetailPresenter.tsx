@@ -45,6 +45,7 @@ export default function DetailPresenter({
           endDate={data.endDate}        
           participants={data.participants}
           minParticipants={data.minParticipants}
+          maxParticipants={data.maxParticipants}
           moimType={data.moimType}
           isConfirmed={data.isConfirmed}
           status={data.status}

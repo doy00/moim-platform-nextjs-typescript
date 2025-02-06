@@ -1,5 +1,5 @@
 import axios from 'axios';
-import type { AxiosError, AxiosResponse } from 'axios';
+import type { AxiosError } from 'axios';
 import { getCookie } from 'cookies-next';
 
 export const axiosInstance = axios.create({
@@ -23,7 +23,7 @@ const getAccessToken = () => {
 
   // 브라우저 환경에서만 localStorage 확인
   if (isBrowser()) {
-    const localToken = localStorage.getItem('accessToken');
+    const localToken = localStorage.getItem('access_token');
     if (localToken) return localToken;
   }
   return null;

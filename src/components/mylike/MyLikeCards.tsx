@@ -12,7 +12,7 @@ interface IMyLikeCards {
 export default function MyLikeCards({ moims, onRemoveLike, onClickCard }: IMyLikeCards) {
 
   return (
-      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2 pt-[14px]">
+      <div className="flex flex-col gap-4 md:gap-6 lg:grid lg:grid-cols-2 pt-[14px]">
         {moims.map((moim) => (
           <MyLikeCard 
             key={moim.moimId} 
