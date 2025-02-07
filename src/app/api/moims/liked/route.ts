@@ -21,8 +21,6 @@ export async function GET(req: NextRequest) {
   const token = authorization?.split(' ')[1] ?? null;
   const refreshToken = cookieStore.get('refresh_token')?.value ?? null;
 
-  console.log('refreshToken????? ====>', refreshToken);
-
   let user: User | null;
   let error: AuthError | null;
 
@@ -38,19 +36,14 @@ export async function GET(req: NextRequest) {
     } = await supabase.auth.getUser(token));
   }
 
-  console.log('error????? ====>', error?.code);
-
   // TODO: refreshToken 이 자꾸 invalid 라는데,
   // 실제로 로그인 후 한시간 기다려서 access_token 이 만료된 뒤에,
   // 진짜 refresh_token이 invalid 한것인지, 즉 내가 로직을 잘못 짠 것인지 뭔지 테스트 필요
   // 그리고 getUser 로직이 route handler 마다 반복되므로, api/auth/me 로 한번 get을 날려서 처리하는 방법은 없는지 확인 필요
   if (error?.code === 'bad_jwt' && refreshToken) {
-    console.log('why refreshToken????? ====>', refreshToken);
     const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession({
       refresh_token: refreshToken,
     });
-
-    console.log('refreshError????????? ====>', refreshError);
 
     if (refreshData?.session?.access_token && refreshData?.session?.refresh_token) {
       const { data: userData, error: userError } = await supabase.auth.getUser(
@@ -75,11 +68,6 @@ export async function GET(req: NextRequest) {
         sameSite: 'strict',
       });
     }
-  }
-
-  if (error) {
-    // console.log('error????? ====>', error);
-    return NextResponse.json({ message: error?.message }, { status: 401 });
   }
 
   if (!user) {
