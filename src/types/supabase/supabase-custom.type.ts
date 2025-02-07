@@ -29,6 +29,7 @@ export type TReviewClient = {
 };
 
 export type TMoimClient = {
+  createdAt: string;
   moimId: string;
   title: string;
   content: string;
