@@ -36,7 +36,7 @@ export type TPutMeInputs = {
 
 export type TMe = Omit<TUsers, 'created_at' | 'updated_at'>;
 
-export type TAuthSignUpInputs = Omit<TMe, 'id' | 'image'> & {
+export type TAuthSignUpInputs = Omit<TMe, 'id' | 'image' | 'is_social'> & {
   password: string;
 };
 
