@@ -1,7 +1,6 @@
 import { IMoim } from '@/types/mypage/moim.type';
 
 export interface IReview {
-  // TODO : 작성날짜 필요함
   created_at: string;
   user_image: string;
   rate: 'SOSO' | 'GOOD' | 'RECOMMEND';
@@ -14,5 +13,11 @@ export interface IReview {
 }
 export interface IReviewPost {
   review: string;
-  rate: 'SOSO' | 'GOOD' | 'RECOMMEND';
+  rate?: 'SOSO' | 'GOOD' | 'RECOMMEND';
+  // moimId?: string;
+}
+
+export interface IReviewResponse {
+  message: string;
+  data: IReview;
 }

@@ -29,10 +29,7 @@ export default function Meetings() {
   return (
     <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
       {data.map((moim) => (
-        <div key={moim.moimId} className="relative">
-          <div className="absolute top-4 right-4 z-10">
-            <Image src={emptyHeart} alt="Heart" width={24} height={24} />
-          </div>
+        <div key={moim.moimId}>
           <GatheringCard moim={moim} />
         </div>
       ))}

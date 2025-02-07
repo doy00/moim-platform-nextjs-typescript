@@ -1,5 +1,6 @@
 import { getUser } from '@/app/api/auth/getUser';
 import { TMe } from '@/types/auth/auth.type';
+import { TMoimsJoined } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
@@ -64,7 +65,13 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
     return NextResponse.json({ message: '모임 참여 실패' }, { status: 500 });
   }
 
-  const { data: moim, error: moimError } = await supabase
+  const {
+    data: moim,
+    error: moimError,
+  }: {
+    data: TMoimsJoined | null;
+    error: PostgrestError | null;
+  } = await supabase
     .from('moims')
     .select(
       '*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
@@ -78,6 +85,10 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
 
   if (!moim) {
     return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
+  }
+
+  if (moim.master_email === user.email) {
+    return NextResponse.json({ message: '자신이 개설한 모임은 참여할 수 없어요' }, { status: 400 });
   }
 
   const response = {

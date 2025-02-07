@@ -1,4 +1,5 @@
 import { TMe, TPutMeInputs } from '@/types/auth/auth.type';
+import { deleteCookie } from '@/utils/auth/auth-server.util';
 import convertToWebP from '@/utils/common/converToWebp';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
