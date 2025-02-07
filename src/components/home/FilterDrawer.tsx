@@ -29,9 +29,9 @@ const FilterDrawer: React.FC = () => {
   const {
     moimType,
     onoff,
-    status, // ✅ 기존 moimStatus -> status 로 변경
+    status, 
     setMoimType,
-    setStatus, // ✅ 기존 setMoimStatus -> setStatus 로 변경
+    setStatus, 
     setOnOff,
     resetFilters,
   } = useFilterStore();
@@ -88,8 +88,6 @@ const FilterDrawer: React.FC = () => {
             );
           })}
             </div>
-
-            {/* Selected Regions */}
           </div>
         );
 

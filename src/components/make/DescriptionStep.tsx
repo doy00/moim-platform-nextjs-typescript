@@ -6,7 +6,7 @@ import CameraIcon from '../home/icons/CameraIcon';
 import DeleteFillIcon from '../home/icons/DeleteFillIcon';
 
 export default function DescriptionStep() {
-  const { title, content, image, setTitle, setContent, setImage } = useMakeStore(); // useMakeStore에서 setImage를 정확히 가져옵니다.
+  const { title, content, image, setTitle, setContent, setImage } = useMakeStore();
   const [error, setError] = useState<string | null>(null);
 
   const handleTitleChange = (e: React.ChangeEvent<HTMLInputElement>) => {

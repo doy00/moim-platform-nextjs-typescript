@@ -4,14 +4,12 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-
 // Constants
 import { GNB_MENU } from '@/constants/home/gnb-menu';
 
 export default function HomeGnb() {
   const pathname = usePathname();
 
-  // GNB를 표시할 경로 목록
   const showGnbPaths = ['/', '/favorites', '/mypage'];
   const shouldShowGnb = showGnbPaths.includes(pathname);
 

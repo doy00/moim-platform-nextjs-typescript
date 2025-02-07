@@ -1,4 +1,3 @@
-// src/stores/home/filterStore.ts
 import { create } from 'zustand';
 import { TFilterState } from '@/types/home/t-filterState';
 

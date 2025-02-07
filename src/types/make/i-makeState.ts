@@ -1,6 +1,5 @@
-// /types/make/i-makeState.ts
 interface IMakeState {
-  type: string; // 모임 카테고리 (예: 'PROJECT' | 'STUDY' | 'INTERVIEW')
+  type: string; 
   title: string;
   content: string;
   si: string;

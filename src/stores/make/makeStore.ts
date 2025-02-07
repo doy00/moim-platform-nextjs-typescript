@@ -39,7 +39,7 @@ export const useMakeStore = create<MakeStoreState>((set) => ({
   setEndDate: (endDate) => set({ endDate }),
   setMinParticipants: (minParticipants) => set({ minParticipants }),
   setMaxParticipants: (maxParticipants) => set({ maxParticipants }),
-  setImage: (image: File | null) => set({ image }), // 수정된 타입
+  setImage: (image: File | null) => set({ image }),
   reset: () =>
     set({
       type: "",
