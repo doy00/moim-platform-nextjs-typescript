@@ -1,4 +1,4 @@
-import { getLocalStorageItem } from '@/utils/auth/auth-client.util';
+import { getCookie } from '@/utils/auth/auth-server.util';
 import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
 
@@ -6,19 +6,26 @@ const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_API_URL ?? process.env.NEXT_PUBLIC_VERCEL_URL,
 });
 
-api.interceptors.request.use(async (config) => {
-  if (typeof window !== 'undefined') {
-    const token = getLocalStorageItem('access_token');
-    if (token) {
-      config.headers.set('Authorization', `Bearer ${token}`);
-    }
+const isBrowser = () => typeof window !== 'undefined';
+
+// 토큰 가져오기 함수
+const getAccessToken = () => {
+  const cookieToken = getCookie('access_token');
+  if (cookieToken) return cookieToken;
+
+  // 브라우저 환경에서만 localStorage 확인
+  if (isBrowser()) {
+    const localToken = localStorage.getItem('access_token');
+    if (localToken) return localToken;
   }
-  // else {
-  //   const token = await getCookie('accessToken');
-  //   if (token) {
-  //     config.headers.set('Authorization', `Bearer ${token}`);
-  //   }
-  // }
+  return null;
+};
+
+api.interceptors.request.use(async (config) => {
+  const token = getAccessToken();
+  if (token) {
+    config.headers.set('Authorization', `Bearer ${token}`);
+  }
   return config;
 });
 

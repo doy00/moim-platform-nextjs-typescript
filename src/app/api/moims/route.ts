@@ -3,9 +3,10 @@ import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-cus
 import convertToWebP from '@/utils/common/converToWebp';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
-import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
-import { cookies, headers } from 'next/headers';
+import { PostgrestError } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { getUser } from '../auth/getUser';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -74,25 +75,24 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const authorization = (await headers()).get('authorization');
-  const token = authorization?.split(' ')[1] ?? null;
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  let user: User | null;
-  let error: AuthError | null;
-  if (token) {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token));
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser());
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
+  const { data: foundUser, error: foundUserError } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', user.email)
+    .single();
+
+  if (foundUserError) {
+    return NextResponse.json({ message: foundUserError?.message }, { status: 401 });
+  }
+
+  if (!foundUser) {
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const formData = await req.formData();
@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
     max_participants: moimDataOrigin.maxParticipants,
     category: moimDataOrigin.moimType,
     status,
-    master_email: user?.email,
+    master_email: foundUser.email,
     images: null,
     online: moimDataOrigin.online,
   };

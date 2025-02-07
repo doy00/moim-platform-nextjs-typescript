@@ -24,9 +24,8 @@ export const deleteSignOut = () => {
   return api.delete<TSignOutResponse, TSignOutResponse>(url);
 };
 
-export const getMe = async (jwt?: string) => {
-  let url = '/api/auth/me';
-  if (jwt) url = `/api/auth/me?jwt=${jwt}`;
+export const getMe = async () => {
+  const url = '/api/auth/me';
   return await api.get<TMe, TMe>(url);
 };
 
