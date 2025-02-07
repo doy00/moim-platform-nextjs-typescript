@@ -68,10 +68,10 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
             <div className="flex flex-col">
               <div className="flex justify-between items-start">
                 <div className="flex gap-1 flex-wrap">
-                  <ChipSmallSquircle text={getMoimTypeText(moimType)} variant="light" />
-                  <ChipSmallSquircle text={getDeadlineText(recruitmentDeadline)} variant="light" />
+                  <ChipSmallSquircle text={getMoimTypeText(moimType)} variant="cardTag" />
+                  {/* <ChipSmallSquircle text={getDeadlineText(recruitmentDeadline)} variant="cardTag" /> */}
                   {isConfirmed && ( <ChipSmallSquircle text="개설확정" variant="dark" /> )}
-                  {getStatusTag  && ( <ChipSmallSquircle variant="light" text={getStatusTag(status)} /> )}
+                  {getStatusTag  && ( <ChipSmallSquircle variant="cardTag" text={getStatusTag(status)} /> )}
                 </div>
 
                 {/* 찜버튼 */}
