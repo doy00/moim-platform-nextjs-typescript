@@ -8,23 +8,17 @@ import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
+import { getUser } from '../../auth/getUser';
 
 // 내가 참여한 모임 조회
 export async function GET() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-
-  if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const {
@@ -33,12 +27,12 @@ export async function GET() {
   }: { data: TParticipatedMoimsJoined[] | null; error: PostgrestError | null } = await supabase
     .from('participated_moims')
     .select(
-      '*, moims (*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
+      '*, moims (*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
     )
     .eq('user_uuid', user.id);
 
   if (participatedMoimsError) {
-    return NextResponse.json({ message: participatedMoimsError?.message }, { status: 401 });
+    return NextResponse.json({ message: participatedMoimsError?.message }, { status: 500 });
   }
 
   if (!participatedMoims) {

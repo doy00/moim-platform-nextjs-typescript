@@ -10,12 +10,12 @@ export interface IImageBox {
 
 export interface IChipSmallSquircle {
   text: string;
-  variant: 'light' | 'dark' | 'success' | 'tag' | 'emotion';
+  variant: 'light' | 'dark' | 'success' | 'tag' | 'emotion' | 'cardTag';
   className?: string;
 }
 
 export interface IChipSmallRound {
   text: string;
-  variant: 'gray';
+  variant: 'gray' | 'soso' | 'good' | 'recommend';
   className?: string;
 }

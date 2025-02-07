@@ -1,11 +1,11 @@
 'use client';
 
-import { useEffect } from 'react';
 import IntersectionObserver from '@/libs/home/intersectionObserver';
 import { useFilterStore } from '@/stores/home/filterStore';
-import HomeCard from './HomeCard';
-import { IMoim } from '@/types/home/i-moim';
 import { useLikeStore } from '@/stores/home/likeStore';
+import { IMoim } from '@/types/home/i-moim';
+import { useEffect } from 'react';
+import HomeCard from './HomeCard';
 
 interface HomeCardsProps {
   data: any; // HomeContainer에서 받은 데이터

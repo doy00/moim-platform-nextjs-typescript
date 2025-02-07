@@ -36,6 +36,7 @@ export function useCreateMoim() {
 
       if (response.data && response.data.moimId) {
         makeSuccessToast(response.data.moimId, () => router.push(`/detail/${response.data.moimId}`));
+
         // 새로운 모임 데이터가 즉시 반영되도록 캐시 무효화
         await queryClient.invalidateQueries({ queryKey: ['moims'] });
 

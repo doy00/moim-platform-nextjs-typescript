@@ -1,20 +1,24 @@
 // types/detail/i-presenter.ts
-import type { IMoimDetail, IParticipant, IDetailReviewResponse, IMoimReview } from './i-moim';
+import type { IMoimDetail, IParticipant, IReview } from './t-moim';
 
-export interface DetailPresenterProps {
+export interface IDetailPresenterProps {
   // 기본 데이터
-  data: IMoimDetail | undefined;
-  participants: IParticipant[] | undefined;
-  // reviews: IDetailReviewResponse | undefined;
-  reviews: IMoimReview[] | undefined;
+  data: IMoimDetail | null;
+  participants: IParticipant[];
+  reviews: IReview[] | undefined;
   
   // 상태
   isJoining: boolean;
   isLiked: boolean;
+  canJoin: boolean;
   
   // 이벤트 핸들러
   onJoin: () => void;
   onLikeToggle: () => void;
+  
+  // 신청하기 버튼 관련 props
+  actionLabel?: string;  // 신청하기 버튼 라벨
+  disabled?: boolean;    // 신청불가 상태일때 버튼 비활성화
   
   // 옵셔널 props
   className?: string;

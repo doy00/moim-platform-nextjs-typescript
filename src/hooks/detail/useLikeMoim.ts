@@ -1,72 +1,97 @@
-// 찜하기 커스텀훅
+// 찜하기 커스텀 훅
 'use client';
-import { useCallback } from 'react';
-import { useFavoriteStore } from '@/stores/detail/favoriteStore';
-import { toast } from 'sonner';
+import { getDetail, likeApi } from '@/apis/detail/detail.api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '../auth/auth.hook';
+import { IMoimDetail } from '@/types/detail/t-moim';
 
-interface UseLikeMoimOptions {
-  successMessage?: string;
-  errorMessage?: string;
+interface IUseLikeMoimOptions {
   onSuccess?: () => void;
+  onError?: (error: unknown) => void;
 }
+export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) => {
+  const { me, isMeLoading } = useAuth();
+  const queryClient = useQueryClient();
+  const { onSuccess, onError } = options;
 
-export const useLikeMoim = (moimId: number, options: UseLikeMoimOptions = {}) => {
-  const {
-    successMessage = "찜하기가 완료되었어요",
-    errorMessage = "잠시후 다시 시도해주세요",
-    onSuccess: onSuccessCallback
-  }= options;
+  const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
+    queryKey: ['moim', moimId],
+    queryFn: () => getDetail(moimId),
+    enabled: !!moimId,
+  });
 
+  // 현재 유저가 이 모임을 찜했는지 확인
+  const isLiked = me && moimDetail?.likedUsers?.includes(me.id);  // [ ] 빌드에러 확인해봤는데 TMe에 moimId가 없음
+  
+  const { mutateAsync: toggleLike, isPending: isToggling } = useMutation({
+    mutationFn: async () => {
+      if (!me) throw new Error('로그인이 필요합니다');
+      const response = await (isLiked ? likeApi.unlike(moimId) : likeApi.like(moimId));
+      return response;
+    },
 
-  // 찜 초기상태 확인 useEffect 사용
-  // const [isLiked, setIsLiked] = useState(false);
-  // const [isProcessing, setIsProcessing] = useState(false);
-  const { favorites, isFavorite, toggleFavorite, isLoading } = useFavoriteStore();
-  const isLiked = favorites.has(moimId);
+    // 낙관적 업데이트를 위한 onMutate
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['moim', moimId] });  // 진행중인 모든 관련 쿼리 취소
+      const previousMoim = queryClient.getQueryData<IMoimDetail>(['moim', moimId]);  // 현재 캐시된 데이터 저장
+      // 캐시 낙관적 업데이트
+      if (previousMoim && me) {
+        queryClient.setQueryData<IMoimDetail>(['moim', moimId], {
+          ...previousMoim,
+          likes: isLiked ? previousMoim.likes - 1 : previousMoim.likes + 1,
+          likedUsers: isLiked
+            ? previousMoim.likedUsers.filter(id => id !== me.id)
+            : [...previousMoim.likedUsers, me.id],
+        });
+      }
 
-  // useEffect(() => {
-  //   const loadLikeStatus = async () => {
-  //     try {
-  //       const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
-  //       setIsLiked(likedMoims.includes(moimId));
-        
-  //     } catch (error) {
-  //       console.error('찜하기 상태 로드 실패:', error);
-  //     }
-  //   };
+      return { previousMoim };
+    },
 
-  //   loadLikeStatus();
-  // }, [moimId]);
+    // 서버 응답 성공 시
+    onSuccess: (response) => {
+      // 모임 상세 데이터 캐시 업데이트
+      queryClient.setQueryData<IMoimDetail>(['moim', moimId], (oldData) => {
+        if (!oldData || !me) return oldData;
+        return {
+          ...oldData,
+          ...response.data
+        };
+      });
 
-  const handleToggleLike = useCallback(async () => {
-    const {
-      successMessage = isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요",
-      errorMessage = "잠시후 다시 시도해주세요",
-      onSuccess
-    } = options;
+      // 관련 다른 쿼리들도 무효화(찜한 목록 캐시 무효화)
+      queryClient.invalidateQueries({ queryKey: ['liked-moims'] });
 
-    // setIsProcessing(true);
-    try {
-      // zustand
-      await toggleFavorite(moimId);
       onSuccess?.();
-
-      // 로컬 스토리지 저장
-      // const likedMoims = JSON.parse(localStorage.getItem('likedMoims') || '[]');
-      // const updatedLikes = isLiked 
-      //   ? likedMoims.filter((id: number) => id !== moimId)
-      //   : [...likedMoims, moimId];
-      // localStorage.setItem('likedMoims', JSON.stringify(updatedLikes));
-      // setIsLiked(!isLiked);
-      toast.success(successMessage);
-    } catch (error) {
+    },
+    
+    // 에러 발생 시
+    onError: (error, _, context) => {
+      // 이전 상태로 롤백
+      if (context?.previousMoim) {
+        queryClient.setQueryData(['moim', moimId], context.previousMoim);
+      }
       console.error('찜하기 토글 실패:', error);
-      toast.error(errorMessage);
-    } 
-  }, [moimId, toggleFavorite, isLiked]);
+      onError?.(error);
+    },
+  });
 
-  return { 
-    isLiked,
+  // 찜하기 토글 핸들러
+  const handleToggleLike = async (e?: React.MouseEvent) => {
+    // e?.preventDefault();
+    e?.stopPropagation();
+    if (!me) throw new Error('로그인이 필요합니다');
+    try {
+      await toggleLike();
+      return true;
+    } catch (error) {
+      throw error;
+    }
+  };
+  return {
+    isLiked: !!isLiked,
     handleToggleLike,
+    isLoading: isLoadingDetail || isToggling || isMeLoading,
+    likesCount: moimDetail?.likes ?? 0,
   };
 };

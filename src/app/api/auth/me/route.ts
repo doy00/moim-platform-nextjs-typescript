@@ -4,44 +4,24 @@ import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { getUser } from '../getUser';
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const jwt = searchParams.get('jwt');
+export async function GET() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const auth = supabase.auth;
-  let user;
-  let error;
-  if (jwt) {
-    ({
-      data: { user },
-      error,
-    } = await auth.getUser(jwt));
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await auth.getUser());
-  }
+  const { isSuccess, message, user, status } = await getUser(supabase);
 
-  if (error) {
-    // if (error.message === 'Auth session missing!')
-    //   return NextResponse.json('Auth session missing!', { status: 200 });
-    console.log('getUser error from route handler ====>', error);
-
-    if (error.message === 'Unauthorized') {
-      return NextResponse.json({ message: '인증되지 않은 사용자입니다' }, { status: 401 });
-    }
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-  if (!user) {
-    return NextResponse.json({ message: '로그인된 사용자가 없습니다' }, { status: 404 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status });
   }
 
   const { data: me, error: meError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('email', user.email).single();
+    await supabase
+      .from('users')
+      .select('id, email, nickname, position, introduction, tags, image, is_social')
+      .eq('email', user.email)
+      .single();
 
   if (meError) {
     return NextResponse.json({ message: meError?.message }, { status: 401 });
@@ -79,20 +59,18 @@ export async function PUT(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-  if (!user) {
-    return NextResponse.json({ message: '로그인된 사용자가 없습니다' }, { status: 404 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const { data: userData, error: userError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('email', user.email).single();
+    await supabase
+      .from('users')
+      .select('id, email, nickname, position, introduction, tags, image, is_social')
+      .eq('email', user.email)
+      .single();
 
   if (userError) {
     return NextResponse.json({ message: userError?.message }, { status: 401 });
@@ -108,11 +86,12 @@ export async function PUT(req: NextRequest) {
     position,
     introduction,
     tags: tagsArray,
+    is_social: userData.is_social,
   };
 
   if (meImageFile) {
     const imageBuffer = await convertToWebP(meImageFile, 1080);
-    const filePath = `users_${Date.now()}.webp`;
+    const filePath = `users/${user.email}/${Date.now()}.webp`;
 
     if (!imageBuffer) {
       return NextResponse.json({ message: '이미지 변환 중 오류 발생' }, { status: 500 });
@@ -128,7 +107,7 @@ export async function PUT(req: NextRequest) {
       return NextResponse.json({ message: '이미지 업로드 중 오류 발생' }, { status: 500 });
     }
 
-    const { data: imageUrlData } = supabase.storage.from('moims').getPublicUrl(filePath);
+    const { data: imageUrlData } = supabase.storage.from('users').getPublicUrl(filePath);
     newUserData.image = imageUrlData.publicUrl;
   }
 
@@ -139,11 +118,11 @@ export async function PUT(req: NextRequest) {
     .from('users')
     .update({ ...newUserData, updated_at: new Date().toISOString() })
     .eq('email', newUserData.email)
-    .select('*')
+    .select('id, email, nickname, position, introduction, tags, image, is_social')
     .single();
 
   if (updatedUserError) {
-    return NextResponse.json({ message: updatedUserError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedUserError?.message }, { status: 500 });
   }
 
   return NextResponse.json(updatedUser, { status: 200 });

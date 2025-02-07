@@ -34,23 +34,27 @@ export async function POST(request: Request) {
 
   if (error) {
     if (error.message === 'Invalid login credentials') {
-      return NextResponse.json({ message: '비밀번호를 확인해주세요' }, { status: 400 });
+      return NextResponse.json({ message: '비밀번호를 확인해주세요' }, { status: 401 });
     }
-    return NextResponse.json({ message: error.message }, { status: 400 });
+    return NextResponse.json({ message: error.message }, { status: 401 });
   }
   if (!user) {
-    return NextResponse.json({ message: '로그인에 실패했습니다' }, { status: 404 });
+    return NextResponse.json({ message: '로그인에 실패했습니다' }, { status: 500 });
   }
 
   const { data: me, error: userError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('email', user.email).single();
+    await supabase
+      .from('users')
+      .select('id, email, nickname, position, introduction, tags, image, is_social')
+      .eq('email', user.email)
+      .single();
 
   if (userError) {
     console.error(userError);
-    return NextResponse.json({ error: userError?.message }, { status: 401 });
+    return NextResponse.json({ error: userError?.message }, { status: 500 });
   }
   if (!me) {
-    return NextResponse.json({ message: '로그인에 실패했습니다' }, { status: 404 });
+    return NextResponse.json({ message: '로그인에 실패했습니다' }, { status: 500 });
   }
 
   setCookie({

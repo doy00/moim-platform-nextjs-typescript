@@ -4,17 +4,25 @@ import { useState } from 'react';
 import Meetings from '@/components/mypage/Meetings';
 import CreatedMeetings from '@/components/mypage/CreatedMeetings';
 import FilterBar from '@/components/mypage/filterBar/FilterBar';
-// import CompletedReviewCard from '@/components/mypage/myReview/CompletedReview';
 import { motion, AnimatePresence } from 'framer-motion';
 import ReviewTabs from '@/components/mypage/myReview/ReviewTabs';
-import PendingReview from '@/components/mypage/myReview/PendingReview';
 
 export default function RenderTab() {
   const [activeTab, setActiveTab] = useState('meetings');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
+
+  const handleCategorySelect = (category: string | null) => {
+    setSelectedCategory(category);
+  };
+
+  const handleStatusSelect = (status: string | null) => {
+    setSelectedStatus(status);
+  };
 
   const renderTab = () => {
     return (
-      <div className="relative overflow-hidden">
+      <div className="relative">
         <AnimatePresence mode="wait">
           <motion.div
             key={activeTab}
@@ -26,8 +34,8 @@ export default function RenderTab() {
           >
             {activeTab === 'meetings' ? (
               <Meetings />
-            ) : activeTab === 'reviews' ? (
-              <PendingReview />
+            ) : activeTab === 'my-reviews' ? (
+              <ReviewTabs />
             ) : activeTab === 'created-meetings' ? (
               <CreatedMeetings />
             ) : null}
@@ -38,7 +46,7 @@ export default function RenderTab() {
   };
 
   return (
-    <div className="flex flex-col gap-4 px-3 mb-[68px] lg:mb-0 overflow-hidden">
+    <div className="flex flex-col gap-4 px-3 mb-[68px] lg:mb-0">
       <div className="flex px-4 justify-evenly items-center">
         <button
           className={`w-1/3 py-3.5 px-4 font-semibold text-sm ${
@@ -66,7 +74,9 @@ export default function RenderTab() {
           만든 모임
         </button>
       </div>
-      {(activeTab === 'meetings' || activeTab === 'created-meetings') && <FilterBar />}
+      {(activeTab === 'meetings' || activeTab === 'created-meetings') && (
+        <FilterBar onCategorySelect={handleCategorySelect} onStatusSelect={handleStatusSelect} />
+      )}
       {activeTab === 'reviews' && <ReviewTabs />}
       {renderTab()}
     </div>

@@ -9,10 +9,11 @@ import { IMoim } from '@/types/home/i-moim';
 import { useLikeStore } from '@/stores/home/likeStore';
 
 export default function HomeCard({ data }: { data: IMoim }) {
-  const router = useRouter()
+  const router = useRouter();
 
-  const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } = data;
-  
+  const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } =
+    data;
+
   const { likes: likedMoims, toggleLike, likeDeltas } = useLikeStore();
   const isLiked = likedMoims.has(String(moimId));
 
@@ -31,11 +32,11 @@ export default function HomeCard({ data }: { data: IMoim }) {
   };
 
   const handleNavigate = () => {
-    router.push(`/detail/${moimId}`)
-  }
+    router.push(`/detail/${moimId}`);
+  };
 
   return (
-    <article 
+    <article
       className="flex min-w-[343px] h-[174px] bg-white p-4 space-x-5 cursor-pointer"
       onClick={handleNavigate}
     >

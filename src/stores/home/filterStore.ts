@@ -1,5 +1,5 @@
-import { create } from 'zustand';
 import { TFilterState } from '@/types/home/t-filterState';
+import { create } from 'zustand';
 
 export const useFilterStore = create<TFilterState>((set) => ({
   moimType: 'all',

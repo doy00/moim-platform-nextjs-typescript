@@ -26,11 +26,11 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   }
 
   if (!meImageFile) {
-    return NextResponse.json({ message: '이미지 파일이 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '이미지 파일이 없어요' }, { status: 400 });
   }
 
   const imageBuffer = await convertToWebP(meImageFile, 1080);
-  const filePath = `users_${Date.now()}.webp`;
+  const filePath = `users/${user.email}/${Date.now()}.webp`;
 
   if (!imageBuffer) {
     return NextResponse.json({ message: '이미지 변환 중 오류 발생' }, { status: 500 });
@@ -46,7 +46,7 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ message: '이미지 업로드 중 오류 발생' }, { status: 500 });
   }
 
-  const { data: imageUrlData } = supabase.storage.from('moims').getPublicUrl(filePath);
+  const { data: imageUrlData } = supabase.storage.from('users').getPublicUrl(filePath);
   user.image = imageUrlData.publicUrl;
 
   const {
@@ -54,17 +54,17 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
     error: updatedUserError,
   }: { data: TMe | null; error: PostgrestError | null } = await supabase
     .from('users')
-    .update({ image: user.image })
+    .update({ image: user.image, updated_at: new Date().toISOString() })
     .eq('id', id)
     .select()
     .single();
 
   if (updatedUserError) {
-    return NextResponse.json({ message: updatedUserError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedUserError?.message }, { status: 500 });
   }
 
   if (!updatedUser) {
-    return NextResponse.json({ message: '프로필 이미지 변경 실패' }, { status: 401 });
+    return NextResponse.json({ message: '프로필 이미지 변경 실패' }, { status: 500 });
   }
 
   return NextResponse.json(

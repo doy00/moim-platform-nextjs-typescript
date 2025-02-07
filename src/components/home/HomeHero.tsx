@@ -23,16 +23,17 @@ export default function HomeHero({ data }: { data: any }) {
     if (!data) return;
 
     const today = new Date().toISOString().split('T')[0];
-    const count = data.pages
-      ?.flatMap((page: any) => page.data)
-      .filter((moim: any) => moim.createdAt && moim.createdAt.startsWith(today))
-      .length ?? 0;
+    const count =
+      data.pages
+        ?.flatMap((page: any) => page.data)
+        .filter((moim: any) => moim.createdAt && moim.createdAt.startsWith(today)).length ?? 0;
 
     setTodayMoimCount(count);
   }, [data]);
 
   return (
     <section>
+      {/* 히어로 영역 */}
       <article className="px-4 pt-2">
         <div className="flex items-center justify-start w-full h-[58px] bg-background400 rounded-xl pl-4 py-[13px] space-x-2.5">
           <Image
@@ -43,13 +44,15 @@ export default function HomeHero({ data }: { data: any }) {
             priority
           />
           <p className="text-body-2-normal font-bold">
-            오늘 <span className="text-orange200">{todayMoimCount}개</span>의 모임을 새로 발굴했어요!
+            오늘 <span className="text-orange200">{todayMoimCount}개</span>의 모임을 새로
+            발굴했어요!
           </p>
         </div>
       </article>
 
       <article className="px-4 pt-5 flex items-center justify-between">
         <div className="flex items-center gap-x-1.5">
+          {/* 필터 드로어 */}
           <div className="w-[52px] h-[42px] border border-background400 rounded-xl flex items-center justify-center bg-background100">
             <FilterDrawer />
           </div>

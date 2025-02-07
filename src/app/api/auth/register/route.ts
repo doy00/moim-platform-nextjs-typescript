@@ -61,7 +61,7 @@ export async function POST(request: NextRequest) {
   }
 
   if (!user) {
-    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
+    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 500 });
   }
 
   const { data: existingUser, error: existingUserError } = await supabase
@@ -81,7 +81,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ message: '서버에 문제가 발생했습니다' }, { status: 500 });
   }
 
-  const { data: userData, error: userError }: { data: TMe | null; error: PostgrestError | null } =
+  const { data: me, error: userError }: { data: TMe | null; error: PostgrestError | null } =
     await supabase
       .from('users')
       .upsert({
@@ -91,16 +91,16 @@ export async function POST(request: NextRequest) {
         introduction,
         tags: tagsArray,
       })
-      .select()
+      .select('id, email, nickname, position, introduction, tags, image, is_social')
       .single();
 
   if (userError) {
     // console.log('userError ====>', userError);
-    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
+    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 500 });
   }
 
-  if (!userData) {
-    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 404 });
+  if (!me) {
+    return NextResponse.json({ message: '회원가입에 실패했습니다' }, { status: 500 });
   }
 
   if (session?.access_token) {
@@ -126,7 +126,7 @@ export async function POST(request: NextRequest) {
 
   return NextResponse.json(
     {
-      me: userData,
+      me,
       tokens: { accessToken: session?.access_token, refreshToken: session?.refresh_token },
     },
     { status: 200 },

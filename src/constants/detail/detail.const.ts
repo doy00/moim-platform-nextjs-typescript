@@ -20,3 +20,12 @@ export const DEFAULT_IMAGE = {
   PROFILE: '/svgs/img_detail-profile.svg',
   MOIM: '/images/img_moim-image.png',
 } as const;
+
+// 리뷰 평점
+export const REVIEW_RATE = {
+  SOSO: '그냥그래요',
+  GOOD: '괜찮아요',
+  RECOMMEND: '추천해요',
+} as const;
+
+export type ReviewRate = typeof REVIEW_RATE[keyof typeof REVIEW_RATE];

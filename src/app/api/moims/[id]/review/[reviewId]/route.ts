@@ -1,3 +1,4 @@
+import { getUser } from '@/app/api/auth/getUser';
 import { TMe } from '@/types/auth/auth.type';
 import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
@@ -16,17 +17,10 @@ export async function PUT(
   const supabase = createClient(cookieStore);
   const { review, rate }: TReviewInput = await req.json();
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-
-  if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const {
@@ -43,7 +37,7 @@ export async function PUT(
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const {
@@ -59,23 +53,23 @@ export async function PUT(
     .single();
 
   if (updatedReviewError) {
-    return NextResponse.json({ message: updatedReviewError?.message }, { status: 401 });
+    return NextResponse.json({ message: updatedReviewError?.message }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
     .from('moims')
     .select(
-      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+      '*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
     )
     .eq('id', id)
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {
@@ -95,17 +89,10 @@ export async function DELETE(
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-
-  if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 401 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const {
@@ -122,7 +109,7 @@ export async function DELETE(
   }
 
   if (!foundUser) {
-    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const { data: deletedReview, error: deletedReviewError } = await supabase
@@ -135,23 +122,23 @@ export async function DELETE(
     .single();
 
   if (deletedReviewError) {
-    return NextResponse.json({ message: deletedReviewError?.message }, { status: 401 });
+    return NextResponse.json({ message: deletedReviewError?.message }, { status: 500 });
   }
 
   const { data: moim, error: moimError } = await supabase
     .from('moims')
     .select(
-      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+      '*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
     )
     .eq('id', id)
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 401 });
+    return NextResponse.json({ message: '모임 정보가 없어요' }, { status: 404 });
   }
 
   const response = {

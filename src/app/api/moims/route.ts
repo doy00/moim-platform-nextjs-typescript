@@ -6,6 +6,7 @@ import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { getUser } from '../auth/getUser';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -13,66 +14,23 @@ export async function GET(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  // 총 아이템 수를 가져옵니다.
   const { count: totalItems, error: countError } = await supabase
     .from('moims')
     .select('id', { count: 'exact', head: true });
 
   if (countError) {
     console.error(countError);
-    return NextResponse.json({ message: countError?.message }, { status: 401 });
+    return NextResponse.json({ message: countError?.message }, { status: 500 });
   }
 
   if (!totalItems) {
     return NextResponse.json({ message: '아이템이 하나도 없어요' }, { status: 404 });
   }
 
-  if (pageQuery !== 'null') {
-    const page = Number(pageQuery);
-    const start = page === 1 || page === 0 ? 0 : (page - 1) * MOIMS_ITEMS_PER_PAGE;
-    const end = start + MOIMS_ITEMS_PER_PAGE - 1;
+  const page = Math.max(1, Number(pageQuery) || 1); // 최소 1 보장
+  const start = (page - 1) * MOIMS_ITEMS_PER_PAGE;
+  const end = start + MOIMS_ITEMS_PER_PAGE - 1;
 
-    const {
-      data: moims,
-      error: moimError,
-    }: {
-      data: TMoimsJoined[] | null;
-      error: PostgrestError | null;
-    } = await supabase
-      .from('moims')
-      .select(
-        '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
-      )
-      .order('created_at', { ascending: false })
-      .range(start, end);
-
-    if (moimError) {
-      console.error(moimError);
-      return NextResponse.json({ message: moimError?.message }, { status: 401 });
-    }
-
-    if (!moims) {
-      return NextResponse.json({ message: '모임이 하나도 없어요' }, { status: 404 });
-    }
-
-    const totalPages = Math.ceil(totalItems / MOIMS_ITEMS_PER_PAGE);
-
-    const moimsToClient: TMoimClient[] = mapMoimsToClient(moims);
-
-    return NextResponse.json(
-      {
-        data: moimsToClient,
-        pagination: {
-          totalItems,
-          totalPages,
-          currentPage: page, // 1부터 시작하는 페이지 번호
-        },
-      },
-      { status: 200 },
-    );
-  }
-
-  // 페이지 파라미터가 없는 경우 전체 데이터를 가져옵니다.
   const {
     data: moims,
     error: moimError,
@@ -82,14 +40,16 @@ export async function GET(req: NextRequest) {
   } = await supabase
     .from('moims')
     .select(
-      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+      '*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
     )
-    .order('created_at', { ascending: false });
+    .order('created_at', { ascending: false })
+    .range(start, end);
 
   if (moimError) {
     console.error(moimError);
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
+
   if (!moims) {
     return NextResponse.json({ message: '모임이 하나도 없어요' }, { status: 404 });
   }
@@ -104,7 +64,7 @@ export async function GET(req: NextRequest) {
       pagination: {
         totalItems,
         totalPages,
-        currentPage: 1, // 페이지 파라미터가 없으므로 첫 번째 페이지로 간주
+        currentPage: page,
       },
     },
     { status: 200 },
@@ -115,13 +75,24 @@ export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const {
-    data: { user },
-    error,
-  } = await supabase.auth.getUser();
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
+  }
+
+  const { data: foundUser, error: foundUserError } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', user.email)
+    .single();
+
+  if (foundUserError) {
+    return NextResponse.json({ message: foundUserError?.message }, { status: 401 });
+  }
+
+  if (!foundUser) {
+    return NextResponse.json({ message: '사용자 정보가 없어요' }, { status: 404 });
   }
 
   const formData = await req.formData();
@@ -162,7 +133,7 @@ export async function POST(req: NextRequest) {
     max_participants: moimDataOrigin.maxParticipants,
     category: moimDataOrigin.moimType,
     status,
-    master_email: user?.email,
+    master_email: foundUser.email,
     images: null,
     online: moimDataOrigin.online,
   };
@@ -198,36 +169,19 @@ export async function POST(req: NextRequest) {
     .from('moims')
     .upsert({ ...moimData })
     .select(
-      '*, reviews (user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
+      '*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid)',
     )
     .single();
 
   if (moimError) {
-    return NextResponse.json({ message: moimError?.message }, { status: 401 });
+    return NextResponse.json({ message: moimError?.message }, { status: 500 });
   }
 
   if (!moim) {
-    return NextResponse.json({ message: '모임 생성 실패' }, { status: 404 });
+    return NextResponse.json({ message: '모임 생성 실패' }, { status: 500 });
   }
 
   const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
 
   return NextResponse.json(moimsToClient[0], { status: 200 });
 }
-
-// const deadlineDate = new Date(moimDataOrigin.recruitmentDeadline);
-// const startDate = new Date(moimDataOrigin.startDate);
-// const endDate = new Date(moimDataOrigin.endDate);
-
-// const isDeadlinePassed = deadlineDate < new Date();
-// const isStartDatePassed = startDate < new Date();
-// const isEndDatePassed = endDate < new Date();
-
-// let status = '';
-// if (isDeadlinePassed) {
-//   status = 'RECRUIT';
-// } else if (isStartDatePassed) {
-//   status = 'PROGRESS';
-// } else if (isEndDatePassed) {
-//   status = 'END';
-// }

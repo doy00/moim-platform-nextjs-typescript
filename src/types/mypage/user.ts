@@ -49,3 +49,10 @@ export interface IMeJsonData {
   introduction: string;
   tags: string[];
 }
+
+export interface IParticipatedUser {
+  userEmail: string;
+  userImage: string;
+  userNickname: string;
+  userUuid: string;
+}

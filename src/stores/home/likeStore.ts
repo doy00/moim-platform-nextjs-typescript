@@ -23,7 +23,7 @@ export const useLikeStore = create<LikeState>((set, get) => ({
       } else {
         await axiosHomeInstance.post(`/moims/${moimId}/like`);
       }
-      
+
       if (isLiked) {
         currentLikes.delete(moimId);
         currentDeltas[moimId] = (currentDeltas[moimId] || 0) - 1;

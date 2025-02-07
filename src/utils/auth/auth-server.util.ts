@@ -32,7 +32,7 @@ export const prefetchMe = async () => {
 
   await queryClient.prefetchQuery({
     queryKey: [QUERY_KEY_ME],
-    queryFn: () => getMe(accessToken),
+    queryFn: () => getMe(),
   });
   const me = await queryClient.getQueryData([QUERY_KEY_ME]);
   const dehydratedState = dehydrate(queryClient);
