@@ -14,7 +14,7 @@ interface HomeCardsProps {
 }
 
 export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCardsProps) {
-  const { sortOrder, moimType, region, status, isConfirmed } = useFilterStore();
+  const { sortOrder, moimType, onoff, status, isConfirmed } = useFilterStore();
   const { fetchLikes } = useLikeStore();
 
   useEffect(() => {
@@ -25,16 +25,19 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
 
   // ✅ 클라이언트 필터링 적용
   const filteredMoims =
-    data?.pages.flatMap((page: any) =>
-      page.data.filter((moim: IMoim) => {
-        return (
-          (moimType === 'all' || moimType.toUpperCase() === moim.moimType.toUpperCase()) &&
-          (region.includes('all') || region.includes(moim.address) || !moim.address) &&
-          (status === 'all' || status.toUpperCase() === moim.status.toUpperCase()) &&
-          (isConfirmed === null || moim.isConfirmed === isConfirmed) // ✅ isConfirmed === null이면 true/false 모두 포함
-        );
-      })
-    ) || [];
+  data?.pages.flatMap((page: any) =>
+    page.data.filter((moim: IMoim) => {
+      return (
+        (moimType === 'all' || moimType.toUpperCase() === moim.moimType.toUpperCase()) &&
+        (status === 'all' || status.toUpperCase() === moim.status.toUpperCase()) &&
+        (isConfirmed === null || moim.isConfirmed === isConfirmed) &&
+        // ✅ 온라인/오프라인 필터링 추가
+        (onoff === 'all' ||
+          (onoff === 'online' && moim.address.includes('온라인으로 진행합니다')) ||
+          (onoff === 'offline' && !moim.address.includes('온라인으로 진행합니다')))
+      );
+    }),
+  ) || [];
 
   // ✅ 정렬 적용 (sortedMoims 유지)
   const sortedMoims = [...filteredMoims].sort((a, b) => {

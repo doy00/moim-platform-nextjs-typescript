@@ -12,7 +12,7 @@ export function useCreateMoim() {
     const moimData = {
       title: currentState.title,
       content: currentState.content,
-      roadAddress: currentState.roadAddress,
+      roadAddress: currentState.isOnline ? "온라인으로 진행합니다" : currentState.roadAddress, // ✅ 변경
       recruitmentDeadline: currentState.recruitmentDeadline,
       startDate: currentState.startDate,
       endDate: currentState.endDate,

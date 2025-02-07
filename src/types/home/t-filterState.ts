@@ -1,13 +1,15 @@
 export type TFilterState = {
   moimType: string;
-  region: string[];
+  onoff: 'all' | 'online' | 'offline';
   status: string;
   sortOrder: 'LATEST' | 'LIKES' | 'DEADLINE';
   isConfirmed: boolean | null;
-  setSortOrder: (sortOrder: 'LATEST' | 'LIKES' | 'DEADLINE') => void;
+
   setMoimType: (moimType: string) => void;
+  setOnOff: (onoff: 'all' | 'online' | 'offline') => void;
   setStatus: (status: string) => void;
-  toggleRegion: (region: string) => void;
+  setSortOrder: (sortOrder: 'LATEST' | 'LIKES' | 'DEADLINE') => void;
   toggleConfirmed: () => void;
+
   resetFilters: () => void;
 };

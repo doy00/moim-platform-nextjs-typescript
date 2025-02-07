@@ -6,6 +6,7 @@ interface IMakeState {
   si: string;
   district: string;
   roadAddress: string;
+  isOnline: boolean;
   recruitmentDeadline: string;
   startDate: string;
   endDate: string;
@@ -21,6 +22,7 @@ export interface MakeStoreState extends IMakeState {
   setSi: (si: string) => void;
   setDistrict: (district: string) => void;
   setRoadAddress: (roadAddress: string) => void;
+  toggleOnline: () => void;
   setRecruitmentDeadline: (recruitmentDeadline: string) => void;
   setStartDate: (startDate: string) => void;
   setEndDate: (endDate: string) => void;
