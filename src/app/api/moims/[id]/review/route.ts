@@ -1,9 +1,10 @@
+import { getUser } from '@/app/api/auth/getUser';
 import { TMe } from '@/types/auth/auth.type';
 import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
-import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
-import { cookies, headers } from 'next/headers';
+import { PostgrestError } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 // 해당 모임의 모든 리뷰 조회
@@ -47,29 +48,11 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
   const { review, rate }: TReviewInput = await req.json();
-  const authorization = (await headers()).get('authorization');
-  const token = authorization?.split(' ')[1] ?? null;
 
-  let user: User | null;
-  let error: AuthError | null;
-  if (token) {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token));
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser());
-  }
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-
-  if (!user) {
-    return NextResponse.json({ message: '로그인 후 이용해주세요' }, { status: 401 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const {
