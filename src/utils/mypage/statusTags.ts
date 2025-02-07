@@ -3,6 +3,8 @@ import { IReview } from '@/types/mypage/reviews.type';
 import projectIcon from '@images/mypage/puzzle-on.svg';
 import studyIcon from '@images/mypage/open-book.svg';
 import interviewIcon from '@images/mypage/conversation-icon.svg';
+import emptyHeart from '@public/images/mypage/empty-heart.svg';
+import fullHeart from '@public/images/mypage/heart.svg';
 
 export const statusTag = (moim?: IMoim) => {
   if (moim?.status === 'END') {
@@ -44,4 +46,11 @@ export const moimTypeIcon = (moim?: IMoim) => {
   } else if (moim?.moimType === 'INTERVIEW') {
     return interviewIcon;
   }
+};
+
+export const moimHeartLike = (moim?: IMoim, isLiked?: boolean) => {
+  return {
+    icon: !moim?.likes || (moim.likes === 0 && !isLiked) ? emptyHeart : fullHeart,
+    count: moim?.likes ? (isLiked ? moim.likes - 1 : moim.likes + 1) : 0,
+  };
 };
