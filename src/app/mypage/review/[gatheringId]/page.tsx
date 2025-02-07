@@ -1,15 +1,21 @@
 import CreateReview from '@/components/mypage/myReview/CreateReview';
-import { IParticipatedMoim } from '@/types/mypage/moim.type';
-import { IUser } from '@/types/mypage/user';
 
-interface Props {
-  participatedMoim: IParticipatedMoim;
-}
+// interface Props {
+//   participatedMoim: IParticipatedMoim;
+// }
 
-export default function Review({ participatedMoim }: Props) {
+// export default function Review({ participatedMoim }: Props) {
+//   return (
+//     <div>
+//       <CreateReview moim={participatedMoim} />
+//     </div>
+//   );
+// }
+
+export default function Review() {
   return (
     <div>
-      <CreateReview moim={participatedMoim} />
+      <CreateReview />
     </div>
   );
 }
