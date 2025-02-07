@@ -1,4 +1,5 @@
 import { TMe, TPutMeInputs } from '@/types/auth/auth.type';
+import { deleteCookie } from '@/utils/auth/auth-server.util';
 import convertToWebP from '@/utils/common/converToWebp';
 import { createClient } from '@/utils/supabase/server';
 import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
@@ -30,8 +31,19 @@ export async function GET(request: NextRequest) {
   }
 
   if (error) {
-    // if (error.message === 'Auth session missing!')
-    //   return NextResponse.json('Auth session missing!', { status: 200 });
+    if (error.message === 'Auth session missing!') {
+      deleteCookie('access_token');
+      deleteCookie('refresh_token');
+      deleteCookie('sb-kabbnwozubbpbafvlolf-auth-token-code-verifier');
+
+      return NextResponse.json(
+        { message: '쿠키, 토큰이 유효하지 않습니다. 다시 로그인 하세요.' },
+        {
+          status: 401,
+        },
+      );
+    }
+
     console.log('getUser error from route handler ====>', error);
 
     if (error.message === 'Unauthorized') {
@@ -44,7 +56,11 @@ export async function GET(request: NextRequest) {
   }
 
   const { data: me, error: meError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('email', user.email).single();
+    await supabase
+      .from('users')
+      .select('id, email, nickname, position, introduction, tags, image, is_social')
+      .eq('email', user.email)
+      .single();
 
   if (meError) {
     return NextResponse.json({ message: meError?.message }, { status: 401 });
@@ -107,7 +123,11 @@ export async function PUT(req: NextRequest) {
   }
 
   const { data: userData, error: userError }: { data: TMe | null; error: PostgrestError | null } =
-    await supabase.from('users').select('*').eq('email', user.email).single();
+    await supabase
+      .from('users')
+      .select('id, email, nickname, position, introduction, tags, image, is_social')
+      .eq('email', user.email)
+      .single();
 
   if (userError) {
     return NextResponse.json({ message: userError?.message }, { status: 401 });
@@ -123,6 +143,7 @@ export async function PUT(req: NextRequest) {
     position,
     introduction,
     tags: tagsArray,
+    is_social: userData.is_social,
   };
 
   if (meImageFile) {
@@ -154,7 +175,7 @@ export async function PUT(req: NextRequest) {
     .from('users')
     .update({ ...newUserData, updated_at: new Date().toISOString() })
     .eq('email', newUserData.email)
-    .select('*')
+    .select('id, email, nickname, position, introduction, tags, image, is_social')
     .single();
 
   if (updatedUserError) {
