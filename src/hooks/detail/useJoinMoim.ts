@@ -17,7 +17,6 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
 
   // 모임상세 조회
   const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
-    // queryKey: ['moim', moimId],
     queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
     queryFn: () => getDetail(moimId),
     enabled: !!moimId,
@@ -59,21 +58,14 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
     },
 
     // 서버 응답 성공시
-    onSuccess: (response) => {
+    onSuccess: async (response) => {
       // 모임 상세 데이터 캐시 업데이트
-      // queryClient.setQueryData<IMoimDetail>(['moim', moimId], (oldData) => {
-      //   if (!oldData || !me) return oldData;
-      //   return response.data;
-      //   // return {
-      //   //   ...oldData,
-      //   //   ...response,
-      //   // };
-      // });
-      queryClient.setQueryData<IMoimDetail>(QUERY_KEYS.MOIM_DETAIL(moimId), response.data);
+      await queryClient.setQueryData<IMoimDetail>(QUERY_KEYS.MOIM_DETAIL(moimId), response.data);
 
-      // 관련 쿼리 무효화 (내가 참여한 모임 목록)
-      // queryClient.invalidateQueries({ queryKey: ['joined-moims']});
+      // 내가 참여한 모임 목록 캐시 업데이트
       queryClient.invalidateQueries({ queryKey: ['getParticipatedMoim']});
+      queryClient.invalidateQueries({ queryKey: ['moims']});
+
       onSuccess?.();
     },
     onError: (error, _, context) => {
