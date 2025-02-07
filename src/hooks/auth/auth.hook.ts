@@ -149,6 +149,10 @@ export function useAuth() {
 
   useEffect(() => {
     if (!meError && !signOutError && !updateMeError) return;
+    if (meError?.message === '쿠키, 토큰이 유효하지 않습니다. 다시 로그인 하세요.') {
+      removeLocalStorageItem('access_token');
+      removeLocalStorageItem('refresh_token');
+    }
     console.log(meError || signOutError || updateMeError);
     setError(meError || signOutError || updateMeError);
   }, [meError, signOutError, updateMeError]);
