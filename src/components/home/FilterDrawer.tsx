@@ -13,11 +13,12 @@ import { VisuallyHidden } from '@radix-ui/react-visually-hidden';
 import { useFilterStore } from '@/stores/home/filterStore';
 
 // Constants
-import { FILTER_TAB_MENUS } from '@/constants/home/filter-tab';
+import { FILTER_TAB_MENUS } from '@/constants/home/filter-constants';
 import { IFilterTabMenu } from '@/types/home/i-filtertab';
-import { CATEGORY_ITEMS } from '@/constants/home/filter-category';
-import { REGION_ITEMS } from '@/constants/home/filter-region';
-import { STATUS_ITEMS } from '@/constants/home/filter-status';
+import { CATEGORY_ITEMS } from '@/constants/home/filter-constants';
+import { ONOFF_ITEMS } from '@/constants/home/filter-constants';
+// import { REGION_ITEMS } from '@/constants/home/filter-constants';
+import { STATUS_ITEMS } from '@/constants/home/filter-constants';
 // Components - Icons
 import FilterActivateIcon from './icons/FilterActivateIcon';
 import DeleteIcon from './icons/DeleteIcon';
@@ -27,23 +28,17 @@ const FilterDrawer: React.FC = () => {
   const [activeTab, setActiveTab] = useState<string>(FILTER_TAB_MENUS[0].id);
   const {
     moimType,
-    region,
-    status, // ✅ 기존 moimStatus -> status 로 변경
+    onoff,
+    status, 
     setMoimType,
-    setStatus, // ✅ 기존 setMoimStatus -> setStatus 로 변경
-    toggleRegion,
+    setStatus, 
+    setOnOff,
     resetFilters,
   } = useFilterStore();
   
   // 필터 적용
   const handleApplyFilters = () => {
-    console.log('🛠 [Applied Filters]:', { moimType, region, status });
-  };
-
-  const isRegionSelected = (id: string) => region.includes(id);
-
-  const handleRegionToggle = (regionId: string) => {
-    toggleRegion(regionId);
+    console.log('🛠 [Applied Filters]:', { moimType, onoff, status });
   };
 
   const renderContent = () => {
@@ -76,41 +71,22 @@ const FilterDrawer: React.FC = () => {
       case 'region':
         return (
           <div>
-            {/* Region Grid */}
             <div className="px-3 grid grid-cols-2 gap-x-[7px] gap-y-[11px] text-body-2-normal mb-[18px]">
-              {REGION_ITEMS.map((item) => (
-                <button
-                  key={item.id}
-                  className={`w-[172px] h-16 border rounded-md cursor-pointer ${
-                    isRegionSelected(item.id)
-                      ? 'bg-background400 text-black'
-                      : 'bg-transparent text-[#9e9892]'
-                  }`}
-                  onClick={() => handleRegionToggle(item.id)}
-                >
-                  {item.label}
-                </button>
-              ))}
-            </div>
+            {ONOFF_ITEMS.map((item) => {
+            const isSelected = onoff === item.id;
 
-            {/* Selected Regions */}
-            <p className='ml-3 px-3 pt-3 text-caption-normal text-gray300'>
-              <strong className='text-gray800'>{region.length}</strong>/{REGION_ITEMS.length}
-            </p>
-            <div className="mt-2 flex flex-wrap items-center gap-2 px-3 text-caption-reading">
-              {region.length > 0 ? (
-                region.map((regionId) => (
-                  <div
-                    key={regionId}
-                    className="flex items-center justify-center bg-background400 text-gray-700 px-3 py-1 rounded-full space-x-2 w-[69px] h-[34px]"
-                  >
-                    <span>{REGION_ITEMS.find((item) => item.id === regionId)?.label}</span>
-                    <button onClick={() => toggleRegion(regionId)}>X</button>
-                  </div>
-                ))
-              ) : (
-                <p className="text-gray-400">선택된 지역이 없습니다.</p>
-              )}
+            return (
+              <div
+                key={item.id}
+                className={`flex items-center justify-center w-full h-16 px-6 py-5 cursor-pointer rounded-md ${
+                  isSelected ? 'bg-background400 text-black' : 'bg-transparent text-[#9e9892]'
+                }`}
+                onClick={() => setOnOff(item.id)}
+              >
+                <span>{item.label}</span>
+              </div>
+            );
+          })}
             </div>
           </div>
         );
@@ -194,7 +170,7 @@ const FilterDrawer: React.FC = () => {
                 className="w-[252px] h-16 text-white bg-black rounded-xl"
                 onClick={handleApplyFilters}
               >
-                {region.length}/{REGION_ITEMS.length}개의 모임 보기
+                모임 필터링하기
               </button>
             </DrawerTrigger>
           </div>

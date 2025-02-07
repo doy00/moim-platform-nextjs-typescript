@@ -9,6 +9,7 @@ export const useMakeStore = create<MakeStoreState>((set) => ({
   si: "",
   district: "",
   roadAddress: "",
+  isOnline: false,
   recruitmentDeadline: "",
   startDate: "",
   endDate: "",
@@ -20,13 +21,25 @@ export const useMakeStore = create<MakeStoreState>((set) => ({
   setContent: (content) => set({ content }),
   setSi: (si) => set({ si }),
   setDistrict: (district) => set({ district }),
-  setRoadAddress: (roadAddress) => set({ roadAddress }),
+  setRoadAddress: (roadAddress) =>
+    set((state) => ({
+      roadAddress,
+      isOnline: roadAddress === "온라인으로 진행합니다" ? true : false, // ✅ 주소가 변경되면 자동 해제
+    })),
+  toggleOnline: () =>
+    set((state) => {
+      const newIsOnline = !state.isOnline;
+      return {
+        isOnline: newIsOnline,
+        roadAddress: newIsOnline ? '온라인으로 진행합니다' : '', // ✅ 체크되면 주소 변경
+      };
+    }),
   setRecruitmentDeadline: (recruitmentDeadline) => set({ recruitmentDeadline }),
   setStartDate: (startDate) => set({ startDate }),
   setEndDate: (endDate) => set({ endDate }),
   setMinParticipants: (minParticipants) => set({ minParticipants }),
   setMaxParticipants: (maxParticipants) => set({ maxParticipants }),
-  setImage: (image: File | null) => set({ image }), // 수정된 타입
+  setImage: (image: File | null) => set({ image }),
   reset: () =>
     set({
       type: "",
@@ -35,6 +48,7 @@ export const useMakeStore = create<MakeStoreState>((set) => ({
       si: "",
       district: "",
       roadAddress: "",
+      isOnline: false,
       recruitmentDeadline: "",
       startDate: "",
       endDate: "",

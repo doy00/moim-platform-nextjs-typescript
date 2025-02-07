@@ -2,7 +2,7 @@
 
 import React from 'react';
 import { useMakeStore } from '@/stores/make/makeStore';
-import { CATEGORY_ITMES_TWO } from '@/constants/home/filter-category';
+import { CATEGORY_ITMES_TWO } from '@/constants/home/filter-constants';
 
 export default function CategoryStep() {
   const { type, setType } = useMakeStore();

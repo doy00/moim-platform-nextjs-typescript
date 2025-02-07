@@ -22,11 +22,9 @@ export default function HomeCard({ data }: { data: IMoim }) {
   const displayLikes = baseLikes + optimisticDelta;
 
   const today = new Date();
-  const start = new Date(startDate);
-  const diffTime = start.getTime() - today.getTime();
-  const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  const deadlineText = diffDays >= 0 ? `D-${diffDays}` : '';
-  const confirmedText = isConfirmed ? '개설확정' : '진행중';
+  const end = new Date(endDate)
+  
+  const confirmedText = end < today ? '종료' : isConfirmed ? '개설확정' : '모집중';
 
   const handleLike = (event: React.MouseEvent) => {
     event.stopPropagation();
@@ -57,12 +55,7 @@ export default function HomeCard({ data }: { data: IMoim }) {
             <span className="text-caption-normal bg-background400 px-1.5 py-[3px] rounded-md">
               {moimType}
             </span>
-            {deadlineText && (
-              <span className="text-caption-normal bg-background400 px-1.5 py-[3px] rounded-md">
-                {deadlineText}
-              </span>
-            )}
-            <span className="text-caption-normal bg-gray800 text-white px-1.5 py-[3px] rounded-md">
+            <span className={`text-caption-normal ${ confirmedText === '종료' ? 'bg-red200' : 'bg-gray800'} text-white px-1.5 py-[3px] rounded-md`}>
               {confirmedText}
             </span>
           </div>
