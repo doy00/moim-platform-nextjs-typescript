@@ -7,6 +7,7 @@ import {
 
 export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
   return moims.map((moim) => ({
+    createdAt: moim.created_at,
     moimId: moim.id,
     title: moim.title,
     content: moim.content,

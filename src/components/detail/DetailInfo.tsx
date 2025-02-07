@@ -10,6 +10,7 @@ import { ECategory, EMoimStatus } from "@/types/supabase/supabase-custom.type";
 interface IDetailInfoProps {
   title: string;
   address: string;
+  createdAt: string;
   recruitmentDeadline: string;
   startDate: string;
   endDate: string;
@@ -20,11 +21,13 @@ interface IDetailInfoProps {
   status: EMoimStatus;
   isConfirmed: boolean;
   online: boolean;
+  masterEmail: string;
   className?: string;
 }
 export const DetailInfo: React.FC<IDetailInfoProps> = ({
   title,
   address,
+  createdAt,
   recruitmentDeadline,
   startDate,
   endDate,
@@ -35,6 +38,7 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
   status,
   isConfirmed,
   online,
+  masterEmail,
   className,
 }) => {
   const getStatusTag = (status: EMoimStatus): string => {
@@ -61,8 +65,7 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
           {getStatusTag  && ( <ChipSmallSquircle variant="light" text={getStatusTag(status)} /> )}
         </div>
         <div className="flex flex-col gap-1.5">
-          <h3 className="text-body-1-normal font-medium text-textNormal truncate"
-          >
+          <h3 className="text-body-1-normal font-medium text-textNormal truncate">
             {title}
           </h3>
           <p className="text-caption-normal text-gray500 font-medium truncate">
@@ -77,7 +80,7 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
             </span>
             <Separator orientation="vertical" className="h-2 bg-gray200" />
             <span className="text-caption-normal font-medium text-gray500">
-              {`${formatDate(recruitmentDeadline)} - ${formatDate(recruitmentDeadline)}`}
+              {`${formatDate(createdAt)} - ${formatDate(recruitmentDeadline)}`}
             </span>
             <span>
               <ChipSmallRound variant="gray" text={getDeadlineText(recruitmentDeadline)} />

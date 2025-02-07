@@ -10,7 +10,7 @@ export interface IImageBox {
 
 export interface IChipSmallSquircle {
   text: string;
-  variant: 'light' | 'dark' | 'success' | 'tag' | 'emotion';
+  variant: 'light' | 'dark' | 'success' | 'tag' | 'emotion' | 'cardTag';
   className?: string;
 }
 
@@ -19,18 +19,3 @@ export interface IChipSmallRound {
   variant: 'gray' | 'soso' | 'good' | 'recommend';
   className?: string;
 }
-
-// export interface IDetailInfoProps {
-//   title: string;
-//   address: string;
-//   recruitmentDeadline: string;
-//   startDate: string;
-//   endDate: string;
-//   // recruitmentPeriod: string;
-//   minParticipants: number;
-//   moimType: ECategory;           // Enum 타입 사용
-//   status: EMoimStatus;           // Enum 타입 사용
-//   participants: number;
-//   online:
-//   className?: string;
-// }

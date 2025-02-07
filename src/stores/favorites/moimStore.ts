@@ -10,8 +10,6 @@ export const useMoimStore = create<TMoimState>((set) => ({
   moims: [],
   fetchMoims: async () => {
     try {
-      // const response = await fetchMockMoims({ page: 1 });
-      // set({ moims: response.data });
     } catch (error) {
       console.error('Failed to fetch moims', error);
     }

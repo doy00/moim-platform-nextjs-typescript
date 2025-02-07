@@ -2,57 +2,19 @@ import { TMe, TPutMeInputs } from '@/types/auth/auth.type';
 import { deleteCookie } from '@/utils/auth/auth-server.util';
 import convertToWebP from '@/utils/common/converToWebp';
 import { createClient } from '@/utils/supabase/server';
-import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
-import { cookies, headers } from 'next/headers';
+import { PostgrestError } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { getUser } from '../getUser';
 
-export async function GET(request: NextRequest) {
-  const { searchParams } = new URL(request.url);
-  const jwt = searchParams.get('jwt');
+export async function GET() {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
-  const authorization = (await headers()).get('authorization');
-  const token = authorization?.split(' ')[1] ?? null;
 
-  const jwtToken = jwt ?? token;
+  const { isSuccess, message, user, status } = await getUser(supabase);
 
-  let user: User | null;
-  let error: AuthError | null;
-  if (jwtToken) {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(jwtToken));
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser());
-  }
-
-  if (error) {
-    if (error.message === 'Auth session missing!') {
-      deleteCookie('access_token');
-      deleteCookie('refresh_token');
-      deleteCookie('sb-kabbnwozubbpbafvlolf-auth-token-code-verifier');
-
-      return NextResponse.json(
-        { message: '쿠키, 토큰이 유효하지 않습니다. 다시 로그인 하세요.' },
-        {
-          status: 401,
-        },
-      );
-    }
-
-    console.log('getUser error from route handler ====>', error);
-
-    if (error.message === 'Unauthorized') {
-      return NextResponse.json({ message: '인증되지 않은 사용자입니다' }, { status: 401 });
-    }
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-  if (!user) {
-    return NextResponse.json({ message: '로그인된 사용자가 없습니다' }, { status: 404 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status });
   }
 
   const { data: me, error: meError }: { data: TMe | null; error: PostgrestError | null } =
@@ -98,28 +60,10 @@ export async function PUT(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
-  const authorization = (await headers()).get('authorization');
-  const token = authorization?.split(' ')[1] ?? null;
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  let user: User | null;
-  let error: AuthError | null;
-  if (token) {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token));
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser());
-  }
-
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-  if (!user) {
-    return NextResponse.json({ message: '로그인된 사용자가 없습니다' }, { status: 404 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const { data: userData, error: userError }: { data: TMe | null; error: PostgrestError | null } =

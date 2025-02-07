@@ -4,15 +4,13 @@ import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import clsx from 'clsx';
-
 // Constants
 import { GNB_MENU } from '@/constants/home/gnb-menu';
 
 export default function HomeGnb() {
   const pathname = usePathname();
 
-  // GNB를 표시할 경로 목록
-  const showGnbPaths = ['/', '/favorites', '/mypage', '/mylike'];
+  const showGnbPaths = ['/', '/favorites', '/mypage'];
   const shouldShowGnb = showGnbPaths.includes(pathname);
 
   if (!shouldShowGnb) return null;
@@ -46,7 +44,7 @@ export default function HomeGnb() {
 
   return (
     <nav
-      className="w-full h-[62px] mx-auto fixed bottom-0 left-0 right-0 bg-background200 font-bold text-xl z-10 min-w-[500px] max-w-[1040px] 2xl:hidden"
+      className="sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg w-full h-[62px] mx-auto fixed bottom-0 left-0 right-0 bg-background200 font-bold text-xl z-10 min-w-[500px] max-w-[1040px] 2xl:hidden"
     >
       <ul className="list-none w-full flex justify-between items-center text-sm px-6 py-[9px] mx-auto">
         {renderedGnbMenu}

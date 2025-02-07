@@ -19,7 +19,7 @@ export default function HomeContainer() {
   });
 
   return (
-    <div id="layout-container" tabIndex={-1}>
+    <div tabIndex={-1}>
       <HomeHeader />
       <HomeHero data={data} />
       <HomeCards data={data} fetchNextPage={fetchNextPage} hasNextPage={hasNextPage} />
