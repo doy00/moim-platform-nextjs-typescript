@@ -4,6 +4,7 @@ import QueryProvider from '@/libs/detail/QueryProvider';
 import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '../styles/globals.css';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -34,6 +35,7 @@ export default function RootLayout({
           {/* GNB는 HomeGnb 컴포넌트에서 관리 */}
           <HomeGnb />
         </QueryProvider>
+        <Toaster />
       </body>
     </html>
   );

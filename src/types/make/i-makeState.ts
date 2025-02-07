@@ -1,11 +1,11 @@
-// /types/make/i-makeState.ts
 interface IMakeState {
-  type: string; // 모임 카테고리 (예: 'PROJECT' | 'STUDY' | 'INTERVIEW')
+  type: string; 
   title: string;
   content: string;
   si: string;
   district: string;
   roadAddress: string;
+  isOnline: boolean;
   recruitmentDeadline: string;
   startDate: string;
   endDate: string;
@@ -21,6 +21,7 @@ export interface MakeStoreState extends IMakeState {
   setSi: (si: string) => void;
   setDistrict: (district: string) => void;
   setRoadAddress: (roadAddress: string) => void;
+  toggleOnline: () => void;
   setRecruitmentDeadline: (recruitmentDeadline: string) => void;
   setStartDate: (startDate: string) => void;
   setEndDate: (endDate: string) => void;

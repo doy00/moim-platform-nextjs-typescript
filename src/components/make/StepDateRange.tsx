@@ -31,7 +31,6 @@ export function StepDateRange({ startDate, endDate, onDateChange }: StepDateRang
           className="w-auto p-4"
           onBlur={(e) => {
             if (!e.currentTarget.contains(e.relatedTarget)) {
-              // 포커스가 다른 곳으로 이동한 경우
             }
           }}
         >

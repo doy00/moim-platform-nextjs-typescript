@@ -3,6 +3,7 @@
 
 import React, { useState } from 'react';
 import { useCreateMoim } from '@/hooks/home/useCreateMoim';
+import { Toaster } from '../ui/sonner';
 // Components
 import CategoryStep from './CategoryStep';
 import DescriptionStep from './DescriptionStep';
@@ -42,6 +43,7 @@ export default function MakeMain() {
 
   return (
     <main className="flex flex-col space-y-6 h-screen">
+      <Toaster />
       {/* 헤더 영역 */}
       <div className="flex flex-col items-start w-full h-16 space-y-4">
         <div className="px-5 w-full flex items-center justify-between">
