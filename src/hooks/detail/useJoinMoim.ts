@@ -1,68 +1,109 @@
-// 모임 신청하기 커스텀 훅
-import { joinMoim } from '@/apis/detail/detail.api';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
-import { toast } from 'sonner';
+// 모임 참여하기 커스텀 훅
+import { getDetail, joinApi } from '@/apis/detail/detail.api';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useAuth } from '@/hooks/auth/auth.hook';
+import { IMoimDetail } from '@/types/detail/t-moim';
 
-interface UseJoinMoimOptions {
-  successMessage?: string;
-  errorMessage?: string;
-  onSuccess?: () => void; // [ ] 성공 시 콜백 함수 타입 정의
+interface IUseJoinMoimOptions {
+  onSuccess?: () => void;
+  onError?: (error: unknown) =>  void;
 }
 
-export const useJoinMoim = (options: UseJoinMoimOptions = {}) => {
-  // const [isJoined, setIsJoined] = useState(false);
+export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) => {
+  const { me, isMeLoading } = useAuth();
   const queryClient = useQueryClient();
+  const { onSuccess, onError } = options;
 
-  // const joinMoim = useCallback(async (moimId: number) => {
-  const {
-    successMessage = '모임 신청이 완료되었어요',
-    errorMessage = '잠시후 다시 시도해주세요',
-    onSuccess: onSuccessCallback,
-  } = options;
+  // 모임상세 조회
+  const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
+    queryKey: ['moim', moimId],
+    queryFn: () => getDetail(moimId),
+    enabled: !!moimId,
+  });
 
-  const mutation = useMutation({
-    mutationFn: (moimId: string) => joinMoim(moimId),
-    onSuccess: () => {
-      // [ ] 더알아보기: 관련된 쿼리 무효화
-      queryClient.invalidateQueries({ queryKey: ['detail-info'] });
-      queryClient.invalidateQueries({ queryKey: ['detail-participants'] });
-      queryClient.invalidateQueries({ queryKey: ['detail-reviews'] });
+  // 현재 유저가 이 모임을 이미 참여했는지 확인
+  const isJoined = me && moimDetail?.participatedUsers?.some(user => user.userUuid === me.id); // [ ]
+  // 참여 가능한 모임인지 확인 - 유저 신청 여부, 정원, 모집중(RECRUIT)
+  const canJoin = me && moimDetail && !isJoined && moimDetail.participants < moimDetail.maxParticipants && moimDetail.status === 'RECRUIT';
 
-      toast.success(successMessage);
-      onSuccessCallback?.();
+  const { mutateAsync: joinMutation, isPending: isJoining } = useMutation({
+    mutationFn: async () => {
+      if (!me) throw new Error('로그인이 필요합니다.');
+      if (!canJoin) throw new Error('참여할 수 없는 모임입니다');
+
+      const response = await joinApi.join(moimId);
+      return response;
     },
-    onError: (error: Error) => {
-      console.error('모임 신청하기 실패:', error);
-      toast.error(errorMessage);
+
+    // 낙관적 업데이트
+    onMutate: async () => {
+      await queryClient.cancelQueries({ queryKey: ['moim', moimId] });
+      const previousMoim = queryClient.getQueryData<IMoimDetail>(['moim', moimId]);
+      if (previousMoim && me) {
+        const newParticipant = {
+          userUuid: me.id,
+          userEmail: me.email,
+          userImage: me.image || '',
+          userNickname: me.nickname,
+        };
+
+        queryClient.setQueryData<IMoimDetail>(['moim', moimId], {
+          ...previousMoim,
+          participants: previousMoim.participants + 1,
+          participatedUsers: [...previousMoim.participatedUsers, newParticipant],
+        });
+      }
+      return { previousMoim };
+    },
+
+    // 서버 응답 성공시
+    onSuccess: (response) => {
+      // 모임 상세 데이터 캐시 업데이트
+      queryClient.setQueryData<IMoimDetail>(['moim', moimId], (oldData) => {
+        if (!oldData || !me) return oldData;
+        return response.data;
+        // return {
+        //   ...oldData,
+        //   ...response,
+        // };
+      });
+      // 관련 쿼리 무효화 (내가 참여한 모임 목록)
+      queryClient.invalidateQueries({ queryKey: ['joined-moims']});
+      onSuccess?.();
+    },
+    onError: (error, _, context) => {
+      // 이전 상태로
+      if (context?.previousMoim) {
+        queryClient.setQueryData(['moim', moimId], context.previousMoim);
+      }
+      console.error('모임 참여 실패:', error);
+      onError?.(error);
     },
   });
 
-  /* useCallback 사용
-  // const handleJoinClick = async () => {
-    setIsJoined(true);
+  // 참여 토글 핸들러
+  const handleJoinMoim = async () => {
+    if (!me) throw new Error('로그인이 필요합니다');
+    if (isJoined) {
+      return { success: false, message: '이미 신청한 모임입니다'};
+    }
+    if (!canJoin) throw new Error('참여할 수 없는 모임입니다');
     try {
-    // console.log('신청하기 클릭');
-    // await joinMoim(id)   // [ ] 모임 신청 API 호출
-      toast.success(successMessage)
-      return {
-      success: true,
-      message: successMessage
-    };
-  } catch (error) {
-    console.error("모임 신청하기를 실패했습니다:", error)
-    return {
-      success: false,
-      message: errorMessage
-    };
-  } finally {
-    setIsJoined(false);
-  }
-}, [options]);
-*/
-
+      await joinMutation();
+      return { 
+        success: true, 
+        message: '모임 신청이 완료되었습니다'
+      };
+    } catch (error) {
+      throw error;
+    }
+  };
   return {
-    joinMoim: mutation.mutate,
-    isJoining: mutation.isPending, // 로딩 상태
-    error: mutation.error, // 에러 상태
+    isJoined: !!isJoined,
+    canJoin: !!canJoin,
+    handleJoinMoim,
+    isLoading: isLoadingDetail || isJoining || isMeLoading,
+    participantsCount: moimDetail?.participants ?? 0,
+    maxParticipants: moimDetail?.maxParticipants ?? 0,
   };
 };

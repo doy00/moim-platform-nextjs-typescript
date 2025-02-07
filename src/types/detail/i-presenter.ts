@@ -10,10 +10,15 @@ export interface IDetailPresenterProps {
   // 상태
   isJoining: boolean;
   isLiked: boolean;
+  canJoin: boolean;
   
   // 이벤트 핸들러
   onJoin: () => void;
   onLikeToggle: () => void;
+  
+  // 신청하기 버튼 관련 props
+  actionLabel?: string;  // 신청하기 버튼 라벨
+  disabled?: boolean;    // 신청불가 상태일때 버튼 비활성화
   
   // 옵셔널 props
   className?: string;
