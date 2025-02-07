@@ -2,6 +2,7 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getUserInfo, editUserInfo } from '@/apis/userInfo';
 import { IUserEdit, IEditUserResponse } from '@/types/mypage/user';
 import { useRouter } from 'next/navigation';
+
 export const useUserQuery = () => {
   return useQuery({
     queryKey: ['getUserInfo'],
