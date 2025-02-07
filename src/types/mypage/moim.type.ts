@@ -29,3 +29,8 @@ export interface IMyMoim extends IMoim {
 export interface IParticipatedMoim extends IMoim {
   isParticipated: boolean;
 }
+
+export interface IMoimLikeyResponse {
+  message: string;
+  data: IMoim;
+}

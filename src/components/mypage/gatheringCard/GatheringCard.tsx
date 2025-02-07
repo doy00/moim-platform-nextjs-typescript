@@ -1,38 +1,51 @@
 import { IMoim } from '@/types/mypage/moim.type';
-import { IParticipatedUser } from '@/types/mypage/user';
+// import { IParticipatedUser } from '@/types/mypage/user';
 import Image from 'next/image';
 import Link from 'next/link';
-import { moimTypeTag, moimTypeIcon, statusTag } from '@/utils/mypage/statusTags';
+import { moimTypeTag, moimTypeIcon, statusTag, moimHeartLike } from '@/utils/mypage/statusTags';
+import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
+import { useMoimLikeMutation } from '@/hooks/mypage/queries/useLikeyQuery';
 
 interface Props {
   moim: IMoim;
-  participatedUser?: IParticipatedUser;
   hideStatus?: boolean;
   hideReviewButton?: boolean;
   disableLink?: boolean;
+  isLiked?: boolean;
 }
 
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-background100 rounded-[14px] shadow-sm">{children}</div>
 );
 
-export function GatheringCard({
-  moim,
-  participatedUser,
-  hideStatus,
-  hideReviewButton,
-  disableLink,
-}: Props) {
+export function GatheringCard({ moim, hideStatus, hideReviewButton, disableLink, isLiked }: Props) {
+  const { data } = useUserQuery();
+  const { mutate: likeMoim } = useMoimLikeMutation(moim?.moimId);
   const isMoimEnded = moim?.status === 'END';
+  const myUuid = data?.id;
   const isParticipatedUser = moim?.participatedUsers.some(
-    (participatedUser) => participatedUser.userUuid === participatedUser?.userUuid,
+    (participatedUser) => participatedUser.userUuid === myUuid,
   );
-  const isReviewer = moim?.reviews.some((review) => review.userUuid === participatedUser?.userUuid);
-  const showReviewButton = isMoimEnded && isParticipatedUser && !isReviewer;
+  const hasWrittenReview = moim?.reviews.some((review) => review.userUuid === myUuid);
+  const participatedUserUuid = moim?.participatedUsers.some((user) => user.userUuid);
+  const showReviewButton = isMoimEnded && isParticipatedUser && participatedUserUuid;
+  const { icon, count } = moimHeartLike(moim, isLiked);
 
+  // ================================================================
+
+  // const findReviewer = moim?.reviews.some((review) => review.userUuid);
+  // console.log('participatedUserUuid : ', participatedUserUuid);
+  // console.log('findReviewer : ', findReviewer);
   // console.log('isMoimEnded : ', isMoimEnded);
   // console.log('isParticipatedUser : ', isParticipatedUser);
   // console.log('isReviewer : ', isReviewer);
+  // console.log('myUuid : ', myUuid);
+
+  // ================================================================
+
+  const handleLikeClick = () => {
+    likeMoim();
+  };
 
   const CardContent = (
     <div className="flex flex-col">
@@ -71,6 +84,18 @@ export function GatheringCard({
             </div>
           </div>
         </div>
+        <div className="relative">
+          <div
+            onClick={(e) => {
+              e.stopPropagation();
+              e.preventDefault();
+              handleLikeClick();
+            }}
+            className="top-4 right-4 z-10"
+          >
+            <Image src={moimHeartLike(moim, isLiked).icon} alt="heart" width={24} height={24} />
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -82,9 +107,12 @@ export function GatheringCard({
         <div className="p-4 pt-0">
           <Link
             href={`/mypage/review/${moim.moimId}`}
-            className="w-full py-4 px-4 bg-gray100 rounded-[14px] text-body-2-normal font-semibold text-gray800 hover:bg-gray200 block text-center"
+            className={`w-full py-4 px-4 rounded-[14px] text-body-2-normal font-semibold block text-center bg-gray100 
+              ${
+                !hasWrittenReview ? 'text-gray800 hover:bg-gray200' : 'text-gray300 cursor-default'
+              }`}
           >
-            리뷰작성
+            {hasWrittenReview ? '리뷰작성 완료' : '리뷰작성'}
           </Link>
         </div>
       )}

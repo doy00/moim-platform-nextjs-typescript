@@ -20,17 +20,19 @@ export default function UserEdit() {
   const { mutate: editUser, isPending: isEditing } = useEditUserMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
+  // 리액트훅폼 document 참고
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [image, setImage] = useState<File | null>(null);
   const [emailInputValue, setEmailInputValue] = useState('');
   const [nicknameInputValue, setNicknameInputValue] = useState('');
-  const [textareaValue, setTextareaValue] = useState('');
+  const [textareaValue, setTextareaValue] = useState(''); // 변수명 명확하게 수정
   const [tags, setTags] = useState<string[]>([]);
   const [tagInputValue, setTagInputValue] = useState('');
   const [position, setPosition] = useState('');
 
   const [passwordInputValue, setPasswordInputValue] = useState('');
 
+  // TODO : zod 라이브러리 사용해보기 타입으로 가능함
   const [isEmailInputExceeded, setIsEmailInputExceeded] = useState(false);
   const [isNicknameInputExceeded, setIsNicknameInputExceeded] = useState(false);
   const [isTextAreaExceeded, setIsTextAreaExceeded] = useState(false);
@@ -43,6 +45,9 @@ export default function UserEdit() {
     },
   });
 
+  // methods.handleSubmit;
+
+  // || , ?? 둘 중 하나 고민해보기
   useEffect(() => {
     if (data) {
       setEmailInputValue(data.email || '');
@@ -60,7 +65,7 @@ export default function UserEdit() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      setImage(file);
+      // setImage(file);
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
     }
@@ -81,6 +86,7 @@ export default function UserEdit() {
     }
   };
 
+  // 변수명 handle~ 로 수정
   const emailInputHandleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
     const emailValidation = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,4}$/;
@@ -89,6 +95,7 @@ export default function UserEdit() {
     setIsEmailInputExceeded(!emailValidation.test(text));
   };
 
+  // 변수명에 성격?이 명확하면 index는 간결하게 해도 됨
   const handleRemoveTag = (indexToRemove: number) => {
     setTags(tags?.filter((_, index) => index !== indexToRemove) || []);
   };
@@ -100,6 +107,7 @@ export default function UserEdit() {
       //마지막 글자가 확정되지 않은 상태에서 엔터키를 누르면 글자가 다음 태그로 넘어가는 문제가 발생(IME(Input Method Editor) 이슈) 추가함.
       if (e.nativeEvent.isComposing) return;
 
+      // TODO : 조건을 한글로 풀어놓은 상태에서 코딩으 하면 덜 혼란스러움 의존성 생각하고 우선순위를 생각해서 배치해야함.
       const newTag = tagInputValue.trim();
       if (newTag && !tags.includes(newTag) && tags.length < 3) {
         setTags([...tags, newTag]);
