@@ -1,31 +1,32 @@
 'use client';
 
 import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
+import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
+import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
+import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { IParticipatedMoim } from '@/types/mypage/moim.type';
-import { IUser } from '@/types/mypage/user';
 import close from '@public/images/mypage/close.svg';
 import badOff from '@public/images/mypage/dude-grade-bad-off.svg';
-import greatOff from '@public/images/mypage/dude-grade-best-off.svg';
-import goodOff from '@public/images/mypage/dude-grade-good-off.svg';
 import badOn from '@public/images/mypage/dude-grade-bad-on.svg';
+import greatOff from '@public/images/mypage/dude-grade-best-off.svg';
 import greatOn from '@public/images/mypage/dude-grade-best-on.svg';
+import goodOff from '@public/images/mypage/dude-grade-good-off.svg';
 import goodOn from '@public/images/mypage/dude-grade-good-on.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
-import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 // import defaultImage from '@public/images/mypage/camera.svg';
-import { useForm } from 'react-hook-form';
-import { IReviewPost } from '@/types/mypage/reviews.type';
 import { usePostReviewMutation } from '@/hooks/mypage/queries/useReviewQuery';
+import { IReviewPost } from '@/types/mypage/reviews.type';
+import { useForm } from 'react-hook-form';
 
 interface Props {
   moim: IParticipatedMoim;
 }
 
-export default function CreateReview({ moim }: Props) {
+// export default function CreateReview({ moim }: Props) {
+// Props 가 사용되지 않고, 빌드 에러 발생으로 우선 제거했습니다.
+export default function CreateReview() {
   const { data, isLoading, error: queryError } = useParticipatedMoimQuery();
   const { data: userData, error: userError } = useUserQuery();
   const { mutate: postReview, isPending: isPosting } = usePostReviewMutation();
