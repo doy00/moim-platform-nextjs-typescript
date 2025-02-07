@@ -3,6 +3,7 @@ import QueryProvider from '@/libs/detail/QueryProvider';
 import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '../styles/globals.css';
+import { Toaster } from 'sonner';
 
 export const metadata: Metadata = {
   title: 'Create Next App',
@@ -35,6 +36,7 @@ export default function RootLayout({
           <div className="layout">{children}</div>
           <HomeGnb />
         </QueryProvider>
+        <Toaster />
       </body>
     </html>
   );

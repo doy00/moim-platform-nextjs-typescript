@@ -46,7 +46,7 @@ export default function HomeGnb() {
 
   return (
     <nav
-      className="w-full h-[62px] mx-auto fixed bottom-0 left-0 right-0 bg-background200 font-bold text-xl z-10 min-w-[500px] max-w-[1040px] 2xl:hidden"
+      className="sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg w-full h-[62px] mx-auto fixed bottom-0 left-0 right-0 bg-background200 font-bold text-xl z-10 min-w-[500px] max-w-[1040px] 2xl:hidden"
     >
       <ul className="list-none w-full flex justify-between items-center text-sm px-6 py-[9px] mx-auto">
         {renderedGnbMenu}

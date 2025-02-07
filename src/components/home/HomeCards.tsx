@@ -61,7 +61,7 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
 
   return (
     <>
-      <div className="px-4 pt-[14px] space-y-4 bg-background300 min-h-[827px]">
+      <div className="px-4 pt-[14px] space-y-4 bg-background300 min-h-[827px] pb-[62px]">
         {sortedMoims.length > 0 ? (
           sortedMoims.map((item) => <HomeCard key={item.moimId} data={item} />)
         ) : (
