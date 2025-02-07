@@ -3,6 +3,7 @@ import { getDetail, joinApi } from '@/apis/detail/detail.api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { IMoimDetail } from '@/types/detail/t-moim';
+import { QUERY_KEYS } from '@/constants/detail/detail.const';
 
 interface IUseJoinMoimOptions {
   onSuccess?: () => void;
@@ -16,13 +17,14 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
 
   // 모임상세 조회
   const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
-    queryKey: ['moim', moimId],
+    // queryKey: ['moim', moimId],
+    queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
     queryFn: () => getDetail(moimId),
     enabled: !!moimId,
   });
 
   // 현재 유저가 이 모임을 이미 참여했는지 확인
-  const isJoined = me && moimDetail?.participatedUsers?.some(user => user.userUuid === me.id); // [ ]
+  const isJoined = me && moimDetail?.participatedUsers?.some(user => user.userUuid === me.id);
   // 참여 가능한 모임인지 확인 - 유저 신청 여부, 정원, 모집중(RECRUIT)
   const canJoin = me && moimDetail && !isJoined && moimDetail.participants < moimDetail.maxParticipants && moimDetail.status === 'RECRUIT';
 
@@ -37,8 +39,8 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
 
     // 낙관적 업데이트
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['moim', moimId] });
-      const previousMoim = queryClient.getQueryData<IMoimDetail>(['moim', moimId]);
+      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.MOIM_DETAIL(moimId) });
+      const previousMoim = queryClient.getQueryData<IMoimDetail>(QUERY_KEYS.MOIM_DETAIL(moimId));
       if (previousMoim && me) {
         const newParticipant = {
           userUuid: me.id,
@@ -47,7 +49,7 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
           userNickname: me.nickname,
         };
 
-        queryClient.setQueryData<IMoimDetail>(['moim', moimId], {
+        queryClient.setQueryData<IMoimDetail>(QUERY_KEYS.MOIM_DETAIL(moimId), {
           ...previousMoim,
           participants: previousMoim.participants + 1,
           participatedUsers: [...previousMoim.participatedUsers, newParticipant],
@@ -59,22 +61,25 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
     // 서버 응답 성공시
     onSuccess: (response) => {
       // 모임 상세 데이터 캐시 업데이트
-      queryClient.setQueryData<IMoimDetail>(['moim', moimId], (oldData) => {
-        if (!oldData || !me) return oldData;
-        return response.data;
-        // return {
-        //   ...oldData,
-        //   ...response,
-        // };
-      });
+      // queryClient.setQueryData<IMoimDetail>(['moim', moimId], (oldData) => {
+      //   if (!oldData || !me) return oldData;
+      //   return response.data;
+      //   // return {
+      //   //   ...oldData,
+      //   //   ...response,
+      //   // };
+      // });
+      queryClient.setQueryData<IMoimDetail>(QUERY_KEYS.MOIM_DETAIL(moimId), response.data);
+
       // 관련 쿼리 무효화 (내가 참여한 모임 목록)
-      queryClient.invalidateQueries({ queryKey: ['joined-moims']});
+      // queryClient.invalidateQueries({ queryKey: ['joined-moims']});
+      queryClient.invalidateQueries({ queryKey: ['getParticipatedMoim']});
       onSuccess?.();
     },
     onError: (error, _, context) => {
       // 이전 상태로
       if (context?.previousMoim) {
-        queryClient.setQueryData(['moim', moimId], context.previousMoim);
+        queryClient.setQueryData(QUERY_KEYS.MOIM_DETAIL(moimId), context.previousMoim);
       }
       console.error('모임 참여 실패:', error);
       onError?.(error);
