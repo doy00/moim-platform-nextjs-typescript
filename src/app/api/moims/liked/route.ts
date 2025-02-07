@@ -4,12 +4,12 @@ import {
   TMoimClient,
   TMoimsJoined,
 } from '@/types/supabase/supabase-custom.type';
-import { setCookie } from '@/utils/auth/auth-server.util';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
-import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
-import { cookies, headers } from 'next/headers';
+import { PostgrestError } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 import { NextRequest, NextResponse } from 'next/server';
+import { getUser } from '../../auth/getUser';
 
 // 내가 좋아요한 모임 조회
 export async function GET(req: NextRequest) {
@@ -17,61 +17,11 @@ export async function GET(req: NextRequest) {
   const pageQuery = searchParams.get('page');
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
-  const authorization = (await headers()).get('authorization');
-  const token = authorization?.split(' ')[1] ?? null;
-  const refreshToken = cookieStore.get('refresh_token')?.value ?? null;
 
-  let user: User | null;
-  let error: AuthError | null;
+  const { isSuccess, message, user, status } = await getUser(supabase);
 
-  if (!token) {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser());
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token));
-  }
-
-  // TODO: refreshToken 이 자꾸 invalid 라는데,
-  // 실제로 로그인 후 한시간 기다려서 access_token 이 만료된 뒤에,
-  // 진짜 refresh_token이 invalid 한것인지, 즉 내가 로직을 잘못 짠 것인지 뭔지 테스트 필요
-  // 그리고 getUser 로직이 route handler 마다 반복되므로, api/auth/me 로 한번 get을 날려서 처리하는 방법은 없는지 확인 필요
-  if (error?.code === 'bad_jwt' && refreshToken) {
-    const { data: refreshData, error: refreshError } = await supabase.auth.refreshSession({
-      refresh_token: refreshToken,
-    });
-
-    if (refreshData?.session?.access_token && refreshData?.session?.refresh_token) {
-      const { data: userData, error: userError } = await supabase.auth.getUser(
-        refreshData.session.access_token,
-      );
-      user = userData.user;
-
-      setCookie({
-        name: 'access_token',
-        value: refreshData?.session?.access_token,
-        maxAge: 60 * 60,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-      });
-      setCookie({
-        name: 'refresh_token',
-        value: refreshData?.session?.refresh_token,
-        maxAge: 60 * 60 * 24 * 30,
-        httpOnly: true,
-        secure: process.env.NODE_ENV === 'production',
-        sameSite: 'strict',
-      });
-    }
-  }
-
-  if (!user) {
-    return NextResponse.json({ message: '로그인 후 이용해주세요' }, { status: 401 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status });
   }
 
   const { data: foundUser, error: foundUserError } = await supabase

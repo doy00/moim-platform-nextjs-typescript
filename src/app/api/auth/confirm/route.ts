@@ -20,32 +20,6 @@ export async function GET(request: NextRequest) {
   // console.log('타입 =>', type);
   // console.log('다음 주소 =>', next);
 
-  // 패스워드 변경 플로우 인데 만약에 로그인 중이면 로그아웃 시킬것
-  // let user: User | null;
-  // let error: AuthError | null;
-  // if (token) {
-  //   ({
-  //     data: { user },
-  //     error,
-  //   } = await supabase.auth.getUser(token));
-  // } else {
-  //   ({
-  //     data: { user },
-  //     error,
-  //   } = await supabase.auth.getUser());
-  // }
-
-  // if (error) {
-  //   return NextResponse.json({ message: '문제가 발생했습니다' }, { status: 500 });
-  // }
-
-  // if (user) {
-  //   const { error: logoutError } = await supabase.auth.signOut();
-  //   if (logoutError) {
-  //     return NextResponse.json({ message: '로그아웃에 실패했습니다' }, { status: 500 });
-  //   }
-  // }
-
   if (token_hash && type) {
     const {
       data: { user, session },

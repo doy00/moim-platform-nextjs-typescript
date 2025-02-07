@@ -1,9 +1,10 @@
+import { getUser } from '@/app/api/auth/getUser';
 import { TMe } from '@/types/auth/auth.type';
 import { TReviewInput, TReviews } from '@/types/supabase/supabase-custom.type';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
-import { AuthError, PostgrestError, User } from '@supabase/supabase-js';
-import { cookies, headers } from 'next/headers';
+import { PostgrestError } from '@supabase/supabase-js';
+import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
 export async function PUT(
@@ -15,29 +16,11 @@ export async function PUT(
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
   const { review, rate }: TReviewInput = await req.json();
-  const authorization = (await headers()).get('authorization');
-  const token = authorization?.split(' ')[1] ?? null;
 
-  let user: User | null;
-  let error: AuthError | null;
-  if (token) {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token));
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser());
-  }
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-
-  if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const {
@@ -105,29 +88,11 @@ export async function DELETE(
   const reviewId = (await params).reviewId;
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
-  const authorization = (await headers()).get('authorization');
-  const token = authorization?.split(' ')[1] ?? null;
 
-  let user: User | null;
-  let error: AuthError | null;
-  if (token) {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser(token));
-  } else {
-    ({
-      data: { user },
-      error,
-    } = await supabase.auth.getUser());
-  }
+  const { isSuccess, message, user, status: userStatus } = await getUser(supabase);
 
-  if (error) {
-    return NextResponse.json({ message: error?.message }, { status: 401 });
-  }
-
-  if (!user) {
-    return NextResponse.json({ message: '유저가 없습니다' }, { status: 404 });
+  if (!isSuccess) {
+    return NextResponse.json({ message }, { status: userStatus });
   }
 
   const {
