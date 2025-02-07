@@ -7,6 +7,8 @@ export interface IMoimDetail {
   title: string;
   content: string;
   address: string;
+  createdAt: string;
+  masterEmail: string;
   recruitmentDeadline: string;
   startDate: string;
   endDate: string;

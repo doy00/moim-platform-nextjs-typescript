@@ -42,6 +42,7 @@ export default function DetailPresenter({
         <DetailInfo 
           title={data.title}
           address={data.address}
+          createdAt={data.createdAt}
           startDate={data.startDate}
           recruitmentDeadline={data.recruitmentDeadline}
           endDate={data.endDate}        
@@ -52,6 +53,7 @@ export default function DetailPresenter({
           isConfirmed={data.isConfirmed}
           status={data.status}
           online={data.online}
+          masterEmail={data.masterEmail}
         />
         <DetailParticipants 
           participants={data.participatedUsers}
