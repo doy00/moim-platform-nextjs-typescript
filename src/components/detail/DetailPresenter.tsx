@@ -25,6 +25,8 @@ export default function DetailPresenter({
   isLiked,
   onJoin,
   onLikeToggle,
+  actionLabel = '신청하기',
+  disabled = false,
   className,
 }: IDetailPresenterProps) {
   if (!data) {
@@ -69,17 +71,17 @@ export default function DetailPresenter({
             // data?.image || 
             DEFAULT_IMAGE.PROFILE}
         />
-        {/* 리뷰 목록 */}
         <DetailReview 
           reviews={data.reviews}
           totalReviews={data.reviewsCount}
         />
         <FloatingBar
           onHeartClick={onLikeToggle}
-          onJoinClick={() => onJoin}
+          onJoinClick={onJoin}
           isLiked={isLiked}
           isJoining={isJoining}
-          // stauts={data.status}
+          actionLabel={actionLabel}
+          disabled={disabled}
         />
     </div>
   );
