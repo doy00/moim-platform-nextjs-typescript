@@ -1,3 +1,7 @@
+export const QUERY_KEYS = {
+  MOIM_DETAIL: (moimId: string) => ['moim', moimId],
+}
+
 // 반응형을 위한 사이즈 상수
 export const IMAGE_SIZE = {
   DEFAULT: `
