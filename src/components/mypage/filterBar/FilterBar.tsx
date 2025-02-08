@@ -11,7 +11,7 @@ export default function FilterBar({ onCategorySelect, onStatusSelect }: FilterBa
   return (
     <div className="flex justify-between items-center w-full">
       <div className="flex items-center gap-1.5">
-        <Filter onCategorySelect={onCategorySelect} onStatusSelect={onStatusSelect} />
+        {/* <Filter onCategorySelect={onCategorySelect} onStatusSelect={onStatusSelect} /> */}
         <DropDown />
       </div>
       <div className="flex items-center gap-1.5">
