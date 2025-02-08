@@ -4,11 +4,21 @@ import emptyDudu from '@public/images/mypage/dudu-empty.svg';
 import Link from 'next/link';
 import { useMyMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { motion } from 'framer-motion';
-import emptyHeart from '@public/images/mypage/empty-heart.svg';
-// import fullHeart from '@public/images/mypage/heart.svg';
+import { useMemo } from 'react';
 
-export default function CreatedMeetings() {
+export default function CreatedMeetings({ filter }: { filter: string }) {
   const { data, isLoading } = useMyMoimQuery();
+
+  const filteredData = useMemo(() => {
+    if (!data || filter === '전체') return data;
+
+    return data.filter((moim) => {
+      if (filter === '모집중') return moim.status === 'RECRUIT';
+      if (filter === '모집완료') return moim.status === 'PROGRESS';
+      if (filter === '종료') return moim.status === 'END';
+      return true;
+    });
+  }, [data, filter]);
 
   console.log(data);
 
@@ -37,15 +47,17 @@ export default function CreatedMeetings() {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
-      {data.map((moim) => (
-        <div key={moim.moimId} className="relative">
-          {/* <div className="absolute top-4 right-4 z-10">
-            <Image src={emptyHeart} alt="Heart" width={24} height={24} />
-          </div> */}
-          <GatheringCard moim={moim} />
-        </div>
-      ))}
+    <div className="flex flex-col gap-4">
+      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
+        {filteredData?.map((moim) => (
+          <div key={moim.moimId} className="relative">
+            {/* <div className="absolute top-4 right-4 z-10">
+              <Image src={emptyHeart} alt="Heart" width={24} height={24} />
+            </div> */}
+            <GatheringCard moim={moim} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

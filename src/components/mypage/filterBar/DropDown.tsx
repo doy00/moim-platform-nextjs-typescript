@@ -35,11 +35,14 @@ const menuVariants: Variants = {
   },
 };
 
-export default function DropDown() {
-  const [isOpen, setIsOpen] = useState(false);
-  const [selected, setSelected] = useState('진행 중');
+interface DropDownProps {
+  onFilterChange: (value: string) => void;
+  value: string;
+}
 
-  const options = ['진행 중', '진행 예정', '종료'];
+export default function DropDown({ onFilterChange, value }: DropDownProps) {
+  const [isOpen, setIsOpen] = useState(false);
+  const options = ['전체', '모집중', '모집완료', '종료'];
 
   useEffect(() => {
     const closeDropdown = () => setIsOpen(false);
@@ -52,13 +55,18 @@ export default function DropDown() {
     setIsOpen(!isOpen);
   };
 
+  const handleOptionSelect = (option: string) => {
+    setIsOpen(false);
+    onFilterChange(option);
+  };
+
   return (
     <div onClick={handleClick} className="relative">
       <motion.button
         whileTap={{ scale: 0.97 }}
         className="flex items-center justify-between w-32 border border-background400 rounded-xl bg-background100 px-3.5 py-3"
       >
-        <span className="text-label-normal font-medium text-gray600">{selected}</span>
+        <span className="text-label-normal font-medium text-gray600">{value}</span>
         <motion.div
           variants={{
             open: { rotate: 180 },
@@ -82,10 +90,7 @@ export default function DropDown() {
           <motion.button
             variants={itemVariants}
             key={option}
-            onClick={() => {
-              setSelected(option);
-              setIsOpen(false);
-            }}
+            onClick={() => handleOptionSelect(option)}
             className="w-full px-3.5 py-2 text-left hover:bg-background300"
           >
             <span className="text-label-normal font-medium text-gray600">{option}</span>
