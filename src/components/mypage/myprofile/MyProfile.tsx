@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import defaultProfile from '@public/images/mypage/profile-default.svg';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-
+import { userPositionTag } from '@/utils/mypage/statusTags';
 // 공통 래퍼 컴포넌트
 const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="px-3">
@@ -15,6 +15,9 @@ const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
 
 export default function MyProfile() {
   const { data, isLoading } = useUserQuery();
+  const position = userPositionTag(data);
+
+  // console.log(position);
 
   if (isLoading) {
     return (
@@ -39,7 +42,7 @@ export default function MyProfile() {
               <div className="flex gap-1.5">
                 <span className="text-lg font-semibold">{data?.nickname}</span>
                 <span className="rounded-[20px] px-2 py-1 bg-gray200 text-gray600 font-medium text-caption-normal">
-                  {data?.position}
+                  {position}
                 </span>
               </div>
               <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>

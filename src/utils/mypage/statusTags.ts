@@ -1,5 +1,6 @@
 import { IMoim } from '@/types/mypage/moim.type';
 import { IReview } from '@/types/mypage/reviews.type';
+import { IUser } from '@/types/mypage/user';
 import projectIcon from '@images/mypage/puzzle-on.svg';
 import studyIcon from '@images/mypage/open-book.svg';
 import interviewIcon from '@images/mypage/conversation-icon.svg';
@@ -45,6 +46,18 @@ export const moimTypeIcon = (moim?: IMoim) => {
     return studyIcon;
   } else if (moim?.moimType === 'INTERVIEW') {
     return interviewIcon;
+  }
+};
+
+export const userPositionTag = (user?: IUser) => {
+  if (user?.position === 'FRONTEND') {
+    return '프론트엔드';
+  } else if (user?.position === 'BACKEND') {
+    return '백엔드';
+  } else if (user?.position === 'PM') {
+    return 'PM';
+  } else if (user?.position === 'DESIGNER') {
+    return '디자이너';
   }
 };
 
