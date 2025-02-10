@@ -76,7 +76,7 @@ export default function MyLikeContainer () {
   return (
     <>
     <MyLikePresenter
-      moims={moims}
+      moims={moims || []}
       onRemoveLike={handleRemoveLike}
       onClickCard={handleClickCard}
     />

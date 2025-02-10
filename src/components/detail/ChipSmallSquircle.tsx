@@ -16,6 +16,7 @@ export const ChipSmallSquircle: React.FC<IChipSmallSquircle> = ({
         variant === 'tag' && 'bg-background300 text-caption-normal',
         variant === 'emotion' && 'bg-background300 text-cation-normal, text-red200',
         variant === 'cardTag' && 'bg-background400 text-caption-normal text-gray800',
+        variant === 'end' && 'text-caption-normal bg-red200 text-red100',
         className
       )}
     >
