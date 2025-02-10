@@ -15,6 +15,7 @@ export interface IMoim {
   moimType: 'PROJECT' | 'STUDY' | 'INTERVIEW';
   status: 'RECRUIT' | 'PROGRESS' | 'END';
   likes: number;
+  likedUsers: string[];
   participants: number;
   reviewsCount: number;
   participantsMoims: [];
