@@ -43,7 +43,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
     if (status === 'END') {
       return {
         text: '종료',
-        variant: 'cardTag'
+        variant: 'end'
       };
     } else if (maxParticipants === participants) {
       return {
@@ -105,7 +105,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
                 </h3>
                 <div className="text-label-normal text-gray400 flex pt-1 lg:pt-2">
                   <span>
-                  {address}
+                  {address || '온라인으로 진행합니다'}
                   </span>
                   <span className="mx-2 text-gray300 flex flex-shrink-0 items-center">
                     <Separator orientation="vertical" className="h-2 bg-gray200" />

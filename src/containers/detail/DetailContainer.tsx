@@ -68,7 +68,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   // 신청하기 버튼 라벨 결정
   const getActionLabel = () => {
     if (isJoined) return '신청완료';
-    if (!canJoin && detail?.status !== 'RECRUIT') return '모집마감';
+    if (!canJoin || detail?.status !== 'RECRUIT') return '모집마감';
     return '신청하기';
   };
 
