@@ -28,7 +28,7 @@ export default function UserEdit() {
   const [textareaValue, setTextareaValue] = useState(''); // 변수명 명확하게 수정
   const [tags, setTags] = useState<string[]>([]);
   const [tagInputValue, setTagInputValue] = useState('');
-  const [position, setPosition] = useState('');
+  const [position, setPosition] = useState<'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND'>('PM');
 
   const [passwordInputValue, setPasswordInputValue] = useState('');
 
@@ -52,7 +52,7 @@ export default function UserEdit() {
     if (data) {
       setEmailInputValue(data.email || '');
       setNicknameInputValue(data.nickname || '');
-      setPosition(data.position || '');
+      setPosition((data.position || '') as 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND');
       setTextareaValue(data.introduction || '');
       setTags(data.tags || []);
     }
@@ -126,7 +126,7 @@ export default function UserEdit() {
   };
 
   const handlePositionChange = (value: string) => {
-    setPosition(value);
+    setPosition(value as 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND');
   };
 
   // const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -158,8 +158,10 @@ export default function UserEdit() {
     editUser(editData);
   };
 
+  // 위쪽으로 이동하기
   const isFormValid = tags.length > 0 && tags.length <= 3 && textareaValue;
 
+  // 로딩이랑 수정은 다르기 때문에 분리하는게 좋을 것 같다 -> 분리가 잘 되어있으면 코드가 길어져도 괜츈
   if (isLoading || isEditing) {
     return (
       <div className="flex flex-col gap-5 justify-center items-center h-screen">
@@ -168,16 +170,16 @@ export default function UserEdit() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="flex flex-col gap-5 justify-center items-center h-screen">
-        <p className="text-error">사용자 정보를 불러오는데 실패했습니다.</p>
-        <Link href="/mypage" className="text-orange200">
-          마이페이지로 돌아가기
-        </Link>
-      </div>
-    );
-  }
+  // if (error) {
+  //   return (
+  //     <div className="flex flex-col gap-5 justify-center items-center h-screen">
+  //       <p className="text-error">사용자 정보를 불러오는데 실패했습니다.</p>
+  //       <Link href="/mypage" className="text-orange200">
+  //         마이페이지로 돌아가기
+  //       </Link>
+  //     </div>
+  //   );
+  // }
 
   if (!data) {
     return (
@@ -189,6 +191,19 @@ export default function UserEdit() {
       </div>
     );
   }
+
+  // 즉시실행
+  const imgSrc = (() => {
+    if (previewImage) {
+      return previewImage;
+    }
+
+    if (data?.image) {
+      return data.image;
+    }
+
+    return defaultProfile;
+  })();
 
   return (
     <>
@@ -205,7 +220,7 @@ export default function UserEdit() {
                 className="hidden"
               />
               <Image
-                src={previewImage || data?.image || defaultProfile}
+                src={imgSrc}
                 alt="profile"
                 width={86}
                 height={86}
@@ -283,6 +298,7 @@ export default function UserEdit() {
                 name="position"
                 control={methods.control}
                 render={({ field: { onChange, value } }) => (
+                  // 업뎃하기
                   <AuthSelect
                     options={[
                       { value: 'PM', label: 'PM' },
@@ -354,7 +370,7 @@ export default function UserEdit() {
                     onKeyDown={handleTagInput}
                     maxLength={5}
                     placeholder="# 태그추가"
-                    className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-caption-normal font-medium placeholder:text-gray300 w-[90px] "
+                    className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-caption-normal font-medium placeholder:text-gray300 w-[90px]"
                   />
 
                   {tags?.map((tag, index) => (
@@ -362,6 +378,7 @@ export default function UserEdit() {
                       key={index}
                       className="flex items-center gap-2 px-4 bg-background400 rounded-xl justify-between"
                     >
+                      {/* 키 필요 없음 */}
                       <span
                         key={index}
                         className="inline-flex items-center text-caption-normal font-medium text-gray600 "
@@ -378,7 +395,7 @@ export default function UserEdit() {
                     </div>
                   ))}
                 </div>
-                {/* TODO: 태그 글자수 초과 시 에러 메시지 표시 수정 */}
+                {/* TODO: 즉시실행함수로 사용해보기 */}
                 <span
                   className={`text-label-normal font-medium ${
                     isTagInputExceeded || isTagTextExceeded ? 'text-error' : 'text-gray300'
