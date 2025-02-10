@@ -2,17 +2,16 @@
 
 import { useDebounce } from '@/hooks/auth/auth.hook';
 import { cn } from '@/lib/utils';
-import { TAuthFormValues } from '@/types/auth/auth.type';
+import { TSignUpSchema } from '@/schemas/auth/auth.schema';
 import { ReactNode, useId } from 'react';
 import { RegisterOptions, useFormContext } from 'react-hook-form';
 import AuthTextArea from './AuthTextArea';
 
 interface IAuthLabelWithTextArea {
-  name: keyof TAuthFormValues;
+  name: keyof TSignUpSchema;
   label: string;
   placeholder: string;
-  registerOptions: RegisterOptions;
-  additionalErrors?: ReactNode;
+  additionalMessage?: ReactNode;
   className?: string;
   isRequired?: boolean;
   rows?: number;
@@ -23,8 +22,7 @@ export default function AuthLabelWithTextArea({
   name,
   label,
   placeholder,
-  registerOptions,
-  additionalErrors,
+  additionalMessage,
   className,
   rows,
   isRequired = true,
@@ -36,9 +34,9 @@ export default function AuthLabelWithTextArea({
     setValue,
     trigger,
     formState: { errors },
-  } = useFormContext<TAuthFormValues>();
+  } = useFormContext<TSignUpSchema>();
 
-  const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
+  const debouncedValidation = useDebounce((name: keyof TSignUpSchema) => {
     trigger(name);
   }, 600);
 
@@ -57,18 +55,17 @@ export default function AuthLabelWithTextArea({
         name={name}
         id={id}
         register={register(name, {
-          ...registerOptions,
           onChange: (e: React.ChangeEvent<HTMLTextAreaElement>) => {
             if (errors[name]) mutationReset?.();
             setValue(name, e.target.value);
             debouncedValidation(name);
           },
-        } as RegisterOptions<TAuthFormValues, typeof name>)}
+        } as RegisterOptions<TSignUpSchema, typeof name>)}
       />
       {errors[name] && (
         <p className="text-error text-label-normal font-medium">{errors[name].message}</p>
       )}
-      {additionalErrors && additionalErrors}
+      {additionalMessage && additionalMessage}
     </div>
   );
 }

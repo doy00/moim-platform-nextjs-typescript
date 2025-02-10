@@ -1,9 +1,10 @@
 'use client';
 
 import { useDebounce } from '@/hooks/auth/auth.hook';
+import { TSignUpSchema } from '@/schemas/auth/auth.schema';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { cn } from '@/utils/auth/ui.util';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useFieldArray, useFormContext } from 'react-hook-form';
 import AuthInput from './AuthInput';
 import { AuthBar, AuthX } from './icons';
@@ -16,12 +17,12 @@ interface AuthTagsProps {
 export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
   const {
     control,
-    register,
     trigger,
     setValue,
+    setFocus,
     formState: { errors },
-  } = useFormContext<TAuthFormValues>();
-  const { fields, append, remove } = useFieldArray<TAuthFormValues, 'tags', 'value'>({
+  } = useFormContext<TSignUpSchema>();
+  const { fields, append, remove } = useFieldArray<TSignUpSchema, 'tags', 'id'>({
     control,
     name: 'tags',
   });
@@ -29,7 +30,7 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
   const [isComposing, setIsComposing] = useState(false);
 
   const handleAppendTag = () => {
-    if (fields.length < 3) append({ value: '' });
+    if (fields.length < 3) append({ value: '' }, { shouldFocus: true });
   };
 
   const handleRemoveTag = (index: number) => {
@@ -48,9 +49,7 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // 한글 조합 중이라면 조합 완료 후에만 Enter/Tab 동작 처리
-    if ((e.nativeEvent as any).isComposing || isComposing) {
-      return;
-    }
+    if ((e.nativeEvent as any).isComposing || isComposing) return;
     if (errors.tags) return;
     if (e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
@@ -61,6 +60,12 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
   const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
     trigger(name);
   }, 600);
+
+  useEffect(() => {
+    if (fields.length === 1) return;
+    const latestAddedID = fields[fields.length - 1].id;
+    document.getElementById(latestAddedID)?.focus();
+  }, [fields, setFocus]);
 
   return (
     <div className="flex flex-col gap-2">
@@ -76,6 +81,7 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
         {fields.map((field, index) => (
           <AuthInput
             key={field.id}
+            id={field.id}
             type="text"
             placeholder="# 태그추가"
             name={`tags.${index}.value`}
@@ -87,17 +93,11 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
               'h-[34px] w-[88px] text-xs',
               (errors.tags || signUpError) && 'focus-visible:ring-error',
             )}
-            register={register(`tags.${index}.value` as const, {
-              maxLength: {
-                value: 5,
-                message: '최대 5글자까지 입력 가능해요',
-              },
-              onChange: (e) => {
-                if (signUpError) signUpReset();
-                setValue(`tags.${index}.value`, e.target.value);
-                debouncedValidation(`tags`);
-              },
-            })}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              if (signUpError) signUpReset();
+              setValue(`tags.${index}.value`, e.target.value);
+              debouncedValidation(`tags`);
+            }}
           >
             <button
               type="button"
