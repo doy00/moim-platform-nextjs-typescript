@@ -1,8 +1,9 @@
 'use client';
 
 import { useAuth, useSignInMutation } from '@/hooks/auth/auth.hook';
-import { TAuthFormValues } from '@/types/auth/auth.type';
+import { signInSchema, type TSignInSchema } from '@/schemas/auth/auth.schema';
 import { cn } from '@/utils/auth/ui.util';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
@@ -15,7 +16,10 @@ import { DothemeetLogo } from './icons';
 
 export default function SignInForm() {
   const router = useRouter();
-  const methods = useForm<TAuthFormValues>();
+  const methods = useForm<TSignInSchema>({
+    resolver: zodResolver(signInSchema),
+    mode: 'onBlur',
+  });
   const {
     mutate: signIn,
     isPending: isSignInPending,
@@ -24,7 +28,7 @@ export default function SignInForm() {
   } = useSignInMutation();
   const { me, isMeLoading } = useAuth();
 
-  const onSubmit = async (data: TAuthFormValues) => {
+  const onSubmit = async (data: TSignInSchema) => {
     if (signInError) return;
     const signInData = {
       email: data.email,
@@ -82,13 +86,6 @@ export default function SignInForm() {
                         label="이메일"
                         placeholder="example@google.com"
                         mutationReset={signInReset}
-                        registerOptions={{
-                          required: '이메일을 입력해주세요',
-                          pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: '올바른 이메일 형식을 입력해 주세요',
-                          },
-                        }}
                       />
 
                       <AuthLabelWithInput
@@ -97,14 +94,7 @@ export default function SignInForm() {
                         placeholder="******"
                         isPassword
                         mutationReset={signInReset}
-                        registerOptions={{
-                          required: '비밀번호를 입력해주세요',
-                          minLength: {
-                            value: 7,
-                            message: '비밀번호를 확인해주세요',
-                          },
-                        }}
-                        additionalErrors={
+                        additionalMessage={
                           !methods.formState.errors.password &&
                           !signInError && (
                             <p className="text-gray300 text-label-normal font-medium">
