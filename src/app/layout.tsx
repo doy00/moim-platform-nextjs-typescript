@@ -5,6 +5,7 @@ import { Metadata } from 'next';
 import localFont from 'next/font/local';
 import '../styles/globals.css';
 import { Toaster } from 'sonner';
+import HomeHeaderDesk from '@/components/home/HomeHeaderDesk';
 
 export const metadata: Metadata = defaultMetadata;
 
@@ -31,6 +32,7 @@ export default function RootLayout({
       </head>
       <body className={`bg-background200 font-pretendard antialiased ${pretendard.variable}`}>
         <QueryProvider>
+          <HomeHeaderDesk />
           <div className="layout">{children}</div>
           {/* GNB는 HomeGnb 컴포넌트에서 관리 */}
           <HomeGnb />
