@@ -88,7 +88,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
       />
       <ToasterDark
         position="top-right"
-        duration={3000}
+        duration={5000}
       />
     </div>
   );

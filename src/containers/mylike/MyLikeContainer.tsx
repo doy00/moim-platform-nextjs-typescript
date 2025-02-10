@@ -8,15 +8,15 @@ import { likeApi } from '@/apis/detail/detail.api';
 import { toast } from 'sonner';
 import { DuduEmpty } from '@/components/detail/icons/DuduEmpty';
 import { useAuth } from '@/hooks/auth/auth.hook';
-import { GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import { Header } from '@/components/mylike/Header';
 import { ToasterDark } from '@/components/detail/ToasterDark';
+import { MyLikeSkeleton } from '@/components/mylike/MyLikeSkeleton';
 
 export default function MyLikeContainer () {
   const router = useRouter();
   const queryClient = useQueryClient();
-  const { me, isMeLoading } = useAuth();
-  
+  const { isMeLoading } = useAuth();
+
   const {
     moims,
     isLoading,
@@ -55,35 +55,34 @@ export default function MyLikeContainer () {
     }
   };
 
-  // 필터링된 모임 데이터
-  // const filteredMoims = React.useMemo(() => 
-  //   moims.filter(moim => {
-  //     const typeMatch = !moimType || moim.moimType === moimType;
-  //     const statusMatch = !status || moim.status === status;
-  //     return typeMatch && statusMatch;
-  //   }),
-  //   [moims, moimType, status]
-  // );
-
-  // console.log('me 찜한 모임:', moims);
   if (isLoading || isMeLoading) {
-    return <div className="w-full min-h-screen mx-auto px-4 bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg"><Header /><div className="flex flex-col gap-4 md:gap-6 lg:grid lg:grid-cols-2"><GatheringSkeleton /><GatheringSkeleton /></div></div>
+    return <MyLikeSkeleton />;
   }
   if (error) {
     return <div><DuduEmpty /></div>
   }
 
+  // if (moims.length === 0) {
+  if (isEmpty) {
+    return (
+      <div className="w-full min-h-screen mx-auto px-4 md:px-20 bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
+        <Header />
+        <div className="pt-[14px] relative flex flex-col items-center"><DuduEmpty /></div>
+        <div className="text-center text-gray600 text-caption-normal">찜한 모임이 없습니다.</div>
+      </div>
+    );
+  }
+
   return (
     <>
     <MyLikePresenter
-      // moims={filteredMoims}
       moims={moims}
       onRemoveLike={handleRemoveLike}
       onClickCard={handleClickCard}
     />
     <ToasterDark
       position="top-right"
-      duration={3000}
+      duration={5000}
     />
     </>
   );
