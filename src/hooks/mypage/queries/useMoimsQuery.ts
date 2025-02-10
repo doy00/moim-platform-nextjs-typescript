@@ -6,7 +6,6 @@ export const useMyMoimQuery = () => {
   return useQuery({
     queryKey: ['getMyMoim'],
     queryFn: getMyMoim,
-    staleTime: 1000,
     refetchOnMount: true,
   });
 };
@@ -15,7 +14,6 @@ export const useParticipatedMoimQuery = () => {
   return useQuery({
     queryKey: ['getParticipatedMoim'],
     queryFn: getParticipatedMoim,
-    // staleTime: 1000,
     refetchOnMount: true,
   });
 };
