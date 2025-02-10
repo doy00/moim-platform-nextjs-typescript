@@ -32,6 +32,12 @@ export default function Header() {
           <Image src={close} alt="close" width={24} height={24} />
         </Link>
       )}
+
+      {pathname === '/mypage/editPassword' && (
+        <Link href="/mypage/editUser">
+          <Image src={close} alt="close" width={24} height={24} />
+        </Link>
+      )}
     </div>
   );
 }
