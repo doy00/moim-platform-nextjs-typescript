@@ -30,7 +30,13 @@ export const sendPasswordResetEmail = async (email: string) => {
 
 export const resetPassword = async (password: string) => {
   const url = '/api/auth/recover-password';
-  return await axiosInstance.post<IEditUserResponse, IEditUserResponse>(url, {
+  return await axiosInstance.post<
+    { password: string },
+    {
+      message: string;
+      redirectUrl: string;
+    }
+  >(url, {
     password,
   });
 };
