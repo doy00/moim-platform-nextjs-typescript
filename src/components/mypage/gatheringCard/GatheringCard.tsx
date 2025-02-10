@@ -12,13 +12,21 @@ interface Props {
   hideReviewButton?: boolean;
   disableLink?: boolean;
   isLiked?: boolean;
+  showInReviewTab?: boolean;
 }
 
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-background100 rounded-[14px] shadow-sm">{children}</div>
 );
 
-export function GatheringCard({ moim, hideStatus, hideReviewButton, disableLink, isLiked }: Props) {
+export function GatheringCard({
+  moim,
+  hideStatus,
+  hideReviewButton,
+  disableLink,
+  isLiked,
+  showInReviewTab = false,
+}: Props) {
   const { data } = useUserQuery();
   const { mutate: likeMoim } = useMoimLikeMutation(moim?.moimId);
   const isMoimEnded = moim?.status === 'END';
@@ -28,7 +36,8 @@ export function GatheringCard({ moim, hideStatus, hideReviewButton, disableLink,
   );
   const hasWrittenReview = moim?.reviews.some((review) => review.userUuid === myUuid);
   const participatedUserUuid = moim?.participatedUsers.some((user) => user.userUuid);
-  const showReviewButton = isMoimEnded && isParticipatedUser && participatedUserUuid;
+  const showReviewButton =
+    isMoimEnded && isParticipatedUser && participatedUserUuid && showInReviewTab;
   const { icon, count } = moimHeartLike(moim, isLiked);
 
   // ================================================================

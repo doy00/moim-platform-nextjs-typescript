@@ -33,11 +33,13 @@ export default function PendingReview({ participatedUser }: Props) {
     <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
       {data
         ?.filter(
-          (moim) => !moim.reviews.some((review) => review.userUuid === participatedUser?.userUuid),
+          (moim) =>
+            moim.status === 'END' &&
+            !moim.reviews.some((review) => review.userUuid === participatedUser?.userUuid),
         )
         .map((moim) => (
           <div key={moim.moimId} className="relative">
-            <GatheringCard moim={moim} />
+            <GatheringCard moim={moim} showInReviewTab={true} />
           </div>
         ))}
     </div>
