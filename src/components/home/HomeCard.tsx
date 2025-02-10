@@ -1,7 +1,7 @@
 // src/components/HomeCard.tsx
 'use client';
 
-import React from 'react';
+import React  from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import HeartIcon from './icons/HeartIcon';
@@ -10,20 +10,16 @@ import { useLikeStore } from '@/stores/home/likeStore';
 
 export default function HomeCard({ data }: { data: IMoim }) {
   const router = useRouter();
-
-  const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } =
-    data;
-
+  const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } = data;
   const { likes: likedMoims, toggleLike, likeDeltas } = useLikeStore();
   const isLiked = likedMoims.has(String(moimId));
-
+  
   const baseLikes = likes ?? 0;
   const optimisticDelta = likeDeltas[moimId] || 0;
   const displayLikes = baseLikes + optimisticDelta;
 
   const today = new Date();
   const end = new Date(endDate)
-  
   const confirmedText = end < today ? '종료' : isConfirmed ? '개설확정' : '모집중';
 
   const handleLike = (event: React.MouseEvent) => {
@@ -34,6 +30,8 @@ export default function HomeCard({ data }: { data: IMoim }) {
   const handleNavigate = () => {
     router.push(`/detail/${moimId}`);
   };
+
+  const isLoggedIn = typeof window !== "undefined" && localStorage.getItem('access_token');
 
   return (
     <article
@@ -59,9 +57,11 @@ export default function HomeCard({ data }: { data: IMoim }) {
               {confirmedText}
             </span>
           </div>
-          <button onClick={handleLike} aria-label={isLiked ? 'Remove from likes' : 'Add to likes'}>
-            <HeartIcon className={`w-6 h-6 ${isLiked ? 'fill-red-500' : 'fill-gray-300'}`} />
-          </button>
+          {isLoggedIn && (
+            <button onClick={handleLike} aria-label={isLiked ? 'Remove from likes' : 'Add to likes'}>
+              <HeartIcon className={`w-6 h-6 ${isLiked ? 'fill-red-500' : 'fill-gray-300'}`} />
+            </button>
+          )}
         </div>
         <div className="pt-3 space-y-2">
           <h3 className="text-body-1-normal">{title}</h3>
