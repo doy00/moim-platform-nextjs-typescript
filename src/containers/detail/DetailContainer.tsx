@@ -3,11 +3,11 @@ import { useAuth } from '@/hooks/auth/auth.hook';
 import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
 import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
 import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
+import { useRouter } from 'next/navigation';
 import DetailPresenter from '@/components/detail/DetailPresenter';
-import { ToasterDark } from '@/components/detail/ToasterDark';
 import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
 import { toast } from 'sonner';
-import { useRouter } from 'next/navigation';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 interface IDetailContainerProps {
   moimId: string;
@@ -26,6 +26,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
       await handleToggleLike();
       toast.success(
         isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요", {
+          icon: <CheckCircle className="w-5 h-5 text-green-500" />,
           action: {
             label: '내역 확인',
             onClick: () => {
@@ -47,6 +48,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         return;
       }
       toast.success('모임 신청이 완료되었어요', {
+        icon: <CheckCircle className="w-5 h-5 text-green-500" />,
         action: {
           label: '내역 확인',
           onClick: () => {
@@ -58,7 +60,9 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
       if (error instanceof Error) {
         toast.error(error.message);
       } else {
-        toast.error('잠시후 다시 시도해주세요');
+        toast.error('잠시후 다시 시도해주세요', {
+          icon: <XCircle className="w-5 h-5 text-red-500" />,
+        });
       }
     }
   };
@@ -85,10 +89,6 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         onLikeToggle={handleLike}
         actionLabel={getActionLabel()}
         disabled={!canJoin || isJoined}
-      />
-      <ToasterDark
-        position="top-right"
-        duration={5000}
       />
     </div>
   );

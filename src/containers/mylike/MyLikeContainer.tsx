@@ -9,8 +9,8 @@ import { toast } from 'sonner';
 import { DuduEmpty } from '@/components/detail/icons/DuduEmpty';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { Header } from '@/components/mylike/Header';
-import { ToasterDark } from '@/components/detail/ToasterDark';
 import { MyLikeSkeleton } from '@/components/mylike/MyLikeSkeleton';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 export default function MyLikeContainer () {
   const router = useRouter();
@@ -48,10 +48,14 @@ export default function MyLikeContainer () {
     e.stopPropagation();
     try {
       await unlikeMutation.mutateAsync(moimId);
-      toast.success('찜하기가 취소되었습니다');
+      toast.success('찜하기가 취소되었습니다', {
+        icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+      });
     } catch (error) {
       console.error('찜하기 취소 실패:', error)
-      toast.error('잠시후 시도해주세요');
+      toast.error('잠시후 시도해주세요', {
+        icon: <XCircle className="w-5 h-5 text-red-500" />,
+      });
     }
   };
 
@@ -80,10 +84,10 @@ export default function MyLikeContainer () {
       onRemoveLike={handleRemoveLike}
       onClickCard={handleClickCard}
     />
-    <ToasterDark
+    {/* <ToasterDark
       position="top-right"
       duration={5000}
-    />
+    /> */}
     </>
   );
 }
