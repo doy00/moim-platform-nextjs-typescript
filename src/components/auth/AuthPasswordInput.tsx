@@ -2,18 +2,17 @@
 
 import { cn } from '@/utils/auth/ui.util';
 import { useState } from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
 import { AuthEye, AuthEyeSlash } from './icons';
 
 interface AuthPasswordInputProps extends React.InputHTMLAttributes<HTMLInputElement> {
   className?: string;
-  register: UseFormRegisterReturn;
+  // register: UseFormRegisterReturn;
   children?: React.ReactNode;
 }
 
 export default function AuthPasswordInput({
   className,
-  register,
+  // register,
   children,
   ...props
 }: AuthPasswordInputProps) {
@@ -32,7 +31,7 @@ export default function AuthPasswordInput({
           className,
         )}
         {...props}
-        {...register}
+        // {...register}
       />
       <div
         className="absolute right-3 cursor-pointer text-muted-foreground"

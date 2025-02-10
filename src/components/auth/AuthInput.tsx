@@ -2,18 +2,17 @@
 
 import { cn } from '@/utils/auth/ui.util';
 import { InputHTMLAttributes } from 'react';
-import { UseFormRegisterReturn } from 'react-hook-form';
 
-interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement | HTMLTextAreaElement> {
+interface AuthInputProps extends InputHTMLAttributes<HTMLInputElement> {
   name: string;
-  register: UseFormRegisterReturn;
+  // register: UseFormRegisterReturn;
   isArray?: boolean;
   children?: React.ReactNode;
 }
 
 export default function AuthInput({
   className,
-  register,
+  // register,
   isArray,
   children,
   ...props
@@ -27,7 +26,7 @@ export default function AuthInput({
           className,
         )}
         {...props}
-        {...register}
+        // {...register}
       />
       {children}
     </div>
