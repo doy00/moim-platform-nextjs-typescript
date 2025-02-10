@@ -11,11 +11,8 @@ import { useQueryClient } from '@tanstack/react-query';
 
 export default function HomeCard({ data }: { data: IMoim }) {
   const router = useRouter();
-  const queryClient = useQueryClient();
-
   const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } =
     data;
-
   const { likes: likedMoims, toggleLike, likeDeltas } = useLikeStore();
   const isLiked = likedMoims.has(String(moimId));
 
@@ -24,8 +21,7 @@ export default function HomeCard({ data }: { data: IMoim }) {
   const displayLikes = baseLikes + optimisticDelta;
 
   const today = new Date();
-  const end = new Date(endDate)
-  
+  const end = new Date(endDate);
   const confirmedText = end < today ? '종료' : isConfirmed ? '개설확정' : '모집중';
 
   const handleLike = (event: React.MouseEvent) => {
@@ -37,6 +33,8 @@ export default function HomeCard({ data }: { data: IMoim }) {
   const handleNavigate = () => {
     router.push(`/detail/${moimId}`);
   };
+
+  const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('access_token');
 
   return (
     <article
@@ -58,13 +56,20 @@ export default function HomeCard({ data }: { data: IMoim }) {
             <span className="text-caption-normal bg-background400 px-1.5 py-[3px] rounded-md">
               {moimType}
             </span>
-            <span className={`text-caption-normal ${ confirmedText === '종료' ? 'bg-red200' : 'bg-gray800'} text-white px-1.5 py-[3px] rounded-md`}>
+            <span
+              className={`text-caption-normal ${confirmedText === '종료' ? 'bg-red200' : 'bg-gray800'} text-white px-1.5 py-[3px] rounded-md`}
+            >
               {confirmedText}
             </span>
           </div>
-          <button onClick={handleLike} aria-label={isLiked ? 'Remove from likes' : 'Add to likes'}>
-            <HeartIcon className={`w-6 h-6 ${isLiked ? 'fill-red-500' : 'fill-gray-300'}`} />
-          </button>
+          {isLoggedIn && (
+            <button
+              onClick={handleLike}
+              aria-label={isLiked ? 'Remove from likes' : 'Add to likes'}
+            >
+              <HeartIcon className={`w-6 h-6 ${isLiked ? 'fill-red-500' : 'fill-gray-300'}`} />
+            </button>
+          )}
         </div>
         <div className="pt-3 space-y-2">
           <h3 className="text-body-1-normal">{title}</h3>
