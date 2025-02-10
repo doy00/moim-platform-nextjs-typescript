@@ -62,6 +62,7 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
   }, 600);
 
   useEffect(() => {
+    if (fields.length === 1) return;
     const latestAddedID = fields[fields.length - 1].id;
     document.getElementById(latestAddedID)?.focus();
   }, [fields, setFocus]);
