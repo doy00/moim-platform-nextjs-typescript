@@ -10,7 +10,7 @@ import fullHeart from '@public/images/mypage/heart.svg';
 
 interface Props {
   moim: IMoim;
-  hideStatus: boolean;
+  hideStatus?: boolean;
   hideReviewButton?: boolean;
   disableLink?: boolean;
   showInReviewTab?: boolean;
@@ -85,9 +85,9 @@ const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
 
 export function GatheringCard({
   moim,
-  hideStatus,
-  hideReviewButton,
-  disableLink,
+  hideStatus = false,
+  hideReviewButton = false,
+  disableLink = false,
   showInReviewTab = false,
   refetch,
 }: Props) {
