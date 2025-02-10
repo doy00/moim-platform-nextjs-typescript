@@ -1,19 +1,17 @@
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { postMoimLikey, deleteMoimLikey } from '@/apis/moimLikey';
 
-export const useMoimLikeMutation = (moimId: string) => {
+export const useMoimLikeQuery = ({ moimId, isLiked }: { moimId: string; isLiked: boolean }) => {
   const queryClient = useQueryClient();
 
+  const likeAPI = isLiked ? deleteMoimLikey : postMoimLikey;
+
   return useMutation({
-    mutationFn: () => postMoimLikey(moimId),
+    mutationFn: () => likeAPI(moimId),
     onSuccess: () => {
-      // 해당 모임 데이터만 업데이트
-      queryClient.invalidateQueries({
-        queryKey: ['moims', moimId],
-      });
       // 목록 데이터도 업데이트가 필요한 경우
       queryClient.invalidateQueries({
-        queryKey: ['moims'],
+        queryKey: ['getParticipatedMoim'],
       });
     },
     onError: (error: any) => {

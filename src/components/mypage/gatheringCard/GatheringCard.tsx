@@ -1,17 +1,18 @@
 import { IMoim } from '@/types/mypage/moim.type';
-// import { IParticipatedUser } from '@/types/mypage/user';
 import Image from 'next/image';
 import Link from 'next/link';
-import { moimTypeTag, moimTypeIcon, statusTag, moimHeartLike } from '@/utils/mypage/statusTags';
+import { moimTypeTag, moimTypeIcon, statusTag } from '@/utils/mypage/statusTags';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import { useMoimLikeMutation } from '@/hooks/mypage/queries/useLikeyQuery';
+import { useMoimLikeQuery } from '@/hooks/mypage/queries/useLikeyQuery';
+import { useMemo } from 'react';
+import emptyHeart from '@public/images/mypage/empty-heart.svg';
+import fullHeart from '@public/images/mypage/heart.svg';
 
 interface Props {
   moim: IMoim;
   hideStatus?: boolean;
   hideReviewButton?: boolean;
   disableLink?: boolean;
-  isLiked?: boolean;
   showInReviewTab?: boolean;
 }
 
@@ -24,21 +25,28 @@ export function GatheringCard({
   hideStatus,
   hideReviewButton,
   disableLink,
-  isLiked,
   showInReviewTab = false,
 }: Props) {
   const { data } = useUserQuery();
-  const { mutate: likeMoim } = useMoimLikeMutation(moim?.moimId);
+  const isLiked = useMemo(() => {
+    if (moim.likedUsers.find((userId) => userId === data?.id)) {
+      return true;
+    }
+    return false;
+  }, [moim, data]);
+
+  const { mutate: likeMoim } = useMoimLikeQuery({ moimId: moim.moimId, isLiked });
+
   const isMoimEnded = moim?.status === 'END';
-  const myUuid = data?.id;
+  const myUuid = useMemo(() => data?.id, [data]);
   const isParticipatedUser = moim?.participatedUsers.some(
     (participatedUser) => participatedUser.userUuid === myUuid,
   );
   const hasWrittenReview = moim?.reviews.some((review) => review.userUuid === myUuid);
   const participatedUserUuid = moim?.participatedUsers.some((user) => user.userUuid);
+
   const showReviewButton =
     isMoimEnded && isParticipatedUser && participatedUserUuid && showInReviewTab;
-  const { icon, count } = moimHeartLike(moim, isLiked);
 
   // ================================================================
 
@@ -51,7 +59,6 @@ export function GatheringCard({
   // console.log('myUuid : ', myUuid);
 
   // ================================================================
-
   const handleLikeClick = () => {
     likeMoim();
   };
@@ -96,13 +103,12 @@ export function GatheringCard({
         <div className="relative">
           <div
             onClick={(e) => {
-              e.stopPropagation();
               e.preventDefault();
               handleLikeClick();
             }}
             className="top-4 right-4 z-10"
           >
-            <Image src={moimHeartLike(moim, isLiked).icon} alt="heart" width={24} height={24} />
+            <Image src={isLiked ? fullHeart : emptyHeart} alt="heart" width={24} height={24} />
           </div>
         </div>
       </div>
