@@ -6,19 +6,37 @@ import { useMyMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { motion } from 'framer-motion';
 import { useMemo } from 'react';
 
-export default function CreatedMeetings({ filter }: { filter: string }) {
+export default function CreatedMeetings({
+  filter,
+  isConfirmed,
+}: {
+  filter: string;
+  isConfirmed: boolean;
+}) {
   const { data, isLoading } = useMyMoimQuery();
 
   const filteredData = useMemo(() => {
-    if (!data || filter === '전체') return data;
+    if (!data) return data;
+
+    console.log(
+      'CreatedMeetings Data Structure:',
+      data.map((moim) => ({
+        moimId: moim.moimId,
+        status: moim.status,
+        isConfirmed: moim.isConfirmed,
+      })),
+    );
 
     return data.filter((moim) => {
+      if (isConfirmed && !moim.isConfirmed) return false;
+
+      if (filter === '전체') return true;
       if (filter === '모집중') return moim.status === 'RECRUIT';
       if (filter === '모집완료') return moim.status === 'PROGRESS';
       if (filter === '종료') return moim.status === 'END';
       return true;
     });
-  }, [data, filter]);
+  }, [data, filter, isConfirmed]);
 
   console.log(data);
 
@@ -51,9 +69,6 @@ export default function CreatedMeetings({ filter }: { filter: string }) {
       <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
         {filteredData?.map((moim) => (
           <div key={moim.moimId} className="relative">
-            {/* <div className="absolute top-4 right-4 z-10">
-              <Image src={emptyHeart} alt="Heart" width={24} height={24} />
-            </div> */}
             <GatheringCard moim={moim} />
           </div>
         ))}

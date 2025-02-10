@@ -11,7 +11,7 @@ export default function RenderTab() {
   const [activeTab, setActiveTab] = useState('meetings');
   // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-
+  const [isConfirmed, setIsConfirmed] = useState(false);
   // const handleCategorySelect = (category: string | null) => {
   //   setSelectedCategory(category);
   // };
@@ -25,6 +25,11 @@ export default function RenderTab() {
   //   setActiveTab(tab);
   //   setSelectedStatus(null);
   // };
+
+  const handleConfirmedFilter = (isConfirmed: boolean) => {
+    setIsConfirmed(isConfirmed);
+    setActiveTab(activeTab);
+  };
 
   const renderTab = () => {
     if (activeTab === 'reviews') {
@@ -43,9 +48,9 @@ export default function RenderTab() {
             className="relative w-full"
           >
             {activeTab === 'meetings' ? (
-              <Meetings filter={selectedStatus || '전체'} />
+              <Meetings filter={selectedStatus || '전체'} isConfirmed={isConfirmed} />
             ) : activeTab === 'created-meetings' ? (
-              <CreatedMeetings filter={selectedStatus || '전체'} />
+              <CreatedMeetings filter={selectedStatus || '전체'} isConfirmed={isConfirmed} />
             ) : null}
           </motion.div>
         </AnimatePresence>
@@ -82,7 +87,12 @@ export default function RenderTab() {
         </button>
       </div>
       {(activeTab === 'meetings' || activeTab === 'created-meetings') && (
-        <FilterBar onStatusSelect={handleStatusSelect} selectedStatus={selectedStatus} />
+        <FilterBar
+          onStatusSelect={handleStatusSelect}
+          selectedStatus={selectedStatus}
+          onConfirmedFilter={handleConfirmedFilter}
+          isConfirmed={isConfirmed}
+        />
       )}
       {renderTab()}
     </div>
