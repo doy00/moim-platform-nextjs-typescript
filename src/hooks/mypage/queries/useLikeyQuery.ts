@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { postMoimLikey, deleteMoimLikey } from '@/apis/moimLikey';
 
 export const useMoimLikeQuery = ({
@@ -15,7 +15,6 @@ export const useMoimLikeQuery = ({
   return useMutation({
     mutationFn: () => likeAPI(moimId),
     onSuccess: () => {
-      // 목록 데이터도 업데이트가 필요한 경우
       refetch();
     },
     onError: (error: any) => {
