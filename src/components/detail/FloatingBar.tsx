@@ -1,7 +1,4 @@
 // 상세페이지 하단 찜하기, 신청하기 버튼이 있는 플로팅 바 컴포넌트입니다.
-import { HeartIcon } from "./icons/HeartIcon";
-import { HeartEmptyIcon } from "./icons/HeartEmptyIcon";
-import { ToasterDark } from "./ToasterDark";
 import { LikeButton } from "./LikeButton";
 import { JoinButton } from "./join/JoinButton";
 
@@ -38,7 +35,6 @@ export const FloatingBar = ({
           disabled={disabled}
         />
       </div>
-      <ToasterDark position="bottom-center" duration={2000} />
     </div>
   );
 };
