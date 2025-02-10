@@ -4,6 +4,7 @@ import DetailContainer from '@/containers/detail/DetailContainer';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { Suspense } from "react";
 import { IMoimDetail } from '@/types/detail/t-moim';
+import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
 
 interface DetailPageProps {
   params: Promise<{ id: string }>;
@@ -30,7 +31,7 @@ export default async function DetailPage({ params } : DetailPageProps) {
   return (
     <div>
       <HydrationBoundary state={dehydrate(queryClient)}>
-        <Suspense fallback={<div>Loading...</div>}>
+        <Suspense fallback={<DetailSkeleton />}>
             <DetailContainer moimId={moimId} />
         </Suspense>
       </HydrationBoundary>

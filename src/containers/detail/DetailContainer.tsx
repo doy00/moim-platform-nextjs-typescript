@@ -8,6 +8,7 @@ import DetailPresenter from '@/components/detail/DetailPresenter';
 import { SignInDialog } from '@/components/detail/SignInDialog';
 import { ToasterDark } from '@/components/detail/ToasterDark';
 import { toast } from 'sonner';
+import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
 
 interface IDetailContainerProps {
   moimId: string;
@@ -56,7 +57,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     }
   };
 
-  if (isDetailLoading || isMeLoading) return null;
+  if (isDetailLoading || isMeLoading) return <DetailSkeleton />;
 
   // 신청하기 버튼 라벨 결정
   const getActionLabel = () => {
