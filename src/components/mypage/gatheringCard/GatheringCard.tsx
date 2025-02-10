@@ -10,13 +10,75 @@ import fullHeart from '@public/images/mypage/heart.svg';
 
 interface Props {
   moim: IMoim;
-  hideStatus?: boolean;
+  hideStatus: boolean;
   hideReviewButton?: boolean;
   disableLink?: boolean;
   showInReviewTab?: boolean;
   refetch?: () => void;
 }
-
+const CardContent = ({
+  moim,
+  hideStatus,
+  handleLikeClick,
+  isLiked,
+}: {
+  moim: IMoim;
+  hideStatus: boolean;
+  handleLikeClick: () => void;
+  isLiked: boolean;
+}) => {
+  return (
+    <div className="flex flex-col">
+      <div className="flex gap-5 p-4 justify-between">
+        <div className="flex gap-5 items-start">
+          <Image src={moimTypeIcon(moim)} alt="puzzle" width={36} height={36} />
+          <div className="flex flex-col gap-2">
+            <div className="flex gap-1">
+              <span className="h-[24px] bg-background400 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray800">
+                {moimTypeTag(moim)}
+              </span>
+              {!hideStatus && (
+                <span className="h-[24px] bg-gray800 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray50">
+                  {statusTag(moim)}
+                </span>
+              )}
+            </div>
+            <div className="flex flex-col gap-2">
+              <p className="font-medium text-body-1-normal color-[#2B2926]">{moim?.title}</p>
+              <div className="flex gap-2 items-center">
+                <span className="font-medium text-label-reading text-[#9E9892]">
+                  {moim?.address}
+                </span>
+                <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
+                <span className="font-medium text-label-reading text-[#9E9892]">
+                  {moim?.participants}명 참여
+                </span>
+              </div>
+            </div>
+            <div className="flex items-center justify-between gap-2">
+              <span className="font-medium text-caption-normal text-[#837C74]">
+                {new Date(moim?.startDate).toLocaleDateString()}
+                {''} - {''}
+                {new Date(moim?.endDate).toLocaleDateString()}
+              </span>
+            </div>
+          </div>
+        </div>
+        <div className="relative">
+          <div
+            onClick={(e) => {
+              e.preventDefault();
+              handleLikeClick();
+            }}
+            className="top-4 right-4 z-10"
+          >
+            <Image src={isLiked ? fullHeart : emptyHeart} alt="heart" width={24} height={24} />
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-background100 rounded-[14px] shadow-sm">{children}</div>
 );
@@ -69,61 +131,25 @@ export function GatheringCard({
     likeMoim();
   };
 
-  const CardContent = (
-    <div className="flex flex-col">
-      <div className="flex gap-5 p-4 justify-between">
-        <div className="flex gap-5 items-start">
-          <Image src={moimTypeIcon(moim)} alt="puzzle" width={36} height={36} />
-          <div className="flex flex-col gap-2">
-            <div className="flex gap-1">
-              <span className="h-[24px] bg-background400 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray800">
-                {moimTypeTag(moim)}
-              </span>
-              {!hideStatus && (
-                <span className="h-[24px] bg-gray800 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray50">
-                  {statusTag(moim)}
-                </span>
-              )}
-            </div>
-            <div className="flex flex-col gap-2">
-              <p className="font-medium text-body-1-normal color-[#2B2926]">{moim?.title}</p>
-              <div className="flex gap-2 items-center">
-                <span className="font-medium text-label-reading text-[#9E9892]">
-                  {moim?.address}
-                </span>
-                <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
-                <span className="font-medium text-label-reading text-[#9E9892]">
-                  {moim?.participants}명 참여
-                </span>
-              </div>
-            </div>
-            <div className="flex items-center justify-between gap-2">
-              <span className="font-medium text-caption-normal text-[#837C74]">
-                {new Date(moim?.startDate).toLocaleDateString()}
-                {''} - {''}
-                {new Date(moim?.endDate).toLocaleDateString()}
-              </span>
-            </div>
-          </div>
-        </div>
-        <div className="relative">
-          <div
-            onClick={(e) => {
-              e.preventDefault();
-              handleLikeClick();
-            }}
-            className="top-4 right-4 z-10"
-          >
-            <Image src={isLiked ? fullHeart : emptyHeart} alt="heart" width={24} height={24} />
-          </div>
-        </div>
-      </div>
-    </div>
-  );
-
   return (
     <GatheringWrapper>
-      {disableLink ? CardContent : <Link href={`/detail/${moim?.moimId}`}>{CardContent}</Link>}
+      {disableLink ? (
+        <CardContent
+          moim={moim}
+          hideStatus={hideStatus}
+          handleLikeClick={handleLikeClick}
+          isLiked={isLiked}
+        />
+      ) : (
+        <Link href={`/detail/${moim?.moimId}`}>
+          <CardContent
+            moim={moim}
+            hideStatus={hideStatus}
+            handleLikeClick={handleLikeClick}
+            isLiked={isLiked}
+          />
+        </Link>
+      )}
       {!hideReviewButton && showReviewButton && (
         <div className="p-4 pt-0">
           <Link
