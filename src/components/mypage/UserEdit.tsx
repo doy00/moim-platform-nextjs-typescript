@@ -14,7 +14,7 @@ import AuthSelect from '@/components/auth/AuthSelect';
 import { cn } from '@/utils/auth/ui.util';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { IUserEdit } from '@/types/mypage/user';
-
+import { sendPasswordResetEmail } from '@/apis/userInfo';
 export default function UserEdit() {
   const { data, isLoading, error } = useUserQuery();
   const { mutate: editUser, isPending: isEditing } = useEditUserMutation();
@@ -205,6 +205,10 @@ export default function UserEdit() {
     return defaultProfile;
   })();
 
+  const onClickUpdatePasswordBtn = async () => {
+    await sendPasswordResetEmail(data.email);
+  };
+
   return (
     <>
       <Header />
@@ -229,12 +233,12 @@ export default function UserEdit() {
               />
             </div>
             {!data.is_social && (
-              <Link
-                href="/mypage/editPassword"
+              <button
+                onClick={onClickUpdatePasswordBtn}
                 className="text-label-normal font-medium text-orange200"
               >
                 비밀번호 변경
-              </Link>
+              </button>
             )}
           </div>
 
