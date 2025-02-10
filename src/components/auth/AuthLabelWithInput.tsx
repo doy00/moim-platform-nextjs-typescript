@@ -2,18 +2,18 @@
 
 import { useDebounce } from '@/hooks/auth/auth.hook';
 import { cn } from '@/lib/utils';
-import { TAuthFormValues } from '@/types/auth/auth.type';
-import { ReactNode, useId } from 'react';
-import { RegisterOptions, useFormContext } from 'react-hook-form';
+import { TSignUpSchema } from '@/schemas/auth/auth.schema';
+import { ReactNode, useEffect, useId } from 'react';
+import { get, Path, PathValue, useFormContext } from 'react-hook-form';
 import AuthInput from './AuthInput';
 import AuthPasswordInput from './AuthPasswordInput';
 
 interface IAuthLabelWithInput {
-  name: keyof TAuthFormValues;
+  name: Path<TSignUpSchema>;
   label: string;
   placeholder: string;
-  registerOptions: RegisterOptions;
-  additionalErrors?: ReactNode;
+  additionalMessage?: ReactNode;
+  // registerOptions?: RegisterOptions<TSignUpSchema>;
   className?: string;
   isRequired?: boolean;
   isPassword?: boolean;
@@ -24,8 +24,8 @@ export default function AuthLabelWithInput({
   name,
   label,
   placeholder,
-  registerOptions,
-  additionalErrors,
+  additionalMessage,
+  // registerOptions,
   className,
   isRequired = true,
   isPassword = false,
@@ -36,12 +36,21 @@ export default function AuthLabelWithInput({
     register,
     setValue,
     trigger,
+    setFocus,
     formState: { errors },
-  } = useFormContext<TAuthFormValues>();
+  } = useFormContext<TSignUpSchema>();
 
-  const debouncedValidation = useDebounce((name: keyof TAuthFormValues) => {
+  const debouncedValidation = useDebounce((name: keyof TSignUpSchema) => {
     trigger(name);
   }, 600);
+
+  useEffect(() => {
+    if (errors[name as keyof TSignUpSchema]) {
+      setFocus(name);
+    }
+  }, [errors, name, setFocus]);
+
+  const error = get(errors, name);
 
   return (
     <div className="flex flex-col gap-2">
@@ -52,41 +61,33 @@ export default function AuthLabelWithInput({
         <AuthPasswordInput
           placeholder={placeholder}
           className={cn('h-[54px]', className, {
-            'focus-visible:ring-error ring-1 ring-error': errors?.[name],
+            'focus-visible:ring-error ring-1 ring-error': error,
           })}
           name={name}
           id={id}
-          register={register(name, {
-            ...registerOptions,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-              if (errors[name]) mutationReset?.();
-              setValue(name, e.target.value);
-              debouncedValidation(name);
-            },
-          } as RegisterOptions<TAuthFormValues, typeof name>)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (error) mutationReset?.();
+            setValue(name, e.target.value as PathValue<TSignUpSchema, Path<TSignUpSchema>>);
+            debouncedValidation(name as keyof TSignUpSchema);
+          }}
         />
       ) : (
         <AuthInput
           placeholder={placeholder}
           className={cn('h-[54px]', className, {
-            'focus-visible:ring-error ring-1 ring-error': errors?.[name],
+            'focus-visible:ring-error ring-1 ring-error': error,
           })}
           name={name}
           id={id}
-          register={register(name, {
-            ...registerOptions,
-            onChange: (e: React.ChangeEvent<HTMLInputElement>) => {
-              if (errors[name]) mutationReset?.();
-              setValue(name, e.target.value);
-              debouncedValidation(name);
-            },
-          } as RegisterOptions<TAuthFormValues, typeof name>)}
+          onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+            if (error) mutationReset?.();
+            setValue(name, e.target.value as PathValue<TSignUpSchema, Path<TSignUpSchema>>);
+            debouncedValidation(name as keyof TSignUpSchema);
+          }}
         />
       )}
-      {errors[name] && (
-        <p className="text-error text-label-normal font-medium">{errors[name].message}</p>
-      )}
-      {additionalErrors && additionalErrors}
+      {error && <p className="text-error text-label-normal font-medium">{error.message}</p>}
+      {additionalMessage && additionalMessage}
     </div>
   );
 }
