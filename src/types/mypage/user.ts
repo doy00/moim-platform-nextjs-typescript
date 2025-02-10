@@ -4,6 +4,7 @@ export interface IUser {
   id: string;
   image: string | null;
   introduction: string | null;
+  is_social: boolean;
   nickname: string;
   position: string;
   tags: string[] | null;
