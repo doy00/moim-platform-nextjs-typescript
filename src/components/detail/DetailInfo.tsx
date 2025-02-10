@@ -59,8 +59,8 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
     >
       <div className="flex flex-col gap-4 w-full">
         <div className="flex gap-1.5">
-          <ChipSmallSquircle variant="light" text={getMoimTypeText(moimType)} />
           {isConfirmed && ( <ChipSmallSquircle variant="dark" text="개설 확정" /> )}
+          <ChipSmallSquircle variant="light" text={getMoimTypeText(moimType)} />
           {online && ( <ChipSmallSquircle variant="light" text="온라인" /> )}
           {getStatusTag  && ( <ChipSmallSquircle variant="light" text={getStatusTag(status)} /> )}
         </div>

@@ -4,11 +4,16 @@ import React from 'react';
 import { ChipSmallSquircle } from '../detail/ChipSmallSquircle';
 import { HeartIcon } from '../detail/icons/HeartIcon';
 import { Separator } from '../ui/separator';
-import { formatDate, getDeadlineText } from '@/utils/detail/date';
+import { formatDate } from '@/utils/detail/date';
 import { getMoimTypeText } from '@/utils/detail/enums';
 import { IMoimDetail } from '@/types/detail/t-moim';
 import { EMoimStatus } from '@/types/supabase/supabase-custom.type';
 import Image from 'next/image';
+
+interface IStatusInfo {
+  text: string;
+  variant: 'end' | 'cardTag';
+}
 
 interface IMyLikeCardProps {
   moim: IMoimDetail;
@@ -33,19 +38,30 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
     likes,
   } = moim;
 
-  const { likes: likedMoims, toggleLike } = useLikeStore();
-  const isProject = moimType === "PROJECT";
   const isConfirmed = participants >= minParticipants;
-  const getStatusTag = (status: EMoimStatus): string => {
+  const getStatusInfo = (status: EMoimStatus, maxParticipants: number, participants: number, isConfirmed: boolean): IStatusInfo => {
     if (status === 'END') {
-      return '종료';
+      return {
+        text: '종료',
+        variant: 'cardTag'
+      };
     } else if (maxParticipants === participants) {
-      return '모집완료';
+      return {
+        text: '모집완료',
+        variant: 'cardTag'
+      };
     } else if (isConfirmed === false) {
-      return '모집중';
+      return {
+        text: '모집 중',
+        variant: 'cardTag'
+      };
     };
-    return '모집중';
+    return {
+      text: '모집 중',
+      variant: 'cardTag'
+    };
   }
+  const statusInfo = getStatusInfo(status, maxParticipants, participants, isConfirmed);
 
   return (
     <div
@@ -69,9 +85,8 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
               <div className="flex justify-between items-start">
                 <div className="flex gap-1 flex-wrap">
                   <ChipSmallSquircle text={getMoimTypeText(moimType)} variant="cardTag" />
-                  {/* <ChipSmallSquircle text={getDeadlineText(recruitmentDeadline)} variant="cardTag" /> */}
                   {isConfirmed && ( <ChipSmallSquircle text="개설확정" variant="dark" /> )}
-                  {getStatusTag  && ( <ChipSmallSquircle variant="cardTag" text={getStatusTag(status)} /> )}
+                  {statusInfo  && ( <ChipSmallSquircle variant={statusInfo.variant} text={statusInfo.text} /> )}
                 </div>
 
                 {/* 찜버튼 */}
