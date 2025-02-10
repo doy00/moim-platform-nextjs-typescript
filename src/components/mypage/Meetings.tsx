@@ -5,19 +5,28 @@ import emptyDudu from '@public/images/mypage/dudu-empty.svg';
 import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { useMemo } from 'react';
 
-export default function Meetings({ filter }: { filter: string }) {
+export default function Meetings({
+  filter,
+  isConfirmed,
+}: {
+  filter: string;
+  isConfirmed: boolean;
+}) {
   const { data, isLoading } = useParticipatedMoimQuery();
 
   const filteredData = useMemo(() => {
-    if (!data || filter === '전체') return data;
+    if (!data) return data;
 
     return data.filter((moim) => {
+      if (isConfirmed && !moim.isConfirmed) return false;
+
+      if (filter === '전체') return true;
       if (filter === '모집중') return moim.status === 'RECRUIT';
       if (filter === '모집완료') return moim.status === 'PROGRESS';
       if (filter === '종료') return moim.status === 'END';
       return true;
     });
-  }, [data, filter]);
+  }, [data, filter, isConfirmed]);
 
   if (isLoading) {
     return <GatheringSkeleton />;
