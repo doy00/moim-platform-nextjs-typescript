@@ -213,12 +213,14 @@ export default function UserEdit() {
                 onClick={handleImageClick}
               />
             </div>
-            <Link
-              href="/mypage/editPassword"
-              className="text-label-normal font-medium text-orange200"
-            >
-              비밀번호 변경
-            </Link>
+            {!data.is_social && (
+              <Link
+                href="/mypage/editPassword"
+                className="text-label-normal font-medium text-orange200"
+              >
+                비밀번호 변경
+              </Link>
+            )}
           </div>
 
           <form className="flex flex-col gap-6 mt-8" onSubmit={handleSubmit}>
@@ -271,21 +273,6 @@ export default function UserEdit() {
                 </span>
               </div>
             </div>
-
-            {/* TODO: 비밀번호 수정 기능 추가 수정 필요 */}
-            {/* <div className="flex flex-col gap-3">
-              <label htmlFor="password" className="flex justify-start items-center gap-[2px]">
-                <span className="text-body-2-nomal font-medium text-gray-800">비밀번호</span>
-              </label>
-              <input
-                type="password"
-                id="password"
-                placeholder="비밀번호를 입력해주세요"
-                className="rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none"
-                value={passwordInputValue}
-                onChange={handlePasswordChange}
-              />
-            </div> */}
 
             <div className="flex flex-col gap-3">
               <label htmlFor="position" className="flex justify-start items-center gap-[2px]">
