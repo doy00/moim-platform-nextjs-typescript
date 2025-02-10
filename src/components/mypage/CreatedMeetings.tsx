@@ -13,7 +13,7 @@ export default function CreatedMeetings({
   filter: string;
   isConfirmed: boolean;
 }) {
-  const { data, isLoading } = useMyMoimQuery();
+  const { data, isLoading, refetch } = useMyMoimQuery();
 
   const filteredData = useMemo(() => {
     if (!data) return data;
@@ -69,7 +69,7 @@ export default function CreatedMeetings({
       <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
         {filteredData?.map((moim) => (
           <div key={moim.moimId} className="relative">
-            <GatheringCard moim={moim} />
+            <GatheringCard moim={moim} refetch={refetch} />
           </div>
         ))}
       </div>

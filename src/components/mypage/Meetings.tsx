@@ -12,7 +12,7 @@ export default function Meetings({
   filter: string;
   isConfirmed: boolean;
 }) {
-  const { data, isLoading } = useParticipatedMoimQuery();
+  const { data, isLoading, refetch } = useParticipatedMoimQuery();
 
   const filteredData = useMemo(() => {
     if (!data) return data;
@@ -50,7 +50,7 @@ export default function Meetings({
       <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
         {filteredData?.map((moim) => (
           <div key={moim.moimId}>
-            <GatheringCard moim={moim} />
+            <GatheringCard moim={moim} refetch={refetch} />
           </div>
         ))}
       </div>

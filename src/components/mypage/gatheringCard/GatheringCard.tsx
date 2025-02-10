@@ -14,6 +14,7 @@ interface Props {
   hideReviewButton?: boolean;
   disableLink?: boolean;
   showInReviewTab?: boolean;
+  refetch?: () => void;
 }
 
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -26,6 +27,7 @@ export function GatheringCard({
   hideReviewButton,
   disableLink,
   showInReviewTab = false,
+  refetch,
 }: Props) {
   const { data } = useUserQuery();
   const isLiked = useMemo(() => {
@@ -35,7 +37,11 @@ export function GatheringCard({
     return false;
   }, [moim, data]);
 
-  const { mutate: likeMoim } = useMoimLikeQuery({ moimId: moim.moimId, isLiked });
+  const { mutate: likeMoim } = useMoimLikeQuery({
+    moimId: moim.moimId,
+    isLiked,
+    refetch: refetch ?? (() => {}),
+  });
 
   const isMoimEnded = moim?.status === 'END';
   const myUuid = useMemo(() => data?.id, [data]);
