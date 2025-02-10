@@ -41,7 +41,7 @@ export default function DetailPresenter({
         <ImageBox image={DEFAULT_IMAGE.MOIM} />
         <DetailInfo 
           title={data.title}
-          address={data.address}
+          address={data.address || '온라인으로 진행합니다'}
           createdAt={data.createdAt}
           startDate={data.startDate}
           recruitmentDeadline={data.recruitmentDeadline}
