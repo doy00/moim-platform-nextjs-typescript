@@ -33,10 +33,9 @@ export const useLikeStore = create<LikeState>((set, get) => ({
       }
       set({ likes: currentLikes, likeDeltas: currentDeltas });
     } catch (error: any) {
-      // API 에러가 "이미 찜한 모임이에요"인 경우, 클라이언트 상태를 보정합니다.
       if (error.response?.data?.message === '이미 찜한 모임이에요') {
         currentLikes.add(moimId);
-        currentDeltas[moimId] = (currentDeltas[moimId] || 0) + 0; // 변화 없음
+        currentDeltas[moimId] = (currentDeltas[moimId] || 0) + 0;
         set({ likes: currentLikes, likeDeltas: currentDeltas });
       } else {
         console.error('Failed to toggle like:', error);

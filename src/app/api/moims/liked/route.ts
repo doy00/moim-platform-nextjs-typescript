@@ -4,6 +4,7 @@ import {
   TMoimClient,
   TMoimsJoined,
 } from '@/types/supabase/supabase-custom.type';
+import { setCookie } from '@/utils/auth/auth-server.util';
 import { mapMoimsToClient } from '@/utils/common/mapMoims';
 import { createClient } from '@/utils/supabase/server';
 import { PostgrestError } from '@supabase/supabase-js';
