@@ -1,14 +1,12 @@
 'use client';
-import { useState } from 'react';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { useMoimDetail } from '@/hooks/detail/useMoimDetail';
 import { useJoinMoim } from '@/hooks/detail/useJoinMoim';
 import { useLikeMoim } from '@/hooks/detail/useLikeMoim';
 import DetailPresenter from '@/components/detail/DetailPresenter';
-import { SignInDialog } from '@/components/detail/SignInDialog';
 import { ToasterDark } from '@/components/detail/ToasterDark';
-import { toast } from 'sonner';
 import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
+import { toast } from 'sonner';
 
 interface IDetailContainerProps {
   moimId: string;
@@ -20,15 +18,8 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   const { isLiked, handleToggleLike } = useLikeMoim(moimId);
   const { isJoined, canJoin, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
 
-  // 로그인 상태 확인
-  const [showDialog, setShowDialog] = useState(false);
-
   // 찜하기 버튼 핸들러
   const handleLike = async () => {
-    if (!me) {
-      setShowDialog(true);
-      return;
-    }
     try {
       await handleToggleLike();
       toast.success(
@@ -80,15 +71,10 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         actionLabel={getActionLabel()}
         disabled={!canJoin || isJoined}
       />
-      <SignInDialog 
-        isOpen={showDialog}
-        onClose={() => setShowDialog(false)}
-      />
       <ToasterDark 
-        position="bottom-center"
+        position="top-right"
         duration={2000}
       />
     </div>
   );
 }
-
