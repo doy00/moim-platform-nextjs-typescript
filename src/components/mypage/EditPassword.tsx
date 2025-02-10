@@ -7,51 +7,50 @@ import openEye from '@public/images/mypage/visibility_on.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 
-export default function EditPassword() {
-  // 비밀번호 입력 필드 컴포넌트
-  const PasswordInput = ({
-    id,
-    label,
-    placeholder,
-    register,
-    showPassword,
-    onTogglePassword,
-    validation,
-  }: {
-    id: string;
-    label: string;
-    placeholder: string;
-    register: any;
-    showPassword: boolean;
-    onTogglePassword: () => void;
-    validation?: object;
-  }) => (
-    <div className="flex flex-col gap-3">
-      <label htmlFor={id} className="flex justify-start items-center gap-[2px] px-2">
-        <span className="text-body-2-nomal font-medium text-gray-800">{label}</span>
-        <span className="text-body-2-nomal font-medium text-error pt-1">*</span>
-      </label>
-      <div className="relative rounded-xl bg-background400 px-4 py-[18px]">
-        <input
-          type={showPassword ? 'text' : 'password'}
-          id={id}
-          {...register(id, validation)}
-          placeholder={placeholder}
-          className="bg-background400 w-full placeholder:text-gray300 outline-none"
-        />
-        <Image
-          src={showPassword ? openEye : closeEye}
-          alt="password visibility"
-          className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
-          onClick={onTogglePassword}
-        />
-      </div>
-      <span className="text-label-normal font-medium text-gray300 px-2">
-        특수문자 포함 8~20자 사이로 입력해주세요
-      </span>
+const PasswordInput = ({
+  id,
+  label,
+  placeholder,
+  register,
+  showPassword,
+  onTogglePassword,
+  validation,
+}: {
+  id: string;
+  label: string;
+  placeholder: string;
+  register: any;
+  showPassword: boolean;
+  onTogglePassword: () => void;
+  validation?: object;
+}) => (
+  <div className="flex flex-col gap-3">
+    <label htmlFor={id} className="flex justify-start items-center gap-[2px] px-2">
+      <span className="text-body-2-nomal font-medium text-gray-800">{label}</span>
+      <span className="text-body-2-nomal font-medium text-error pt-1">*</span>
+    </label>
+    <div className="relative rounded-xl bg-background400 px-4 py-[18px]">
+      <input
+        type={showPassword ? 'text' : 'password'}
+        id={id}
+        {...register(id, validation)}
+        placeholder={placeholder}
+        className="bg-background400 w-full placeholder:text-gray300 outline-none"
+      />
+      <Image
+        src={showPassword ? openEye : closeEye}
+        alt="password visibility"
+        className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+        onClick={onTogglePassword}
+      />
     </div>
-  );
+    <span className="text-label-normal font-medium text-gray300 px-2">
+      특수문자 포함 8~20자 사이로 입력해주세요
+    </span>
+  </div>
+);
 
+export default function EditPassword() {
   // 상태 관리
   const [passwordVisibility, setPasswordVisibility] = useState({
     current: false,
