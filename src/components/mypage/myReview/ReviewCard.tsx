@@ -1,6 +1,5 @@
 import { IReview } from '@/types/mypage/reviews.type';
 import Image from 'next/image';
-import profileDefault from '@public/images/mypage/profile-default.svg';
 import { reviewRateTag } from '@/utils/mypage/statusTags';
 
 interface Props {
@@ -46,7 +45,6 @@ export function ReviewCard({ review }: Props) {
           </span>
           <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
           <span className="font-normal text-caption-normal text-gray300 ">
-            {/* //리뷰 작성 날짜 추가 필요 */}
             {new Date(review?.moims?.startDate).toLocaleDateString()}
           </span>
         </div>
@@ -67,8 +65,7 @@ export function ReviewCard({ review }: Props) {
           </span>
           <span className="w-[1px] h-2 border-l border-[#DEDBD9]" />
           <span className="font-normal text-caption-normal text-gray300">
-            {/* 리뷰 작성 날짜 추가 필요, 임시로 모임 시작 날짜 출력 */}
-            {new Date(review?.moims?.startDate).toLocaleDateString()}
+            {new Date(review?.createdAt).toLocaleDateString()}
           </span>
         </div>
       </div>
