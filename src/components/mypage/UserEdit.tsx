@@ -15,6 +15,7 @@ import { cn } from '@/utils/auth/ui.util';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { IUserEdit } from '@/types/mypage/user';
 import { sendPasswordResetEmail } from '@/apis/userInfo';
+
 export default function UserEdit() {
   const { data, isLoading, error } = useUserQuery();
   const { mutate: editUser, isPending: isEditing } = useEditUserMutation();
@@ -129,11 +130,6 @@ export default function UserEdit() {
     setPosition(value as 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND');
   };
 
-  // const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const text = e.target.value;
-  //   setPasswordInputValue(text);
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!isFormValid) return;
@@ -170,17 +166,6 @@ export default function UserEdit() {
     );
   }
 
-  // if (error) {
-  //   return (
-  //     <div className="flex flex-col gap-5 justify-center items-center h-screen">
-  //       <p className="text-error">사용자 정보를 불러오는데 실패했습니다.</p>
-  //       <Link href="/mypage" className="text-orange200">
-  //         마이페이지로 돌아가기
-  //       </Link>
-  //     </div>
-  //   );
-  // }
-
   if (!data) {
     return (
       <div className="flex flex-col gap-5 justify-center items-center h-screen">
@@ -206,7 +191,16 @@ export default function UserEdit() {
   })();
 
   const onClickUpdatePasswordBtn = async () => {
-    await sendPasswordResetEmail(data.email);
+    try {
+      await sendPasswordResetEmail(data.email);
+      alert('비밀번호 변경 이메일을 확인해주세요.');
+    } catch (error: any) {
+      if (error.error) {
+        alert('사용 가능한 이메일로 변경해주세요.');
+      } else {
+        alert('비밀번호 변경 이메일 전송에 실패했습니다.');
+      }
+    }
   };
 
   return (
