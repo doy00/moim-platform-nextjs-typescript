@@ -4,15 +4,14 @@ import { useAuth, useSignInMutation } from '@/hooks/auth/auth.hook';
 import { signInSchema, type TSignInSchema } from '@/schemas/auth/auth.schema';
 import { cn } from '@/utils/auth/ui.util';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 import { FormProvider, useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthLabelWithInput from './AuthLabelWithInput';
 import AuthLoading from './AuthLoading';
+import AuthLogos from './AuthLogos';
 import AuthQuestions from './AuthQuestions';
-import { DothemeetLogo } from './icons';
 
 export default function SignInForm() {
   const router = useRouter();
@@ -66,9 +65,7 @@ export default function SignInForm() {
 
       <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
         <div className="w-full h-14 flex items-center">
-          <Link href="/" className="cursor-pointer">
-            <DothemeetLogo />
-          </Link>
+          <AuthLogos />
         </div>
         <div className="w-full h-full flex flex-col items-center justify-start md:justify-center ">
           <FormProvider {...methods}>
