@@ -8,9 +8,9 @@ import { likeApi } from '@/apis/detail/detail.api';
 import { toast } from 'sonner';
 import { DuduEmpty } from '@/components/detail/icons/DuduEmpty';
 import { useAuth } from '@/hooks/auth/auth.hook';
-import { Header } from '@/components/mylike/Header';
 import { MyLikeSkeleton } from '@/components/mylike/MyLikeSkeleton';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { Header } from '@/components/detail/Header';
 
 export default function MyLikeContainer () {
   const router = useRouter();
