@@ -1,10 +1,6 @@
 import { IMoim } from '@/types/mypage/moim.type';
 import { IReview } from '@/types/mypage/reviews.type';
-import projectIcon from '@images/mypage/puzzle-on.svg';
-import studyIcon from '@images/mypage/open-book.svg';
-import interviewIcon from '@images/mypage/conversation-icon.svg';
-import emptyHeart from '@public/images/mypage/empty-heart.svg';
-import fullHeart from '@public/images/mypage/heart.svg';
+import { IUser } from '@/types/mypage/user';
 
 export const statusTag = (moim?: IMoim) => {
   if (moim?.status === 'END') {
@@ -40,17 +36,30 @@ export const moimTypeTag = (moim?: IMoim) => {
 
 export const moimTypeIcon = (moim?: IMoim) => {
   if (moim?.moimType === 'PROJECT') {
-    return projectIcon;
+    return '/images/mypage/puzzle-on.svg';
   } else if (moim?.moimType === 'STUDY') {
-    return studyIcon;
+    return '/images/mypage/open-book.svg';
   } else if (moim?.moimType === 'INTERVIEW') {
-    return interviewIcon;
+    return '/images/mypage/conversation-icon.svg';
+  }
+  return '/images/mypage/puzzle-on.svg'; // 기본값 설정
+};
+
+export const userPositionTag = (user?: IUser) => {
+  if (user?.position === 'FRONTEND') {
+    return '프론트엔드';
+  } else if (user?.position === 'BACKEND') {
+    return '백엔드';
+  } else if (user?.position === 'PM') {
+    return 'PM';
+  } else if (user?.position === 'DESIGNER') {
+    return '디자이너';
   }
 };
 
-export const moimHeartLike = (moim?: IMoim, isLiked?: boolean) => {
-  return {
-    icon: !moim?.likes || (moim.likes === 0 && !isLiked) ? emptyHeart : fullHeart,
-    count: moim?.likes ? (isLiked ? moim.likes - 1 : moim.likes + 1) : 0,
-  };
-};
+// export const moimHeartLike = (moim?: IMoim, isLiked?: boolean) => {
+//   return {
+//     icon: !moim?.likes || (moim.likes === 0 && !isLiked) ? emptyHeart : fullHeart,
+//     count: moim?.likes ? (isLiked ? moim.likes - 1 : moim.likes + 1) : 0,
+//   };
+// };

@@ -1,7 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { getReviews, postReview } from '@/apis/reviews';
 import { IReviewPost, IReviewResponse } from '@/types/mypage/reviews.type';
-import { useRouter } from 'next/router';
 
 export const useReviewQuery = () => {
   return useQuery({
@@ -18,13 +17,11 @@ interface ReviewMutationVariables extends IReviewPost {
 
 export const usePostReviewMutation = () => {
   const queryClient = useQueryClient();
-  // const router = useRouter();
 
   return useMutation<IReviewResponse, Error, ReviewMutationVariables>({
     mutationFn: ({ review, rate, moimId }) => postReview({ review, rate }, moimId),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['postReview'] });
-      // router.back();
     },
     onError: (error) => {
       console.error('리뷰 작성 실패:', error);
