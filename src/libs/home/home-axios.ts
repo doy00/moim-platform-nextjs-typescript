@@ -6,7 +6,7 @@ const axiosHomeInstance = axios.create({
 
 axiosHomeInstance.interceptors.request.use(
   (config) => {
-    if (typeof window !== "undefined") {
+    if (typeof window !== 'undefined') {
       const token = localStorage.getItem('access_token');
 
       if (token) {
@@ -21,7 +21,7 @@ axiosHomeInstance.interceptors.request.use(
   (error) => {
     console.error('Axios 요청 오류:', error);
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosHomeInstance;

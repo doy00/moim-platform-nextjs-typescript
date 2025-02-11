@@ -25,13 +25,13 @@ export default function HomeGnb() {
             <menu.icon
               className={clsx(
                 'w-6 h-6 transition-colors',
-                isActive ? 'fill-[#42424A]' : 'fill-[#B8B9C1]'
+                isActive ? 'fill-[#42424A]' : 'fill-[#B8B9C1]',
               )}
             />
             <span
               className={clsx(
                 'text-caption-normal',
-                isActive ? 'text-[#42424A]' : 'text-[#B8B9C1]'
+                isActive ? 'text-[#42424A]' : 'text-[#B8B9C1]',
               )}
             >
               {menu.name}
@@ -43,9 +43,7 @@ export default function HomeGnb() {
   });
 
   return (
-    <nav
-      className="sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg w-full h-[62px] mx-auto fixed bottom-0 left-0 right-0 bg-background200 font-bold text-xl z-10 min-w-[500px] max-w-[1040px] 2xl:hidden"
-    >
+    <nav className="sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg w-full h-[62px] mx-auto fixed bottom-0 left-0 right-0 bg-background200 font-bold text-xl z-10 min-w-[500px] max-w-[1040px] 2xl:hidden">
       <ul className="list-none w-full flex justify-between items-center text-sm px-6 py-[9px] mx-auto">
         {renderedGnbMenu}
       </ul>

@@ -13,12 +13,16 @@ export default function PendingReview({ participatedUser }: Props) {
   const { data, isLoading } = useParticipatedMoimQuery();
 
   if (isLoading) {
-    return <GatheringSkeleton />;
+    return (
+      <div className="flex flex-col gap-4 max-w-[960px] 2xl:grid 2xl:grid-cols-2 ">
+        <GatheringSkeleton />
+      </div>
+    );
   }
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center h-full gap-6">
+      <div className="flex flex-col justify-center items-center h-[400px]">
         <div className="flex flex-col justify-center items-center gap-4">
           <Image
             src="/images/mypage/dudu-empty.svg"
@@ -34,7 +38,7 @@ export default function PendingReview({ participatedUser }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
+    <div className="flex flex-col gap-4 max-w-[960px] 2xl:grid 2xl:grid-cols-2">
       {data
         ?.filter(
           (moim) =>

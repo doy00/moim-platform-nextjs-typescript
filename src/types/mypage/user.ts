@@ -6,14 +6,14 @@ export interface IUser {
   introduction: string | null;
   is_social: boolean;
   nickname: string;
-  position: string;
+  position: string | undefined;
   tags: string[] | null;
   updated_at: string;
 }
 
 export interface IMeJsonData {
   email: string;
-  password: string;
+  // password: string;
   nickname: string;
   position: string;
   introduction: string;
@@ -22,7 +22,7 @@ export interface IMeJsonData {
 
 export interface IUserEdit {
   email: string;
-  password: string;
+  // password: string;
   nickname: string;
   position: string;
   introduction: string;
@@ -44,7 +44,7 @@ export interface IEditUserResponse {
 
 export interface IMeJsonData {
   email: string;
-  password: string;
+  // password: string;
   nickname: string;
   position: string;
   introduction: string;

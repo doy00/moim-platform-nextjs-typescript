@@ -22,10 +22,14 @@ export const passwordEdit = async (password: string) => {
 };
 
 export const sendPasswordResetEmail = async (email: string) => {
-  const url = '/api/auth/send-recovery-email';
-  return await axiosInstance.post<IEditUserResponse, IEditUserResponse>(url, {
-    email,
-  });
+  try {
+    const url = '/api/auth/send-recovery-email';
+    const response = await axiosInstance.post(url, { email });
+    return response.data;
+  } catch (error) {
+    console.error('비밀번호 재설정 이메일 전송 에러:', error);
+    throw error;
+  }
 };
 
 export const resetPassword = async (password: string) => {

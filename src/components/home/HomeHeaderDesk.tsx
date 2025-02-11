@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import { useRouter, usePathname } from 'next/navigation';
@@ -12,7 +12,7 @@ import { HeaderAnimation } from '../mypage/LoadingAnimation';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { confirmSignout } from '../make/MakeSoner';
 import { MdLogout } from 'react-icons/md';
-import { PiSignOutBold } from "react-icons/pi";
+import { PiSignOutBold } from 'react-icons/pi';
 
 export default function HomeHeaderDesk() {
   const router = useRouter();
@@ -20,18 +20,16 @@ export default function HomeHeaderDesk() {
   const { signOut } = useAuth();
   const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
 
-  const showGnbDeskPaths = ['/', ,`/detail/`, '/mylike', '/mypage'];
+  const showGnbDeskPaths = ['/', , `/detail/`, '/mylike', '/mypage'];
   const isDetailPage = pathname.startsWith('/detail/');
 
-  const shouldGndDesk = showGnbDeskPaths.includes(pathname) || isDetailPage ;
+  const shouldGndDesk = showGnbDeskPaths.includes(pathname) || isDetailPage;
 
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('access_token'));
+  }, []);
 
-useEffect(() => {
-  setIsLoggedIn(!!localStorage.getItem("access_token"));
-}, []);
-
-if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌더링하지 않음
-
+  if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌더링하지 않음
 
   if (!shouldGndDesk) return null;
 
@@ -59,7 +57,7 @@ if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌�
   };
 
   const handleLogout = () => {
-    confirmSignout(signOut)
+    confirmSignout(signOut);
   };
 
   return (
@@ -87,11 +85,13 @@ if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌�
             </span>
           </div>
           {isLoggedIn && (
-            <div className='flex items-center space-x-2' onClick={handleLogout}>
-              <div className='rounded-full bg-orange200 w-6 h-6 flex items-center justify-center'>
+            <div className="flex items-center space-x-2" onClick={handleLogout}>
+              <div className="rounded-full bg-orange200 w-6 h-6 flex items-center justify-center">
                 <PiSignOutBold className="text-background200" />
               </div>
-              <label className='text-body-2-normal font-semibold text-gray300 hover:text-[#42424A]'>로그아웃</label>
+              <label className="text-body-2-normal font-semibold text-gray300 hover:text-[#42424A]">
+                로그아웃
+              </label>
             </div>
           )}
         </div>
