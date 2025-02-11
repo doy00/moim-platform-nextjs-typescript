@@ -3,6 +3,7 @@
 import Image from 'next/image';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { userPositionTag } from '@/utils/mypage/statusTags';
+import Link from 'next/link';
 
 // 공통 래퍼 컴포넌트
 const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -46,6 +47,15 @@ export default function MyProfile() {
                     {position}
                   </span>
                 )}
+                <Link href="/mypage/editUser">
+                  <Image
+                    src="/images/mypage/edit.svg"
+                    alt="edit"
+                    width={15}
+                    height={15}
+                    className="mt-3 -translate-x-1"
+                  />
+                </Link>
               </div>
               <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
             </div>
