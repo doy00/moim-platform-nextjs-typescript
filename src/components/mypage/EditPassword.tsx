@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { resetPassword } from '@/apis/userInfo';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { XCircle } from 'lucide-react';
 
 interface IUserValues {
   currentPassword: string;
@@ -83,7 +85,12 @@ export default function EditPassword() {
     const result = await resetPassword(newPassword);
 
     if (!result.redirectUrl) {
-      alert('비밀번호 변경에 실패했습니다');
+      toast.error('비밀번호 변경 실패', {
+        description: '비밀번호 변경에 실패했습니다',
+        icon: <XCircle className="w-5 h-5 text-red-500" />,
+        duration: 4000,
+        position: 'top-right',
+      });
       return;
     }
 

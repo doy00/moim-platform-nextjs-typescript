@@ -15,6 +15,8 @@ import { TAuthFormValues } from '@/types/auth/auth.type';
 import { IUserEdit } from '@/types/mypage/user';
 import { sendPasswordResetEmail } from '@/apis/userInfo';
 import TagInput from '@/components/common/TagInput';
+import { toast } from 'sonner';
+import { CheckCircle, XCircle } from 'lucide-react';
 
 type Position = 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND';
 
@@ -152,19 +154,32 @@ export default function UserEdit() {
   const onClickUpdatePasswordBtn = async () => {
     try {
       await sendPasswordResetEmail(data.email);
-      alert('비밀번호 변경 메일을 발송했습니다.');
+      toast.success('이메일 발송 완료', {
+        description: '비밀번호 변경 메일을 발송했습니다.',
+        icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+        duration: 4000,
+        position: 'top-right',
+      });
     } catch (error: any) {
       console.error('비밀번호 변경 이메일 전송 에러:', error);
 
+      let errorMessage = '비밀번호 변경 이메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.';
+
+      // 보안상의 이유로 48초 후에 시도해야하여 1분으로 변경
       if (error.response?.data?.error?.includes('48 seconds')) {
-        alert('보안상의 이유로 48초 후에 다시 시도해주세요.');
+        errorMessage = '1분 후에 다시 시도해주세요.';
       } else if (error.response?.status === 405) {
-        alert('현재 비밀번호 변경 서비스를 이용할 수 없습니다. 잠시 후 다시 시도해주세요.');
+        errorMessage = '현재 비밀번호 변경 서비스를 이용할 수 없습니다. 잠시 후 다시 시도해주세요.';
       } else if (error.response?.status === 400) {
-        alert('이메일 형식이 올바르지 않습니다.');
-      } else {
-        alert('비밀번호 변경 이메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.');
+        errorMessage = '이메일 형식이 올바르지 않습니다.';
       }
+
+      toast.error('비밀번호 변경 중 오류가 발생했습니다.', {
+        description: errorMessage,
+        icon: <XCircle className="w-5 h-5 text-red-500" />,
+        duration: 4000,
+        position: 'top-right',
+      });
     }
   };
 
