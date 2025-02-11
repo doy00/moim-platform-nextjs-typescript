@@ -14,9 +14,9 @@ interface IDetailContainerProps {
 }
 
 export default function DetailContainer({ moimId }: IDetailContainerProps) {
-  const { isMeLoading } = useAuth();    // 로그인 상태 확인
-  const { data: detail, isLoading: isDetailLoading, error } = useMoimDetail(moimId, { enabled: !isMeLoading });
-  const { isLiked, handleToggleLike } = useLikeMoim(moimId);
+  const { me, isMeLoading } = useAuth();    // 로그인 상태 확인
+  const { data: detail, isLoading: isDetailLoading, error } = useMoimDetail(moimId, { enabled: !isMeLoading, user: me });
+  const { isLiked, handleToggleLike } = useLikeMoim(moimId, { user: me });
   const { isJoined, canJoin, isHost, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
   const router = useRouter();
 
