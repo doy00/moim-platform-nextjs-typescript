@@ -1,5 +1,4 @@
 // 신청하기 버튼 컴포넌트
-
 interface IJoinButton {
   onJoinClick: () => void;
   isJoining?: boolean;
@@ -11,7 +10,7 @@ interface IJoinButton {
 export const JoinButton = ({ 
   onJoinClick,
   isJoining = false,
-  actionLabel = '신청하기',
+  actionLabel,
   disabled = false,
   className,
 }: IJoinButton) => {

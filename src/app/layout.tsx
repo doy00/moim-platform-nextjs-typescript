@@ -37,7 +37,7 @@ export default function RootLayout({
           {/* GNB는 HomeGnb 컴포넌트에서 관리 */}
           <HomeGnb />
         </QueryProvider>
-        <Toaster />
+        <Toaster position='top-right'/>
       </body>
     </html>
   );

@@ -1,8 +1,8 @@
 'use client';
 
 import Image from 'next/image';
-import defaultProfile from '@public/images/mypage/profile-default.svg';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
+import { userPositionTag } from '@/utils/mypage/statusTags';
 
 // 공통 래퍼 컴포넌트
 const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
@@ -15,6 +15,9 @@ const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
 
 export default function MyProfile() {
   const { data, isLoading } = useUserQuery();
+  const position = userPositionTag(data);
+
+  // console.log(position);
 
   if (isLoading) {
     return (
@@ -36,17 +39,21 @@ export default function MyProfile() {
         <div>
           <div className="flex gap-2 justify-between">
             <div className="flex flex-col gap-2">
-              <span className="text-lg font-semibold">{data?.nickname}</span>
+              <div className="flex gap-1.5">
+                <span className="text-lg font-semibold">{data?.nickname}</span>
+                <span className="rounded-[20px] px-2 py-1 bg-gray200 text-gray600 font-medium text-caption-normal">
+                  {position}
+                </span>
+              </div>
               <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
             </div>
             <Image
-              src={data?.image ?? defaultProfile}
+              src={data?.image ?? '/images/mypage/profile-default.svg'}
               alt="profile"
               width={64}
               height={64}
               className="rounded-full w-16 h-16"
             />
-            {/* <Image src={defaultProfile} alt="profile" width={64} height={64} /> */}
           </div>
           <div className="flex gap-1">
             {data?.tags?.map((tag) => (

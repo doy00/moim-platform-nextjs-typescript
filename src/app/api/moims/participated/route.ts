@@ -21,6 +21,16 @@ export async function GET() {
     return NextResponse.json({ message }, { status: userStatus });
   }
 
+  const { data: foundUser, error: foundUserError } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', user.email)
+    .single();
+
+  if (foundUserError) {
+    return NextResponse.json({ message: foundUserError?.message }, { status: 500 });
+  }
+
   const {
     data: participatedMoims,
     error: participatedMoimsError,
@@ -29,7 +39,7 @@ export async function GET() {
     .select(
       '*, moims (*, reviews (created_at, user_uuid, review, rate, user_email, user_image, user_nickname), participated_moims (user_uuid, user_email, user_image, user_nickname), liked_moims (user_uuid))',
     )
-    .eq('user_uuid', user.id);
+    .eq('user_uuid', foundUser.id);
 
   if (participatedMoimsError) {
     return NextResponse.json({ message: participatedMoimsError?.message }, { status: 500 });

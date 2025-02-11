@@ -1,11 +1,11 @@
 'use client';
 
 import { useAuth, useSignUpMutation } from '@/hooks/auth/auth.hook';
-import { TAuthFormValues } from '@/types/auth/auth.type';
+import { TSignUpSchema, signUpSchema } from '@/schemas/auth/auth.schema';
 import { cn } from '@/utils/auth/ui.util';
-import { useQueryClient } from '@tanstack/react-query';
+import { zodResolver } from '@hookform/resolvers/zod';
 import Link from 'next/link';
-import { useEffect, useId, useState } from 'react';
+import { useEffect, useId } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthLabelWithInput from './AuthLabelWithInput';
@@ -19,12 +19,15 @@ import { DothemeetLogo } from './icons';
 
 export default function SignUpForm() {
   const positionId = useId();
-
-  const [isPasswordConfirmed, setIsPasswordConfirmed] = useState(false);
-
-  const queryClient = useQueryClient();
-  const methods = useForm<TAuthFormValues>({
+  const methods = useForm<TSignUpSchema>({
+    resolver: zodResolver(signUpSchema),
     defaultValues: {
+      nickname: '',
+      email: '',
+      password: '',
+      passwordConfirm: '',
+      position: undefined,
+      introduction: '',
       tags: [{ value: '' }],
     },
   });
@@ -38,8 +41,17 @@ export default function SignUpForm() {
 
   const { me, isMeLoading } = useAuth();
 
-  const onSubmit = async (data: TAuthFormValues) => {
+  const handleOnBlur = () => {
+    if (methods.watch('position') === undefined) {
+      methods.setError('position', { type: 'manual', message: '직군을 선택해주세요' });
+    } else {
+      methods.clearErrors('position');
+    }
+  };
+
+  const onSubmit = async (data: TSignUpSchema) => {
     if (signUpError) return;
+    if (!data.email || !data.password || !data.nickname || !data.position) return;
     const signUpData = {
       email: data.email,
       password: data.password,
@@ -60,19 +72,20 @@ export default function SignUpForm() {
     !!methods.formState.errors.passwordConfirm ||
     !!methods.formState.errors.tags ||
     !!signUpError ||
-    !methods.formState.isValid;
+    !methods.formState.isValid ||
+    methods.watch('position') === undefined;
+
+  const isPasswordConfirmed =
+    methods.watch('password') === methods.watch('passwordConfirm') &&
+    !methods.formState.errors.passwordConfirm &&
+    methods.watch('password') !== '' &&
+    methods.watch('passwordConfirm') !== '';
 
   useEffect(() => {
     if (!signUpError) return;
     methods.setError('email', { type: 'manual', message: '이미 가입된 계정이에요' });
     methods.setFocus('email');
   }, [signUpError, methods]);
-
-  useEffect(() => {
-    if (methods.formState.errors.password) {
-      methods.setFocus('password');
-    }
-  }, [methods.formState.errors.password, methods]);
 
   if (me) return <AuthSignUpComplete me={me} />;
 
@@ -107,9 +120,6 @@ export default function SignUpForm() {
                         name="nickname"
                         label="닉네임"
                         placeholder="dothemeet"
-                        registerOptions={{
-                          required: '닉네임을 입력해주세요',
-                        }}
                         mutationReset={signUpReset}
                       />
 
@@ -117,13 +127,6 @@ export default function SignUpForm() {
                         name="email"
                         label="이메일"
                         placeholder="example@google.com"
-                        registerOptions={{
-                          required: '이메일을 입력해주세요',
-                          pattern: {
-                            value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            message: '올바른 이메일 형식을 입력해 주세요',
-                          },
-                        }}
                         mutationReset={signUpReset}
                       />
 
@@ -132,20 +135,8 @@ export default function SignUpForm() {
                         label="비밀번호"
                         placeholder="******"
                         isPassword
-                        registerOptions={{
-                          required: '비밀번호를 입력해주세요',
-                          pattern: {
-                            value: /^(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]{8,}$/,
-                            message: '특수문자 포함 8~20자 사이로 입력해주세요',
-                          },
-                          onChange: (e) => {
-                            if (e.target.value === methods.getValues('passwordConfirm')) {
-                              setIsPasswordConfirmed(true);
-                            }
-                          },
-                        }}
                         mutationReset={signUpReset}
-                        additionalErrors={
+                        additionalMessage={
                           !methods.formState.errors.password && (
                             <p className="text-label-normal text-gray300 font-semibold">
                               특수문자 포함 8~20자 사이로 입력해주세요
@@ -159,31 +150,13 @@ export default function SignUpForm() {
                         label="비밀번호 확인"
                         placeholder="******"
                         isPassword
-                        registerOptions={{
-                          required: '비밀번호를 다시 한번 입력해주세요',
-                          validate: (value) => {
-                            if (value === methods.watch('password')) {
-                              setIsPasswordConfirmed(true);
-                              methods.clearErrors('passwordConfirm');
-                              return true;
-                            }
-                            setIsPasswordConfirmed(false);
-                            return '비밀번호가 일치하지 않아요';
-                          },
-                        }}
                         mutationReset={signUpReset}
-                        additionalErrors={
-                          (isPasswordConfirmed &&
-                            !methods.formState.errors.passwordConfirm?.message && (
-                              <p className="text-green-500 text-label-normal font-medium">
-                                비밀번호가 일치합니다
-                              </p>
-                            )) ||
-                          (!isPasswordConfirmed && !methods.formState.errors.passwordConfirm && (
-                            <p className="text-label-normal text-gray300 font-semibold">
-                              특수문자 포함 8~20자 사이로 입력해주세요
+                        additionalMessage={
+                          isPasswordConfirmed && (
+                            <p className="text-green-500 text-label-normal font-medium">
+                              비밀번호가 일치합니다
                             </p>
-                          ))
+                          )
                         }
                       />
 
@@ -205,11 +178,12 @@ export default function SignUpForm() {
                               className={cn(
                                 'h-[54px]',
                                 (methods.formState.errors.position || signUpError) &&
-                                  'focus-visible:ring-error',
+                                  'border border-error',
                               )}
                               placeholder="직군을 선택해주세요"
-                              value={value}
+                              value={value ?? null}
                               onChange={onChange}
+                              onBlur={handleOnBlur}
                             />
                           )}
                           rules={{ required: '직군을 선택해주세요' }}
@@ -227,14 +201,8 @@ export default function SignUpForm() {
                         placeholder="소개를 입력해주세요"
                         isRequired={false}
                         className="h-[100px]"
-                        registerOptions={{
-                          maxLength: {
-                            value: 20,
-                            message: '최대 20자까지 입력 가능해요',
-                          },
-                        }}
                         mutationReset={signUpReset}
-                        additionalErrors={
+                        additionalMessage={
                           !methods.formState.errors.introduction && (
                             <p className="text-label-normal text-gray300 font-semibold">
                               최대 20자까지 입력 가능해요

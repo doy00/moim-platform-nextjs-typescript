@@ -3,7 +3,8 @@
 import { getDetail, likeApi } from '@/apis/detail/detail.api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '../auth/auth.hook';
-import { IMoimDetail } from '@/types/detail/t-moim';
+import { IMoimMasterResponse } from '@/types/detail/t-moim';
+import { QUERY_KEYS } from '@/constants/detail/detail.const';
 
 interface IUseLikeMoimOptions {
   onSuccess?: () => void;
@@ -15,13 +16,13 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   const { onSuccess, onError } = options;
 
   const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
-    queryKey: ['moim', moimId],
+    queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
     queryFn: () => getDetail(moimId),
     enabled: !!moimId,
   });
 
   // 현재 유저가 이 모임을 찜했는지 확인
-  const isLiked = me && moimDetail?.likedUsers?.includes(me.id);  // [ ] 빌드에러 확인해봤는데 TMe에 moimId가 없음
+  const isLiked = me && moimDetail?.moim.likedUsers?.includes(me.id);
   
   const { mutateAsync: toggleLike, isPending: isToggling } = useMutation({
     mutationFn: async () => {
@@ -32,26 +33,29 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
 
     // 낙관적 업데이트를 위한 onMutate
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: ['moim', moimId] });  // 진행중인 모든 관련 쿼리 취소
-      const previousMoim = queryClient.getQueryData<IMoimDetail>(['moim', moimId]);  // 현재 캐시된 데이터 저장
+      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.MOIM_DETAIL(moimId) });  // 진행중인 모든 관련 쿼리 취소
+      const previousData = queryClient.getQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId));  // 현재 캐시된 데이터 저장
       // 캐시 낙관적 업데이트
-      if (previousMoim && me) {
-        queryClient.setQueryData<IMoimDetail>(['moim', moimId], {
-          ...previousMoim,
-          likes: isLiked ? previousMoim.likes - 1 : previousMoim.likes + 1,
-          likedUsers: isLiked
-            ? previousMoim.likedUsers.filter(id => id !== me.id)
-            : [...previousMoim.likedUsers, me.id],
+      if (previousData?.moim && me) {
+        queryClient.setQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId), {
+          masterUser: previousData?.masterUser,   // master 정보는 유지
+          moim: {
+            ...previousData.moim,
+            likes: previousData.moim.likes + 1,
+            likedUsers: isLiked
+            ? previousData.moim.likedUsers.filter(id => id !== me.id)
+            : [...previousData.moim.likedUsers, me.id],
+          }
         });
       }
 
-      return { previousMoim };
+      return { previousData };
     },
 
     // 서버 응답 성공 시
     onSuccess: (response) => {
       // 모임 상세 데이터 캐시 업데이트
-      queryClient.setQueryData<IMoimDetail>(['moim', moimId], (oldData) => {
+      queryClient.setQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId), (oldData) => {
         if (!oldData || !me) return oldData;
         return {
           ...oldData,
@@ -68,8 +72,8 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
     // 에러 발생 시
     onError: (error, _, context) => {
       // 이전 상태로 롤백
-      if (context?.previousMoim) {
-        queryClient.setQueryData(['moim', moimId], context.previousMoim);
+      if (context?.previousData) {
+        queryClient.setQueryData(QUERY_KEYS.MOIM_DETAIL(moimId), context.previousData);
       }
       console.error('찜하기 토글 실패:', error);
       onError?.(error);
@@ -78,7 +82,6 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
 
   // 찜하기 토글 핸들러
   const handleToggleLike = async (e?: React.MouseEvent) => {
-    // e?.preventDefault();
     e?.stopPropagation();
     if (!me) throw new Error('로그인이 필요합니다');
     try {
@@ -92,6 +95,6 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
     isLiked: !!isLiked,
     handleToggleLike,
     isLoading: isLoadingDetail || isToggling || isMeLoading,
-    likesCount: moimDetail?.likes ?? 0,
+    likesCount: moimDetail?.moim.likes ?? 0,
   };
 };

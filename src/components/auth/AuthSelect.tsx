@@ -1,23 +1,32 @@
 'use client';
 
 import { cn } from '@/lib/utils';
+import { EPosition } from '@/types/supabase/supabase-custom.type';
 import { KeyboardEvent, useRef, useState } from 'react';
 import { AuthDropDown, AuthDropUp } from './icons';
 
 interface Option {
-  value: string;
+  value: EPosition;
   label: string;
 }
 
 interface CustomSelectProps {
   options: Option[];
   placeholder: string;
-  value: string | null;
+  value: EPosition | null;
   className?: string;
   onChange: (value: string) => void;
+  onBlur?: () => void;
 }
 
-function AuthSelect({ options, placeholder, value, className, onChange }: CustomSelectProps) {
+function AuthSelect({
+  options,
+  placeholder,
+  value,
+  className,
+  onChange,
+  onBlur,
+}: CustomSelectProps) {
   const [isOpen, setIsOpen] = useState(false);
   const [highlightedIndex, setHighlightedIndex] = useState<number | null>(null);
   const inputDivRef = useRef<HTMLDivElement>(null);
@@ -26,9 +35,14 @@ function AuthSelect({ options, placeholder, value, className, onChange }: Custom
     onChange(selectedValue);
     setIsOpen(false);
     setHighlightedIndex(null);
+    onBlur?.();
   };
 
   const handleToggle = () => {
+    if (isOpen) {
+      // 열려 있다가 닫히는 시점 => onBlur 호출
+      onBlur?.();
+    }
     setIsOpen((prev) => !prev);
     setHighlightedIndex(null);
   };
@@ -74,6 +88,7 @@ function AuthSelect({ options, placeholder, value, className, onChange }: Custom
         tabIndex={0}
         ref={inputDivRef}
         onFocus={handleOnFocus}
+        onBlur={onBlur}
         role="combobox"
         aria-controls="options-listbox"
         aria-expanded={isOpen}
