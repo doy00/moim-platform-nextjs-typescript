@@ -2,18 +2,18 @@
 'use client';
 import { getDetail, likeApi } from '@/apis/detail/detail.api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
-import { useAuth } from '../auth/auth.hook';
 import { IMoimMasterResponse } from '@/types/detail/t-moim';
 import { QUERY_KEYS } from '@/constants/detail/detail.const';
+import { TMe } from '@/types/auth/auth.type';
 
 interface IUseLikeMoimOptions {
+  user?: TMe | null;
   onSuccess?: () => void;
   onError?: (error: unknown) => void;
 }
 export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) => {
-  const { me, isMeLoading } = useAuth();
   const queryClient = useQueryClient();
-  const { onSuccess, onError } = options;
+  const { user, onSuccess, onError } = options;
 
   const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
     queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
@@ -22,11 +22,11 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   });
 
   // 현재 유저가 이 모임을 찜했는지 확인
-  const isLiked = me && moimDetail?.moim.likedUsers?.includes(me.id);
+  const isLiked = user && moimDetail?.moim.likedUsers?.includes(user.id);
   
   const { mutateAsync: toggleLike, isPending: isToggling } = useMutation({
     mutationFn: async () => {
-      if (!me) throw new Error('로그인이 필요합니다');
+      if (!user) throw new Error('로그인이 필요합니다');
       const response = await (isLiked ? likeApi.unlike(moimId) : likeApi.like(moimId));
       return response;
     },
@@ -36,15 +36,15 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.MOIM_DETAIL(moimId) });  // 진행중인 모든 관련 쿼리 취소
       const previousData = queryClient.getQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId));  // 현재 캐시된 데이터 저장
       // 캐시 낙관적 업데이트
-      if (previousData?.moim && me) {
+      if (previousData?.moim && user) {
         queryClient.setQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId), {
           masterUser: previousData?.masterUser,   // master 정보는 유지
           moim: {
             ...previousData.moim,
             likes: previousData.moim.likes + 1,
             likedUsers: isLiked
-            ? previousData.moim.likedUsers.filter(id => id !== me.id)
-            : [...previousData.moim.likedUsers, me.id],
+            ? previousData.moim.likedUsers.filter(id => id !== user.id)
+            : [...previousData.moim.likedUsers, user.id],
           }
         });
       }
@@ -56,7 +56,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
     onSuccess: (response) => {
       // 모임 상세 데이터 캐시 업데이트
       queryClient.setQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId), (oldData) => {
-        if (!oldData || !me) return oldData;
+        if (!oldData || !user) return oldData;
         return {
           ...oldData,
           ...response.data
@@ -83,7 +83,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   // 찜하기 토글 핸들러
   const handleToggleLike = async (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    if (!me) throw new Error('로그인이 필요합니다');
+    if (!user) throw new Error('로그인이 필요합니다');
     try {
       await toggleLike();
       return true;
@@ -94,7 +94,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   return {
     isLiked: !!isLiked,
     handleToggleLike,
-    isLoading: isLoadingDetail || isToggling || isMeLoading,
+    isLoading: isLoadingDetail || isToggling,
     likesCount: moimDetail?.moim.likes ?? 0,
   };
 };
