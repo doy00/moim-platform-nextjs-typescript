@@ -35,8 +35,13 @@ const CardContent = ({
               <span className="h-[24px] bg-background400 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray800">
                 {moimTypeTag(moim)}
               </span>
+              {/* 리뷰작성 시 상태값은 안보여도 되므로 hideStatus 설정해놓음 */}
               {!hideStatus && (
-                <span className="h-[24px] bg-gray800 py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal text-gray50">
+                <span
+                  className={`h-[24px] py-[3px] px-1.5 rounded-[6px] font-medium text-caption-normal ${
+                    moim?.status === 'END' ? 'bg-red200 text-red100' : 'bg-gray800 text-gray50'
+                  }`}
+                >
                   {statusTag(moim)}
                 </span>
               )}
