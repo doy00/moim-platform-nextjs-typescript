@@ -2,7 +2,7 @@
 import { getDetail, joinApi } from '@/apis/detail/detail.api';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/auth/auth.hook';
-import { IMoimDetail } from '@/types/detail/t-moim';
+import { IMoimDetail, IMoimMasterResponse } from '@/types/detail/t-moim';
 import { QUERY_KEYS } from '@/constants/detail/detail.const';
 
 interface IUseJoinMoimOptions {
@@ -23,9 +23,10 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
   });
 
   // 현재 유저가 이 모임을 이미 참여했는지 확인
-  const isJoined = me && moimDetail?.participatedUsers?.some(user => user.userUuid === me.id);
+  const isJoined = me && moimDetail?.moim.participatedUsers?.some(user => user.userUuid === me.id);
   // 참여 가능한 모임인지 확인 - 유저 신청 여부, 정원, 모집중(RECRUIT)
-  const canJoin = me && moimDetail && !isJoined && moimDetail.participants < moimDetail.maxParticipants && moimDetail.status === 'RECRUIT';
+  const canJoin = me && moimDetail && !isJoined && moimDetail.moim.participants < moimDetail.moim.maxParticipants && moimDetail.moim.status === 'RECRUIT';
+  const isHost = me && moimDetail?.masterUser.id === me.id;  
 
   const { mutateAsync: joinMutation, isPending: isJoining } = useMutation({
     mutationFn: async () => {
@@ -39,8 +40,8 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
     // 낙관적 업데이트
     onMutate: async () => {
       await queryClient.cancelQueries({ queryKey: QUERY_KEYS.MOIM_DETAIL(moimId) });
-      const previousMoim = queryClient.getQueryData<IMoimDetail>(QUERY_KEYS.MOIM_DETAIL(moimId));
-      if (previousMoim && me) {
+      const previousData = queryClient.getQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId));
+      if (previousData?.moim && me) {
         const newParticipant = {
           userUuid: me.id,
           userEmail: me.email,
@@ -48,13 +49,16 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
           userNickname: me.nickname,
         };
 
-        queryClient.setQueryData<IMoimDetail>(QUERY_KEYS.MOIM_DETAIL(moimId), {
-          ...previousMoim,
-          participants: previousMoim.participants + 1,
-          participatedUsers: [...previousMoim.participatedUsers, newParticipant],
+        queryClient.setQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId), {
+          masterUser: previousData?.masterUser,   // master 정보는 유지
+          moim: {
+            ...previousData?.moim,
+            participants: previousData.moim.participants + 1,
+            participatedUsers: [...previousData?.moim.participatedUsers, newParticipant],
+          }
         });
       }
-      return { previousMoim };
+      return { previousData };
     },
 
     // 서버 응답 성공시
@@ -68,19 +72,23 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
 
       onSuccess?.();
     },
-    onError: (error, _, context) => {
-      // 이전 상태로
-      if (context?.previousMoim) {
-        queryClient.setQueryData(QUERY_KEYS.MOIM_DETAIL(moimId), context.previousMoim);
+    // 이전 상태로 롤백
+    onError: (error, variables, context) => {
+      if (context?.previousData) {
+        queryClient.setQueryData<IMoimMasterResponse>(
+          QUERY_KEYS.MOIM_DETAIL(moimId),
+          context.previousData
+        );
       }
-      console.error('모임 참여 실패:', error);
-      onError?.(error);
-    },
+    }
   });
 
   // 참여 토글 핸들러
   const handleJoinMoim = async () => {
     if (!me) throw new Error('로그인이 필요합니다');
+    if (isHost) {
+      return { success: false, message: '내가 작성한 모임은 참여할 수 없습니다'};
+    }
     if (isJoined) {
       return { success: false, message: '이미 신청한 모임입니다'};
     }
@@ -98,9 +106,10 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
   return {
     isJoined: !!isJoined,
     canJoin: !!canJoin,
+    isHost: !!isHost,
     handleJoinMoim,
     isLoading: isLoadingDetail || isJoining || isMeLoading,
-    participantsCount: moimDetail?.participants ?? 0,
-    maxParticipants: moimDetail?.maxParticipants ?? 0,
+    participantsCount: moimDetail?.moim.participants ?? 0,
+    maxParticipants: moimDetail?.moim.maxParticipants ?? 0,
   };
 };
