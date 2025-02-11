@@ -6,7 +6,6 @@ import { Separator } from '../ui/separator';
 import { formatDate } from '@/utils/detail/date';
 import { getMoimTypeText } from '@/utils/detail/enums';
 import { IMoimDetail } from '@/types/detail/t-moim';
-import { EMoimStatus } from '@/types/supabase/supabase-custom.type';
 import Image from 'next/image';
 
 interface IStatusInfo {

@@ -1,4 +1,4 @@
-import { Header } from "../mylike/Header";
+import { Header } from "../detail/Header";
 import { GatheringSkeleton } from "../mypage/gatheringCard/GatheringCard";
 
 export const MyLikeSkeleton = () => {
