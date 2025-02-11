@@ -14,6 +14,11 @@ export default function HomeHeaderDesk() {
   const router = useRouter();
   const pathname = usePathname()
 
+  const showGnbDeskPaths = ['/','/mylike','/mypage']
+  const shouldGndDesk = showGnbDeskPaths.includes(pathname)
+
+  if (!shouldGndDesk) return null
+
   const renderedDeskMenu = GNB_MENU.map((menu) => {
     const isActive = pathname === menu.path;
 

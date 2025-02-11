@@ -43,13 +43,12 @@ export default function DateLocationStep() {
   };
 
   return (
-    <div className="flex flex-col space-y-6 px-5 h-[680px]">
+    <div className="flex flex-col space-y-6 px-5 min-h-[680px]">
       {/* 소개 */}
       <div className="flex flex-col items-start mb-10">
         <h1 className="text-title-2 font-semibold">모임의 장소와 날짜를 알려주세요</h1>
         <p className="text-body-2-normal text-gray400">장소와 날짜는 정확할수록 좋아요</p>
       </div>
-
       {/* 모임 장소 */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-700">
