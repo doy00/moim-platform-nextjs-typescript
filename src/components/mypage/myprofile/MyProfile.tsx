@@ -1,9 +1,9 @@
 'use client';
 
 import Image from 'next/image';
-import defaultProfile from '@public/images/mypage/profile-default.svg';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { userPositionTag } from '@/utils/mypage/statusTags';
+
 // 공통 래퍼 컴포넌트
 const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="px-3">
@@ -48,13 +48,12 @@ export default function MyProfile() {
               <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
             </div>
             <Image
-              src={data?.image ?? defaultProfile}
+              src={data?.image ?? '/images/mypage/profile-default.svg'}
               alt="profile"
               width={64}
               height={64}
               className="rounded-full w-16 h-16"
             />
-            {/* <Image src={defaultProfile} alt="profile" width={64} height={64} /> */}
           </div>
           <div className="flex gap-1">
             {data?.tags?.map((tag) => (

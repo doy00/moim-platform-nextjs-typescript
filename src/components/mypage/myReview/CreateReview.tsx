@@ -5,17 +5,9 @@ import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
 import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { IParticipatedMoim } from '@/types/mypage/moim.type';
-import close from '@public/images/mypage/close.svg';
-import badOff from '@public/images/mypage/dude-grade-bad-off.svg';
-import badOn from '@public/images/mypage/dude-grade-bad-on.svg';
-import greatOff from '@public/images/mypage/dude-grade-best-off.svg';
-import greatOn from '@public/images/mypage/dude-grade-best-on.svg';
-import goodOff from '@public/images/mypage/dude-grade-good-off.svg';
-import goodOn from '@public/images/mypage/dude-grade-good-on.svg';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
-// import defaultImage from '@public/images/mypage/camera.svg';
 import { usePostReviewMutation } from '@/hooks/mypage/queries/useReviewQuery';
 import { IReviewPost } from '@/types/mypage/reviews.type';
 import { useForm } from 'react-hook-form';
@@ -24,8 +16,6 @@ interface Props {
   moim: IParticipatedMoim;
 }
 
-// export default function CreateReview({ moim }: Props) {
-// Props 가 사용되지 않고, 빌드 에러 발생으로 우선 제거했습니다.
 export default function CreateReview() {
   const { data, isLoading, error: queryError } = useParticipatedMoimQuery();
   const { data: userData, error: userError } = useUserQuery();
@@ -55,11 +45,6 @@ export default function CreateReview() {
   );
 
   const isParticipatedUser = Boolean(userUuid && participatedUserUuid?.includes(userUuid));
-
-  // console.log('isParticipatedUser:', isParticipatedUser);
-  // console.log('participatedUserUuid:', participatedUserUuid);
-  // console.log('userUuid:', userUuid);
-  // console.log('moim:', moimId);
 
   const handleClose = () => {
     setShowModal(true);
@@ -96,12 +81,6 @@ export default function CreateReview() {
         return;
       }
 
-      // console.log('리뷰 제출:', {
-      //   review: data.review,
-      //   rate: data.rate,
-      //   moimId: currentMoim,
-      // });
-
       postReview(
         {
           review: data.review,
@@ -122,19 +101,6 @@ export default function CreateReview() {
     }
   };
 
-  // 이미지 처리 부분
-  // const handleImageClick = () => {
-  //   fileInputRef.current?.click();
-  // };
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   const file = e.target.files?.[0];
-  //   if (file) {
-  //     const imageUrl = URL.createObjectURL(file);
-  //     setPreviewImage(imageUrl);
-  //   }
-  // };
-
   if (isLoading || isPosting) {
     return (
       <div className="flex flex-col gap-5 justify-center items-center h-screen">
@@ -154,7 +120,7 @@ export default function CreateReview() {
           <div className="flex items-center justify-between">
             <span className="text-body-1-normal font-semibold text-gray800">리뷰 작성하기</span>
             <Image
-              src={close}
+              src="/images/mypage/close.svg"
               alt="close"
               width={24}
               height={24}
@@ -184,7 +150,11 @@ export default function CreateReview() {
           <div className="flex gap-7 items-center justify-center sm:justify-start">
             <button type="button" onClick={() => handleReview('SOSO')}>
               <Image
-                src={clicked === 'SOSO' ? badOn : badOff}
+                src={
+                  clicked === 'SOSO'
+                    ? '/images/mypage/dude-grade-bad-on.svg'
+                    : '/images/mypage/dude-grade-bad-off.svg'
+                }
                 alt="그냥그래요"
                 width={80}
                 height={112}
@@ -192,7 +162,11 @@ export default function CreateReview() {
             </button>
             <button type="button" onClick={() => handleReview('GOOD')}>
               <Image
-                src={clicked === 'GOOD' ? goodOn : goodOff}
+                src={
+                  clicked === 'GOOD'
+                    ? '/images/mypage/dude-grade-good-on.svg'
+                    : '/images/mypage/dude-grade-good-off.svg'
+                }
                 alt="괜찮아요"
                 width={80}
                 height={112}
@@ -200,7 +174,11 @@ export default function CreateReview() {
             </button>
             <button type="button" onClick={() => handleReview('RECOMMEND')}>
               <Image
-                src={clicked === 'RECOMMEND' ? greatOn : greatOff}
+                src={
+                  clicked === 'RECOMMEND'
+                    ? '/images/mypage/dude-grade-best-on.svg'
+                    : '/images/mypage/dude-grade-best-off.svg'
+                }
                 alt="추천해요"
                 width={80}
                 height={112}
@@ -224,35 +202,6 @@ export default function CreateReview() {
               placeholder="모임의 장소, 환경, 진행, 구성 등 만족스러웠나요?"
             />
           </div>
-
-          {/* 모임 관련 사진 유무 확인 */}
-          {/* <div className="flex flex-col gap-6">
-            <span>모임 관련 사진이 있나요?</span>
-            <div className="relative">
-              <input
-                type="file"
-                ref={fileInputRef}
-                onChange={handleFileChange}
-                accept="image/*"
-                className="hidden"
-              />
-              <div
-                onClick={handleImageClick}
-                className="w-full h-[140px] rounded-xl bg-background400 flex flex-col gap-2 items-center justify-center cursor-pointer"
-              >
-                <Image
-                  src={previewImage || defaultImage}
-                  alt="camera"
-                  width={32}
-                  height={32}
-                  className="object-contain"
-                />
-                <span className="text-label-normal font-medium text-gray400">
-                  이미지를 추가해주세요
-                </span>
-              </div>
-            </div>
-          </div> */}
 
           <button
             type="submit"
@@ -294,7 +243,7 @@ export default function CreateReview() {
       </div>
     );
   } else {
-    // 모달이나 페이지 생성 예정
+    // TODO : 모달이나 페이지 생성 예정
     return <div>이 모임의 참여자가 아닙니다.</div>;
   }
 }

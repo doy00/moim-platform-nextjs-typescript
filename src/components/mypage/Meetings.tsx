@@ -1,7 +1,5 @@
 import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
-import Link from 'next/link';
-import emptyDudu from '@public/images/mypage/dudu-empty.svg';
 import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { useMemo } from 'react';
 
@@ -39,7 +37,13 @@ export default function Meetings({
     return (
       <div className="flex flex-col justify-center items-center h-full gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
-          <Image src={emptyDudu} alt="empty" width={180} height={180} priority />
+          <Image
+            src="/images/mypage/dudu-empty.svg"
+            alt="empty"
+            width={180}
+            height={180}
+            priority
+          />
           <p className="text-body-2-reading text-gray300">아직 내 모임이 없어요</p>
         </div>
       </div>

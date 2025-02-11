@@ -1,6 +1,5 @@
 import { GatheringCard, GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCard';
 import Image from 'next/image';
-import emptyDudu from '@public/images/mypage/dudu-empty.svg';
 import Link from 'next/link';
 import { useMyMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { motion } from 'framer-motion';
@@ -49,7 +48,13 @@ export default function CreatedMeetings({
     return (
       <div className="flex flex-col justify-center items-center h-full gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
-          <Image src={emptyDudu} alt="empty" width={180} height={180} priority />
+          <Image
+            src="/images/mypage/dudu-empty.svg"
+            alt="empty"
+            width={180}
+            height={180}
+            priority
+          />
           <p className="text-body-2-reading text-gray300">아직 만든 모임이 없어요</p>
         </div>
         <motion.div

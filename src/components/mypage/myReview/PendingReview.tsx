@@ -3,7 +3,6 @@ import { GatheringSkeleton } from '@/components/mypage/gatheringCard/GatheringCa
 import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { IParticipatedUser } from '@/types/mypage/user';
 import Image from 'next/image';
-import EmptyDudu from '@public/images/mypage/dudu-empty.svg';
 
 interface Props {
   // moim?: IMyMoim;
@@ -21,7 +20,13 @@ export default function PendingReview({ participatedUser }: Props) {
     return (
       <div className="flex flex-col justify-center items-center h-full gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
-          <EmptyDudu alt="empty" width={180} height={180} />
+          <Image
+            src="/images/mypage/dudu-empty.svg"
+            alt="empty"
+            width={180}
+            height={180}
+            priority
+          />
           <p className="text-body-2-reading text-gray300">아직 작성 가능한 리뷰가 없어요</p>
         </div>
       </div>

@@ -55,7 +55,7 @@ export function ReviewCard({ review }: Props) {
 
       <div className="flex items-center justify-end gap-2">
         <Image
-          src={review?.userImage ?? profileDefault}
+          src={review?.userImage ?? '/images/mypage/profile-default.svg'}
           alt="profile"
           width={24}
           height={24}

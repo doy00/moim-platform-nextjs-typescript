@@ -1,8 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import closeEye from '@public/images/mypage/visibility_off.svg';
-import openEye from '@public/images/mypage/visibility_on.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { resetPassword } from '@/apis/userInfo';
@@ -44,7 +42,9 @@ const PasswordInput = ({
         className="bg-background400 w-full placeholder:text-gray300 outline-none"
       />
       <Image
-        src={showPassword ? openEye : closeEye}
+        src={
+          showPassword ? '/images/mypage/visibility_on.svg' : '/images/mypage/visibility_off.svg'
+        }
         alt="password visibility"
         className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
       />

@@ -3,7 +3,6 @@
 import Header from '@/components/mypage/header/Header';
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import defaultProfile from '@public/images/mypage/profile-edit-default.svg';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useEffect, useState, useRef } from 'react';
@@ -187,7 +186,7 @@ export default function UserEdit() {
       return data.image;
     }
 
-    return defaultProfile;
+    return '/images/mypage/profile-default.svg';
   })();
 
   const onClickUpdatePasswordBtn = async () => {

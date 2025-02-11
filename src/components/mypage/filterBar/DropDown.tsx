@@ -1,7 +1,6 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import arrowDownIcon from '@public/images/mypage/arrow-down.svg';
 import Image from 'next/image';
 import { motion, Variants } from 'framer-motion';
 
@@ -75,7 +74,7 @@ export default function DropDown({ onFilterChange, value }: DropDownProps) {
           animate={isOpen ? 'open' : 'closed'}
           transition={{ duration: 0.2 }}
         >
-          <Image src={arrowDownIcon} alt="arrow-down" width={24} height={24} />
+          <Image src="/images/mypage/arrow-down.svg" alt="arrow-down" width={24} height={24} />
         </motion.div>
       </motion.button>
 

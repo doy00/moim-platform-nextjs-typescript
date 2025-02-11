@@ -5,8 +5,6 @@ import { moimTypeTag, moimTypeIcon, statusTag } from '@/utils/mypage/statusTags'
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { useMoimLikeQuery } from '@/hooks/mypage/queries/useLikeyQuery';
 import { useMemo } from 'react';
-import emptyHeart from '@public/images/mypage/empty-heart.svg';
-import fullHeart from '@public/images/mypage/heart.svg';
 
 interface Props {
   moim: IMoim;
@@ -72,13 +70,19 @@ const CardContent = ({
             }}
             className="top-4 right-4 z-10"
           >
-            <Image src={isLiked ? fullHeart : emptyHeart} alt="heart" width={24} height={24} />
+            <Image
+              src={isLiked ? '/images/mypage/heart.svg' : '/images/mypage/empty-heart.svg'}
+              alt="heart"
+              width={24}
+              height={24}
+            />
           </div>
         </div>
       </div>
     </div>
   );
 };
+
 const GatheringWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="bg-background100 rounded-[14px] shadow-sm">{children}</div>
 );
@@ -127,6 +131,7 @@ export function GatheringCard({
   // console.log('myUuid : ', myUuid);
 
   // ================================================================
+
   const handleLikeClick = () => {
     likeMoim();
   };
