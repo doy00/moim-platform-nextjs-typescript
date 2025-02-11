@@ -1,10 +1,14 @@
 import { motion } from 'framer-motion';
-import { useState } from 'react';
 
-export default function SwitchFilter() {
-  const [isOn, setIsOn] = useState(false);
+interface SwitchFilterProps {
+  onFilterChange: (isConfirmed: boolean) => void;
+  isOn: boolean;
+}
 
-  const toggleSwitch = () => setIsOn(!isOn);
+export default function SwitchFilter({ onFilterChange, isOn }: SwitchFilterProps) {
+  const toggleSwitch = () => {
+    onFilterChange(!isOn);
+  };
 
   return (
     <div

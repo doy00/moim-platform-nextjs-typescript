@@ -9,18 +9,24 @@ import ReviewTabs from '@/components/mypage/myReview/ReviewTabs';
 
 export default function RenderTab() {
   const [activeTab, setActiveTab] = useState('meetings');
-  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
-
-  const handleCategorySelect = (category: string | null) => {
-    setSelectedCategory(category);
-  };
+  const [isConfirmed, setIsConfirmed] = useState(false);
 
   const handleStatusSelect = (status: string | null) => {
     setSelectedStatus(status);
+    setActiveTab(activeTab);
+  };
+
+  const handleConfirmedFilter = (isConfirmed: boolean) => {
+    setIsConfirmed(isConfirmed);
+    setActiveTab(activeTab);
   };
 
   const renderTab = () => {
+    if (activeTab === 'reviews') {
+      return <ReviewTabs />;
+    }
+
     return (
       <div className="relative">
         <AnimatePresence mode="wait">
@@ -33,11 +39,9 @@ export default function RenderTab() {
             className="relative w-full"
           >
             {activeTab === 'meetings' ? (
-              <Meetings />
-            ) : activeTab === 'my-reviews' ? (
-              <ReviewTabs />
+              <Meetings filter={selectedStatus || '전체'} isConfirmed={isConfirmed} />
             ) : activeTab === 'created-meetings' ? (
-              <CreatedMeetings />
+              <CreatedMeetings filter={selectedStatus || '전체'} isConfirmed={isConfirmed} />
             ) : null}
           </motion.div>
         </AnimatePresence>
@@ -64,7 +68,6 @@ export default function RenderTab() {
         >
           내 리뷰
         </button>
-
         <button
           className={`w-1/3 py-3.5 px-4 font-semibold text-sm ${
             activeTab === 'created-meetings' ? 'border-b-2 border-[#4A4642] ' : 'text-[#C1BDB8]'
@@ -75,9 +78,13 @@ export default function RenderTab() {
         </button>
       </div>
       {(activeTab === 'meetings' || activeTab === 'created-meetings') && (
-        <FilterBar onCategorySelect={handleCategorySelect} onStatusSelect={handleStatusSelect} />
+        <FilterBar
+          onStatusSelect={handleStatusSelect}
+          selectedStatus={selectedStatus}
+          onConfirmedFilter={handleConfirmedFilter}
+          isConfirmed={isConfirmed}
+        />
       )}
-      {activeTab === 'reviews' && <ReviewTabs />}
       {renderTab()}
     </div>
   );
