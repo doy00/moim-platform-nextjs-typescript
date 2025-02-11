@@ -26,6 +26,6 @@ export function useLikedMoims() {
     fetchNextPage: fetchNextPage,
     hasNextPage: hasNextPage,
     isFetchingNextPage: isFetchingNextPage,
-    isEmpty: moims.length === 0 && !isLoading,  // [ ] isEmpty
+    isEmpty: moims.length === 0 && !isLoading,
   }
 }

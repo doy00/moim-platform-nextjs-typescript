@@ -5,8 +5,6 @@ import { useClipboard } from "@/hooks/detail/useClipboard";
 import Image from "next/image";
 import { cn } from "@/utils/detail/cn";
 import { DeleteIcon } from "./icons/DeleteIcon";
-import { ToasterDark } from "./ToasterDark";
-
 interface IDetailShare {
   className?: string;
   content?: string;
@@ -62,7 +60,6 @@ export const DetailShare: React.FC<IDetailShare> = ({ className }) => {
                     </div>
         </div>
       </button>
-      <ToasterDark position="bottom-center" duration={2000}/>
     </div>
   )
 }

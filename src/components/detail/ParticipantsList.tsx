@@ -1,9 +1,7 @@
 // 모임 참여 신청을 한 유저들의 목록을 보여주는 컴포넌트입니다.
 import React, { useState } from 'react';
 import { cn } from "@/utils/detail/cn";
-import Image from "next/image";
 import { HoverCard, HoverCardContent, HoverCardTrigger, } from "@/components/detail/HoverCardUI"
-import { IParticipant } from '@/types/detail/t-moim';
 import { TParticipatedUserClient } from '@/types/supabase/supabase-custom.type';
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 import { ProfileImage } from './ProfileImage';

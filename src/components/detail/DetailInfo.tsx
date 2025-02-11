@@ -5,7 +5,6 @@ import { Separator } from "@/components/ui/separator"
 import { cn } from "@/utils/detail/cn";
 import { getMoimTypeText } from "@/utils/detail/enums";
 import { formatDate, getDeadlineText } from "@/utils/detail/date";
-import { ECategory, EMoimStatus } from "@/types/supabase/supabase-custom.type";
 
 interface IDetailInfoProps {
   title: string;
@@ -17,11 +16,11 @@ interface IDetailInfoProps {
   participants: number;
   minParticipants: number;
   maxParticipants: number;
-  moimType: ECategory;
-  status: EMoimStatus;
+  // moimType: ECategory;
+  // status: EMoimStatus;
+  moimType: string;
+  status: string;
   isConfirmed: boolean;
-  online: boolean;
-  masterEmail: string;
   className?: string;
 }
 export const DetailInfo: React.FC<IDetailInfoProps> = ({
@@ -37,11 +36,9 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
   moimType,
   status,
   isConfirmed,
-  online,
-  masterEmail,
   className,
 }) => {
-  const getStatusTag = (status: EMoimStatus): string => {
+  const getStatusTag = (status: string) => {
     if (status === 'END') {
       return '종료';
     } else if (maxParticipants === participants) {
@@ -59,9 +56,9 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
     >
       <div className="flex flex-col gap-4 w-full">
         <div className="flex gap-1.5">
-          <ChipSmallSquircle variant="light" text={getMoimTypeText(moimType)} />
           {isConfirmed && ( <ChipSmallSquircle variant="dark" text="개설 확정" /> )}
-          {online && ( <ChipSmallSquircle variant="light" text="온라인" /> )}
+          <ChipSmallSquircle variant="light" text={getMoimTypeText(moimType)} />
+          {/* {online && ( <ChipSmallSquircle variant="light" text="온라인" /> )} */}
           {getStatusTag  && ( <ChipSmallSquircle variant="light" text={getStatusTag(status)} /> )}
         </div>
         <div className="flex flex-col gap-1.5">

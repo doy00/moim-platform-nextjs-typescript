@@ -1,9 +1,18 @@
 // types/detail/i-presenter.ts
 import type { IMoimDetail, IParticipant, IReview } from './t-moim';
+import { TMe } from '../auth/auth.type';
+
+export interface IDetailHostProps {
+  nickname: string;
+  introduction?: string;
+  tags?: string[];
+  image?: string | null;
+}
 
 export interface IDetailPresenterProps {
   // 기본 데이터
   data: IMoimDetail | null;
+  masterUser: TMe | null;
   participants: IParticipant[];
   reviews: IReview[] | undefined;
   

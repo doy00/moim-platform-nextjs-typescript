@@ -1,30 +1,39 @@
 // types/detail/t-moims.ts
-import { ERate, ECategory, EMoimStatus,TParticipatedUserClient, TReviewClient } from "../supabase/supabase-custom.type";
+import { TMe } from "../auth/auth.type";
+import { ERate } from "../supabase/supabase-custom.type";
+import { TMoimClient } from "../supabase/supabase-custom.type";
 
 // 모임 상세  (새로운 구조에 맞게 수정)
-export interface IMoimDetail {
-  moimId: string;
-  title: string;
-  content: string;
-  address: string;
-  createdAt: string;
-  masterEmail: string;
-  recruitmentDeadline: string;
-  startDate: string;
-  endDate: string;
-  minParticipants: number;
-  maxParticipants: number;
-  moimType: ECategory;
-  status: EMoimStatus;
-  likes: number;
-  participants: number;
-  reviewsCount: number;
-  isConfirmed: boolean;
-  online: boolean;
-  likedUsers: string[];
-  participatedUsers: TParticipatedUserClient[];
-  reviews: TReviewClient[];
-}
+export type IMoimDetail = TMoimClient;
+// export interface IMoimDetail extends TMoimClient {
+//   moimId: string;
+//   title: string;
+//   content: string;
+//   address: string;
+//   createdAt: string;
+//   recruitmentDeadline: string;
+//   startDate: string;
+//   endDate: string;
+//   minParticipants: number;
+//   maxParticipants: number;
+//   moimType: ECategory;
+//   status: EMoimStatus;
+//   likes: number;
+//   participants: number;
+//   reviewsCount: number;
+//   isConfirmed: boolean;
+//   likedUsers: string[];
+//   participatedUsers: TParticipatedUserClient[];
+//   reviews: TReviewClient[];
+
+//   online: boolean;
+//   masterEmail: string;
+// }
+
+export type IMoimMasterResponse = {
+  moim: IMoimDetail;
+  masterUser: TMe;
+};
 
 // 모임 목록 응답
 export interface IMoimListResponse {
