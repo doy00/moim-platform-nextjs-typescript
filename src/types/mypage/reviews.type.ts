@@ -1,7 +1,7 @@
 import { IMoim } from '@/types/mypage/moim.type';
 
 export interface IReview {
-  created_at: string;
+  createdAt: string;
   user_image: string;
   rate: 'SOSO' | 'GOOD' | 'RECOMMEND';
   review: string;
