@@ -30,9 +30,32 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     return NextResponse.json({ message: '존재하지 않는 모임입니다' }, { status: 404 });
   }
 
+  const { data: masterUser, error: masterUserError } = await supabase
+    .from('users')
+    .select('*')
+    .eq('email', moim.master_email)
+    .single();
+
+  if (masterUserError) {
+    return NextResponse.json({ message: masterUserError?.message }, { status: 500 });
+  }
+
+  if (!masterUser) {
+    return NextResponse.json(
+      { message: '모임 주최자 정보를 찾는데 실패했습니다' },
+      { status: 500 },
+    );
+  }
+
   const moimToClient: TMoimClient[] = mapMoimsToClient([moim]);
 
-  return NextResponse.json(moimToClient[0], { status: 200 });
+  return NextResponse.json(
+    {
+      moim: moimToClient[0],
+      masterUser: masterUser,
+    },
+    { status: 200 },
+  );
 }
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
