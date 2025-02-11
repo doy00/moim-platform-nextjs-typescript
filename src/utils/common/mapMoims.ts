@@ -7,7 +7,7 @@ import {
 
 export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
   return moims.map((moim) => ({
-    createdAt: moim.created_at,
+    createdAt: new Date(moim.created_at).toISOString(),
     moimId: moim.id,
     title: moim.title,
     content: moim.content,
@@ -19,6 +19,7 @@ export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
     maxParticipants: moim.max_participants,
     moimType: moim.category,
     status: moim.status,
+    masterEmail: moim.master_email,
     likes: moim.liked_counts,
     participants: moim.participants_counts,
     reviewsCount: moim.reviews_counts,

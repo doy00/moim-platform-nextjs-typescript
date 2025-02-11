@@ -1,3 +1,4 @@
+import { TMe } from '../auth/auth.type';
 import { Enums, Tables } from './supabase';
 
 export type TMoims = Tables<'moims'>;
@@ -81,4 +82,9 @@ export type TReviewWithMoim = TReviews & {
 
 export type TReviewWithMoimClient = TReviewClient & {
   moims: TMoimClient;
+};
+
+export type TDetailMoimResponse = {
+  moim: TMoimClient;
+  masterUser: TMe;
 };
