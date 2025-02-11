@@ -1,7 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { useForm } from 'react-hook-form';
 import closeEye from '@public/images/mypage/visibility_off.svg';
 import openEye from '@public/images/mypage/visibility_on.svg';
 import Image from 'next/image';

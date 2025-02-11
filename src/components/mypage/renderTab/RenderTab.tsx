@@ -9,22 +9,13 @@ import ReviewTabs from '@/components/mypage/myReview/ReviewTabs';
 
 export default function RenderTab() {
   const [activeTab, setActiveTab] = useState('meetings');
-  // const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
   const [selectedStatus, setSelectedStatus] = useState<string | null>(null);
   const [isConfirmed, setIsConfirmed] = useState(false);
-  // const handleCategorySelect = (category: string | null) => {
-  //   setSelectedCategory(category);
-  // };
 
   const handleStatusSelect = (status: string | null) => {
     setSelectedStatus(status);
     setActiveTab(activeTab);
   };
-
-  // const handleTabChange = (tab: string) => {
-  //   setActiveTab(tab);
-  //   setSelectedStatus(null);
-  // };
 
   const handleConfirmedFilter = (isConfirmed: boolean) => {
     setIsConfirmed(isConfirmed);

@@ -1,6 +1,5 @@
 import SwitchFilter from '@/components/mypage/filterBar/SwitchFilter';
 import DropDown from '@/components/mypage/filterBar/DropDown';
-import Filter from '@/components/filter/Filter';
 
 interface FilterBarProps {
   onStatusSelect: (status: string | null) => void;

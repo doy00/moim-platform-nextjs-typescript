@@ -14,7 +14,6 @@ export interface IReview {
 export interface IReviewPost {
   review: string;
   rate?: 'SOSO' | 'GOOD' | 'RECOMMEND';
-  // moimId?: string;
 }
 
 export interface IReviewResponse {
