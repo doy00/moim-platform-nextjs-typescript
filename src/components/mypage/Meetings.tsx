@@ -22,7 +22,8 @@ export default function Meetings({
 
       if (filter === '전체') return true;
       if (filter === '모집중') return moim?.isConfirmed === false;
-      if (filter === '모집완료') return moim?.maxParticipants === moim?.participants;
+      if (filter === '모집완료')
+        return moim?.maxParticipants === moim?.participants && moim?.status !== 'END';
       if (filter === '종료') return moim.status === 'END';
       return true;
     });
