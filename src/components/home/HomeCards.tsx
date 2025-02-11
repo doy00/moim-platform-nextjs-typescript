@@ -61,7 +61,7 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
 
   return (
     <>
-      <div className="px-4 pt-[14px] space-y-4 bg-background300 min-h-[827px] pb-[62px]">
+      <div className="px-4 pt-[14px] space-y-4 bg-background300 min-h-[827px] pb-[62px] h-dvh">
         {sortedMoims.length > 0 ? (
           <div className="grid grid-cols-1 2xl:grid-cols-2 gap-x-5 gap-y-6">
             {sortedMoims.map((item) => (

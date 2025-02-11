@@ -7,7 +7,7 @@ import Image from 'next/image';
 import HeartIcon from './icons/HeartIcon';
 import { IMoim } from '@/types/home/i-moim';
 import { useLikeStore } from '@/stores/home/likeStore';
-import { useQueryClient } from '@tanstack/react-query';
+import { MOIM_TYPE_MAP } from '@/constants/home/card-constants';
 
 export default function HomeCard({ data }: { data: IMoim }) {
   const router = useRouter();
@@ -36,6 +36,8 @@ export default function HomeCard({ data }: { data: IMoim }) {
 
   const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('access_token');
 
+  const localizedMoimType = MOIM_TYPE_MAP[moimType] || moimType;
+
   return (
     <article
       className="flex min-w-[343px] h-[174px] bg-white p-4 space-x-5 cursor-pointer"
@@ -54,7 +56,7 @@ export default function HomeCard({ data }: { data: IMoim }) {
         <div className="flex justify-between items-center">
           <div className="space-x-1">
             <span className="text-caption-normal bg-background400 px-1.5 py-[3px] rounded-md">
-              {moimType}
+              {localizedMoimType}
             </span>
             <span
               className={`text-caption-normal ${confirmedText === '종료' ? 'bg-red200' : 'bg-gray800'} text-white px-1.5 py-[3px] rounded-md`}
