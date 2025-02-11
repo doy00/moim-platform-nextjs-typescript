@@ -22,7 +22,7 @@ export default function UserEdit() {
 
   // 리액트훅폼 document 참고
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [image, setImage] = useState<File | null>(null);
+  // const [image, setImage] = useState<File | null>(null);
   const [emailInputValue, setEmailInputValue] = useState('');
   const [nicknameInputValue, setNicknameInputValue] = useState('');
   const [textareaValue, setTextareaValue] = useState(''); // 변수명 명확하게 수정
@@ -30,14 +30,13 @@ export default function UserEdit() {
   const [tagInputValue, setTagInputValue] = useState('');
   const [position, setPosition] = useState<'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND'>('PM');
 
-  const [passwordInputValue, setPasswordInputValue] = useState('');
-
   // TODO : zod 라이브러리 사용해보기 타입으로 가능함
   const [isEmailInputExceeded, setIsEmailInputExceeded] = useState(false);
   const [isNicknameInputExceeded, setIsNicknameInputExceeded] = useState(false);
   const [isTextAreaExceeded, setIsTextAreaExceeded] = useState(false);
   const [isTagInputExceeded, setIsTagInputExceeded] = useState(false);
   const [isTagTextExceeded, setIsTagTextExceeded] = useState(false);
+  const [isTagIncludeExceeded, setIsTagIncludeExceeded] = useState(false);
 
   const methods = useForm<TAuthFormValues>({
     defaultValues: {
@@ -65,16 +64,15 @@ export default function UserEdit() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // setImage(file);
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
     }
   };
 
-  const textAreaHandleInput = () => {
-    const text = textareaValue;
-    setIsTextAreaExceeded(text.length > 20);
-  };
+  // const textAreaHandleInput = () => {
+  //   const text = textareaValue;
+  //   setIsTextAreaExceeded(text.length > 20);
+  // };
 
   const nicknameInputHandleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const text = e.target.value;
@@ -98,32 +96,73 @@ export default function UserEdit() {
   // 변수명에 성격?이 명확하면 index는 간결하게 해도 됨
   const handleRemoveTag = (indexToRemove: number) => {
     setTags(tags?.filter((_, index) => index !== indexToRemove) || []);
+    setIsTagInputExceeded(false);
+
+    setIsTagTextExceeded(false);
   };
 
   const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.key === 'Enter') {
       e.preventDefault();
 
-      //마지막 글자가 확정되지 않은 상태에서 엔터키를 누르면 글자가 다음 태그로 넘어가는 문제가 발생(IME(Input Method Editor) 이슈) 추가함.
       if (e.nativeEvent.isComposing) return;
 
-      // TODO : 조건을 한글로 풀어놓은 상태에서 코딩으 하면 덜 혼란스러움 의존성 생각하고 우선순위를 생각해서 배치해야함.
       const newTag = tagInputValue.trim();
-      if (newTag && !tags.includes(newTag) && tags.length < 3) {
-        setTags([...tags, newTag]);
-        setTagInputValue('');
-        setIsTagInputExceeded(false);
-      } else {
-        setIsTagInputExceeded(true);
-      }
 
+      // 태그 개수 체크
+      if (tags.length === 3) {
+        setIsTagInputExceeded(true);
+        return;
+      }
+      setIsTagInputExceeded(false);
+
+      // 태그 길이 체크
       if (newTag.length > 5) {
         setIsTagTextExceeded(true);
-      } else {
-        setIsTagTextExceeded(false);
+        return;
+      }
+      setIsTagTextExceeded(false);
+
+      // 태그 중복 체크
+      if (tags.includes(newTag)) {
+        setIsTagIncludeExceeded(true);
+        return;
+      }
+      setIsTagIncludeExceeded(false);
+
+      // 태그 추가 로직
+      if (newTag && !tags.includes(newTag)) {
+        setTags([...tags, newTag]);
+        setTagInputValue('');
       }
     }
   };
+
+  const tagExceeded = (() => {
+    if (isTagInputExceeded) {
+      return (
+        <span className="text-label-normal font-medium text-error">최대 3개까지 입력 가능해요</span>
+      );
+    }
+
+    if (isTagTextExceeded) {
+      return (
+        <span className="text-label-normal font-medium text-error">
+          최대 5글자까지 입력 가능해요
+        </span>
+      );
+    }
+
+    if (isTagIncludeExceeded) {
+      return <span className="text-label-normal font-medium text-error">이미 추가된 태그에요</span>;
+    }
+
+    return (
+      <span className="text-label-normal font-medium text-gray300">
+        최대 5글자까지 입력 가능해요
+      </span>
+    );
+  })();
 
   const handlePositionChange = (value: string) => {
     setPosition(value as 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND');
@@ -138,9 +177,8 @@ export default function UserEdit() {
       nickname: nicknameInputValue,
       introduction: textareaValue || '',
       tags: tags || [],
-      password: passwordInputValue || '',
       position: position || '',
-      image: image || undefined,
+      // image: previewImage || undefined,
     };
 
     console.log('폼 제출 데이터:', editData);
@@ -363,9 +401,16 @@ export default function UserEdit() {
                     type="text"
                     id="tag"
                     value={tagInputValue}
-                    onChange={(e) => setTagInputValue(e.target.value)}
+                    onChange={(e) => {
+                      const inputValue = e.target.value;
+                      if (inputValue.length <= 5) {
+                        setTagInputValue(inputValue);
+                        setIsTagTextExceeded(false);
+                      } else {
+                        setIsTagTextExceeded(true);
+                      }
+                    }}
                     onKeyDown={handleTagInput}
-                    maxLength={5}
                     placeholder="# 태그추가"
                     className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-caption-normal font-medium placeholder:text-gray300 w-[90px]"
                   />
@@ -375,12 +420,8 @@ export default function UserEdit() {
                       key={index}
                       className="flex items-center gap-2 px-4 bg-background400 rounded-xl justify-between"
                     >
-                      {/* 키 필요 없음 */}
-                      <span
-                        key={index}
-                        className="inline-flex items-center text-caption-normal font-medium text-gray600 "
-                      >
-                        #{tag}
+                      <span className="inline-flex items-center text-caption-normal font-medium text-gray600 ">
+                        # {tag}
                       </span>
                       <button
                         type="button"
@@ -392,18 +433,7 @@ export default function UserEdit() {
                     </div>
                   ))}
                 </div>
-                {/* TODO: 즉시실행함수로 사용해보기 */}
-                <span
-                  className={`text-label-normal font-medium ${
-                    isTagInputExceeded || isTagTextExceeded ? 'text-error' : 'text-gray300'
-                  }`}
-                >
-                  {isTagInputExceeded
-                    ? '최대 3개까지 입력 가능해요'
-                    : isTagTextExceeded
-                      ? '최대 5글자까지 입력 가능해요'
-                      : ''}
-                </span>
+                {tagExceeded}
               </div>
             </div>
             <button
