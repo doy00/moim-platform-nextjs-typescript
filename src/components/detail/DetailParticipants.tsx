@@ -1,7 +1,6 @@
 // 현재 참여 인원수와 참여 유저 목록을 알 수 있는 컴포넌트입니다.
 import React from "react";
 import { cn } from "@/utils/detail/cn";
-// import { IMoimDetail } from "@/types/detail/t-moim";
 import { ParticipantsProgress } from "./ParticipantsProgress";
 import { ParticipantsList } from "./ParticipantsList";
 import { TParticipatedUserClient } from "@/types/supabase/supabase-custom.type";

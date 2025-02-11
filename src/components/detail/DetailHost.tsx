@@ -7,7 +7,7 @@ import { ChipSmallRound } from "./ChipSmallRound";
 import { EPosition } from "@/types/supabase/supabase-custom.type";
 import { getPosition } from "@/utils/detail/enums";
 
-interface IDetailHostProps {
+export interface IDetailHostProps {
   nickname: string;
   introduction?: string | null;
   tags?: string[] | null;
