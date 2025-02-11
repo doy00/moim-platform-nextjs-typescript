@@ -27,7 +27,7 @@ export default function DescriptionStep() {
   };
 
   return (
-    <div className="flex flex-col space-y-4 px-5 h-[680px]">
+    <div className="flex flex-col space-y-4 px-5 min-h-[680px]">
       <div className="flex flex-col items-start mb-10">
         <h1 className="text-title-2 font-semibold">모임을 소개해주세요</h1>
         <p className="text-body-2-normal text-gray400">모임에서 어떤 활동을 할까요?</p>
@@ -62,12 +62,12 @@ export default function DescriptionStep() {
       </div>
       <div>
         <label className="block text-sm font-medium text-gray-700">이미지</label>
-        <div className="relative w-[120px] h-[120px] mt-2 bg-background400 rounded-md flex items-center justify-center">
+        <div className="relative w-[120px] h-[120px] md:w-[240px] md:h-[240px] 2xl:w-[480px] 2xl:h-[480px] mt-2 bg-background400 rounded-md flex items-center justify-center transition-all duration-300">
           {image ? (
             <div className="relative w-full h-full group">
               <img src={URL.createObjectURL(image)} alt="uploaded" className="w-full h-full object-cover rounded-2xl" />
               <button
-                onClick={() => setImage(null)} // 이미지 삭제 시 setImage(null) 호출
+                onClick={() => setImage(null)} 
                 className="absolute top-0 hidden group-hover:flex bg-gray900 bg-opacity-40 w-full h-full rounded-2xl text-white text-lg items-center justify-center"
               >
                 <DeleteFillIcon className="fill-[#c4c4c4]" />

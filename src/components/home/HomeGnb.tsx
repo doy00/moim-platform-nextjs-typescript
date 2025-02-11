@@ -10,7 +10,7 @@ import { GNB_MENU } from '@/constants/home/gnb-menu';
 export default function HomeGnb() {
   const pathname = usePathname();
 
-  const showGnbPaths = ['/', '/favorites', '/mypage', '/mylike',];
+  const showGnbPaths = ['/', '/mylike', '/mypage'];
   const shouldShowGnb = showGnbPaths.includes(pathname);
 
   if (!shouldShowGnb) return null;

@@ -17,6 +17,14 @@ export const useLikeStore = create<LikeState>((set, get) => ({
     const currentDeltas = { ...get().likeDeltas };
     const isLiked = currentLikes.has(moimId);
 
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        console.warn('비로그인 상태에서는 좋아요를 변경할 수 없습니다.');
+        return;
+      }
+    }
+
     try {
       if (isLiked) {
         await axiosHomeInstance.delete(`/moims/${moimId}/like`);
@@ -33,23 +41,23 @@ export const useLikeStore = create<LikeState>((set, get) => ({
       }
       set({ likes: currentLikes, likeDeltas: currentDeltas });
     } catch (error: any) {
-      if (error.response?.data?.message === '이미 찜한 모임이에요') {
-        currentLikes.add(moimId);
-        currentDeltas[moimId] = (currentDeltas[moimId] || 0) + 0;
-        set({ likes: currentLikes, likeDeltas: currentDeltas });
-      } else {
-        console.error('Failed to toggle like:', error);
-      }
+      console.error('Failed to toggle like:', error);
     }
   },
 
   fetchLikes: async () => {
+    if (typeof window !== "undefined") {
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        console.warn('비로그인 상태에서는 좋아요 목록을 가져올 수 없습니다.');
+        return;
+      }
+    }
+
     try {
       const response = await axiosHomeInstance.get('/moims/liked');
       const likedMoims = response.data.data;
-
       const likedIds = likedMoims.map((moim: any) => moim.moimId);
-
       set({ likes: new Set(likedIds), likeDeltas: {} });
     } catch (error) {
       console.error('Failed to fetch likes:', error);
