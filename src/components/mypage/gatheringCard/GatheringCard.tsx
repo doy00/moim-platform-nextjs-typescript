@@ -10,6 +10,7 @@ interface Props {
   moim: IMoim;
   hideStatus?: boolean;
   hideReviewButton?: boolean;
+  hideLikeButton?: boolean;
   disableLink?: boolean;
   showInReviewTab?: boolean;
   refetch?: () => void;
@@ -19,11 +20,13 @@ const CardContent = ({
   hideStatus,
   handleLikeClick,
   isLiked,
+  hideLikeButton,
 }: {
   moim: IMoim;
   hideStatus: boolean;
   handleLikeClick: () => void;
   isLiked: boolean;
+  hideLikeButton?: boolean;
 }) => {
   return (
     <div className="flex flex-col">
@@ -75,12 +78,14 @@ const CardContent = ({
             }}
             className="top-4 right-4 z-10"
           >
-            <Image
-              src={isLiked ? '/images/mypage/heart.svg' : '/images/mypage/empty-heart.svg'}
-              alt="heart"
-              width={24}
-              height={24}
-            />
+            {!hideLikeButton && (
+              <Image
+                src={isLiked ? '/images/mypage/heart.svg' : '/images/mypage/empty-heart.svg'}
+                alt="heart"
+                width={24}
+                height={24}
+              />
+            )}
           </div>
         </div>
       </div>
@@ -97,6 +102,7 @@ export function GatheringCard({
   hideStatus = false,
   hideReviewButton = false,
   disableLink = false,
+  hideLikeButton = false,
   showInReviewTab = false,
   refetch,
 }: Props) {
@@ -149,6 +155,7 @@ export function GatheringCard({
           hideStatus={hideStatus}
           handleLikeClick={handleLikeClick}
           isLiked={isLiked}
+          hideLikeButton={hideLikeButton}
         />
       ) : (
         <Link href={`/detail/${moim?.moimId}`}>
@@ -157,10 +164,11 @@ export function GatheringCard({
             hideStatus={hideStatus}
             handleLikeClick={handleLikeClick}
             isLiked={isLiked}
+            hideLikeButton={hideLikeButton}
           />
         </Link>
       )}
-      {!hideReviewButton && showReviewButton && (
+      {!hideReviewButton && showReviewButton && !hideLikeButton && (
         <div className="p-4 pt-0">
           <Link
             href={`/mypage/review/${moim.moimId}`}

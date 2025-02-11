@@ -6,17 +6,18 @@ import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { IParticipatedMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useState, useMemo, useEffect } from 'react';
 import { usePostReviewMutation } from '@/hooks/mypage/queries/useReviewQuery';
 import { IReviewPost } from '@/types/mypage/reviews.type';
 import { useForm } from 'react-hook-form';
-
-interface Props {
-  moim: IParticipatedMoim;
-}
+import Header from '@/components/mypage/header/Header';
 
 export default function CreateReview() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const urlMoimId = pathname.split('/').pop();
+
   const { data, isLoading, error: queryError } = useParticipatedMoimQuery();
   const { data: userData, error: userError } = useUserQuery();
   const { mutate: postReview, isPending: isPosting } = usePostReviewMutation();
@@ -24,7 +25,7 @@ export default function CreateReview() {
   const [clicked, setClicked] = useState('');
   const [review, setReview] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const router = useRouter();
+  const [filteredData, setFilteredData] = useState<IParticipatedMoim[]>([]);
 
   const methods = useForm<IReviewPost>({
     defaultValues: {
@@ -34,17 +35,15 @@ export default function CreateReview() {
     mode: 'onChange',
   });
 
-  // 파생 데이터 계산
-  const userUuid = userData?.id;
   const nickname = userData?.nickname;
-  const moimId = data?.map((m) => m.moimId);
 
-  // 기존 map 사용 시 중첩 배열이 생성되어 단일 배열로 변환하는 flatMap 사용
-  const participatedUserUuid = data?.flatMap((m) =>
-    m.participatedUsers.map((user) => user.userUuid),
-  );
-
-  const isParticipatedUser = Boolean(userUuid && participatedUserUuid?.includes(userUuid));
+  // filteredData 로직을 useEffect로 감싸 초기 렌더링 시에도 적용되게 수정
+  useEffect(() => {
+    if (data && urlMoimId) {
+      const filtered = data.filter((moim) => moim.moimId === urlMoimId);
+      setFilteredData(filtered);
+    }
+  }, [data, urlMoimId]);
 
   const handleClose = () => {
     setShowModal(true);
@@ -68,15 +67,7 @@ export default function CreateReview() {
     setSubmitError(null);
 
     try {
-      // data 배열에서 첫 번째 모임 정보를 사용
-      const currentMoim = moimId?.[0];
-
-      console.log('제출 데이터:', {
-        currentMoim,
-        reviewData: data,
-      });
-
-      if (!currentMoim) {
+      if (!urlMoimId) {
         setSubmitError('없는 모임');
         return;
       }
@@ -85,10 +76,9 @@ export default function CreateReview() {
         {
           review: data.review,
           rate: data.rate,
-          moimId: currentMoim,
+          moimId: urlMoimId,
         },
         {
-          // 리뷰 작성 후 페이지 새로고침해야 데이터 반영이 됨
           onSuccess: () => {
             window.location.href = '/mypage';
           },
@@ -114,131 +104,137 @@ export default function CreateReview() {
   }
 
   return (
-    <div className="flex flex-col gap-10 p-4">
-      <div className="flex flex-col gap-6">
-        <div className="flex items-center justify-between">
-          <span className="text-body-1-normal font-semibold text-gray800">리뷰 작성하기</span>
-          <Image
-            src="/images/mypage/close.svg"
-            alt="close"
-            width={24}
-            height={24}
-            onClick={handleClose}
-            className="cursor-pointer"
-          />
-        </div>
-        <span className="text-heading1 text-gray800 font-semibold">
-          {nickname}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
-        </span>
-      </div>
-      <div>
-        {data?.map((moim) => (
-          <GatheringCard
-            moim={moim}
-            key={moim.moimId}
-            hideStatus={true}
-            hideReviewButton={true}
-            disableLink={true}
-          />
-        ))}
-      </div>
-
-      <form className="flex flex-col gap-6" onSubmit={methods.handleSubmit(onSubmit)}>
-        <span>모임은 어땠나요?</span>
-
-        <div className="flex gap-7 items-center justify-center sm:justify-start">
-          <button type="button" onClick={() => handleReview('SOSO')}>
-            <Image
-              src={
-                clicked === 'SOSO'
-                  ? '/images/mypage/dude-grade-bad-on.svg'
-                  : '/images/mypage/dude-grade-bad-off.svg'
-              }
-              alt="그냥그래요"
-              width={80}
-              height={112}
-            />
-          </button>
-          <button type="button" onClick={() => handleReview('GOOD')}>
-            <Image
-              src={
-                clicked === 'GOOD'
-                  ? '/images/mypage/dude-grade-good-on.svg'
-                  : '/images/mypage/dude-grade-good-off.svg'
-              }
-              alt="괜찮아요"
-              width={80}
-              height={112}
-            />
-          </button>
-          <button type="button" onClick={() => handleReview('RECOMMEND')}>
-            <Image
-              src={
-                clicked === 'RECOMMEND'
-                  ? '/images/mypage/dude-grade-best-on.svg'
-                  : '/images/mypage/dude-grade-best-off.svg'
-              }
-              alt="추천해요"
-              width={80}
-              height={112}
-            />
-          </button>
-        </div>
-        {submitError && <div className="text-red-500 text-sm mt-2">{submitError}</div>}
-
+    <>
+      <Header />
+      <div className="flex flex-col gap-10 p-4 md:max-w-[584px] mx-auto lg:max-w-[664px] xl:max-w-[664px] ['2xl']:max-w-[664px]">
         <div className="flex flex-col gap-6">
-          <label htmlFor="review" className="text-body-2-nomal font-medium text-gray-800">
-            구체적인 경험을 알려주세요
-          </label>
-          <textarea
-            id="review"
-            value={review}
-            onChange={(e) => {
-              setReview(e.target.value);
-              methods.setValue('review', e.target.value);
-            }}
-            className="w-full h-40 rounded-xl px-4 py-[18px] bg-background400 resize-none outline-none"
-            placeholder="모임의 장소, 환경, 진행, 구성 등 만족스러웠나요?"
-          />
+          <div className="flex items-center justify-between">
+            <span className="text-body-1-normal font-semibold text-gray800">리뷰 작성하기</span>
+            <Image
+              src="/images/mypage/close.svg"
+              alt="close"
+              width={24}
+              height={24}
+              onClick={handleClose}
+              className="cursor-pointer"
+            />
+          </div>
+          <span className="text-heading1 text-gray800 font-semibold">
+            {nickname}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
+          </span>
+        </div>
+        <div>
+          {filteredData?.map((moim) => (
+            <div key={moim.moimId}>
+              <GatheringCard
+                moim={moim}
+                hideStatus={true}
+                hideReviewButton={true}
+                hideLikeButton={true}
+                disableLink={true}
+                showInReviewTab={true}
+              />
+            </div>
+          ))}
         </div>
 
-        <button
-          type="submit"
-          disabled={isDisabled}
-          className={`w-full h-14 rounded-2xl py-[17px] text-body-1-nomal font-semibold
+        <form className="flex flex-col gap-6" onSubmit={methods.handleSubmit(onSubmit)}>
+          <span>모임은 어땠나요?</span>
+
+          <div className="flex gap-7 items-center justify-center sm:justify-start">
+            <button type="button" onClick={() => handleReview('SOSO')}>
+              <Image
+                src={
+                  clicked === 'SOSO'
+                    ? '/images/mypage/dude-grade-bad-on.svg'
+                    : '/images/mypage/dude-grade-bad-off.svg'
+                }
+                alt="그냥그래요"
+                width={80}
+                height={112}
+              />
+            </button>
+            <button type="button" onClick={() => handleReview('GOOD')}>
+              <Image
+                src={
+                  clicked === 'GOOD'
+                    ? '/images/mypage/dude-grade-good-on.svg'
+                    : '/images/mypage/dude-grade-good-off.svg'
+                }
+                alt="괜찮아요"
+                width={80}
+                height={112}
+              />
+            </button>
+            <button type="button" onClick={() => handleReview('RECOMMEND')}>
+              <Image
+                src={
+                  clicked === 'RECOMMEND'
+                    ? '/images/mypage/dude-grade-best-on.svg'
+                    : '/images/mypage/dude-grade-best-off.svg'
+                }
+                alt="추천해요"
+                width={80}
+                height={112}
+              />
+            </button>
+          </div>
+          {submitError && <div className="text-red-500 text-sm mt-2">{submitError}</div>}
+
+          <div className="flex flex-col gap-6">
+            <label htmlFor="review" className="text-body-2-nomal font-medium text-gray-800">
+              구체적인 경험을 알려주세요
+            </label>
+            <textarea
+              id="review"
+              value={review}
+              onChange={(e) => {
+                setReview(e.target.value);
+                methods.setValue('review', e.target.value);
+              }}
+              className="w-full h-40 rounded-xl px-4 py-[18px] bg-background400 resize-none outline-none"
+              placeholder="모임의 장소, 환경, 진행, 구성 등 만족스러웠나요?"
+            />
+          </div>
+
+          <button
+            type="submit"
+            disabled={isDisabled}
+            className={`w-full h-14 rounded-2xl py-[17px] text-body-1-nomal font-semibold
               ${isFormValid ? 'bg-orange200 text-white' : 'bg-gray950 text-gray600'} outline-none`}
-        >
-          작성완료
-        </button>
-      </form>
+          >
+            작성완료
+          </button>
+        </form>
 
-      {showModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
-          <div className="flex flex-col gap-6 bg-background400 pt-8 pb-6 px-6 rounded-3xl w-full max-w-[320px]">
-            <div className="flex flex-col gap-3 items-center justify-center">
-              <p className="text-body-1-nomal font-semibold text-gray800">취소하고 나갈까요?</p>
-              <p className="text-body-2-nomal font-medium text-gray400">
-                나가면 내용은 저장되지 않아요.
-              </p>
-            </div>
+        {showModal && (
+          <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+            <div className="flex flex-col gap-6 bg-background400 pt-8 pb-6 px-6 rounded-3xl w-full max-w-[320px]">
+              <div className="flex flex-col gap-3 items-center justify-center">
+                <p className="text-body-1-nomal font-semibold text-gray800">취소하고 나갈까요?</p>
+                <p className="text-body-2-nomal font-medium text-gray400">
+                  나가면 내용은 저장되지 않아요.
+                </p>
+              </div>
 
-            <div className="flex gap-4">
-              <button
-                className="flex-1 px-[12.5px] py-3.5 rounded-[14px] bg-gray200 text-gray500 text-body-2-nomal font-semibold"
-                onClick={() => router.replace('/mypage')}
-              >
-                나가기
-              </button>
-              <button
-                className="flex-1 px-[12.5px] py-3.5 rounded-[14px] bg-gray800 text-gray100 text-body-2-nomal font-semibold"
-                onClick={() => setShowModal(false)}
-              >
-                이어서 작성하기
-              </button>
+              <div className="flex gap-4">
+                <button
+                  className="flex-1 px-[12.5px] py-3.5 rounded-[14px] bg-gray200 text-gray500 text-body-2-nomal font-semibold"
+                  onClick={() => router.replace('/mypage')}
+                >
+                  나가기
+                </button>
+                <button
+                  className="flex-1 px-[12.5px] py-3.5 rounded-[14px] bg-gray800 text-gray100 text-body-2-nomal font-semibold"
+                  onClick={() => setShowModal(false)}
+                >
+                  이어서 작성하기
+                </button>
+              </div>
             </div>
           </div>
-        </div>
-      )}
-    </div>
+        )}
+      </div>
+    </>
   );
 }
