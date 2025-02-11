@@ -31,8 +31,8 @@ export default function CreatedMeetings({
       if (isConfirmed && !moim.isConfirmed) return false;
 
       if (filter === '전체') return true;
-      if (filter === '모집중') return moim.status === 'RECRUIT';
-      if (filter === '모집완료') return moim.status === 'PROGRESS';
+      if (filter === '모집중') return moim?.isConfirmed === false;
+      if (filter === '모집완료') return moim?.maxParticipants === moim?.participants;
       if (filter === '종료') return moim.status === 'END';
       return true;
     });
