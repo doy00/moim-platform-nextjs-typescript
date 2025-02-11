@@ -4,16 +4,11 @@ import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
 import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { IParticipatedMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
 import { useRouter } from 'next/navigation';
 import { useState } from 'react';
 import { usePostReviewMutation } from '@/hooks/mypage/queries/useReviewQuery';
-import { IReviewPost } from '@/types/mypage/reviews.type';
-import { useForm } from 'react-hook-form';
 import { IReviewPost } from '@/types/mypage/reviews.type';
 import { useForm } from 'react-hook-form';
 
