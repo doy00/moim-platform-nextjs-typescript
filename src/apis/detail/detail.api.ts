@@ -1,9 +1,10 @@
 // 모임 상세 조회 API 요청
 import axiosInstance from '@/apis/auth/axios.api';
-import { IMoimDetail, ILikeResponse, ILikedMoimsResponse, ApiResponse } from '@/types/detail/t-moim';
+import { IMoimDetail, ILikeResponse, ILikedMoimsResponse, ApiResponse, IMoimMasterResponse } from '@/types/detail/t-moim';
+import { TDetailMoimResponse } from '@/types/supabase/supabase-custom.type';
 
 // 모임 상세 데이터(모임정보, 참여자, 리뷰) 전체 조회
-export const getDetail = async (moimId: string): Promise<IMoimDetail> => {
+export const getDetail = async (moimId: string): Promise<IMoimMasterResponse> => {
   try {
     return await axiosInstance.get(`/api/moims/${moimId}`);
   } catch (error: any) {

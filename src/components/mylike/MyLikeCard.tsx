@@ -1,5 +1,4 @@
 'use client';
-import { useLikeStore } from '@/stores/home/likeStore';
 import React from 'react';
 import { ChipSmallSquircle } from '../detail/ChipSmallSquircle';
 import { HeartIcon } from '../detail/icons/HeartIcon';
@@ -39,7 +38,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
   } = moim;
 
   const isConfirmed = participants >= minParticipants;
-  const getStatusInfo = (status: EMoimStatus, maxParticipants: number, participants: number, isConfirmed: boolean): IStatusInfo => {
+  const getStatusInfo = (status: string, maxParticipants: number, participants: number, isConfirmed: boolean): IStatusInfo => {
     if (status === 'END') {
       return {
         text: '종료',

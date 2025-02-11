@@ -19,6 +19,7 @@ import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 
 export default function DetailPresenter({
   data,
+  masterUser,
   participants,
   reviews,
   isJoining,
@@ -29,7 +30,7 @@ export default function DetailPresenter({
   disabled = false,
   className,
 }: IDetailPresenterProps) {
-  if (!data) {
+  if (!data || !masterUser) {
     return null;
   }
   return (
@@ -52,8 +53,6 @@ export default function DetailPresenter({
           moimType={data.moimType}
           isConfirmed={data.isConfirmed}
           status={data.status}
-          online={data.online}
-          masterEmail={data.masterEmail}
         />
         <DetailParticipants 
           participants={data.participatedUsers}
@@ -65,13 +64,13 @@ export default function DetailPresenter({
           content={data.content}
         />
         <DetailHost 
-          nickname="두두씨"
-          // name={data.participatedUsers[0]?.userNickname }
-          introduction="안녕하세요! 기획하는 두두입니다."
-          tags={['기획', '마케팅', '자기계발']}
-          image={
-            // data?.image || 
-            DEFAULT_IMAGE.PROFILE}
+          // nickname="두두씨"
+          nickname={masterUser.nickname}
+          // introduction="안녕하세요! 기획하는 두두입니다."
+          introduction={masterUser?.introduction || '안녕하세요!'}
+          // tags={['기획', '마케팅', '자기계발']}
+          tags={masterUser?.tags || []}
+          image={ masterUser?.image || DEFAULT_IMAGE.PROFILE}
         />
         <DetailReview 
           reviews={data.reviews}

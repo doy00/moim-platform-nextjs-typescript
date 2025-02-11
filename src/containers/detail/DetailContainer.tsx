@@ -14,11 +14,14 @@ interface IDetailContainerProps {
 }
 
 export default function DetailContainer({ moimId }: IDetailContainerProps) {
-  const { me, signOut, isMeLoading } = useAuth();    // 로그인 상태 확인
+  const { isMeLoading } = useAuth();    // 로그인 상태 확인
   const { data: detail, isLoading: isDetailLoading, error } = useMoimDetail(moimId, { enabled: !isMeLoading });
   const { isLiked, handleToggleLike } = useLikeMoim(moimId);
-  const { isJoined, canJoin, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
+  const { isJoined, canJoin, isHost, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
   const router = useRouter();
+
+  const moim = detail?.moim;
+  const masterUser = detail?.masterUser;
 
   // 찜하기 버튼 핸들러
   const handleLike = async () => {
@@ -71,17 +74,19 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
 
   // 신청하기 버튼 라벨 결정
   const getActionLabel = () => {
+    if (isHost) return '내가 작성한 모임입니다';
     if (isJoined) return '신청완료';
-    if (!canJoin || detail?.status !== 'RECRUIT') return '모집마감';
+    if (!canJoin || moim?.status !== 'RECRUIT') return '모집마감';
     return '신청하기';
   };
 
   return (
     <div>
       <DetailPresenter
-        data={detail || null}
-        participants={detail?.participatedUsers || []}
-        reviews={detail?.reviews}
+        data={moim || null}
+        masterUser={masterUser || null}
+        participants={moim?.participatedUsers || []}
+        reviews={moim?.reviews}
         isJoining={isJoining}
         canJoin={canJoin}
         isLiked={isLiked || false}
