@@ -14,30 +14,30 @@ import { cn } from '@/utils/auth/ui.util';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { IUserEdit } from '@/types/mypage/user';
 import { sendPasswordResetEmail } from '@/apis/userInfo';
+import TagInput from '@/components/common/TagInput';
+import { toast } from 'sonner';
+import { CheckCircle, XCircle } from 'lucide-react';
+
+type Position = 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND';
 
 export default function UserEdit() {
-  const { data, isLoading, error } = useUserQuery();
+  const { data, isLoading } = useUserQuery();
   const { mutate: editUser, isPending: isEditing } = useEditUserMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   // 리액트훅폼 document 참고
   const [previewImage, setPreviewImage] = useState<string | null>(null);
-  const [image, setImage] = useState<File | null>(null);
   const [emailInputValue, setEmailInputValue] = useState('');
   const [nicknameInputValue, setNicknameInputValue] = useState('');
   const [textareaValue, setTextareaValue] = useState(''); // 변수명 명확하게 수정
   const [tags, setTags] = useState<string[]>([]);
-  const [tagInputValue, setTagInputValue] = useState('');
   const [position, setPosition] = useState<'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND'>('PM');
 
-  const [passwordInputValue, setPasswordInputValue] = useState('');
-
   // TODO : zod 라이브러리 사용해보기 타입으로 가능함
+
   const [isEmailInputExceeded, setIsEmailInputExceeded] = useState(false);
   const [isNicknameInputExceeded, setIsNicknameInputExceeded] = useState(false);
   const [isTextAreaExceeded, setIsTextAreaExceeded] = useState(false);
-  const [isTagInputExceeded, setIsTagInputExceeded] = useState(false);
-  const [isTagTextExceeded, setIsTagTextExceeded] = useState(false);
 
   const methods = useForm<TAuthFormValues>({
     defaultValues: {
@@ -52,7 +52,7 @@ export default function UserEdit() {
     if (data) {
       setEmailInputValue(data.email || '');
       setNicknameInputValue(data.nickname || '');
-      setPosition((data.position || '') as 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND');
+      setPosition((data.position || '') as Position);
       setTextareaValue(data.introduction || '');
       setTags(data.tags || []);
     }
@@ -65,15 +65,9 @@ export default function UserEdit() {
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
-      // setImage(file);
       const imageUrl = URL.createObjectURL(file);
       setPreviewImage(imageUrl);
     }
-  };
-
-  const textAreaHandleInput = () => {
-    const text = textareaValue;
-    setIsTextAreaExceeded(text.length > 20);
   };
 
   const nicknameInputHandleInput = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -95,38 +89,8 @@ export default function UserEdit() {
     setIsEmailInputExceeded(!emailValidation.test(text));
   };
 
-  // 변수명에 성격?이 명확하면 index는 간결하게 해도 됨
-  const handleRemoveTag = (indexToRemove: number) => {
-    setTags(tags?.filter((_, index) => index !== indexToRemove) || []);
-  };
-
-  const handleTagInput = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === 'Enter') {
-      e.preventDefault();
-
-      //마지막 글자가 확정되지 않은 상태에서 엔터키를 누르면 글자가 다음 태그로 넘어가는 문제가 발생(IME(Input Method Editor) 이슈) 추가함.
-      if (e.nativeEvent.isComposing) return;
-
-      // TODO : 조건을 한글로 풀어놓은 상태에서 코딩으 하면 덜 혼란스러움 의존성 생각하고 우선순위를 생각해서 배치해야함.
-      const newTag = tagInputValue.trim();
-      if (newTag && !tags.includes(newTag) && tags.length < 3) {
-        setTags([...tags, newTag]);
-        setTagInputValue('');
-        setIsTagInputExceeded(false);
-      } else {
-        setIsTagInputExceeded(true);
-      }
-
-      if (newTag.length > 5) {
-        setIsTagTextExceeded(true);
-      } else {
-        setIsTagTextExceeded(false);
-      }
-    }
-  };
-
-  const handlePositionChange = (value: string) => {
-    setPosition(value as 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND');
+  const handlePositionChange = (value: string | undefined) => {
+    setPosition(value as Position);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -138,9 +102,7 @@ export default function UserEdit() {
       nickname: nicknameInputValue,
       introduction: textareaValue || '',
       tags: tags || [],
-      password: passwordInputValue || '',
       position: position || '',
-      image: image || undefined,
     };
 
     console.log('폼 제출 데이터:', editData);
@@ -186,19 +148,38 @@ export default function UserEdit() {
       return data.image;
     }
 
-    return '/images/mypage/profile-default.svg';
+    return '/images/mypage/profile-edit-default.svg';
   })();
 
   const onClickUpdatePasswordBtn = async () => {
     try {
       await sendPasswordResetEmail(data.email);
-      alert('비밀번호 변경 이메일을 확인해주세요.');
+      toast.success('이메일 발송 완료', {
+        description: '비밀번호 변경 메일을 발송했습니다.',
+        icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+        duration: 4000,
+        position: 'top-right',
+      });
     } catch (error: any) {
-      if (error.error) {
-        alert('사용 가능한 이메일로 변경해주세요.');
-      } else {
-        alert('비밀번호 변경 이메일 전송에 실패했습니다.');
+      console.error('비밀번호 변경 이메일 전송 에러:', error);
+
+      let errorMessage = '비밀번호 변경 이메일 전송에 실패했습니다. 잠시 후 다시 시도해주세요.';
+
+      // 보안상의 이유로 48초 후에 시도해야하여 1분으로 변경
+      if (error.response?.data?.error?.includes('48 seconds')) {
+        errorMessage = '1분 후에 다시 시도해주세요.';
+      } else if (error.response?.status === 405) {
+        errorMessage = '현재 비밀번호 변경 서비스를 이용할 수 없습니다. 잠시 후 다시 시도해주세요.';
+      } else if (error.response?.status === 400) {
+        errorMessage = '이메일 형식이 올바르지 않습니다.';
       }
+
+      toast.error('비밀번호 변경 중 오류가 발생했습니다.', {
+        description: errorMessage,
+        icon: <XCircle className="w-5 h-5 text-red-500" />,
+        duration: 4000,
+        position: 'top-right',
+      });
     }
   };
 
@@ -221,7 +202,7 @@ export default function UserEdit() {
                 alt="profile"
                 width={86}
                 height={86}
-                className="cursor-pointer rounded-full w-16 h-16"
+                className="cursor-pointer"
                 onClick={handleImageClick}
               />
             </div>
@@ -244,7 +225,7 @@ export default function UserEdit() {
                 type="text"
                 id="email"
                 placeholder="dothemeet@google.com"
-                className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
+                className={`rounded-xl text-gray700 bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
                   isEmailInputExceeded ? 'border-2 border-error focus:border-error' : ''
                 }`}
                 value={emailInputValue}
@@ -269,7 +250,7 @@ export default function UserEdit() {
                   type="text"
                   id="nickName"
                   placeholder="두두씨"
-                  className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
+                  className={`rounded-xl text-gray700 bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
                     isNicknameInputExceeded ? 'border-2 border-error focus:border-error' : ''
                   }`}
                   value={nicknameInputValue}
@@ -329,7 +310,7 @@ export default function UserEdit() {
                     setIsTextAreaExceeded(e.target.value.length >= 20);
                   }}
                   placeholder="소개를 입력해주세요"
-                  className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 resize-none outline-none ${
+                  className={`rounded-xl text-gray700 bg-background400 px-4 py-[18px] placeholder:text-gray300 resize-none outline-none ${
                     isTextAreaExceeded ? 'border-2 border-error focus:border-error' : ''
                   }`}
                   maxLength={20}
@@ -344,68 +325,8 @@ export default function UserEdit() {
               </div>
             </div>
 
-            <div className="flex flex-col gap-3">
-              <div className="flex items-center justify-between">
-                <label htmlFor="tag" className="text-body-2-nomal font-medium text-gray-800">
-                  태그
-                </label>
-                <div className="flex items-center gap-1.5">
-                  <span className="text-gray600 font-medium text-caption-normal">
-                    {tags.length}
-                  </span>
-                  <hr className="w-[1px] h-1.5 bg-gray300" />
-                  <span className="text-gray300 font-medium text-caption-normal">3</span>
-                </div>
-              </div>
-              <div className="relative flex flex-col gap-2">
-                <div className="flex flex-wrap gap-2">
-                  <input
-                    type="text"
-                    id="tag"
-                    value={tagInputValue}
-                    onChange={(e) => setTagInputValue(e.target.value)}
-                    onKeyDown={handleTagInput}
-                    maxLength={5}
-                    placeholder="# 태그추가"
-                    className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-caption-normal font-medium placeholder:text-gray300 w-[90px]"
-                  />
+            <TagInput tags={tags} onTagsChange={setTags} />
 
-                  {tags?.map((tag, index) => (
-                    <div
-                      key={index}
-                      className="flex items-center gap-2 px-4 bg-background400 rounded-xl justify-between"
-                    >
-                      {/* 키 필요 없음 */}
-                      <span
-                        key={index}
-                        className="inline-flex items-center text-caption-normal font-medium text-gray600 "
-                      >
-                        #{tag}
-                      </span>
-                      <button
-                        type="button"
-                        onClick={() => handleRemoveTag(index)}
-                        className=" text-gray600 hover:text-gray950"
-                      >
-                        ×
-                      </button>
-                    </div>
-                  ))}
-                </div>
-                {/* TODO: 즉시실행함수로 사용해보기 */}
-                <span
-                  className={`text-label-normal font-medium ${
-                    isTagInputExceeded || isTagTextExceeded ? 'text-error' : 'text-gray300'
-                  }`}
-                >
-                  {isTagInputExceeded
-                    ? '최대 3개까지 입력 가능해요'
-                    : isTagTextExceeded
-                      ? '최대 5글자까지 입력 가능해요'
-                      : ''}
-                </span>
-              </div>
-            </div>
             <button
               type="submit"
               disabled={isEditing}

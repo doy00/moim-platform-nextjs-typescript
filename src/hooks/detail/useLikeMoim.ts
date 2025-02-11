@@ -23,7 +23,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
 
   // 현재 유저가 이 모임을 찜했는지 확인
   const isLiked = user && moimDetail?.moim.likedUsers?.includes(user.id);
-  
+
   const { mutateAsync: toggleLike, isPending: isToggling } = useMutation({
     mutationFn: async () => {
       if (!user) throw new Error('로그인이 필요합니다');
@@ -33,19 +33,21 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
 
     // 낙관적 업데이트를 위한 onMutate
     onMutate: async () => {
-      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.MOIM_DETAIL(moimId) });  // 진행중인 모든 관련 쿼리 취소
-      const previousData = queryClient.getQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId));  // 현재 캐시된 데이터 저장
+      await queryClient.cancelQueries({ queryKey: QUERY_KEYS.MOIM_DETAIL(moimId) }); // 진행중인 모든 관련 쿼리 취소
+      const previousData = queryClient.getQueryData<IMoimMasterResponse>(
+        QUERY_KEYS.MOIM_DETAIL(moimId),
+      ); // 현재 캐시된 데이터 저장
       // 캐시 낙관적 업데이트
       if (previousData?.moim && user) {
         queryClient.setQueryData<IMoimMasterResponse>(QUERY_KEYS.MOIM_DETAIL(moimId), {
-          masterUser: previousData?.masterUser,   // master 정보는 유지
+          masterUser: previousData?.masterUser, // master 정보는 유지
           moim: {
             ...previousData.moim,
             likes: previousData.moim.likes + 1,
             likedUsers: isLiked
-            ? previousData.moim.likedUsers.filter(id => id !== user.id)
-            : [...previousData.moim.likedUsers, user.id],
-          }
+              ? previousData.moim.likedUsers.filter((id) => id !== user.id)
+              : [...previousData.moim.likedUsers, user.id],
+          },
         });
       }
 
@@ -59,7 +61,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
         if (!oldData || !user) return oldData;
         return {
           ...oldData,
-          ...response.data
+          ...response.data,
         };
       });
 
@@ -68,7 +70,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
 
       onSuccess?.();
     },
-    
+
     // 에러 발생 시
     onError: (error, _, context) => {
       // 이전 상태로 롤백

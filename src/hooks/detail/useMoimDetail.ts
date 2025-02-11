@@ -9,7 +9,7 @@ interface UseMoimDetailOptions {
   enabled?: boolean;
   user?: TMe | null;
 }
-  
+
 export const useMoimDetail = (moimId: string, options: UseMoimDetailOptions = {}) => {
   return useQuery<IMoimMasterResponse>({
     queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),

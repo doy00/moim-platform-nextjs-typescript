@@ -14,8 +14,12 @@ interface IDetailContainerProps {
 }
 
 export default function DetailContainer({ moimId }: IDetailContainerProps) {
-  const { me, isMeLoading } = useAuth();    // 로그인 상태 확인
-  const { data: detail, isLoading: isDetailLoading, error } = useMoimDetail(moimId, { enabled: !isMeLoading, user: me });
+  const { me, isMeLoading } = useAuth(); // 로그인 상태 확인
+  const {
+    data: detail,
+    isLoading: isDetailLoading,
+    error,
+  } = useMoimDetail(moimId, { enabled: !isMeLoading, user: me });
   const { isLiked, handleToggleLike } = useLikeMoim(moimId, { user: me });
   const { isJoined, canJoin, isHost, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
   const router = useRouter();
@@ -27,18 +31,17 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   const handleLike = async () => {
     try {
       await handleToggleLike();
-      toast.success(
-        isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요", {
-          icon: <CheckCircle className="w-5 h-5 text-green-500" />,
-          action: {
-            label: '내역 확인',
-            onClick: () => {
-              router.push('/mylike');
-            },
+      toast.success(isLiked ? '찜하기가 취소되었어요' : '찜하기가 완료되었어요', {
+        icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+        action: {
+          label: '내역 확인',
+          onClick: () => {
+            router.push('/mylike');
           },
-        });
+        },
+      });
     } catch (error) {
-      toast.error("잠시후 다시 시도해주세요");
+      toast.error('잠시후 다시 시도해주세요');
     }
   };
 

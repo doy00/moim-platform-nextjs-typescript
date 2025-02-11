@@ -1,5 +1,5 @@
-import { Header } from "../detail/Header";
-import { GatheringSkeleton } from "../mypage/gatheringCard/GatheringCard";
+import { Header } from '../detail/Header';
+import { GatheringSkeleton } from '../mypage/gatheringCard/GatheringCard';
 
 export const MyLikeSkeleton = () => {
   return (
@@ -11,4 +11,4 @@ export const MyLikeSkeleton = () => {
       </div>
     </div>
   );
-}
+};

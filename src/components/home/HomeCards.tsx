@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import HomeCard from './HomeCard';
 
 interface HomeCardsProps {
-  data: any; 
+  data: any;
   fetchNextPage: () => void;
   hasNextPage: boolean;
 }
@@ -37,17 +37,16 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
 
   const sortedMoims = [...filteredMoims].sort((a, b) => {
     if (sortOrder === 'LATEST') {
-      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime(); 
+      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime();
     }
     if (sortOrder === 'LIKES') {
-      return (b.likes ?? 0) - (a.likes ?? 0); 
+      return (b.likes ?? 0) - (a.likes ?? 0);
     }
     if (sortOrder === 'DEADLINE') {
-      return new Date(a.recruitmentDeadline).getTime() - new Date(b.recruitmentDeadline).getTime(); 
+      return new Date(a.recruitmentDeadline).getTime() - new Date(b.recruitmentDeadline).getTime();
     }
     return 0;
   });
-
 
   const handleIntersect = () => {
     if (hasNextPage) fetchNextPage();
