@@ -1,10 +1,11 @@
 // utils/detail/enums.ts
-import { ECategory, EMoimStatus, ERate, EPosition } from "@/types/supabase/supabase-custom.type";
+// 기존 백엔드에서 Enum 데이터를 변환하기 위해 만들었지만 현재는 모임타입, 모집상태는 string으로 데이터 받고있음
+import { ERate, EPosition } from "@/types/supabase/supabase-custom.type";
 
 // 1. moim_category Enum을 moimType(모임유형) 텍스트로 변환하는 함수
-export const getMoimTypeText = (moimCategory: ECategory): string => {
+export const getMoimTypeText = (moimCategory: string): string => {
   // 카테고리별 매핑 객체를 만들어 관리
-  const categoryMap: Record<ECategory, string> = {
+  const categoryMap: Record<string, string> = {
     PROJECT: '프로젝트',
     STUDY: '스터디',
     INTERVIEW: '면접'
@@ -15,9 +16,9 @@ export const getMoimTypeText = (moimCategory: ECategory): string => {
 }
 
 // 2. moim_status Enum을 status(모임상태) 텍스트로 변환하는 함수
-export const getMoimStatusText = (moimStatus: EMoimStatus): string => {
+export const getMoimStatusText = (moimStatus: string): string => {
   // 모임 상태별 매핑 객체를 만들어 관리
-  const statusMap: Record<EMoimStatus, string> = {
+  const statusMap: Record<string, string> = {
     RECRUIT: '모집중',
     PROGRESS: '진행중',
     END: '모집종료'

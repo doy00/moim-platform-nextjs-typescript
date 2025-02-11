@@ -84,10 +84,6 @@ export default function MyLikeContainer () {
       onRemoveLike={handleRemoveLike}
       onClickCard={handleClickCard}
     />
-    {/* <ToasterDark
-      position="top-right"
-      duration={5000}
-    /> */}
     </>
   );
 }
