@@ -8,7 +8,7 @@ import { useEffect } from 'react';
 import HomeCard from './HomeCard';
 
 interface HomeCardsProps {
-  data: any; // HomeContainer에서 받은 데이터
+  data: any; 
   fetchNextPage: () => void;
   hasNextPage: boolean;
 }
@@ -21,9 +21,6 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
     fetchLikes();
   }, [fetchLikes]);
 
-  console.log('📌 [Before Filtering] HomeCards data:', data);
-
-  // ✅ 클라이언트 필터링 적용
   const filteredMoims =
     data?.pages.flatMap((page: any) =>
       page.data.filter((moim: IMoim) => {
@@ -31,7 +28,6 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
           (moimType === 'all' || moimType.toUpperCase() === moim.moimType.toUpperCase()) &&
           (status === 'all' || status.toUpperCase() === moim.status.toUpperCase()) &&
           (isConfirmed === null || moim.isConfirmed === isConfirmed) &&
-          // ✅ 온라인/오프라인 필터링 추가
           (onoff === 'all' ||
             (onoff === 'online' && moim.address.includes('온라인으로 진행합니다')) ||
             (onoff === 'offline' && !moim.address.includes('온라인으로 진행합니다')))
@@ -39,21 +35,19 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
       }),
     ) || [];
 
-  // ✅ 정렬 적용 (sortedMoims 유지)
   const sortedMoims = [...filteredMoims].sort((a, b) => {
     if (sortOrder === 'LATEST') {
-      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime(); // 최신순 (startDate 기준)
+      return new Date(b.startDate).getTime() - new Date(a.startDate).getTime(); 
     }
     if (sortOrder === 'LIKES') {
-      return (b.likes ?? 0) - (a.likes ?? 0); // 좋아요 순
+      return (b.likes ?? 0) - (a.likes ?? 0); 
     }
     if (sortOrder === 'DEADLINE') {
-      return new Date(a.recruitmentDeadline).getTime() - new Date(b.recruitmentDeadline).getTime(); // 마감일 빠른 순
+      return new Date(a.recruitmentDeadline).getTime() - new Date(b.recruitmentDeadline).getTime(); 
     }
     return 0;
   });
 
-  console.log('✅ [After Filtering] Filtered Moims:', filteredMoims);
 
   const handleIntersect = () => {
     if (hasNextPage) fetchNextPage();
