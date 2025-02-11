@@ -6,7 +6,7 @@ export const useUserFormData = () => {
 
     const jsonData: IMeJsonData = {
       email: editUser.email,
-      password: editUser.password || '',
+      // password: editUser.password || '',
       nickname: editUser.nickname,
       position: editUser.position,
       introduction: editUser.introduction || '',
