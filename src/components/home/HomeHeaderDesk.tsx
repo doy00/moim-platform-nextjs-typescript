@@ -14,8 +14,7 @@ export default function HomeHeaderDesk() {
   const pathname = usePathname();
 
   const showGnbDeskPaths = ['/', '/mylike', '/mypage'];
-  const shouldGndDesk =
-    showGnbDeskPaths.includes(pathname) || pathname.startsWith('/mypage/review');
+  const shouldGndDesk = showGnbDeskPaths.includes(pathname);
 
   if (!shouldGndDesk) return null;
 

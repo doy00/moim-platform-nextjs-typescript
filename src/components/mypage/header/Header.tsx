@@ -19,7 +19,10 @@ export default function Header() {
   };
 
   return (
-    <div className="flex justify-between items-center px-5 py-4 gap-2.5 2xl:hidden">
+    <div
+      className={`flex justify-between items-center px-5 py-4 gap-2.5 
+        ${pathname.startsWith('/mypage/review') ? 'max-w-[664px] mx-auto' : '2xl:hidden'}`}
+    >
       <div className="flex items-center justify-between">
         <Link href="/">
           <Image src="/images/mypage/logo.svg" alt="logo" width={120} height={30} />

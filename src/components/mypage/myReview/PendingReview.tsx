@@ -13,7 +13,11 @@ export default function PendingReview({ participatedUser }: Props) {
   const { data, isLoading } = useParticipatedMoimQuery();
 
   if (isLoading) {
-    return <GatheringSkeleton />;
+    return (
+      <div className="flex flex-col gap-4 max-w-[960px] 2xl:grid 2xl:grid-cols-2 ">
+        <GatheringSkeleton />
+      </div>
+    );
   }
 
   if (!data || data.length === 0) {
@@ -34,7 +38,7 @@ export default function PendingReview({ participatedUser }: Props) {
   }
 
   return (
-    <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
+    <div className="flex flex-col gap-4 max-w-[960px] 2xl:grid 2xl:grid-cols-2">
       {data
         ?.filter(
           (moim) =>

@@ -106,7 +106,7 @@ export default function CreateReview() {
   return (
     <>
       <Header />
-      <div className="flex flex-col gap-10 p-4 md:max-w-[584px] mx-auto lg:max-w-[664px] xl:max-w-[664px] ['2xl']:max-w-[664px]">
+      <div className="flex flex-col gap-10 px-5 md:max-w-[584px] mx-auto lg:max-w-[664px] xl:max-w-[664px] ['2xl']:max-w-[664px]">
         <div className="flex flex-col gap-6">
           <div className="flex items-center justify-between">
             <span className="text-body-1-normal font-semibold text-gray800">리뷰 작성하기</span>
