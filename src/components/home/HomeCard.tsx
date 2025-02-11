@@ -8,9 +8,13 @@ import HeartIcon from './icons/HeartIcon';
 import { IMoim } from '@/types/home/i-moim';
 import { useLikeStore } from '@/stores/home/likeStore';
 import { MOIM_TYPE_MAP } from '@/constants/home/card-constants';
+import { useQueryClient } from '@tanstack/react-query';
+
 
 export default function HomeCard({ data }: { data: IMoim }) {
   const router = useRouter();
+  const queryClient = useQueryClient();
+
   const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } = data;
   const { likes: likedMoims, toggleLike, likeDeltas } = useLikeStore();
   const isLiked = likedMoims.has(String(moimId));
@@ -25,6 +29,7 @@ export default function HomeCard({ data }: { data: IMoim }) {
 
   const handleLike = (event: React.MouseEvent) => {
     event.stopPropagation();
+    queryClient.invalidateQueries({ queryKey: ['liked-moims'] });
     toggleLike(String(moimId));
   };
 
