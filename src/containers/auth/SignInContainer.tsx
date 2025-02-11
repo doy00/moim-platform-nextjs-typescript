@@ -11,8 +11,8 @@ export default function SignInContainer() {
 
   return (
     <div>
-      <div className="fixed top-0 left-0 w-full h-full min-w-dvw min-h-dvh flex flex-col items-center justify-center bg-background100 text-gray800">
-        <section className="w-full h-auto min-h-dvh flex flex-col items-center justify-center bg-background100 text-gray800">
+      <div className="fixed top-0 left-0 w-full h-full min-w-dvw min-h-dvh flex flex-col items-center justify-center bg-background200 text-gray800">
+        <section className="w-full h-auto min-h-dvh flex flex-col items-center justify-center bg-background200 text-gray800">
           {/** 즉시실행함수로 처리 */}
           {(() => {
             if (type === null) {
