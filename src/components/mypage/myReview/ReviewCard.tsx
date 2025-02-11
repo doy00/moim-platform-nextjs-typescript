@@ -2,6 +2,7 @@ import { IReview } from '@/types/mypage/reviews.type';
 import Image from 'next/image';
 import profileDefault from '@public/images/mypage/profile-default.svg';
 import { reviewRateTag } from '@/utils/mypage/statusTags';
+
 interface Props {
   review: IReview;
 }
