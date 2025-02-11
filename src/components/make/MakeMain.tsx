@@ -53,11 +53,13 @@ export default function MakeMain() {
         <StepProgressbar currentStep={step} totalSteps={totalSteps} />
       </div>
       {/* Step 영역 */}
-      <div>{renderStep()}</div>
+      <div className='min-h-[680px] h-dvh'>
+        {renderStep()}
+      </div>
       {/* Button 영역 */}
       <div className="flex space-x-3 px-5">
         {step > 1 && (
-          <button onClick={handlePrevStep} className="flex items-center justify-center px-6 py-4 h-[56px] bg-background400 rounded-2xl">
+          <button onClick={handlePrevStep} className="flex items-center justify-center px-6 py-4 h-[56px] bg-background400 rounded-2xl mb-4">
             <ArrowLeftLine className="fill-transparent stroke-slate-500" />
           </button>
         )}
@@ -66,7 +68,7 @@ export default function MakeMain() {
             다음
           </button>
         ) : (
-          <button onClick={createMoim} className="flex items-center justify-center w-full h-[56px] bg-gray950 text-white rounded-2xl">
+          <button onClick={createMoim} className="flex items-center justify-center w-full h-[56px] bg-gray950 text-white rounded-2xl mb-4">
             완료
           </button>
         )}

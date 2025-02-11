@@ -32,7 +32,7 @@ export default function ParticipantsStep() {
   };
 
   return (
-    <div className="flex flex-col space-y-6 px-5 h-[680px]">
+    <div className="flex flex-col space-y-6 px-5 min-h-[680px]">
       {/* 소개 */}
       <div className="flex flex-col items-start mb-10">
         <h1 className="text-title-2 font-semibold">몇 명의 팀원들과 함께할까요?</h1>
