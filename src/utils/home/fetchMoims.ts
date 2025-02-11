@@ -18,8 +18,6 @@ export const fetchMoims = async ({ pageParam = 1 }: { pageParam: number }) => {
 
     if (error) throw error;
 
-    console.log('📌 [API Response] fetchMoims data:', data);
-
     return {
       data: data.map((moim) => ({
         moimId: moim.id,
