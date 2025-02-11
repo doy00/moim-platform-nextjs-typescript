@@ -30,7 +30,7 @@ export const DetailHost: React.FC<IDetailHostProps> = ({
         {"주최자 프로필"}
       </div>
 
-        <div className="flex w-full min-h-32 p-5 lg:px-6 lg:py-8 flex-col gap-2.5 items-start bg-background400 rounded-xl mt-4">
+        <div className="flex w-full min-h-27 p-5 lg:px-6 lg:py-8 flex-col gap-2.5 items-start bg-background400 rounded-xl mt-4">
           <div className="flex w-full flex-col gap-5 items-start">
             {/* 프로필 영역 */}
             <div className="flex gap-3.5 items-center w-full">
