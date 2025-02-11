@@ -4,7 +4,6 @@ import React from 'react'
 import { useRouter } from 'next/navigation'
 import Image from 'next/image'
 // Coponents
-import SearchIcon from './icons/SearchIcon'
 import PlusIcon from './icons/PlusIcon'
 
 export default function HomeHeader() {
@@ -16,7 +15,7 @@ export default function HomeHeader() {
 
 
   return (
-    <header className='px-5 py-4 h-14 flex justify-between items-center'>
+    <header className='px-5 py-4 h-14 flex justify-between items-center 2xl:hidden'>
       <div>
         <Image 
           src='svgs/img_logo-text.svg'
