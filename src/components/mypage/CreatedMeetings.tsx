@@ -50,7 +50,7 @@ export default function CreatedMeetings({
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center h-full gap-6">
+      <div className="flex flex-col justify-center items-center h-[400px] gap-6">
         <div className="flex flex-col justify-center items-center gap-4">
           <Image
             src="/images/mypage/dudu-empty.svg"

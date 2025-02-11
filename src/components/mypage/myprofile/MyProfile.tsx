@@ -8,7 +8,7 @@ import Link from 'next/link';
 // 공통 래퍼 컴포넌트
 const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
   <div className="px-3">
-    <div className="flex flex-col bg-background400 rounded-[20px] px-5 py-4 gap-2.5">
+    <div className="flex flex-col bg-background400 rounded-[20px] px-6 py-5 gap-2.5">
       {children}
     </div>
   </div>

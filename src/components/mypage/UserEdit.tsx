@@ -148,7 +148,7 @@ export default function UserEdit() {
       return data.image;
     }
 
-    return '/images/mypage/profile-default.svg';
+    return '/images/mypage/profile-edit-default.svg';
   })();
 
   const onClickUpdatePasswordBtn = async () => {
@@ -202,7 +202,7 @@ export default function UserEdit() {
                 alt="profile"
                 width={86}
                 height={86}
-                className="cursor-pointer rounded-full w-16 h-16"
+                className="cursor-pointer"
                 onClick={handleImageClick}
               />
             </div>
