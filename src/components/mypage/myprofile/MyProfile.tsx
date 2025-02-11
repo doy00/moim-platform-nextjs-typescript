@@ -41,9 +41,11 @@ export default function MyProfile() {
             <div className="flex flex-col gap-2">
               <div className="flex gap-1.5">
                 <span className="text-lg font-semibold">{data?.nickname}</span>
-                <span className="rounded-[20px] px-2 py-1 bg-gray200 text-gray600 font-medium text-caption-normal">
-                  {position}
-                </span>
+                {position && (
+                  <span className="rounded-[20px] px-2 py-1 bg-gray200 text-gray600 font-medium text-caption-normal">
+                    {position}
+                  </span>
+                )}
               </div>
               <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
             </div>

@@ -55,6 +55,7 @@ export const userPositionTag = (user?: IUser) => {
   } else if (user?.position === 'DESIGNER') {
     return '디자이너';
   }
+  return null;
 };
 
 // export const moimHeartLike = (moim?: IMoim, isLiked?: boolean) => {
