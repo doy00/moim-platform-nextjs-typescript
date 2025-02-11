@@ -71,6 +71,7 @@ export async function GET(req: NextRequest) {
   );
 }
 
+// 모임 생성
 export async function POST(req: NextRequest) {
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
@@ -181,7 +182,19 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ message: '모임 생성 실패' }, { status: 500 });
   }
 
-  const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
+  // participated_moims 테이블에 모임 생성자 추가
+  const { error: participatedError } = await supabase.from('participated_moims').insert({
+    moim_uuid: moim.id,
+    user_uuid: foundUser.id,
+    user_email: foundUser.email,
+    user_image: foundUser.image,
+    user_nickname: foundUser.nickname,
+  });
 
+  if (participatedError) {
+    return NextResponse.json({ message: participatedError?.message }, { status: 500 });
+  }
+
+  const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
   return NextResponse.json(moimsToClient[0], { status: 200 });
 }
