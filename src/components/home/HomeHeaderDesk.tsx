@@ -13,7 +13,7 @@ export default function HomeHeaderDesk() {
   const router = useRouter();
   const pathname = usePathname();
 
-  const showGnbDeskPaths = ['/', '/mylike', '/mypage'];
+  const showGnbDeskPaths = ['/', '/mylike', '/mypage', '/mypage/editUser'];
   const shouldGndDesk = showGnbDeskPaths.includes(pathname);
 
   if (!shouldGndDesk) return null;
