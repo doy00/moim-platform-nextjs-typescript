@@ -210,7 +210,7 @@ export default function UserEdit() {
                 type="text"
                 id="email"
                 placeholder="dothemeet@google.com"
-                className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
+                className={`rounded-xl text-gray700 bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
                   isEmailInputExceeded ? 'border-2 border-error focus:border-error' : ''
                 }`}
                 value={emailInputValue}
@@ -235,7 +235,7 @@ export default function UserEdit() {
                   type="text"
                   id="nickName"
                   placeholder="두두씨"
-                  className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
+                  className={`rounded-xl text-gray700 bg-background400 px-4 py-[18px] placeholder:text-gray300 outline-none ${
                     isNicknameInputExceeded ? 'border-2 border-error focus:border-error' : ''
                   }`}
                   value={nicknameInputValue}
@@ -295,7 +295,7 @@ export default function UserEdit() {
                     setIsTextAreaExceeded(e.target.value.length >= 20);
                   }}
                   placeholder="소개를 입력해주세요"
-                  className={`rounded-xl bg-background400 px-4 py-[18px] placeholder:text-gray300 resize-none outline-none ${
+                  className={`rounded-xl text-gray700 bg-background400 px-4 py-[18px] placeholder:text-gray300 resize-none outline-none ${
                     isTextAreaExceeded ? 'border-2 border-error focus:border-error' : ''
                   }`}
                   maxLength={20}

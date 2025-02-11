@@ -106,9 +106,9 @@ export default function CreateReview() {
   return (
     <>
       <Header />
-      <div className="flex flex-col gap-10 px-5 md:max-w-[584px] mx-auto lg:max-w-[664px] xl:max-w-[664px] ['2xl']:max-w-[664px]">
+      <div className="flex flex-col gap-8 px-5 py-[10px] md:max-w-[584px] mx-auto lg:max-w-[664px] xl:max-w-[664px] ['2xl']:max-w-[664px]">
         <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pb-[10px] ">
             <span className="text-body-1-normal font-semibold text-gray800">리뷰 작성하기</span>
             <Image
               src="/images/mypage/close.svg"
@@ -120,7 +120,7 @@ export default function CreateReview() {
             />
           </div>
           <span className="text-heading1 text-gray800 font-semibold">
-            {nickname}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
+            {nickname}님<br /> 이번 모임은 어땠나요?
           </span>
         </div>
         <div>
@@ -138,10 +138,13 @@ export default function CreateReview() {
           ))}
         </div>
 
-        <form className="flex flex-col gap-6" onSubmit={methods.handleSubmit(onSubmit)}>
-          <span>모임은 어땠나요?</span>
+        <form className="flex flex-col gap-8" onSubmit={methods.handleSubmit(onSubmit)}>
+          <div className="flex items-center gap-[2px] pl-2">
+            <span className="text-gray800 text-body-1-normal font-medium">모임은 어땠나요?</span>
+            <span className="text-red200 text-body-2-normal font-medium">*</span>
+          </div>
 
-          <div className="flex gap-7 items-center justify-center sm:justify-start">
+          <div className="flex px-7 gap-8 items-center justify-center sm:justify-start">
             <button type="button" onClick={() => handleReview('SOSO')}>
               <Image
                 src={
@@ -182,9 +185,12 @@ export default function CreateReview() {
           {submitError && <div className="text-red-500 text-sm mt-2">{submitError}</div>}
 
           <div className="flex flex-col gap-6">
-            <label htmlFor="review" className="text-body-2-nomal font-medium text-gray-800">
-              구체적인 경험을 알려주세요
-            </label>
+            <div className="flex items-center gap-[2px] pl-2">
+              <label htmlFor="review" className="text-body-1-nomal font-medium text-gray-800">
+                구체적인 경험을 알려주세요
+              </label>
+              <span className="text-red200 text-body-2-normal font-medium">*</span>
+            </div>
             <textarea
               id="review"
               value={review}
@@ -200,7 +206,7 @@ export default function CreateReview() {
           <button
             type="submit"
             disabled={isDisabled}
-            className={`w-full h-14 rounded-2xl py-[17px] text-body-1-nomal font-semibold
+            className={`w-full h-14 mb-5 rounded-2xl py-[17px] text-body-1-nomal font-semibold
               ${isFormValid ? 'bg-orange200 text-white' : 'bg-gray950 text-gray600'} outline-none`}
           >
             작성완료

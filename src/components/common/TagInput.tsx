@@ -101,14 +101,14 @@ export default function TagInput({ tags, onTagsChange }: TagInputProps) {
             }}
             onKeyDown={handleTagInput}
             placeholder="# 태그추가"
-            className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-caption-normal font-medium placeholder:text-gray300 w-[90px]"
+            className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-gray700 text-caption-normal font-medium placeholder:text-gray300 w-[90px]"
           />
           {tags?.map((tag, index) => (
             <div
               key={index}
               className="flex items-center gap-2 px-4 bg-background400 rounded-xl justify-between"
             >
-              <span className="inline-flex items-center text-caption-normal font-medium text-gray600">
+              <span className="inline-flex items-center text-caption-normal font-medium text-gray700">
                 # {tag}
               </span>
               <button
