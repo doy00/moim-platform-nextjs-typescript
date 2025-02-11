@@ -21,6 +21,8 @@ export default function DateLocationStep() {
     setEndDate,
   } = useMakeStore();
 
+  const today = new Date(); 
+
   const handleAddressSearch = () => {
     if (typeof window !== "undefined" && window.daum) {
       new window.daum.Postcode({
@@ -41,13 +43,12 @@ export default function DateLocationStep() {
   };
 
   return (
-    <div className="flex flex-col space-y-6 px-5 h-[680px]">
+    <div className="flex flex-col space-y-6 px-5 min-h-[680px]">
       {/* 소개 */}
       <div className="flex flex-col items-start mb-10">
         <h1 className="text-title-2 font-semibold">모임의 장소와 날짜를 알려주세요</h1>
         <p className="text-body-2-normal text-gray400">장소와 날짜는 정확할수록 좋아요</p>
       </div>
-
       {/* 모임 장소 */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-700">
@@ -60,7 +61,7 @@ export default function DateLocationStep() {
           readOnly
           className="text-body-2-normal cursor-pointer min-w-[343px] h-[54px] p-4 bg-background400 focus:ring-orange200 focus:outline-orange200"
         />
-        {/* 온라인 진행 체크박스 ✅ */}
+        {/* 온라인 진행 체크박스 */}
         <div className="ml-2.5 mt-2 flex items-center space-x-2">
           <Checkbox id="onlineCheck" checked={isOnline} onCheckedChange={toggleOnline} />
           <label htmlFor="onlineCheck" className="text-label-normal text-gray400">
@@ -69,17 +70,16 @@ export default function DateLocationStep() {
         </div>
       </div>
 
-      {/* 모집 기간 선택 */}
+      {/* 모집 기간 선택 (StepDateRange) */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-700">
           모집 기간 <span className="text-orange200">*</span>
         </label>
         <StepDateRange
-          startDate={recruitmentDeadline ? new Date(recruitmentDeadline) : null} 
-          endDate={endDate ? new Date(endDate) : null} 
+          startDate={today}
+          endDate={recruitmentDeadline ? new Date(recruitmentDeadline) : null} 
           onDateChange={(dates) => {
-            setRecruitmentDeadline(dates.start ? dates.start.toISOString() : ''); 
-            setEndDate(dates.end ? dates.end.toISOString() : ''); 
+            setRecruitmentDeadline(dates.end ? dates.end.toISOString() : ''); 
           }}
         />
         <p className="text-label-normal text-gray300 ml-2 mt-[5px]">
@@ -87,19 +87,19 @@ export default function DateLocationStep() {
         </p>
       </div>
 
-      {/* 모임 날짜 선택 */}
+      {/* 모임 날짜 선택 (StepDatePicker) */}
       <div className="space-y-2">
         <label className="text-sm font-medium text-gray-700">
           모임 날짜 <span className="text-orange200">*</span>
         </label>
         <div className="flex items-center flex-grow space-x-2">
-          {/* 시작 날짜 */}
+          {/* 시작 날짜 (사용자 입력) */}
           <StepDatePicker
             selectedDate={startDate ? new Date(startDate) : null} 
             onDateChange={(date) => setStartDate(date ? date.toISOString() : '')} 
             placeholder="모임 시작 날짜를 선택하세요"
           />
-          {/* 종료 날짜 */}
+          {/* 종료 날짜 (사용자 입력) */}
           <StepDatePicker
             selectedDate={endDate ? new Date(endDate) : null} 
             onDateChange={(date) => setEndDate(date ? date.toISOString() : '')} 
