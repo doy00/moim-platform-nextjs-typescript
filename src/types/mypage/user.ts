@@ -27,7 +27,7 @@ export interface IUserEdit {
   position: string;
   introduction: string;
   tags: string[];
-  image?: File;
+  image?: File | null;
 }
 
 export interface IEditUserResponse {
