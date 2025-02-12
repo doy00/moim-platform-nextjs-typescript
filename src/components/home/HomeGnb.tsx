@@ -1,9 +1,8 @@
 'use client';
 
-import React from 'react';
+import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
 // Constants
 import { GNB_MENU } from '@/constants/home/gnb-menu';
 
@@ -20,7 +19,7 @@ export default function HomeGnb() {
 
     return (
       <li key={menu.name} className="cursor-pointer">
-        <Link href={menu.path}>
+        <Link href={menu.path} prefetch={false}>
           <div className="flex flex-col items-center w-[106px] h-[44px]">
             <menu.icon
               className={clsx(
