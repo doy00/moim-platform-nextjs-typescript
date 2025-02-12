@@ -35,21 +35,20 @@ export const ImageBox: React.FC<IImageBox> = ({
   /// 이미지 소스 처리하는 함수
   const getImageSource = (): string | StaticImageData => {
     // 이미지가 에러상태 또는 이미지가 없을 경우
-    if (hasError || !image) {
+    if (hasError || !image || image === "") {
       return DEFAULT_IMAGE.MOIM;
     }
     // 이미지가 StaticImageData 타입인 경우 그대로 반환
     if (typeof image !== 'string') {
       return image;
     }
-    // 이미지가 URL 형태일 경우 
-    if (image.startsWith('http') || image.startsWith('data:') || image.startsWith('/')) {
+    // 이미지가 URL 형태일 경우 그대로 반환
+    if (image.startsWith('https') || image.startsWith('data:') || image.startsWith('/')) {
       return image;
     }
     // 이미지가 상대 경로일 경우
     return `images/${image}`;  
   };
-  
   return (
     <div className={cn(
       "relative w-full mx-auto rounded-2xl overflow-hidden",
@@ -64,15 +63,15 @@ export const ImageBox: React.FC<IImageBox> = ({
         <Image 
           src={getImageSource()}
           alt={alt}
-          width={1240}
-          height={600}
+          // width={1240}
+          // height={600}
+          fill
           className={cn(
             'w-full h-full object-cover',
-            'absolute'
           )}
           sizes={IMAGE_SIZE.DEFAULT}
           onError={() => setHasError(true)}
-          priority={false}
+          priority={true}
         />
       </div>
     </div>
