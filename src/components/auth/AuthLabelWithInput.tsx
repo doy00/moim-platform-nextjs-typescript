@@ -53,7 +53,7 @@ export default function AuthLabelWithInput({
   const error = get(errors, name);
 
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 min-h-[108px]">
       <label htmlFor={id} className="text-body-2-normal font-semibold">
         {label} {isRequired && <span className="text-red200">*</span>}
       </label>
