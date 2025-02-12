@@ -28,8 +28,9 @@ export default function AuthTempPage() {
 
   useEffect(() => {
     if (!me) return;
+    queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     router.replace(next || '/');
-  }, [me, router, next]);
+  }, [me, router, next, queryClient]);
 
   return null;
 }

@@ -57,6 +57,7 @@ export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, 
       setLocalStorageItem('access_token', data.tokens.accessToken);
       setLocalStorageItem('refresh_token', data.tokens.refreshToken);
       queryClient.setQueryData([QUERY_KEY_ME], data.me);
+      queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     },
   });
 }
@@ -74,6 +75,7 @@ export function useSignInMutation(): UseMutationResult<
       setLocalStorageItem('access_token', data.tokens.accessToken);
       setLocalStorageItem('refresh_token', data.tokens.refreshToken);
       queryClient.setQueryData([QUERY_KEY_ME], data.me);
+      queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     },
   });
 }
