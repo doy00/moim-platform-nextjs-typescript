@@ -78,7 +78,6 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     ...detailData,
     image: detailData.image || DEFAULT_IMAGE.MOIM
   } : null;
-    if (isDetailLoading || isMeLoading) return <DetailSkeleton />;
 
   // 신청하기 버튼 라벨 결정
   const getActionLabel = () => {
@@ -87,8 +86,11 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     if (!canJoin || moim?.status !== 'RECRUIT') return '모집마감';
     return '신청하기';
   };
+
+  if (isDetailLoading || isMeLoading || !detailData || !masterUser) return <DetailSkeleton />;
+
   return (
-    <div>
+    // <div>
       <DetailPresenter
         data={moim || null}
         masterUser={masterUser || null}
@@ -102,6 +104,6 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         actionLabel={getActionLabel()}
         disabled={!canJoin || isJoined}
       />
-    </div>
+    // </div>
   );
 }
