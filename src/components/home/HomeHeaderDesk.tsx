@@ -11,14 +11,14 @@ import { GNB_MENU } from '@/constants/home/gnb-menu';
 import { HeaderAnimation } from '../mypage/LoadingAnimation';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { confirmSignout } from '../make/MakeSoner';
-import { MdLogout } from 'react-icons/md';
 import { PiSignOutBold } from "react-icons/pi";
+import { useHomeAuthStore } from '@/stores/home/homeAuthStore';
 
 export default function HomeHeaderDesk() {
   const router = useRouter();
   const pathname = usePathname();
   const { signOut } = useAuth();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  const { isLoggedIn, setIsLoggedIn } = useHomeAuthStore()
 
   const showGnbDeskPaths = ['/', ,`/detail/`, '/mylike', '/mypage'];
   const isDetailPage = pathname.startsWith('/detail/');
@@ -27,8 +27,18 @@ export default function HomeHeaderDesk() {
 
 
 useEffect(() => {
-  setIsLoggedIn(!!localStorage.getItem("access_token"));
-}, []);
+  const updateAuthState = () => {
+    setIsLoggedIn(!!localStorage.getItem("access_token"));
+  }
+
+  updateAuthState();
+
+  window.addEventListener("storage", updateAuthState)
+  return () => {
+    window.removeEventListener("storage", updateAuthState)
+  }
+
+}, [setIsLoggedIn]);
 
 if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌더링하지 않음
 
@@ -59,7 +69,10 @@ if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌�
   };
 
   const handleLogout = () => {
-    confirmSignout(signOut)
+    confirmSignout(() => {
+      signOut(); 
+      setIsLoggedIn(false);
+    });
   };
 
   return (
