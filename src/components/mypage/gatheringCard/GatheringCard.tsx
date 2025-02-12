@@ -1,9 +1,9 @@
+import { useAuth } from '@/hooks/auth/auth.hook';
+import { useMoimLikeQuery } from '@/hooks/mypage/queries/useLikeyQuery';
 import { IMoim } from '@/types/mypage/moim.type';
+import { moimTypeIcon, moimTypeTag, statusTag } from '@/utils/mypage/statusTags';
 import Image from 'next/image';
 import Link from 'next/link';
-import { moimTypeTag, moimTypeIcon, statusTag } from '@/utils/mypage/statusTags';
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import { useMoimLikeQuery } from '@/hooks/mypage/queries/useLikeyQuery';
 import { useMemo } from 'react';
 
 interface Props {
@@ -106,7 +106,8 @@ export function GatheringCard({
   showInReviewTab = false,
   refetch,
 }: Props) {
-  const { data } = useUserQuery();
+  // const { data } = useUserQuery();
+  const { me: data } = useAuth();
   const isLiked = useMemo(() => {
     if (moim.likedUsers.find((userId) => userId === data?.id)) {
       return true;

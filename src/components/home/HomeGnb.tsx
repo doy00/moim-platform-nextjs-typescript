@@ -1,11 +1,11 @@
 'use client';
 
-import React from 'react';
+import clsx from 'clsx';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import clsx from 'clsx';
 // Constants
 import { GNB_MENU } from '@/constants/home/gnb-menu';
+import { useAuth } from '@/hooks/auth/auth.hook';
 
 export default function HomeGnb() {
   const pathname = usePathname();
@@ -13,14 +13,22 @@ export default function HomeGnb() {
   const showGnbPaths = ['/', '/mylike', '/mypage'];
   const shouldShowGnb = showGnbPaths.includes(pathname);
 
+  // 여러가지로 해봐도 잘 안되서 추가했습니다(오은)
+  const { me } = useAuth();
+
   if (!shouldShowGnb) return null;
 
   const renderedGnbMenu = GNB_MENU.map((menu) => {
     const isActive = pathname === menu.path;
 
+    // 여러가지로 해봐도 잘 안되서 추가했습니다(오은)
+    let path = menu.path;
+    if (menu.path === '/mypage' && !me) path = '/auth/signin';
+    if (menu.path === '/mylike' && !me) path = '/auth/signin';
+
     return (
       <li key={menu.name} className="cursor-pointer">
-        <Link href={menu.path}>
+        <Link href={path} prefetch={false}>
           <div className="flex flex-col items-center w-[106px] h-[44px]">
             <menu.icon
               className={clsx(

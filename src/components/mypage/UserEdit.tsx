@@ -5,7 +5,8 @@ import AuthSelect from '@/components/auth/AuthSelect';
 import TagInput from '@/components/common/TagInput';
 import Header from '@/components/mypage/header/Header';
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-import { useEditUserMutation, useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
+import { useAuth } from '@/hooks/auth/auth.hook';
+import { useEditUserMutation } from '@/hooks/mypage/queries/useUserQuery';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { IUserEdit } from '@/types/mypage/user';
 import { cn } from '@/utils/auth/ui.util';
@@ -19,7 +20,8 @@ import { toast } from 'sonner';
 type Position = 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND';
 
 export default function UserEdit() {
-  const { data, isLoading } = useUserQuery();
+  // const { data, isLoading } = useUserQuery();
+  const { me: data, isMeLoading: isLoading } = useAuth();
   const { mutate: editUser, isPending: isEditing } = useEditUserMutation();
   const fileInputRef = useRef<HTMLInputElement>(null);
 
@@ -101,6 +103,7 @@ export default function UserEdit() {
       introduction: textareaValue || '',
       tags: tags || [],
       position: position || '',
+      image: fileInputRef.current?.files?.[0] || null,
     };
 
     console.log('폼 제출 데이터:', editData);

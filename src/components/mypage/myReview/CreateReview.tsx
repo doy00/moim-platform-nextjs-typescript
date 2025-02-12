@@ -1,17 +1,17 @@
 'use client';
 
 import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
-import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import { IParticipatedMoim } from '@/types/mypage/moim.type';
-import Image from 'next/image';
-import { useRouter, usePathname } from 'next/navigation';
-import { useState, useMemo, useEffect } from 'react';
-import { usePostReviewMutation } from '@/hooks/mypage/queries/useReviewQuery';
-import { IReviewPost } from '@/types/mypage/reviews.type';
-import { useForm } from 'react-hook-form';
 import Header from '@/components/mypage/header/Header';
+import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
+import { useAuth } from '@/hooks/auth/auth.hook';
+import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
+import { usePostReviewMutation } from '@/hooks/mypage/queries/useReviewQuery';
+import { IParticipatedMoim } from '@/types/mypage/moim.type';
+import { IReviewPost } from '@/types/mypage/reviews.type';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 
 export default function CreateReview() {
   const router = useRouter();
@@ -19,7 +19,8 @@ export default function CreateReview() {
   const urlMoimId = pathname.split('/').pop();
 
   const { data, isLoading, error: queryError } = useParticipatedMoimQuery();
-  const { data: userData, error: userError } = useUserQuery();
+  // const { data: userData, error: userError } = useUserQuery();
+  const { me: userData, error: userError } = useAuth();
   const { mutate: postReview, isPending: isPosting } = usePostReviewMutation();
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [clicked, setClicked] = useState('');

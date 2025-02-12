@@ -57,6 +57,7 @@ export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, 
       setLocalStorageItem('access_token', data.tokens.accessToken);
       setLocalStorageItem('refresh_token', data.tokens.refreshToken);
       queryClient.setQueryData([QUERY_KEY_ME], data.me);
+      queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     },
   });
 }
@@ -67,12 +68,14 @@ export function useSignInMutation(): UseMutationResult<
   TAuthSignInInputs
 > {
   const queryClient = useQueryClient();
+
   return useMutation<TAuthSignInResponse, TError, TAuthSignInInputs>({
     mutationFn: postSignIn,
     onSuccess: (data) => {
       setLocalStorageItem('access_token', data.tokens.accessToken);
       setLocalStorageItem('refresh_token', data.tokens.refreshToken);
       queryClient.setQueryData([QUERY_KEY_ME], data.me);
+      queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     },
   });
 }
@@ -85,6 +88,7 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
       removeLocalStorageItem('access_token');
       removeLocalStorageItem('refresh_token');
       queryClient.setQueryData([QUERY_KEY_ME], null);
+      queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     },
   });
 }
@@ -163,9 +167,9 @@ export function useAuth() {
   }, [isSignOutPending, isUpdateMePending]);
 
   // 임시 콘솔 로그
-  useEffect(() => {
-    console.log('me =====>', me);
-  }, [me]);
+  // useEffect(() => {
+  //   console.log('me =====>', me);
+  // }, [me]);
 
   return {
     me,

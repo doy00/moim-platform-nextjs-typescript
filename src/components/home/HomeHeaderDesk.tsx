@@ -1,44 +1,62 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { useRouter, usePathname } from 'next/navigation';
-import Image from 'next/image';
-import PlusIcon from './icons/PlusIcon';
-import clsx from 'clsx';
 import { GNB_MENU } from '@/constants/home/gnb-menu';
-import { HeaderAnimation } from '../mypage/LoadingAnimation';
 import { useAuth } from '@/hooks/auth/auth.hook';
-import { confirmSignout } from '../make/MakeSoner';
-import { MdLogout } from 'react-icons/md';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
 import { PiSignOutBold } from 'react-icons/pi';
+import { confirmSignout } from '../make/MakeSoner';
+import { HeaderAnimation } from '../mypage/LoadingAnimation';
+import PlusIcon from './icons/PlusIcon';
 
 export default function HomeHeaderDesk() {
   const router = useRouter();
   const pathname = usePathname();
-  const { signOut } = useAuth();
-  const [isLoggedIn, setIsLoggedIn] = useState<boolean | null>(null);
+  // 여러가지로 해봐도 잘 안되서 추가 및 주석처리 했습니다(오은)
+  const { me, signOut } = useAuth();
+
+  // const { isLoggedIn, setIsLoggedIn } = useHomeAuthStore();
 
   const showGnbDeskPaths = ['/', , `/detail/`, '/mylike', '/mypage'];
   const isDetailPage = pathname.startsWith('/detail/');
 
   const shouldGndDesk = showGnbDeskPaths.includes(pathname) || isDetailPage;
 
-  useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem('access_token'));
-  }, []);
+  // useEffect(() => {
+  //   setIsLoggedIn(!!localStorage.getItem('access_token'));
+  // }, []);
 
-  if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌더링하지 않음
+  // useEffect(() => {
+  //   const updateAuthState = () => {
+  //     setIsLoggedIn(!!localStorage.getItem('access_token'));
+  //   };
+
+  //   updateAuthState();
+
+  //   window.addEventListener('storage', updateAuthState);
+  //   return () => {
+  //     window.removeEventListener('storage', updateAuthState);
+  //   };
+  // }, [setIsLoggedIn]);
+
+  // if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌더링하지 않음
 
   if (!shouldGndDesk) return null;
 
   const renderedDeskMenu = GNB_MENU.map((menu) => {
     const isActive = pathname === menu.path;
 
+    // 여러가지로 해봐도 잘 안되서 추가했습니다(오은)
+    let path = menu.path;
+    if (menu.path === '/mypage' && !me) path = '/auth/signin';
+    if (menu.path === '/mylike' && !me) path = '/auth/signin';
+
     return (
       <li key={menu.name} className="cursor-pointer">
-        <Link href={menu.path}>
+        <Link href={path}>
           <span
             className={clsx(
               'text-body-2-normal px-4 py-2 transition-colors',
@@ -57,7 +75,10 @@ export default function HomeHeaderDesk() {
   };
 
   const handleLogout = () => {
-    confirmSignout(signOut);
+    confirmSignout(() => {
+      signOut();
+      // setIsLoggedIn(false);
+    });
   };
 
   return (
@@ -66,7 +87,7 @@ export default function HomeHeaderDesk() {
         {/* Menu */}
         <div className="flex items-center">
           <Image
-            src="svgs/img_logo-text.svg"
+            src="/svgs/img_logo-text.svg"
             alt="img-logo-text"
             width={120}
             height={16}
@@ -84,7 +105,7 @@ export default function HomeHeaderDesk() {
               모임 만들기
             </span>
           </div>
-          {isLoggedIn && (
+          {me && (
             <div className="flex items-center space-x-2" onClick={handleLogout}>
               <div className="rounded-full bg-orange200 w-6 h-6 flex items-center justify-center">
                 <PiSignOutBold className="text-background200" />

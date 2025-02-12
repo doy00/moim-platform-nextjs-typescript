@@ -23,7 +23,6 @@ export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
     likes: moim.liked_counts,
     participants: moim.participants_counts,
     reviewsCount: moim.reviews_counts,
-    image: moim.images?.[0] || null,
     participatedUsers: moim.participated_moims.map(
       (participatedUser) =>
         ({
@@ -48,5 +47,6 @@ export function mapMoimsToClient(moims: TMoimsJoined[]): TMoimClient[] {
     isConfirmed: moim.is_confirmed,
     online: moim.online,
     likedUsers: moim.liked_moims.map((likedMoim) => likedMoim.user_uuid as string),
+    image: moim.images?.[0] ?? null,
   }));
 }
