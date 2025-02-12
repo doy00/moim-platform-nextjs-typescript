@@ -27,7 +27,7 @@ export default function SignUpForm() {
       passwordConfirm: '',
       position: undefined,
       introduction: '',
-      tags: [{ value: '' }],
+      tags: [],
     },
   });
 
@@ -157,7 +157,7 @@ export default function SignUpForm() {
                         }
                       />
 
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-2 min-h-[108px]">
                         <label htmlFor={positionId} className="text-body-2-normal font-medium">
                           직군 <span className="text-red200">*</span>
                         </label>
