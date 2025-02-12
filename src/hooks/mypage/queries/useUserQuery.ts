@@ -1,6 +1,7 @@
-import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
-import { getUserInfo, editUserInfo } from '@/apis/userInfo';
-import { IUserEdit, IEditUserResponse } from '@/types/mypage/user';
+import { editUserInfo, getUserInfo } from '@/apis/userInfo';
+import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
+import { IEditUserResponse, IUserEdit } from '@/types/mypage/user';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useRouter } from 'next/navigation';
 
 export const useUserQuery = () => {
@@ -19,7 +20,8 @@ export const useEditUserMutation = () => {
   return useMutation<IEditUserResponse, Error, IUserEdit>({
     mutationFn: (editData: IUserEdit) => editUserInfo(editData),
     onSuccess: (data: IEditUserResponse) => {
-      queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
+      // queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
+      queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
       router.push('/mypage');
     },
     onError: (error: any) => {
