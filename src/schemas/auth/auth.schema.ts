@@ -25,9 +25,8 @@ export const signUpSchema = z
     position: z.enum(['PM', 'DESIGNER', 'FRONTEND', 'BACKEND'], {
       required_error: '직군을 선택해주세요',
     }),
-    // .nullable(),
     introduction: z.string().max(20, '최대 20자까지 입력 가능해요').optional(),
-    tags: z.array(tagSchema).optional(),
+    tags: z.array(tagSchema).max(3, '최대 3개까지 입력 가능해요').optional(),
   })
   .partial() // 반드시 partial 처리해야 함
   .superRefine((data, ctx) => {

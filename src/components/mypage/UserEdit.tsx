@@ -1,22 +1,20 @@
 'use client';
 
+import { sendPasswordResetEmail } from '@/apis/userInfo';
+import AuthSelect from '@/components/auth/AuthSelect';
+import TagInput from '@/components/common/TagInput';
 import Header from '@/components/mypage/header/Header';
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import Image from 'next/image';
-import Link from 'next/link';
-import { useEffect, useState, useRef } from 'react';
-import { useEditUserMutation } from '@/hooks/mypage/queries/useUserQuery';
-import { Controller } from 'react-hook-form';
-import { useForm } from 'react-hook-form';
-import AuthSelect from '@/components/auth/AuthSelect';
-import { cn } from '@/utils/auth/ui.util';
+import { useEditUserMutation, useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { TAuthFormValues } from '@/types/auth/auth.type';
 import { IUserEdit } from '@/types/mypage/user';
-import { sendPasswordResetEmail } from '@/apis/userInfo';
-import TagInput from '@/components/common/TagInput';
-import { toast } from 'sonner';
+import { cn } from '@/utils/auth/ui.util';
 import { CheckCircle, XCircle } from 'lucide-react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { useEffect, useRef, useState } from 'react';
+import { Controller, useForm } from 'react-hook-form';
+import { toast } from 'sonner';
 
 type Position = 'PM' | 'DESIGNER' | 'FRONTEND' | 'BACKEND';
 
@@ -202,7 +200,7 @@ export default function UserEdit() {
                 alt="profile"
                 width={86}
                 height={86}
-                className="cursor-pointer"
+                className="cursor-pointer rounded-full w-16 h-16"
                 onClick={handleImageClick}
               />
             </div>
