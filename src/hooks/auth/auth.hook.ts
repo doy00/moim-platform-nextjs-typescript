@@ -163,9 +163,9 @@ export function useAuth() {
   }, [isSignOutPending, isUpdateMePending]);
 
   // 임시 콘솔 로그
-  useEffect(() => {
-    console.log('me =====>', me);
-  }, [me]);
+  // useEffect(() => {
+  //   console.log('me =====>', me);
+  // }, [me]);
 
   return {
     me,
