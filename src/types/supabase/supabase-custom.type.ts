@@ -49,6 +49,7 @@ export type TMoimClient = {
   likedUsers: string[];
   participatedUsers: TParticipatedUserClient[];
   reviews: TReviewClient[];
+  image: string | null;
 };
 
 export type TMoimsJoined = TMoims & {
