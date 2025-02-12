@@ -15,6 +15,7 @@ import PlusIcon from './icons/PlusIcon';
 export default function HomeHeaderDesk() {
   const router = useRouter();
   const pathname = usePathname();
+  // 여러가지로 해봐도 잘 안되서 추가 및 주석처리 했습니다(오은)
   const { me, signOut } = useAuth();
 
   // const { isLoggedIn, setIsLoggedIn } = useHomeAuthStore();
@@ -48,9 +49,14 @@ export default function HomeHeaderDesk() {
   const renderedDeskMenu = GNB_MENU.map((menu) => {
     const isActive = pathname === menu.path;
 
+    // 여러가지로 해봐도 잘 안되서 추가했습니다(오은)
+    let path = menu.path;
+    if (menu.path === '/mypage' && !me) path = '/auth/signin';
+    if (menu.path === '/mylike' && !me) path = '/auth/signin';
+
     return (
       <li key={menu.name} className="cursor-pointer">
-        <Link href={menu.path}>
+        <Link href={path}>
           <span
             className={clsx(
               'text-body-2-normal px-4 py-2 transition-colors',
