@@ -19,7 +19,6 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
     control,
     trigger,
     setValue,
-    setFocus,
     formState: { errors },
   } = useFormContext<TSignUpSchema>();
   const { fields, append, remove } = useFieldArray<TSignUpSchema, 'tags', 'id'>({
@@ -27,14 +26,16 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
     name: 'tags',
   });
   // 한글 조합 여부 state
+  const [tagInputValue, setTagInputValue] = useState('');
   const [isComposing, setIsComposing] = useState(false);
+  const [isTagInputExceeded, setIsTagInputExceeded] = useState(false);
 
   const handleAppendTag = () => {
-    if (fields.length < 3) append({ value: '' }, { shouldFocus: true });
+    if (fields.length < 3) append({ value: tagInputValue });
+    else setIsTagInputExceeded(true);
   };
 
   const handleRemoveTag = (index: number) => {
-    if (fields.length === 1) return;
     remove(index);
   };
 
@@ -50,10 +51,14 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
     // 한글 조합 중이라면 조합 완료 후에만 Enter/Tab 동작 처리
     if ((e.nativeEvent as any).isComposing || isComposing) return;
-    if (errors.tags) return;
     if (e.key === 'Enter' || e.key === 'Tab') {
       e.preventDefault();
+      if (signUpError) signUpReset();
+      setValue(`tags.${fields.length - 1}.value`, tagInputValue);
+      debouncedValidation(`tags`);
+      if (tagInputValue.length > 5) return;
       handleAppendTag();
+      setTagInputValue('');
     }
   };
 
@@ -62,10 +67,31 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
   }, 600);
 
   useEffect(() => {
-    if (fields.length === 1) return;
-    const latestAddedID = fields[fields.length - 1].id;
-    document.getElementById(latestAddedID)?.focus();
-  }, [fields, setFocus]);
+    if (!isTagInputExceeded) return;
+    setTimeout(() => {
+      setIsTagInputExceeded(false);
+    }, 1000);
+  }, [isTagInputExceeded]);
+
+  const tagExceeded = (() => {
+    if (isTagInputExceeded) {
+      return (
+        <span className="text-label-normal font-medium text-error">최대 3개까지 입력 가능해요</span>
+      );
+    }
+    if (errors.tags) {
+      return (
+        <span className="text-label-normal font-medium text-error">
+          최대 5글자까지 입력 가능해요
+        </span>
+      );
+    }
+    return (
+      <span className="text-label-normal font-medium text-gray300">
+        최대 5글자까지 입력 가능해요
+      </span>
+    );
+  })();
 
   return (
     <div className="flex flex-col gap-2">
@@ -78,26 +104,30 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
         </p>
       </div>
       <div className="flex flex-row gap-2">
+        <input
+          type="text"
+          id="tag"
+          value={tagInputValue}
+          onChange={(e) => setTagInputValue(e.target.value)}
+          onKeyDown={handleKeyDown}
+          onCompositionStart={handleComposition}
+          onCompositionEnd={handleComposition}
+          placeholder="# 태그추가"
+          className="flex gap-2 items-center rounded-xl px-4 py-2 bg-background400 outline-none text-gray700 text-caption-normal font-medium placeholder:text-gray300 w-[90px]"
+        />
         {fields.map((field, index) => (
           <AuthInput
             key={field.id}
             id={field.id}
             type="text"
             placeholder="# 태그추가"
+            defaultValue={`# ${field.value}`}
             name={`tags.${index}.value`}
-            onKeyDown={handleKeyDown}
-            onCompositionStart={handleComposition}
-            onCompositionEnd={handleComposition}
             isArray
             className={cn(
-              'h-[34px] w-[88px] text-xs',
+              'h-[34px] w-[88px] text-xs font-medium',
               (errors.tags || signUpError) && 'focus-visible:ring-error',
             )}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-              if (signUpError) signUpReset();
-              setValue(`tags.${index}.value`, e.target.value);
-              debouncedValidation(`tags`);
-            }}
           >
             <button
               type="button"
@@ -109,11 +139,7 @@ export default function AuthTags({ signUpError, signUpReset }: AuthTagsProps) {
           </AuthInput>
         ))}
       </div>
-      {errors.tags ? (
-        <p className="text-error text-label-normal font-medium">최대 5글자까지 입력 가능해요</p>
-      ) : (
-        <p className="text-label-normal text-gray300 font-semibold">최대 5글자까지 입력 가능해요</p>
-      )}
+      {tagExceeded}
     </div>
   );
 }
