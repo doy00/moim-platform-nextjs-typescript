@@ -9,8 +9,8 @@ export const updateSession = async (request: NextRequest) => {
     },
   });
 
-  console.log('Cookies:', request.cookies.getAll());
-  console.log('URL:', request.nextUrl.pathname);
+  // console.log('Cookies:', request.cookies.getAll());
+  // console.log('URL:', request.nextUrl.pathname);
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
@@ -37,7 +37,7 @@ export const updateSession = async (request: NextRequest) => {
     data: { user },
   } = await supabase.auth.getUser();
 
-  console.log('user in middlware ====>', user);
+  // console.log('user in middlware ====>', user);
   // 로그인이 안되었을 때, /, /api, /detail, /auth 를 제외하고는 모두 로그인 페이지로 리다이렉트 한다.
   // /favorite, /make, /mypage 는 로그인이 필요하므로 리다이렉트 한다
 
