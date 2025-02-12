@@ -35,7 +35,7 @@ const IntersectionObserver = ({
     };
   }, [onIntersect, threshold, rootMargin]);
 
-  return <div ref={observerRef} style={{ height: '1px' }} />;
+  return <div ref={observerRef} style={{ height: '5px' }} />;
 };
 
 export default IntersectionObserver;

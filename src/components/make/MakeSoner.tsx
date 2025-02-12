@@ -1,5 +1,3 @@
-"use client";
-
 import { toast } from "sonner";
 import { CheckCircle, XCircle } from "lucide-react";
 import { MdLogout } from "react-icons/md";
@@ -13,7 +11,11 @@ export const makeSuccessToast = (moimId: string, onNavigate?: () => void) => {
     action: onNavigate
       ? {
           label: "모임 보러가기",
-          onClick: onNavigate,
+          onClick: () => {
+            setTimeout(() => {
+              onNavigate();
+            }, 0);
+          },
         }
       : undefined,
   });
@@ -36,7 +38,11 @@ export const confirmSignout = (onSignout: () => void) => {
     position: "top-center",
     action: {
       label: "로그아웃",
-      onClick: onSignout,
+      onClick: () => {
+        setTimeout(() => {
+          onSignout();
+        }, 0);
+      },
     },
   });
 };

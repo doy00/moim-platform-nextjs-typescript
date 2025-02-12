@@ -1,19 +1,28 @@
 import { useRouter } from "next/navigation";
 import axiosHomeInstance from "@/libs/home/home-axios";
 import { useMakeStore } from "@/stores/make/makeStore";
-import { useQueryClient } from "@tanstack/react-query"; 
+import { useQueryClient } from "@tanstack/react-query";
 import { makeSuccessToast, makeErrorToast } from "@/components/make/MakeSoner";
+import { useState, useCallback } from "react";
 
 export function useCreateMoim() {
   const router = useRouter();
   const queryClient = useQueryClient(); 
 
-  const createMoim = async () => {
+  // 요청 중인지 상태 추적 (중복 제출 방지)
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const createMoim = useCallback(async () => {
+    if (isSubmitting) return;
+    setIsSubmitting(true);
+
+    // 현재 상태를 조회하여 폼 데이터 구성
     const currentState = useMakeStore.getState();
     const moimData = {
       title: currentState.title,
       content: currentState.content,
-      roadAddress: currentState.isOnline ? "온라인으로 진행합니다" : currentState.roadAddress, 
+      // isOnline 상태에 따라 주소 값 결정
+      roadAddress: currentState.isOnline ? "온라인으로 진행합니다" : currentState.roadAddress,
       recruitmentDeadline: currentState.recruitmentDeadline,
       startDate: currentState.startDate,
       endDate: currentState.endDate,
@@ -37,10 +46,10 @@ export function useCreateMoim() {
       if (response.data && response.data.moimId) {
         makeSuccessToast(response.data.moimId, () => router.push(`/detail/${response.data.moimId}`));
 
-        // 새로운 모임 데이터가 즉시 반영되도록 캐시 무효화
         await queryClient.invalidateQueries({ queryKey: ['moims'] });
 
         useMakeStore.getState().reset();
+        
         setTimeout(() => {
           router.push("/");
         }, 1500);
@@ -50,8 +59,10 @@ export function useCreateMoim() {
     } catch (error: any) {
       console.error('모임 생성 실패:', error);
       makeErrorToast();
+    } finally {
+      setIsSubmitting(false);
     }
-  };
+  }, [isSubmitting, queryClient, router]);
 
   return { createMoim };
 }

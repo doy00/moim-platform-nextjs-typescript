@@ -14,7 +14,12 @@ import AuthLoading from './AuthLoading';
 import AuthQuestions from './AuthQuestions';
 import { DothemeetLogo } from './icons';
 
+//Jake
+import { useHomeAuthStore } from '@/stores/home/homeAuthStore';
+
 export default function SignInForm() {
+  const { setIsLoggedIn } = useHomeAuthStore()
+
   const router = useRouter();
   const methods = useForm<TSignInSchema>({
     resolver: zodResolver(signInSchema),
@@ -34,7 +39,11 @@ export default function SignInForm() {
       email: data.email,
       password: data.password,
     };
-    signIn(signInData);
+    signIn(signInData, {
+      onSuccess: () => {
+        setIsLoggedIn(true);
+      }
+    });
   };
 
   const isDisabled =

@@ -57,16 +57,16 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
     <>
       <div className="px-4 pt-[14px] space-y-4 bg-background300 min-h-[827px] pb-[62px] h-dvh">
         {sortedMoims.length > 0 ? (
-          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-x-5 gap-y-6">
+          <div className="grid grid-cols-1 2xl:grid-cols-2 gap-x-5 gap-y-6 pb-[62px]">
             {sortedMoims.map((item) => (
               <HomeCard key={item.moimId} data={item} />
             ))}
+            <IntersectionObserver onIntersect={handleIntersect} />
           </div>
         ) : (
           <p className="text-center text-gray-500">필터에 맞는 모임이 없습니다.</p>
         )}
       </div>
-      <IntersectionObserver onIntersect={handleIntersect} />
     </>
   );
 }
