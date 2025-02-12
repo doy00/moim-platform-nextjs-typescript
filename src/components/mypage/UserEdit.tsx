@@ -101,6 +101,7 @@ export default function UserEdit() {
       introduction: textareaValue || '',
       tags: tags || [],
       position: position || '',
+      image: fileInputRef.current?.files?.[0] || null,
     };
 
     console.log('폼 제출 데이터:', editData);
