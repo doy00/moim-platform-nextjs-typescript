@@ -86,6 +86,7 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
       removeLocalStorageItem('access_token');
       removeLocalStorageItem('refresh_token');
       queryClient.setQueryData([QUERY_KEY_ME], null);
+      queryClient.invalidateQueries({ queryKey: ['getUserInfo'] });
     },
   });
 }
