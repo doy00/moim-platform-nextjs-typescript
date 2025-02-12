@@ -57,7 +57,7 @@ export const DetailSkeleton = () => {
       </div>
 
       {/* Floating Bar */}
-      <div className="fixed bottom-0 left-0 right-0 h-19 bg-white border-t border-gray200 flex items-center justify-between p-4">
+      <div className="fixed bottom-0 left-0 right-0 h-19 bg-white flex items-center justify-between p-4">
         <div className="flex items-center gap-3">
           <div className="w-[72px] h-14 bg-gray100 rounded-2xl animate-pulse" />
           <div className="min-w-max h-14 bg-gray100 rounded-2xl animate-pulse" />

@@ -8,6 +8,7 @@ import DetailPresenter from '@/components/detail/DetailPresenter';
 import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
 import { toast } from 'sonner';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 
 interface IDetailContainerProps {
   moimId: string;
@@ -24,7 +25,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   const { isJoined, canJoin, isHost, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
   const router = useRouter();
 
-  const moim = detail?.moim;
+  const detailData = detail?.moim;
   const masterUser = detail?.masterUser;
 
   // 찜하기 버튼 핸들러
@@ -72,8 +73,11 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
       }
     }
   };
-
-  if (isDetailLoading || isMeLoading) return <DetailSkeleton />;
+  // moim 데이터가 있을 때 기본 이미지 처리
+  const moim = detailData ? {
+    ...detailData,
+    image: detailData.image || DEFAULT_IMAGE.MOIM
+  } : null;
 
   // 신청하기 버튼 라벨 결정
   const getActionLabel = () => {
@@ -83,8 +87,10 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     return '신청하기';
   };
 
+  if (isDetailLoading || isMeLoading || !detailData || !masterUser) return <DetailSkeleton />;
+
   return (
-    <div>
+    // <div>
       <DetailPresenter
         data={moim || null}
         masterUser={masterUser || null}
@@ -98,6 +104,6 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         actionLabel={getActionLabel()}
         disabled={!canJoin || isJoined}
       />
-    </div>
+    // </div>
   );
 }
