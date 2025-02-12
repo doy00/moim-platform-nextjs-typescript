@@ -81,7 +81,7 @@ export default function HomeHeaderDesk() {
         {/* Menu */}
         <div className="flex items-center">
           <Image
-            src="svgs/img_logo-text.svg"
+            src="/svgs/img_logo-text.svg"
             alt="img-logo-text"
             width={120}
             height={16}
