@@ -1,4 +1,5 @@
 import { createServerClient } from '@supabase/ssr';
+import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const updateSession = async (request: NextRequest) => {
@@ -30,11 +31,14 @@ export const updateSession = async (request: NextRequest) => {
     },
   );
 
+  const cookieStore = await cookies();
+
   const {
     data: { user },
   } = await supabase.auth.getUser();
 
   console.log('user in middlware ====>', user);
+  console.log('cookieStore in middlware ====>', cookieStore);
   // 로그인이 안되었을 때, /, /api, /detail, /auth 를 제외하고는 모두 로그인 페이지로 리다이렉트 한다.
   // /favorite, /make, /mypage 는 로그인이 필요하므로 리다이렉트 한다
   if (
