@@ -24,9 +24,9 @@ export const deleteSignOut = () => {
   return api.delete<TSignOutResponse, TSignOutResponse>(url);
 };
 
-export const getMe = async () => {
+export const getMe = () => {
   const url = '/api/auth/me';
-  return await api.get<TMe, TMe>(url);
+  return api.get<TMe, TMe>(url);
 };
 
 export const putMe = (data: TPutMeInputs) => {
