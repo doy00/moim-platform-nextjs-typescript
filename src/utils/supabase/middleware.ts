@@ -30,23 +30,24 @@ export const updateSession = async (request: NextRequest) => {
     },
   );
 
-  // const {
-  //   data: { user },
-  // } = await supabase.auth.getUser();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  // // 로그인이 안되었을 때, /, /api, /detail, /auth 를 제외하고는 모두 로그인 페이지로 리다이렉트 한다.
-  // // /favorite, /make, /mypage 는 로그인이 필요하므로 리다이렉트 한다
-  // if (
-  //   !user &&
-  //   request.nextUrl.pathname !== '/' &&
-  //   !request.nextUrl.pathname.startsWith('/api') &&
-  //   !request.nextUrl.pathname.startsWith('/auth') &&
-  //   !request.nextUrl.pathname.startsWith('/detail')
-  // ) {
-  //   const url = request.nextUrl.clone();
-  //   url.pathname = '/auth/signin';
-  //   return NextResponse.redirect(url);
-  // }
+  console.log('user in middlware ====>', user);
+  // 로그인이 안되었을 때, /, /api, /detail, /auth 를 제외하고는 모두 로그인 페이지로 리다이렉트 한다.
+  // /favorite, /make, /mypage 는 로그인이 필요하므로 리다이렉트 한다
+  if (
+    !user &&
+    request.nextUrl.pathname !== '/' &&
+    !request.nextUrl.pathname.startsWith('/api') &&
+    !request.nextUrl.pathname.startsWith('/auth') &&
+    !request.nextUrl.pathname.startsWith('/detail')
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = '/auth/signin';
+    return NextResponse.redirect(url);
+  }
 
   return supabaseResponse;
 };
