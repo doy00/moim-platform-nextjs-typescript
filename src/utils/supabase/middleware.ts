@@ -1,5 +1,4 @@
 import { createServerClient } from '@supabase/ssr';
-import { cookies } from 'next/headers';
 import { NextResponse, type NextRequest } from 'next/server';
 
 export const updateSession = async (request: NextRequest) => {
@@ -9,9 +8,6 @@ export const updateSession = async (request: NextRequest) => {
       headers: request.headers,
     },
   });
-
-  const cookieStore = await cookies();
-  console.log('cookieStore in middlware ====>', cookieStore.getAll());
 
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
