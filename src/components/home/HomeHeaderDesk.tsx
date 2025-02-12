@@ -1,50 +1,47 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
-import { useRouter, usePathname } from 'next/navigation';
-import Image from 'next/image';
-import PlusIcon from './icons/PlusIcon';
-import clsx from 'clsx';
 import { GNB_MENU } from '@/constants/home/gnb-menu';
-import { HeaderAnimation } from '../mypage/LoadingAnimation';
 import { useAuth } from '@/hooks/auth/auth.hook';
+import clsx from 'clsx';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { PiSignOutBold } from 'react-icons/pi';
 import { confirmSignout } from '../make/MakeSoner';
-import { PiSignOutBold } from "react-icons/pi";
-import { useHomeAuthStore } from '@/stores/home/homeAuthStore';
+import { HeaderAnimation } from '../mypage/LoadingAnimation';
+import PlusIcon from './icons/PlusIcon';
 
 export default function HomeHeaderDesk() {
   const router = useRouter();
   const pathname = usePathname();
-  const { signOut } = useAuth();
-  const { isLoggedIn, setIsLoggedIn } = useHomeAuthStore()
+  const { me, signOut } = useAuth();
+
+  // const { isLoggedIn, setIsLoggedIn } = useHomeAuthStore();
 
   const showGnbDeskPaths = ['/', , `/detail/`, '/mylike', '/mypage'];
   const isDetailPage = pathname.startsWith('/detail/');
 
   const shouldGndDesk = showGnbDeskPaths.includes(pathname) || isDetailPage;
 
-  useEffect(() => {
-    setIsLoggedIn(!!localStorage.getItem('access_token'));
-  }, []);
+  // useEffect(() => {
+  //   setIsLoggedIn(!!localStorage.getItem('access_token'));
+  // }, []);
 
-useEffect(() => {
-  const updateAuthState = () => {
-    setIsLoggedIn(!!localStorage.getItem("access_token"));
-  }
+  // useEffect(() => {
+  //   const updateAuthState = () => {
+  //     setIsLoggedIn(!!localStorage.getItem('access_token'));
+  //   };
 
-  updateAuthState();
+  //   updateAuthState();
 
-  window.addEventListener("storage", updateAuthState)
-  return () => {
-    window.removeEventListener("storage", updateAuthState)
-  }
+  //   window.addEventListener('storage', updateAuthState);
+  //   return () => {
+  //     window.removeEventListener('storage', updateAuthState);
+  //   };
+  // }, [setIsLoggedIn]);
 
-}, [setIsLoggedIn]);
-
-if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌더링하지 않음
-
+  // if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌더링하지 않음
 
   if (!shouldGndDesk) return null;
 
@@ -73,8 +70,8 @@ if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌�
 
   const handleLogout = () => {
     confirmSignout(() => {
-      signOut(); 
-      setIsLoggedIn(false);
+      signOut();
+      // setIsLoggedIn(false);
     });
   };
 
@@ -102,7 +99,7 @@ if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌�
               모임 만들기
             </span>
           </div>
-          {isLoggedIn && (
+          {me && (
             <div className="flex items-center space-x-2" onClick={handleLogout}>
               <div className="rounded-full bg-orange200 w-6 h-6 flex items-center justify-center">
                 <PiSignOutBold className="text-background200" />
