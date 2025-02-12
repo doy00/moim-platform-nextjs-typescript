@@ -1,3 +1,4 @@
+import { TMe } from '@/types/auth/auth.type';
 import { IMoim } from '@/types/mypage/moim.type';
 import { IReview } from '@/types/mypage/reviews.type';
 import { IUser } from '@/types/mypage/user';
@@ -45,7 +46,7 @@ export const moimTypeIcon = (moim?: IMoim) => {
   return '/images/mypage/puzzle-on.svg'; // 기본값 설정
 };
 
-export const userPositionTag = (user?: IUser) => {
+export const userPositionTag = (user?: IUser | TMe) => {
   if (user?.position === 'FRONTEND') {
     return '프론트엔드';
   } else if (user?.position === 'BACKEND') {

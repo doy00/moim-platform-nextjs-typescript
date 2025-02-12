@@ -1,6 +1,6 @@
 'use client';
 
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
+import { useAuth } from '@/hooks/auth/auth.hook';
 import { userPositionTag } from '@/utils/mypage/statusTags';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -15,12 +15,13 @@ const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
 );
 
 export default function MyProfile() {
-  const { data, isLoading } = useUserQuery();
-  const position = userPositionTag(data);
+  // const { data, isLoading } = useUserQuery();
+  const { me, isMeLoading } = useAuth();
+  const position = userPositionTag(me);
 
   // console.log(position);
 
-  if (isLoading) {
+  if (isMeLoading) {
     return (
       <ProfileWrapper>
         <div className="animate-pulse flex gap-2 justify-between">
@@ -36,12 +37,12 @@ export default function MyProfile() {
 
   return (
     <ProfileWrapper>
-      {data && (
+      {me && (
         <div>
           <div className="flex gap-2 justify-between">
             <div className="flex flex-col gap-2">
               <div className="flex gap-1.5">
-                <span className="text-lg font-semibold">{data?.nickname}</span>
+                <span className="text-lg font-semibold">{me?.nickname}</span>
                 {position && (
                   <span className="rounded-[20px] px-2 py-1 bg-gray200 text-gray600 font-medium text-caption-normal">
                     {position}
@@ -51,10 +52,10 @@ export default function MyProfile() {
                   <Image src="/images/mypage/edit.svg" alt="edit" width={15} height={15} />
                 </Link>
               </div>
-              <span className="text-[13px] font-normal text-[#9E9892]">{data?.introduction}</span>
+              <span className="text-[13px] font-normal text-[#9E9892]">{me?.introduction}</span>
             </div>
             <Image
-              src={data?.image ?? '/images/mypage/profile-default.svg'}
+              src={me?.image ?? '/images/mypage/profile-default.svg'}
               alt="profile"
               width={64}
               height={64}
@@ -62,7 +63,7 @@ export default function MyProfile() {
             />
           </div>
           <div className="flex gap-1">
-            {data?.tags?.map((tag) => (
+            {me?.tags?.map((tag) => (
               <span
                 key={tag}
                 className="rounded-[6px] bg-gray50 px-1.5 py-[3px] text-caption-normal font-medium text-gray400"
