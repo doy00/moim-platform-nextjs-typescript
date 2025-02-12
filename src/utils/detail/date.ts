@@ -1,5 +1,4 @@
 // 날짜 데이터 관련 유틸 함수
-
 /**
  * 1. 날짜 데이터 형식 변환 함수
  * @param dateString - ISO 형식의 날짜 문자열 (예: '2025-01-31T09:00:00.000Z')
@@ -20,16 +19,29 @@ export const formatDate = (
 
     // 에러 처리
     if (isNaN(date.getTime())) {
+      console.error('Invalid date:', dateString);
       throw new Error('Invalid date');
+      
     }
 
     // 한국 시간대로 변환
-    const koreanDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
-    const formattedDate = koreanDate
+    // const koreanDate = new Date(date.getTime() + 9 * 60 * 60 * 1000);
+
+    // 서버/클라이언트 간 일관성을 위해 UTC 기준으로 변환
+    const utcDate = new Date(Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate(),
+      date.getUTCHours(),
+      date.getUTCMinutes()
+    ));
+
+    const formattedDate = utcDate
       .toLocaleDateString('ko-KR', {
         year: '2-digit',
         month: '2-digit',
         day: '2-digit',
+        timeZone: 'UTC'  // 서버와 클라이언트 간 일관성을 위해 UTC 사용
       })
       .split('.')
       .map((part) => part.trim())
@@ -39,14 +51,27 @@ export const formatDate = (
       return formattedDate;
     }
 
-    // 시간 포함 시 시:분 형식 추가
-    const hours = String(koreanDate.getHours()).padStart(2, '0');
-    const minutes = String(koreanDate.getMinutes()).padStart(2, '0');
-    return `${formattedDate}${delimiter}${hours}:${minutes}`;
+    const timeString = utcDate.toLocaleTimeString('ko-KR', {
+      hour: '2-digit',
+      minute: '2-digit',
+      timeZone: 'UTC',  // 서버와 클라이언트 간 일관성을 위해 UTC 사용
+      hour12: false
+    });
+
+    return `${formattedDate}${delimiter}${timeString}`;
   } catch (error) {
     console.error('Date formatting error:', error);
-    return '날짜 형식 오류';
+    throw error;
   }
+
+    // 시간 포함 시 시:분 형식 추가
+  //   const hours = String(utcDate.getHours()).padStart(2, '0');
+  //   const minutes = String(utcDate.getMinutes()).padStart(2, '0');
+  //   return `${formattedDate}${delimiter}${hours}:${minutes}`;
+  // } catch (error) {
+  //   console.error('Date formatting error:', error);
+  //   return '날짜 형식 오류';
+  // }
 };
 
 /**
@@ -98,12 +123,25 @@ export const formatDateRange = (startDate: string, endDate: string): string => {
  */
 export const getDeadlineText = (deadlineDate: string): string => {
   try {
+    const date = new Date(deadlineDate);
     const deadline = new Date(deadlineDate);
     const now = new Date();
 
     // 날짜 비교를 위해 시간을 00:00:00으로 설정
-    const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
-    const targetDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
+    // UTC 기준으로 날짜 변환
+    const today = new Date(Date.UTC(
+      now.getUTCFullYear(),
+      now.getUTCMonth(),
+      now.getUTCDate()
+    ));
+    
+    const targetDate = new Date(Date.UTC(
+      date.getUTCFullYear(),
+      date.getUTCMonth(),
+      date.getUTCDate()
+    ));
+    // const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+    // const targetDate = new Date(deadline.getFullYear(), deadline.getMonth(), deadline.getDate());
 
     const diffTime = targetDate.getTime() - today.getTime();
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));

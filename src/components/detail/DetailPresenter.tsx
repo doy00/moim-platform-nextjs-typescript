@@ -36,7 +36,7 @@ export default function DetailPresenter({
     <div className="w-full min-h-screen mx-auto px-4 pb-[92px] bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
         <Header />
         <DetailShare />
-        <ImageBox image={DEFAULT_IMAGE.MOIM} />
+        <ImageBox image={data.image} />
         <DetailInfo 
           title={data.title}
           address={data.address || '온라인으로 진행합니다'}
