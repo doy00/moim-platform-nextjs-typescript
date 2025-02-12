@@ -4,24 +4,20 @@ import { GatheringCard } from '@/components/mypage/gatheringCard/GatheringCard';
 import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
 import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
 import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
-import { LoadingAnimation } from '@/components/mypage/LoadingAnimation';
-import { useParticipatedMoimQuery } from '@/hooks/mypage/queries/useMoimsQuery';
-import { useUserQuery } from '@/hooks/mypage/queries/useUserQuery';
 import { IParticipatedMoim } from '@/types/mypage/moim.type';
 import Image from 'next/image';
-import { useRouter } from 'next/navigation';
-import { useState } from 'react';
+import { useRouter, usePathname } from 'next/navigation';
+import { useState, useMemo, useEffect } from 'react';
 import { usePostReviewMutation } from '@/hooks/mypage/queries/useReviewQuery';
 import { IReviewPost } from '@/types/mypage/reviews.type';
 import { useForm } from 'react-hook-form';
-import { IReviewPost } from '@/types/mypage/reviews.type';
-import { useForm } from 'react-hook-form';
-
-interface Props {
-  moim: IParticipatedMoim;
-}
+import Header from '@/components/mypage/header/Header';
 
 export default function CreateReview() {
+  const router = useRouter();
+  const pathname = usePathname();
+  const urlMoimId = pathname.split('/').pop();
+
   const { data, isLoading, error: queryError } = useParticipatedMoimQuery();
   const { data: userData, error: userError } = useUserQuery();
   const { mutate: postReview, isPending: isPosting } = usePostReviewMutation();
@@ -29,7 +25,7 @@ export default function CreateReview() {
   const [clicked, setClicked] = useState('');
   const [review, setReview] = useState('');
   const [showModal, setShowModal] = useState(false);
-  const router = useRouter();
+  const [filteredData, setFilteredData] = useState<IParticipatedMoim[]>([]);
 
   const methods = useForm<IReviewPost>({
     defaultValues: {
@@ -39,17 +35,15 @@ export default function CreateReview() {
     mode: 'onChange',
   });
 
-  // 파생 데이터 계산
-  const userUuid = userData?.id;
   const nickname = userData?.nickname;
-  const moimId = data?.map((m) => m.moimId);
 
-  // 기존 map 사용 시 중첩 배열이 생성되어 단일 배열로 변환하는 flatMap 사용
-  const participatedUserUuid = data?.flatMap((m) =>
-    m.participatedUsers.map((user) => user.userUuid),
-  );
-
-  const isParticipatedUser = Boolean(userUuid && participatedUserUuid?.includes(userUuid));
+  // filteredData 로직을 useEffect로 감싸 초기 렌더링 시에도 적용되게 수정
+  useEffect(() => {
+    if (data && urlMoimId) {
+      const filtered = data.filter((moim) => moim.moimId === urlMoimId);
+      setFilteredData(filtered);
+    }
+  }, [data, urlMoimId]);
 
   const handleClose = () => {
     setShowModal(true);
@@ -73,15 +67,7 @@ export default function CreateReview() {
     setSubmitError(null);
 
     try {
-      // data 배열에서 첫 번째 모임 정보를 사용
-      const currentMoim = moimId?.[0];
-
-      console.log('제출 데이터:', {
-        currentMoim,
-        reviewData: data,
-      });
-
-      if (!currentMoim) {
+      if (!urlMoimId) {
         setSubmitError('없는 모임');
         return;
       }
@@ -90,10 +76,9 @@ export default function CreateReview() {
         {
           review: data.review,
           rate: data.rate,
-          moimId: currentMoim,
+          moimId: urlMoimId,
         },
         {
-          // 리뷰 작성 후 페이지 새로고침해야 데이터 반영이 됨
           onSuccess: () => {
             window.location.href = '/mypage';
           },
@@ -118,11 +103,12 @@ export default function CreateReview() {
     return <div>오류가 발생했습니다</div>;
   }
 
-  if (isParticipatedUser) {
-    return (
-      <div className="flex flex-col gap-10 p-4">
+  return (
+    <>
+      <Header />
+      <div className="flex flex-col gap-8 px-5 py-[10px] md:max-w-[584px] mx-auto lg:max-w-[664px] xl:max-w-[664px] ['2xl']:max-w-[664px]">
         <div className="flex flex-col gap-6">
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between pb-[10px] ">
             <span className="text-body-1-normal font-semibold text-gray800">리뷰 작성하기</span>
             <Image
               src="/images/mypage/close.svg"
@@ -134,25 +120,31 @@ export default function CreateReview() {
             />
           </div>
           <span className="text-heading1 text-gray800 font-semibold">
-            {nickname}님<br /> 이번 모임에 대한 리뷰를 작성해주세요.
+            {nickname}님<br /> 이번 모임은 어땠나요?
           </span>
         </div>
         <div>
-          {data?.map((moim) => (
-            <GatheringCard
-              moim={moim}
-              key={moim.moimId}
-              hideStatus={true}
-              hideReviewButton={true}
-              disableLink={true}
-            />
+          {filteredData?.map((moim) => (
+            <div key={moim.moimId}>
+              <GatheringCard
+                moim={moim}
+                hideStatus={true}
+                hideReviewButton={true}
+                hideLikeButton={true}
+                disableLink={true}
+                showInReviewTab={true}
+              />
+            </div>
           ))}
         </div>
 
-        <form className="flex flex-col gap-6" onSubmit={methods.handleSubmit(onSubmit)}>
-          <span>모임은 어땠나요?</span>
+        <form className="flex flex-col gap-8" onSubmit={methods.handleSubmit(onSubmit)}>
+          <div className="flex items-center gap-[2px] pl-2">
+            <span className="text-gray800 text-body-1-normal font-medium">모임은 어땠나요?</span>
+            <span className="text-red200 text-body-2-normal font-medium">*</span>
+          </div>
 
-          <div className="flex gap-7 items-center justify-center sm:justify-start">
+          <div className="flex px-7 gap-8 items-center justify-center sm:justify-start">
             <button type="button" onClick={() => handleReview('SOSO')}>
               <Image
                 src={
@@ -193,9 +185,12 @@ export default function CreateReview() {
           {submitError && <div className="text-red-500 text-sm mt-2">{submitError}</div>}
 
           <div className="flex flex-col gap-6">
-            <label htmlFor="review" className="text-body-2-nomal font-medium text-gray-800">
-              구체적인 경험을 알려주세요
-            </label>
+            <div className="flex items-center gap-[2px] pl-2">
+              <label htmlFor="review" className="text-body-1-nomal font-medium text-gray-800">
+                구체적인 경험을 알려주세요
+              </label>
+              <span className="text-red200 text-body-2-normal font-medium">*</span>
+            </div>
             <textarea
               id="review"
               value={review}
@@ -203,7 +198,7 @@ export default function CreateReview() {
                 setReview(e.target.value);
                 methods.setValue('review', e.target.value);
               }}
-              className="w-full h-40 rounded-xl px-4 py-[18px] bg-background400 resize-none"
+              className="w-full h-40 rounded-xl px-4 py-[18px] bg-background400 resize-none outline-none"
               placeholder="모임의 장소, 환경, 진행, 구성 등 만족스러웠나요?"
             />
           </div>
@@ -211,8 +206,8 @@ export default function CreateReview() {
           <button
             type="submit"
             disabled={isDisabled}
-            className={`w-full h-14 rounded-2xl py-[17px] text-body-1-nomal font-semibold
-              ${isFormValid ? 'bg-orange200 text-white' : 'bg-gray950 text-gray600'}`}
+            className={`w-full h-14 mb-5 rounded-2xl py-[17px] text-body-1-nomal font-semibold
+              ${isFormValid ? 'bg-orange200 text-white' : 'bg-gray950 text-gray600'} outline-none`}
           >
             작성완료
           </button>
@@ -246,9 +241,6 @@ export default function CreateReview() {
           </div>
         )}
       </div>
-    );
-  } else {
-    // TODO : 모달이나 페이지 생성 예정
-    return <div>이 모임의 참여자가 아닙니다.</div>;
-  }
+    </>
+  );
 }

@@ -28,14 +28,18 @@ export default function Meetings({
   }, [data, filter, isConfirmed]);
 
   if (isLoading) {
-    return <GatheringSkeleton />;
+    return (
+      <div className="flex flex-col gap-4 max-w-[960px] 2xl:grid 2xl:grid-cols-2 ">
+        <GatheringSkeleton />
+      </div>
+    );
   }
 
   console.log(data);
 
   if (!data || data.length === 0) {
     return (
-      <div className="flex flex-col justify-center items-center h-full gap-6">
+      <div className="flex flex-col justify-center items-center h-[400px]">
         <div className="flex flex-col justify-center items-center gap-4">
           <Image
             src="/images/mypage/dudu-empty.svg"
@@ -52,7 +56,7 @@ export default function Meetings({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="flex flex-col gap-4 lg:grid lg:grid-cols-2">
+      <div className="flex flex-col gap-4 max-w-[960px] 2xl:grid 2xl:grid-cols-2 ">
         {filteredData?.map((moim) => (
           <div key={moim.moimId}>
             <GatheringCard moim={moim} refetch={refetch} />

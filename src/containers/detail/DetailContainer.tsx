@@ -8,37 +8,41 @@ import DetailPresenter from '@/components/detail/DetailPresenter';
 import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
 import { toast } from 'sonner';
 import { CheckCircle, XCircle } from 'lucide-react';
+import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 
 interface IDetailContainerProps {
   moimId: string;
 }
 
 export default function DetailContainer({ moimId }: IDetailContainerProps) {
-  const { isMeLoading } = useAuth();    // 로그인 상태 확인
-  const { data: detail, isLoading: isDetailLoading, error } = useMoimDetail(moimId, { enabled: !isMeLoading });
-  const { isLiked, handleToggleLike } = useLikeMoim(moimId);
+  const { me, isMeLoading } = useAuth(); // 로그인 상태 확인
+  const {
+    data: detail,
+    isLoading: isDetailLoading,
+    error,
+  } = useMoimDetail(moimId, { enabled: !isMeLoading, user: me });
+  const { isLiked, handleToggleLike } = useLikeMoim(moimId, { user: me });
   const { isJoined, canJoin, isHost, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
   const router = useRouter();
 
-  const moim = detail?.moim;
+  const detailData = detail?.moim;
   const masterUser = detail?.masterUser;
 
   // 찜하기 버튼 핸들러
   const handleLike = async () => {
     try {
       await handleToggleLike();
-      toast.success(
-        isLiked ? "찜하기가 취소되었어요" : "찜하기가 완료되었어요", {
-          icon: <CheckCircle className="w-5 h-5 text-green-500" />,
-          action: {
-            label: '내역 확인',
-            onClick: () => {
-              router.push('/mylike');
-            },
+      toast.success(isLiked ? '찜하기가 취소되었어요' : '찜하기가 완료되었어요', {
+        icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+        action: {
+          label: '내역 확인',
+          onClick: () => {
+            router.push('/mylike');
           },
-        });
+        },
+      });
     } catch (error) {
-      toast.error("잠시후 다시 시도해주세요");
+      toast.error('잠시후 다시 시도해주세요');
     }
   };
 
@@ -69,8 +73,11 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
       }
     }
   };
-
-  if (isDetailLoading || isMeLoading) return <DetailSkeleton />;
+  // moim 데이터가 있을 때 기본 이미지 처리
+  const moim = detailData ? {
+    ...detailData,
+    image: detailData.image || DEFAULT_IMAGE.MOIM
+  } : null;
 
   // 신청하기 버튼 라벨 결정
   const getActionLabel = () => {
@@ -80,8 +87,10 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     return '신청하기';
   };
 
+  if (isDetailLoading || isMeLoading || !detailData || !masterUser) return <DetailSkeleton />;
+
   return (
-    <div>
+    // <div>
       <DetailPresenter
         data={moim || null}
         masterUser={masterUser || null}
@@ -95,6 +104,6 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         actionLabel={getActionLabel()}
         disabled={!canJoin || isJoined}
       />
-    </div>
+    // </div>
   );
 }

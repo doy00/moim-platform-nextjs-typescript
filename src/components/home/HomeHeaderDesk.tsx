@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 
 import { useRouter, usePathname } from 'next/navigation';
@@ -20,11 +20,14 @@ export default function HomeHeaderDesk() {
   const { signOut } = useAuth();
   const { isLoggedIn, setIsLoggedIn } = useHomeAuthStore()
 
-  const showGnbDeskPaths = ['/', ,`/detail/`, '/mylike', '/mypage'];
+  const showGnbDeskPaths = ['/', , `/detail/`, '/mylike', '/mypage'];
   const isDetailPage = pathname.startsWith('/detail/');
 
-  const shouldGndDesk = showGnbDeskPaths.includes(pathname) || isDetailPage ;
+  const shouldGndDesk = showGnbDeskPaths.includes(pathname) || isDetailPage;
 
+  useEffect(() => {
+    setIsLoggedIn(!!localStorage.getItem('access_token'));
+  }, []);
 
 useEffect(() => {
   const updateAuthState = () => {
@@ -100,11 +103,13 @@ if (isLoggedIn === null) return null; // 초기 상태일 때 아무것도 렌�
             </span>
           </div>
           {isLoggedIn && (
-            <div className='flex items-center space-x-2' onClick={handleLogout}>
-              <div className='rounded-full bg-orange200 w-6 h-6 flex items-center justify-center'>
+            <div className="flex items-center space-x-2" onClick={handleLogout}>
+              <div className="rounded-full bg-orange200 w-6 h-6 flex items-center justify-center">
                 <PiSignOutBold className="text-background200" />
               </div>
-              <label className='text-body-2-normal font-semibold text-gray300 hover:text-[#42424A]'>로그아웃</label>
+              <label className="text-body-2-normal font-semibold text-gray300 hover:text-[#42424A]">
+                로그아웃
+              </label>
             </div>
           )}
         </div>

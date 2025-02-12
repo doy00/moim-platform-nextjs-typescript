@@ -4,18 +4,17 @@ import { useAuth, useSignUpMutation } from '@/hooks/auth/auth.hook';
 import { TSignUpSchema, signUpSchema } from '@/schemas/auth/auth.schema';
 import { cn } from '@/utils/auth/ui.util';
 import { zodResolver } from '@hookform/resolvers/zod';
-import Link from 'next/link';
 import { useEffect, useId } from 'react';
 import { Controller, FormProvider, useForm } from 'react-hook-form';
 import AuthButton from './AuthButton';
 import AuthLabelWithInput from './AuthLabelWithInput';
 import AuthLabelWithTextArea from './AuthLabelWithTextArea';
 import AuthLoading from './AuthLoading';
+import AuthLogos from './AuthLogos';
 import AuthQuestions from './AuthQuestions';
 import AuthSelect from './AuthSelect';
 import AuthSignUpComplete from './AuthSignUpComplete';
 import AuthTags from './AuthTags';
-import { DothemeetLogo } from './icons';
 
 export default function SignUpForm() {
   const positionId = useId();
@@ -28,7 +27,7 @@ export default function SignUpForm() {
       passwordConfirm: '',
       position: undefined,
       introduction: '',
-      tags: [{ value: '' }],
+      tags: [],
     },
   });
 
@@ -93,12 +92,10 @@ export default function SignUpForm() {
     <>
       {(isSignUpPending || isMeLoading) && <AuthLoading />}
 
-      <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background100">
+      <div className="w-full h-full min-h-dvh flex flex-col items-center justify-center bg-background200 md:bg-background200">
         <div className="w-[343px] md:w-[664px] 2xl:w-[1536px] min-h-dvh flex flex-col items-center justify-center md:justify-start pb-5 md:pb-0">
           <div className="w-full h-14 flex items-center">
-            <Link href="/" className="cursor-pointer">
-              <DothemeetLogo />
-            </Link>
+            <AuthLogos />
           </div>
           <div className="w-full h-full md:min-h-[1335px] 2xl:min-h-[1276px] flex flex-col items-center justify-start md:justify-center ">
             <FormProvider {...methods}>
@@ -160,7 +157,7 @@ export default function SignUpForm() {
                         }
                       />
 
-                      <div className="flex flex-col gap-2">
+                      <div className="flex flex-col gap-2 min-h-[108px]">
                         <label htmlFor={positionId} className="text-body-2-normal font-medium">
                           직군 <span className="text-red200">*</span>
                         </label>

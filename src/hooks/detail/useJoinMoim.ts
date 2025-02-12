@@ -4,8 +4,10 @@ import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { IMoimDetail, IMoimMasterResponse } from '@/types/detail/t-moim';
 import { QUERY_KEYS } from '@/constants/detail/detail.const';
+import { TMe } from '@/types/auth/auth.type';
 
 interface IUseJoinMoimOptions {
+  user?: TMe | null;
   onSuccess?: () => void;
   onError?: (error: unknown) =>  void;
 }

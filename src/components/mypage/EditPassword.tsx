@@ -5,6 +5,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { resetPassword } from '@/apis/userInfo';
 import { useRouter } from 'next/navigation';
+import { toast } from 'sonner';
+import { XCircle } from 'lucide-react';
 
 interface IUserValues {
   currentPassword: string;
@@ -19,6 +21,7 @@ const PasswordInput = ({
   showPassword,
   value,
   onChange,
+  onToggleVisibility,
 }: {
   id: string;
   label: string;
@@ -26,6 +29,7 @@ const PasswordInput = ({
   showPassword: boolean;
   value: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  onToggleVisibility: () => void;
 }) => (
   <div className="flex flex-col gap-3">
     <label htmlFor={id} className="flex justify-start items-center gap-[2px] px-2">
@@ -46,7 +50,10 @@ const PasswordInput = ({
           showPassword ? '/images/mypage/visibility_on.svg' : '/images/mypage/visibility_off.svg'
         }
         alt="password visibility"
+        width={24}
+        height={24}
         className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer"
+        onClick={onToggleVisibility}
       />
     </div>
     <span className="text-label-normal font-medium text-gray300 px-2">
@@ -78,12 +85,26 @@ export default function EditPassword() {
     const result = await resetPassword(newPassword);
 
     if (!result.redirectUrl) {
-      alert('비밀번호 변경에 실패했습니다');
+      toast.error('비밀번호 변경 실패', {
+        description: '비밀번호 변경에 실패했습니다',
+        icon: <XCircle className="w-5 h-5 text-red-500" />,
+        duration: 4000,
+        position: 'top-right',
+      });
       return;
     }
 
     router.push(result.redirectUrl);
   };
+
+  const togglePasswordVisibility = (field: 'current' | 'new' | 'confirm') => {
+    setPasswordVisibility((prev) => ({
+      ...prev,
+      [field]: !prev[field],
+    }));
+  };
+
+  const isAllFieldsFilled = currentPassword && newPassword && confirmPassword;
 
   return (
     <div className="h-auto flex flex-col gap-6 mx-auto max-w-[584px] md:bg-background300 md:rounded-[32px] md:px-11 md:py-10 md:my-14 lg:my-10">
@@ -96,15 +117,17 @@ export default function EditPassword() {
           showPassword={passwordVisibility.current}
           value={currentPassword}
           onChange={(e) => setCurrentPassword(e.target.value)}
+          onToggleVisibility={() => togglePasswordVisibility('current')}
         />
 
         <PasswordInput
           id="newPassword"
           label="새 비밀번호"
-          placeholder="8자 이상의 영문, 숫자 조합"
+          placeholder="새 비밀번호를 입력해주세요"
           showPassword={passwordVisibility.new}
           value={newPassword}
           onChange={(e) => setNewPassword(e.target.value)}
+          onToggleVisibility={() => togglePasswordVisibility('new')}
         />
 
         <PasswordInput
@@ -114,6 +137,7 @@ export default function EditPassword() {
           showPassword={passwordVisibility.confirm}
           value={confirmPassword}
           onChange={(e) => setConfirmPassword(e.target.value)}
+          onToggleVisibility={() => togglePasswordVisibility('confirm')}
         />
 
         <div className="flex flex-col items-center justify-center gap-4 w-full mt-[98px]">
@@ -125,7 +149,9 @@ export default function EditPassword() {
           </Link>
           <button
             type="submit"
-            className="bg-gray950 text-gray600 font-semibold text-body-1-nomal rounded-2xl py-[17px] w-full"
+            className={`${
+              isAllFieldsFilled ? 'bg-orange200 text-white' : 'bg-gray950 text-gray600'
+            } font-semibold text-body-1-nomal rounded-2xl py-[17px] w-full`}
           >
             비밀번호 변경
           </button>

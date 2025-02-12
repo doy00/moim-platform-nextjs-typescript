@@ -2,6 +2,7 @@ export { default as AuthButton } from './AuthButton';
 export { default as AuthInput } from './AuthInput';
 export { default as AuthLabelWithInput } from './AuthLabelWithInput';
 export { default as AuthLoading } from './AuthLoading';
+export { default as AuthLogos } from './AuthLogos';
 export { default as AuthQuestions } from './AuthQuestions';
 export { default as AuthSelect } from './AuthSelect';
 export { default as AuthSelectEmailKakao } from './AuthSelectEmailKakao';

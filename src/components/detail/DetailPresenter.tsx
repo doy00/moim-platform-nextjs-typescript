@@ -1,12 +1,11 @@
 // components/detail/DetailPresenter.tsx
 // 상세페이지 전체 UI 렌더링을 담당하는 컴포넌트
 'use client';
-import Link from 'next/link';
 // components
+import { Header } from '@/components/detail/Header';
 import { DetailHost } from '@/components/detail/DetailHost';
 import { DetailShare } from '@/components/detail/DetailShare';
 import { FloatingBar } from '@/components/detail/FloatingBar';
-import { DothemeetLogo } from '@/components/detail/icons/Dothemeet';
 import { ImageBox } from '@/components/detail/ImageBox';
 import { DetailContent } from '../../components/detail/DetailContent';
 import { DetailInfo } from '../../components/detail/DetailInfo';
@@ -35,11 +34,9 @@ export default function DetailPresenter({
   }
   return (
     <div className="w-full min-h-screen mx-auto px-4 pb-[92px] bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
-        <Link href="/" className="w-full h-14 py-[10px] flex items-center">
-          <DothemeetLogo />
-        </Link>
+        <Header />
         <DetailShare />
-        <ImageBox image={DEFAULT_IMAGE.MOIM} />
+        <ImageBox image={data.image} />
         <DetailInfo 
           title={data.title}
           address={data.address || '온라인으로 진행합니다'}

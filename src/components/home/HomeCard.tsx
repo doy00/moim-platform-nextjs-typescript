@@ -1,7 +1,7 @@
 // src/components/HomeCard.tsx
 'use client';
 
-import React  from 'react';
+import React from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import HeartIcon from './icons/HeartIcon';
@@ -10,25 +10,26 @@ import { useLikeStore } from '@/stores/home/likeStore';
 import { MOIM_TYPE_MAP } from '@/constants/home/card-constants';
 import { useQueryClient } from '@tanstack/react-query';
 
-
 export default function HomeCard({ data }: { data: IMoim }) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
-  const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } = data;
+  const { moimId, moimType, title, address, startDate, endDate, participants, likes, isConfirmed } =
+    data;
   const { likes: likedMoims, toggleLike, likeDeltas } = useLikeStore();
   const isLiked = likedMoims.has(String(moimId));
-  
+
   const baseLikes = likes ?? 0;
   const optimisticDelta = likeDeltas[moimId] || 0;
   const displayLikes = baseLikes + optimisticDelta;
 
   const today = new Date();
-  const end = new Date(endDate)
+  const end = new Date(endDate);
   const confirmedText = end < today ? '종료' : isConfirmed ? '개설확정' : '모집중';
 
   const handleLike = (event: React.MouseEvent) => {
     event.stopPropagation();
+    queryClient.invalidateQueries({ queryKey: ['liked-moims'] });
     queryClient.invalidateQueries({ queryKey: ['liked-moims'] });
     toggleLike(String(moimId));
   };
@@ -37,7 +38,7 @@ export default function HomeCard({ data }: { data: IMoim }) {
     router.push(`/detail/${moimId}`);
   };
 
-  const isLoggedIn = typeof window !== "undefined" && localStorage.getItem('access_token');
+  const isLoggedIn = typeof window !== 'undefined' && localStorage.getItem('access_token');
 
   const localizedMoimType = MOIM_TYPE_MAP[moimType] || moimType;
 
@@ -61,12 +62,17 @@ export default function HomeCard({ data }: { data: IMoim }) {
             <span className="text-caption-normal bg-background400 px-1.5 py-[3px] rounded-md">
               {localizedMoimType}
             </span>
-            <span className={`text-caption-normal ${ confirmedText === '종료' ? 'bg-red200' : 'bg-gray800'} text-white px-1.5 py-[3px] rounded-md`}>
+            <span
+              className={`text-caption-normal ${confirmedText === '종료' ? 'bg-red200' : 'bg-gray800'} text-white px-1.5 py-[3px] rounded-md`}
+            >
               {confirmedText}
             </span>
           </div>
           {isLoggedIn && (
-            <button onClick={handleLike} aria-label={isLiked ? 'Remove from likes' : 'Add to likes'}>
+            <button
+              onClick={handleLike}
+              aria-label={isLiked ? 'Remove from likes' : 'Add to likes'}
+            >
               <HeartIcon className={`w-6 h-6 ${isLiked ? 'fill-red-500' : 'fill-gray-300'}`} />
             </button>
           )}
