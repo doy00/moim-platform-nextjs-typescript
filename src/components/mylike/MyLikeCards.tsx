@@ -1,5 +1,5 @@
 'use client';
-// import { useFilterStore } from '@/stores/home/filterStore';
+import { AnimatePresence } from 'framer-motion';
 import MyLikeCard from './MyLikeCard';
 import { IMoimDetail } from '@/types/detail/t-moim';
 
@@ -13,14 +13,16 @@ export default function MyLikeCards({ moims, onRemoveLike, onClickCard }: IMyLik
 
   return (
       <div className="flex flex-col gap-4 md:gap-6 lg:grid lg:grid-cols-2 pt-[14px]">
-        {moims.map((moim) => (
-          <MyLikeCard 
-            key={moim.moimId} 
-            moim={moim} 
-            onClick={() => onClickCard(moim.moimId)}
-            onRemoveLike={(e) => onRemoveLike(e, moim.moimId)}
-          />
-        ))}
+        <AnimatePresence mode="popLayout">
+          {moims.map((moim) => (
+            <MyLikeCard 
+              key={moim.moimId} 
+              moim={moim} 
+              onClick={() => onClickCard(moim.moimId)}
+              onRemoveLike={(e) => onRemoveLike(e, moim.moimId)}
+            />
+          ))}
+        </AnimatePresence>
       </div>
   );
 }

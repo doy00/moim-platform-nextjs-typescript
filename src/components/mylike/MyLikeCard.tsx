@@ -7,6 +7,7 @@ import { formatDate } from '@/utils/detail/date';
 import { getMoimTypeText } from '@/utils/detail/enums';
 import { IMoimDetail } from '@/types/detail/t-moim';
 import Image from 'next/image';
+import { motion } from 'framer-motion';
 
 interface IStatusInfo {
   text: string;
@@ -62,9 +63,21 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
   const statusInfo = getStatusInfo(status, maxParticipants, participants, isConfirmed);
 
   return (
-    <div
+    <motion.div
       onClick={onClick}  
       className="relative flex flex-col w-full items-start bg-white rounded-2xl shadow-sm cursor-pointer transition-all hover:shadow-md"
+      initial={{ opacity: 0, y: 10 }}
+      animate={{ opacity: 1, y: 0 }}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
+      transition={{
+        duration: 0.2,
+        scale: {
+          type: "spring",
+          stiffness: 300,
+          damping: 20
+        }
+      }}
     >
       <div className="flex items-center p-4 lg:p-0 lg:px-6 lg:py-7 w-full">
         <div className="flex gap-5 items-start w-full">
@@ -122,7 +135,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
             </div>
           </div>
         </div>
-      </div>
+      </motion.div>
     
   );
 }
