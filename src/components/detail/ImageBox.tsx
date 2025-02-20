@@ -59,21 +59,17 @@ export const ImageBox: React.FC<IImageBox> = ({
       className
       )}
     >
-      <div className="absolute inset-0">
         <Image 
           src={getImageSource()}
           alt={alt}
-          // width={1240}
-          // height={600}
           fill
           className={cn(
-            'w-full h-full object-cover',
+            'object-cover absolute inset-0',
           )}
           sizes={IMAGE_SIZE.DEFAULT}
           onError={() => setHasError(true)}
-          priority={true}
+          priority
         />
-      </div>
     </div>
   )
 }

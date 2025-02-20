@@ -9,12 +9,15 @@ import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
 import { toast } from 'sonner';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
+import { CancelJoinDialog } from '@/components/detail/join/CancelJoinDialog';
+import { useState } from 'react';
 
 interface IDetailContainerProps {
   moimId: string;
 }
 
 export default function DetailContainer({ moimId }: IDetailContainerProps) {
+  const [showCancelDialog, setShowCancelDialog] = useState(false);
   const { me, isMeLoading } = useAuth(); // 로그인 상태 확인
   const {
     data: detail,
@@ -22,7 +25,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     error,
   } = useMoimDetail(moimId, { enabled: !isMeLoading, user: me });
   const { isLiked, handleToggleLike } = useLikeMoim(moimId, { user: me });
-  const { isJoined, canJoin, isHost, handleJoinMoim, isLoading: isJoining } = useJoinMoim(moimId);
+  const { isJoined, canJoin, isHost, handleJoinMoim, handleLeaveMoim, isLoading: isJoining } = useJoinMoim(moimId);
   const router = useRouter();
 
   const detailData = detail?.moim;
@@ -73,6 +76,49 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
       }
     }
   };
+
+  // 버튼 클릭 핸들러
+  const handleActionClick = () => {
+    if (isJoined) {
+      handleCancelClick();
+    } else {
+      handleJoin();
+    }
+  }
+
+  // 모임 신청 취소 버튼 핸들러
+  const handleCancelClick = () => {
+    setShowCancelDialog(true);
+  }
+
+  const handleCancelConfirm = async () => {
+    try {
+      const result = await handleLeaveMoim();
+      if (result.success) {
+        toast.success('모임 신청이 취소되었어요', {
+          icon: <CheckCircle className="w-5 h-5 text-green-500" />,
+          action: {
+            label: '내역 확인',
+            onClick: () => {
+              router.push('/mypage');
+          },
+        },
+      });
+        setShowCancelDialog(false);
+      }
+    } catch (error) {
+      if (error instanceof Error) {
+        toast.error(error.message, {
+          icon: <XCircle className="w-5 h-5 text-red-500" />,
+        });
+      } else {
+        toast.error('잠시후 다시 시도해주세요', {
+          icon: <XCircle className="w-5 h-5 text-red-500" />,
+        });
+      }
+    }
+  };
+
   // moim 데이터가 있을 때 기본 이미지 처리
   const moim = detailData ? {
     ...detailData,
@@ -82,7 +128,8 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   // 신청하기 버튼 라벨 결정
   const getActionLabel = () => {
     if (isHost) return '내가 작성한 모임입니다';
-    if (isJoined) return '신청완료';
+    // if (isJoined) return '신청완료';
+    if (isJoined) return '신청 취소하기';
     if (!canJoin || moim?.status !== 'RECRUIT') return '모집마감';
     return '신청하기';
   };
@@ -90,7 +137,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   if (isDetailLoading || isMeLoading || !detailData || !masterUser) return <DetailSkeleton />;
 
   return (
-    // <div>
+    <>
       <DetailPresenter
         data={moim || null}
         masterUser={masterUser || null}
@@ -99,11 +146,16 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         isJoining={isJoining}
         canJoin={canJoin}
         isLiked={isLiked || false}
-        onJoin={handleJoin}
+        onJoin={handleActionClick}
         onLikeToggle={handleLike}
         actionLabel={getActionLabel()}
-        disabled={!canJoin || isJoined}
+        disabled={isHost || moim?.status !== 'RECRUIT'}   // (!canJoin && isJoined) || 
       />
-    // </div>
+      <CancelJoinDialog
+        isOpen={showCancelDialog}
+        onClose={() => {setShowCancelDialog(false)}}
+        onConfirm={handleCancelConfirm}
+      />
+    </>
   );
 }

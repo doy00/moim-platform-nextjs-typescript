@@ -10,18 +10,13 @@ interface DetailPageProps {
 
 export default async function DetailPage({ params } : DetailPageProps) {
   // Dynamic route parameters 사용을 위해 비동기 처리
-  // const { id: moimId } = await Promise.resolve(params);
   const { id: moimId } = await params;
-
   usePrefetchDetail(moimId);
-
   return (
     <div>
-      {/* <HydrationBoundary state={dehydrate(queryClient)}> */}
-        <Suspense fallback={<DetailSkeleton />}>
-            <DetailContainer moimId={moimId} />
-        </Suspense>
-      {/* </HydrationBoundary> */}
+      <Suspense fallback={<DetailSkeleton />}>
+        <DetailContainer moimId={moimId} />
+      </Suspense>
     </div>
   );
-};
+}
