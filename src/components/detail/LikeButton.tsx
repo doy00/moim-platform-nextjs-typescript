@@ -6,7 +6,7 @@ interface ILikeButton {
   onHeartClick: () => void;
   isLiked?: boolean;
 }
-export const LikeButton = ({ onHeartClick, isLiked = false }: ILikeButton) => {
+const LikeButton = ({ onHeartClick, isLiked = false }: ILikeButton) => {
 
   return (
     <button
@@ -37,4 +37,6 @@ export const LikeButton = ({ onHeartClick, isLiked = false }: ILikeButton) => {
           </div>
         </button>
   )
-}
+};
+
+export default LikeButton;

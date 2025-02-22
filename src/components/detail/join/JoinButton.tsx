@@ -7,7 +7,7 @@ interface IJoinButton {
   className?: string;
 }
 
-export const JoinButton = ({ 
+const JoinButton = ({ 
   onJoinClick,
   isJoining = false,
   actionLabel,
@@ -24,4 +24,6 @@ export const JoinButton = ({
           {actionLabel}
       </button>
   )
-}
+};
+
+export default JoinButton;
