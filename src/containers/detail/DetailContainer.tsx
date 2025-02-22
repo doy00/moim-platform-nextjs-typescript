@@ -29,7 +29,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   // useLikeMoim에 모임 상세 데이터 전달
   const { isLiked, handleToggleLike } = useLikeMoim(moimId, {
     user: me,
-    initialData: detail  // [ ] 
+    initialData: detail
   });
   const { isJoined, canJoin, isHost, handleJoinMoim, handleLeaveMoim, isLoading: isJoining } = useJoinMoim(moimId);
   const router = useRouter();
@@ -40,9 +40,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   // 찜하기 버튼 핸들러
   const handleLike = async () => {
     try {
-      console.log('1. handleLike 시작', { me, isLiked });  // 로그 추가\
       await handleToggleLike();
-      console.log('2. handleToggleLike 완료');      
       toast.success(isLiked ? '찜하기가 취소되었어요' : '찜하기가 완료되었어요', {
         icon: <CheckCircle className="w-5 h-5 text-green-500" />,
         action: {
@@ -53,7 +51,6 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         },
       });
     } catch (error) {
-      console.error('3. 찜하기 에러발생:', error);
       toast.error('잠시후 다시 시도해주세요');
     }
   };

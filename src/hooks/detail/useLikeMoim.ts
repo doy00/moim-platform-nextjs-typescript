@@ -30,7 +30,6 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
     mutationFn: async () => {
       if (!user) throw new Error('로그인이 필요합니다');
       const response = await (isLiked ? likeApi.unlike(moimId) : likeApi.like(moimId));
-      console.log('Like 응답:', response);
       return response;
     },
 
@@ -80,7 +79,6 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
       if (context?.previousData) {
         queryClient.setQueryData(QUERY_KEYS.MOIM_DETAIL(moimId), context.previousData);
       }
-      console.error('찜하기 토글 실패:', error);
       onError?.(error);
     },
   });
@@ -88,15 +86,11 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   // 찜하기 토글 핸들러
   const handleToggleLike = async (e?: React.MouseEvent) => {
     e?.stopPropagation();
-    console.log('4. handleToggleLike 시작', { user, isLiked }); // 로그 추가
     if (!user) throw new Error('로그인이 필요합니다');
     try {
-      console.log('5. toggleLike mutation 시작'); 
       await toggleLike();
-      console.log('6. toggleLike mutation 완료');                
       return true;
     } catch (error) {
-      console.error('7. toggleLike 에러:', error);
       throw error;
     }
   };
