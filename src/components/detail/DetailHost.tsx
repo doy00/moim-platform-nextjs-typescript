@@ -41,7 +41,8 @@ export const DetailHost: React.FC<IDetailHostProps> = ({
                   alt={"주최자 프로필 이미지"}
                   fill
                   className="object-cover"
-                  priority
+                  priority={false}
+                  loading="lazy"
                 />
             </div>
 
