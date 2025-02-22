@@ -1,7 +1,7 @@
 // 모임 참여 현황을 알 수 있는 Progress Bar 컴포넌트입니다.
 import * as React from 'react';
 import { useState, useEffect } from 'react';
-import { Progress } from '@/components/detail/DetailProgress';
+import { Progress } from '@/components/detail/progress/DetailProgress';
 import { FireIcon } from './icons/FireIcon';
 
 interface IParticipantsProgressProps {
