@@ -22,6 +22,7 @@ export const ProfileImage = ({ src, alt, width, height, className }: ProfileImag
       height={height}
       className={className}
       onError={() => setImgSrc(DEFAULT_IMAGE.PROFILE)}
+      priority
     />
   );
 };
