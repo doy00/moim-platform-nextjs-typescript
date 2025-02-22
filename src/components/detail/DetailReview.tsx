@@ -98,7 +98,14 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
                   </div>
                 {/* 빈 화면 UI */}
                 <div className="relative flex flex-col items-center justify-center py-16">
-                  <DuduEmpty />
+                  {/* <DuduEmpty /> */}
+                  <Image
+                    src="/svgs/svg_dudu_empty.svg"
+                    alt="리뷰가 없습니다"
+                    width={180}
+                    height={180}
+                    priority
+                  />
                   <p className="mt-4 text-gray400 text-caption-normal">
                     아직 작성된 리뷰가 없어요
                   </p>
