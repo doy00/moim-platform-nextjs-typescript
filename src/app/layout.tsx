@@ -10,11 +10,16 @@ import HomeHeaderDesk from '@/components/home/HomeHeaderDesk';
 export const metadata: Metadata = defaultMetadata;
 
 const pretendard = localFont({
-  src: '../../public/fonts/PretendardVariable.woff2',
-  weight: '45 920',
-  style: 'normal',
-  display: 'swap',
+  src: [
+    {
+      path: '../fonts/PretendardVariable.woff2',
+      weight: '100 900',
+      style: 'normal',
+    },
+  ],
+  display: 'optional',
   variable: '--font-pretendard',
+  fallback: ['system-ui', 'Arial', 'sans-serif'],
 });
 
 export default function RootLayout({
@@ -25,12 +30,12 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        <script
+        {/* <script
           src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
           async
-        ></script>
+        ></script> */}
       </head>
-      <body className={`bg-background200 font-pretendard antialiased ${pretendard.variable}`}>
+      <body className={`bg-background200 antialiased ${pretendard.variable}`}>
         <QueryProvider>
           <HomeHeaderDesk />
           <div className="layout">{children}</div>
