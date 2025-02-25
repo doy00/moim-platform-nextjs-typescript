@@ -8,6 +8,7 @@ import { TMe } from '@/types/auth/auth.type';
 
 interface IUseJoinMoimOptions {
   user?: TMe | null;
+  // initialData?: IMoimMasterResponse; // [ ]
   onSuccess?: () => void;
   onError?: (error: unknown) =>  void;
 }
@@ -15,14 +16,18 @@ interface IUseJoinMoimOptions {
 export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) => {
   const { me, isMeLoading } = useAuth();
   const queryClient = useQueryClient();
-  const { onSuccess, onError } = options;
+  const { user, onSuccess, onError } = options;
 
+  // useQuery 제거하고 직접 캐시 데이터 접근
+  const moimDetail = queryClient.getQueryData<IMoimMasterResponse>(
+    QUERY_KEYS.MOIM_DETAIL(moimId)
+  );
   // 모임상세 조회
-  const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
-    queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
-    queryFn: () => getDetail(moimId),
-    enabled: !!moimId,
-  });
+  // const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
+  //   queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
+  //   queryFn: () => getDetail(moimId),
+  //   enabled: false,  // 직접 요청하지 않음
+  // });
 
 
   // 참여 취소 mutation
@@ -185,7 +190,7 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
     isHost: !!isHost,
     handleJoinMoim,
     handleLeaveMoim,
-    isLoading: isLoadingDetail || isJoining || isMeLoading,
+    isLoading: isJoining || isMeLoading,
     participantsCount: moimDetail?.moim.participants ?? 0,
     maxParticipants: moimDetail?.moim.maxParticipants ?? 0,
   };

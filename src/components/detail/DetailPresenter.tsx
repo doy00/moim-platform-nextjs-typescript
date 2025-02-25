@@ -15,8 +15,9 @@ import { DetailReview } from '../../components/detail/DetailReview';
 import { IDetailPresenterProps } from '@/types/detail/i-presenter';
 // constants
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
+import React from 'react';
 
-export default function DetailPresenter({
+function DetailPresenter({
   data,
   masterUser,
   participants,
@@ -60,12 +61,9 @@ export default function DetailPresenter({
         <DetailContent 
           content={data.content}
         />
-        <DetailHost 
-          // nickname="두두씨"
+        <DetailHost
           nickname={masterUser.nickname}
-          // introduction="안녕하세요! 기획하는 두두입니다."
           introduction={masterUser?.introduction || '안녕하세요!'}
-          // tags={['기획', '마케팅', '자기계발']}
           tags={masterUser?.tags || []}
           image={ masterUser?.image || DEFAULT_IMAGE.PROFILE}
         />
@@ -84,3 +82,5 @@ export default function DetailPresenter({
     </div>
   );
 }
+
+export default React.memo(DetailPresenter);

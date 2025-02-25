@@ -14,14 +14,19 @@ interface IUseLikeMoimOptions {
 }
 export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) => {
   const queryClient = useQueryClient();
-  const { user, initialData, onSuccess, onError } = options;
+  // const { user, initialData, onSuccess, onError } = options;
+  const { user, onSuccess, onError } = options;
 
-  const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
-    queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
-    queryFn: () => getDetail(moimId),
-    enabled: !!moimId,
-    initialData 
-  });
+  // 모임 상세 데이터
+  // const { data: moimDetail, isLoading: isLoadingDetail } = useQuery({
+  //   queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
+  //   queryFn: () => getDetail(moimId),
+  //   enabled: false  // 직접 요청하지 않음
+  // });
+  // useQuery 대신 직접 캐시한 데이터 접근
+  const moimDetail = queryClient.getQueryData<IMoimMasterResponse>(
+    QUERY_KEYS.MOIM_DETAIL(moimId)
+  );
 
   // 현재 유저가 이 모임을 찜했는지 확인
   const isLiked = user && moimDetail?.moim.likedUsers?.includes(user.id);
@@ -97,7 +102,7 @@ export const useLikeMoim = (moimId: string, options: IUseLikeMoimOptions = {}) =
   return {
     isLiked: !!isLiked,
     handleToggleLike,
-    isLoading: isLoadingDetail || isToggling,
+    isLoading: isToggling,
     likesCount: moimDetail?.moim.likes ?? 0,
   };
 };
