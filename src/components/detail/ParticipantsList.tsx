@@ -25,9 +25,9 @@ export const ParticipantsList: React.FC<IPartcipantsListProps> = ({
   const availableCount = Math.max(0, maxParticipants - participants.length);
 
   // 작성자 이미지 로딩 실패시 기본 이미지를 보여줌
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
-    e.currentTarget.src = DEFAULT_IMAGE.PROFILE;
-  };
+  // const handleImageError = (e: React.SyntheticEvent<HTMLImageElement>) => {
+  //   e.currentTarget.src = DEFAULT_IMAGE.PROFILE;
+  // };
     return (
       <div className="flex justify-between items-center w-full">
             <HoverCard closeDelay={300}>

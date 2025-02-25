@@ -43,16 +43,20 @@ export const ParticipantsProgressA: React.FC<IParticipantsProgressProps> = ({
           {`${currentCount}명 참여중`}
         </span>
       </motion.div>
-
+      {/* progress bar */}
       <div className="relative">
             <Progress
               value={targetProgress}
               className="h-3 rounded-full bg-gray200"
               progressColor={isMinimumMet ? "bg-brown400" : "bg-gray500"}   // 최소인원 달성 시 주황색
-              // animate={true}
               springConfig={springConfig}
+              // aria-label
+              aria-label={`progressDescription`}
+              aria-valuemin={0}
+              aria-valuemax={100}
+              aria-valuenow={targetProgress}
+              aria-valuetext={`${currentCount}명 참여 중 (${Math.round(targetProgress)}%)`}
             />
-
             {/* Fire 아이콘 */}
               <motion.div
                 className="absolute top-0.5"
@@ -70,11 +74,11 @@ export const ParticipantsProgressA: React.FC<IParticipantsProgressProps> = ({
                   }
                 }}
                 style={{ translateX: '-50%', translateY: '-50%', }}
+                aria-hidden="true"
               >
                 <FireIcon />
               </motion.div>
       </div>
-
       {/* 최소, 최대 인원 */}
       <motion.div className="flex justify-between text-xs">
         <span className="text-caption-normal font-medium text-gray500">
@@ -84,7 +88,6 @@ export const ParticipantsProgressA: React.FC<IParticipantsProgressProps> = ({
           {`최대인원 ${maxParticipants}명`}
         </span>
       </motion.div>
-      
     </div>
   );
 }

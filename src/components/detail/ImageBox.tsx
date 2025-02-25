@@ -3,12 +3,12 @@ import React, { memo, useState } from "react"
 import { IImageBox } from "@/types/detail/i-components"
 import { IMAGE_SIZE } from "@/constants/detail/detail.const";
 import { DEFAULT_IMAGE } from "@/constants/detail/detail.const";
-import Image, { StaticImageData } from "next/image";
+import Image from "next/image";
 import { cn } from "@/utils/detail/cn";
 
 const ImageBoxComponent: React.FC<IImageBox> = ({
   image,
-  alt= "모임 이미지",
+  alt,
   className,
   aspectRatio,
 }) => {
@@ -67,7 +67,7 @@ const ImageBoxComponent: React.FC<IImageBox> = ({
         <Image 
           // src={getImageSource()}
           src={image}
-          alt={alt}
+          alt={alt || '모임이미지'}
           fill
           className={cn(
             'object-cover absolute inset-0',

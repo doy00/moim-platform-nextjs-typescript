@@ -22,13 +22,15 @@ const Progress = React.forwardRef<
       mass: number;
     }
   }
->(({ className, value, progressColor, springConfig, ...props }, ref) => (
+>(({ className, value, progressColor, springConfig, "aria-label": ariaLabel, ...props }, ref) => (
   <ProgressPrimitive.Root
     ref={ref}
     className={cn(
       "relative h-full w-full overflow-hidden rounded-full bg-primary/20",
       className
     )}
+    // Progress 컴포넌트에 필수 ARIA 속성 추가
+    aria-label={ariaLabel || "진행 상태"}
     {...props}
   >
     <motion.div
@@ -41,6 +43,8 @@ const Progress = React.forwardRef<
         damping: 15,
         mass: 1,
       }}
+      // 스크린 리더는 progress root에서 정보를 가져오므로 여기서는 스크린 리더 접근 제한
+      aria-hidden="true"
     />
   </ProgressPrimitive.Root>
 ))
