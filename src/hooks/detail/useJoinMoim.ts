@@ -1,6 +1,6 @@
 // 모임 참여하기 커스텀 훅
-import { getDetail, joinApi } from '@/apis/detail/detail.api';
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { joinApi } from '@/apis/detail/detail.api';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { useAuth } from '@/hooks/auth/auth.hook';
 import { IMoimDetail, IMoimMasterResponse } from '@/types/detail/t-moim';
 import { QUERY_KEYS } from '@/constants/detail/detail.const';
@@ -8,7 +8,6 @@ import { TMe } from '@/types/auth/auth.type';
 
 interface IUseJoinMoimOptions {
   user?: TMe | null;
-  // initialData?: IMoimMasterResponse; // [ ]
   onSuccess?: () => void;
   onError?: (error: unknown) =>  void;
 }
@@ -28,7 +27,6 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
   //   queryFn: () => getDetail(moimId),
   //   enabled: false,  // 직접 요청하지 않음
   // });
-
 
   // 참여 취소 mutation
   const { mutateAsync: leaveMutation, isPending: isLeaving } = useMutation({
@@ -82,11 +80,7 @@ export const useJoinMoim = (moimId: string, options: IUseJoinMoimOptions = {}) =
       onError?.(error);
     }
   });
-
-
-
-
-
+  
   // 현재 유저가 이 모임을 이미 참여했는지 확인
   const isJoined = me && moimDetail?.moim.participatedUsers?.some(user => user.userUuid === me.id);
   // 참여 가능한 모임인지 확인 - 유저 신청 여부, 정원, 모집중(RECRUIT)

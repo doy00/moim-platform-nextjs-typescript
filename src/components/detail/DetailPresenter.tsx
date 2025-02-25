@@ -57,6 +57,7 @@ function DetailPresenter({
           maxParticipants={data.maxParticipants}
           minParticipants={data.minParticipants}
           currentParticipants={data.participants}
+          masterUser={masterUser} // 주최자 정보 전달
         />
         <DetailContent 
           content={data.content}

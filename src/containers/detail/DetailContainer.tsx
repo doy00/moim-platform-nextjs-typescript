@@ -10,7 +10,7 @@ import { toast } from 'sonner';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { DEFAULT_IMAGE } from '@/constants/detail/detail.const';
 import { CancelJoinDialog } from '@/components/detail/join/CancelJoinDialog';
-import { useCallback, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 
 interface IDetailContainerProps {
   moimId: string;
@@ -37,7 +37,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
 
 
 
-
+  // 메모이제이션 안한 데이터
   // const detailData = detail?.moim;
   // const masterUser = detail?.masterUser;
 
@@ -61,6 +61,17 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     return '신청하기';
   }, [isHost, isJoined, canJoin, moim?.status]);
 
+  // 신청하기 버튼 라벨 결정 로직을 클라이언트에서만 실행되도록 useEffect 적용
+  const [actionLabel, setActionLabel] = useState(''); 
+  const [clientDisabled, setClientDisabled] = useState(false);
+  useEffect(() => {
+    if (isHost) setActionLabel('내가 작성한 모임입니다');
+    if (isJoined) setActionLabel('신청 취소하기');
+    if (!canJoin || moim?.status !== 'RECRUIT') setActionLabel('모집마감');
+    else setActionLabel('신청하기');
+    
+    setClientDisabled(isHost || moim?.status !== 'RECRUIT');
+  }, [isHost, isJoined, canJoin, moim?.status]);
 
   // 메모ㅇ) 찜하기 버튼 핸들러
   const handleLike = useCallback(async () => {
@@ -233,7 +244,8 @@ const handleCloseDialog = useCallback(() => {
         onJoin={handleActionClick}
         onLikeToggle={handleLike}
         actionLabel={getActionLabel}
-        disabled={isHost || moim?.status !== 'RECRUIT'}   // (!canJoin && isJoined) || 
+        // disabled={isHost || moim?.status !== 'RECRUIT'}   // (!canJoin && isJoined) || 
+        disabled={clientDisabled}
       />
       <CancelJoinDialog
         isOpen={showCancelDialog}
