@@ -66,8 +66,8 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   const [clientDisabled, setClientDisabled] = useState(false);
   useEffect(() => {
     if (isHost) setActionLabel('내가 작성한 모임입니다');
-    if (isJoined) setActionLabel('신청 취소하기');
-    if (!canJoin || moim?.status !== 'RECRUIT') setActionLabel('모집마감');
+    else if (isJoined) setActionLabel('신청 취소하기');
+    else if (!canJoin || moim?.status !== 'RECRUIT') setActionLabel('모집마감');
     else setActionLabel('신청하기');
     
     setClientDisabled(isHost || moim?.status !== 'RECRUIT');
