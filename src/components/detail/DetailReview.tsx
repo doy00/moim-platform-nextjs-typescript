@@ -54,7 +54,7 @@ const ReviewItem: React.FC<IReviewItemProps> = ({ review, className }) => {
           <div className="flex items-center gap-2 text-caption-normal text-gray300">
             <span>{review.userNickname}</span>
             <div className="h-2 w-px bg-gray200"></div>
-            <span>{formatDate(review.createdAt)}</span>
+            <span suppressHydrationWarning={true}>{formatDate(review.createdAt)}</span>
           </div>
 
         </div>

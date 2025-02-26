@@ -76,10 +76,10 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
               {"모집 일정"}
             </span>
             <Separator orientation="vertical" className="h-2 bg-gray200" />
-            <span className="text-caption-normal font-medium text-gray500">
+            <span className="text-caption-normal font-medium text-gray500" suppressHydrationWarning={true}>
               {`${formatDate(createdAt)} - ${formatDate(recruitmentDeadline)}`}
             </span>
-            <span>
+            <span suppressHydrationWarning={true}>
               <ChipSmallRound variant="gray" text={getDeadlineText(recruitmentDeadline)} />
             </span>
           </div>
@@ -88,7 +88,7 @@ export const DetailInfo: React.FC<IDetailInfoProps> = ({
               {"모임 날짜"}
             </span>
             <Separator orientation="vertical" className="h-2 bg-gray200" />
-            <span className="text-caption-normal font-medium text-gray500 flex-1">
+            <span className="text-caption-normal font-medium text-gray500 flex-1  suppressHydrationWarning={true}">
             {`${formatDate(startDate)} - ${formatDate(endDate)}`}
             </span>
           </div>
