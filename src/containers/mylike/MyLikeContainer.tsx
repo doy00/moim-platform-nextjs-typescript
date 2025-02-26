@@ -11,6 +11,7 @@ import { useAuth } from '@/hooks/auth/auth.hook';
 import { MyLikeSkeleton } from '@/components/mylike/MyLikeSkeleton';
 import { CheckCircle, XCircle } from 'lucide-react';
 import { Header } from '@/components/detail/Header';
+import Image from 'next/image';
 
 export default function MyLikeContainer() {
   const router = useRouter();
@@ -55,8 +56,18 @@ export default function MyLikeContainer() {
   }
   if (error) {
     return (
-      <div>
-        <DuduEmpty />
+      <div className="w-full min-h-screen mx-auto px-4 md:px-20 bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg" aria-live="polite" role="status">
+        <Header />
+        <div className="pt-[14px] relative flex flex-col items-center">
+          <Image
+            src="/svgs/svg_dudu_empty.svg"
+            alt="잠시후 다시 시도해주세요"
+            width={180}
+            height={180}
+            priority
+          />
+        </div>
+        <div className="text-center text-gray600 text-caption-normal">찜한 모임이 없습니다</div>
       </div>
     );
   }
@@ -66,20 +77,24 @@ export default function MyLikeContainer() {
       <div className="w-full min-h-screen mx-auto px-4 md:px-20 bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg" aria-live="polite" role="status">
         <Header />
         <div className="pt-[14px] relative flex flex-col items-center">
-          <DuduEmpty />
+          <Image
+            src="/svgs/svg_dudu_empty.svg"
+            alt="찜한 모임이 없습니다"
+            width={180}
+            height={180}
+            priority
+          />
         </div>
-        <div className="text-center text-gray600 text-caption-normal">찜한 모임이 없습니다.</div>
+        <div className="text-center text-gray600 text-caption-normal">찜한 모임이 없습니다</div>
       </div>
     );
   }
 
   return (
-    <>
       <MyLikePresenter
         moims={moims || []}
         onRemoveLike={handleRemoveLike}
         onClickCard={handleClickCard}
       />
-    </>
   );
 }

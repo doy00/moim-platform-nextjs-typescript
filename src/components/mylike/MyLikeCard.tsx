@@ -8,6 +8,7 @@ import { getMoimTypeText } from '@/utils/detail/enums';
 import { IMoimDetail } from '@/types/detail/t-moim';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
+import { useVisibleCard } from '@/hooks/mylike/useVisibleCard';
 
 interface IStatusInfo {
   text: string;
@@ -18,9 +19,10 @@ interface IMyLikeCardProps {
   moim: IMoimDetail;
   onClick: () => void;
   onRemoveLike: (e: React.MouseEvent) => void;
+  isPriority: boolean;
 }
 
-export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardProps) {
+export default function MyLikeCard({ moim, onClick, onRemoveLike, isPriority=false }: IMyLikeCardProps) {
   const {
     moimId,
     moimType,
@@ -35,7 +37,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
     status,
     likes,
   } = moim;
-
+  const { ref, isVisible } = useVisibleCard();
   const isConfirmed = participants >= minParticipants;
   const getStatusInfo = (status: string, maxParticipants: number, participants: number, isConfirmed: boolean): IStatusInfo => {
     if (status === 'END') {
@@ -63,6 +65,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
 
   return (
     <motion.div
+      ref={ref}
       role="button"
       aria-label={`${title} 모임 상세 보러가기`}
       onClick={onClick}  
@@ -88,7 +91,10 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
               alt={`${moimType} 모임 아이콘`}
               width={36}
               height={36}
-              priority
+              // priority
+              priority={isPriority}
+              // loading="lazy"
+              loading={isPriority || isVisible ? undefined : "lazy"} // 화면에 보이는 경우에는 일반 로딩, 나머지는 지연 로딩
             />
           </div>
           <div className="flex flex-col flex-1">
