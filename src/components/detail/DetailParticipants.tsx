@@ -56,7 +56,9 @@ export const DetailParticipants: React.FC<IDetailParticipantsProps> = ({
       className={cn("relative flex flex-col gap-4 px-5 py-5 mt-5 lg:px-6 lg:py-8 lg:mt-8 bg-background400 rounded-2xl items-center",
       "min-h-[154px]",
       className)}
+      aria-labelledby="participants-section-title"
     >
+      <h3 id="participants-section-title" className="sr-only">모임 참여자 현황</h3>
         {/* 참여 인원수 Progress Bar */}
         <ParticipantsProgressA
           currentCount={currentParticipants}

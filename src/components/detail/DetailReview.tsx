@@ -32,7 +32,7 @@ const ReviewItem: React.FC<IReviewItemProps> = ({ review, className }) => {
         </div>
 
         {/* 후기 텍스트 */}
-        <p className="text-label-reading text-gray400 truncate">
+        <p className="text-label-reading text-gray500 truncate">
           {review.review}
         </p>
       
@@ -51,7 +51,7 @@ const ReviewItem: React.FC<IReviewItemProps> = ({ review, className }) => {
           </div>
 
           {/* 작성자 이름 */}
-          <div className="flex items-center gap-2 text-caption-normal text-gray300">
+          <div className="flex items-center gap-2 text-caption-normal text-gray400">
             <span>{review.userNickname}</span>
             <div className="h-2 w-px bg-gray200"></div>
             <span suppressHydrationWarning={true}>{formatDate(review.createdAt)}</span>
@@ -88,7 +88,7 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
     // 리뷰가 없을 때의 빈 화면 UI
         if (!reviews || reviews.length === 0) {
           return (
-            <div className="relative flex flex-col">
+            <section className="relative flex flex-col" aria-labelledby="review-section-title">
               {/* 타이틀 */} 
                   <div className="relative w-fit mt-4 lg:mt-8 px-2 font-semibold text-gray800 text-body-1-reading">
                     {"모임 후기"}
@@ -110,12 +110,12 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
                     아직 작성된 리뷰가 없어요
                   </p>
                 </div>
-            </div>
+            </section>
           );
         }
         // 리뷰가 있을 때 UI
         return (
-          <div className="relative flex flex-col">
+          <section className="relative flex flex-col">
             {/* 타이틀 */}
             <div className="relative w-fit mt-5 lg:mt-8 px-2 font-semibold text-gray800 text-body-1-reading">
               {"모임 후기"}
@@ -125,9 +125,11 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
             </div>
 
             {/* 리뷰 리스트 */}
-            <div>
+            <div role="list" aria-label="모임 후기 목록">
               {visibleReivews.map((review, index) => (
-                <ReviewItem key={index} review={review} className={className} />
+                <div key={index} role="listitem">
+                  <ReviewItem key={index} review={review} className={className} />
+                </div>
               ))}
             </div>
 
@@ -135,10 +137,10 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
               onClick={handleLoadMore}
               className="w-full h-12 rounded-[14px] py-[14px] mt-[14px] lg:mt-6 text-body-2-normal font-semibold text-gray400 bg-gray100"
               disabled={!hasMoreReivews}
+              aria-label={hasMoreReivews ? `후기 ${REIVEW_ITEMS_PER_PAGE}개 더 보기` : "모든 후기를 표시했습니다"}
             >
               후기 더보기
             </button>
-
-          </div>
+          </section>
         )
   }
