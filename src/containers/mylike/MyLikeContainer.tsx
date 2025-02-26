@@ -16,7 +16,6 @@ export default function MyLikeContainer() {
   const router = useRouter();
   const queryClient = useQueryClient();
   const { isMeLoading } = useAuth();
-
   const { moims, isLoading, error, fetchNextPage, hasNextPage, isEmpty } = useLikedMoims();
 
   // 찜하기 취소 뮤테이션
@@ -62,10 +61,9 @@ export default function MyLikeContainer() {
     );
   }
 
-  // if (moims.length === 0) {
   if (isEmpty) {
     return (
-      <div className="w-full min-h-screen mx-auto px-4 md:px-20 bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg">
+      <div className="w-full min-h-screen mx-auto px-4 md:px-20 bg-background200 xs:max-w-screen-xs sm:max-w-screen-sm md:max-w-screen-md lg:max-w-screen-lg" aria-live="polite" role="status">
         <Header />
         <div className="pt-[14px] relative flex flex-col items-center">
           <DuduEmpty />

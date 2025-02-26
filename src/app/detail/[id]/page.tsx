@@ -17,14 +17,12 @@ export default async function DetailPage({ params } : DetailPageProps) {
   await queryClient.prefetchQuery({
     queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
     queryFn: () => getDetail(moimId),
-
     staleTime: 1000 * 60, // 1분
     gcTime: 1000 * 60 * 5 // 5분
   });
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-
       <Suspense fallback={<DetailSkeleton />}>
         <DetailContainer moimId={moimId} />
       </Suspense>

@@ -16,7 +16,6 @@ interface IStatusInfo {
 
 interface IMyLikeCardProps {
   moim: IMoimDetail;
-  // moim: any;
   onClick: () => void;
   onRemoveLike: (e: React.MouseEvent) => void;
 }
@@ -64,6 +63,8 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
 
   return (
     <motion.div
+      role="button"
+      aria-label={`${title} 모임 상세 보러가기`}
       onClick={onClick}  
       className="relative flex flex-col w-full items-start bg-white rounded-2xl shadow-sm cursor-pointer transition-all hover:shadow-md"
       initial={{ opacity: 0, y: 10 }}
@@ -84,7 +85,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
           <div className="w-9 h-9">
             <Image
               src={`/svgs/ic_color-${moimType}.svg`}
-              alt={`${moimType} icon`}
+              alt={`${moimType} 모임 아이콘`}
               width={36}
               height={36}
               priority
@@ -94,7 +95,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
             {/* 태그, 찜 버튼 */}
             <div className="flex flex-col">
               <div className="flex justify-between items-start">
-                <div className="flex gap-1 flex-wrap">
+                <div className="flex gap-1 flex-wrap" aria-label="모임 상태">
                   <ChipSmallSquircle text={getMoimTypeText(moimType)} variant="cardTag" />
                   {isConfirmed && ( <ChipSmallSquircle text="개설확정" variant="dark" /> )}
                   {statusInfo  && ( <ChipSmallSquircle variant={statusInfo.variant} text={statusInfo.text} /> )}
@@ -103,6 +104,7 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
                 {/* 찜버튼 */}
                 <button
                   onClick={onRemoveLike}
+                  aria-label="찜하기 취소"
                   className="p-1 hover:bg-gray50 rounded-full transition-colors"
                 >
                   <HeartIcon />
@@ -119,16 +121,16 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
                   {address || '온라인으로 진행합니다'}
                   </span>
                   <span className="mx-2 text-gray300 flex flex-shrink-0 items-center">
-                    <Separator orientation="vertical" className="h-2 bg-gray200" />
+                    <Separator orientation="vertical" className="h-2 bg-gray200" aria-hidden="true" />
                   </span>
-                  <span className="flex-shrink-0">
+                  <span className="flex-shrink-0" aria-label={`${participants}명 참여`}>
                   {`${participants}명 참여`}
                   </span>
                 </div>
               </div>
 
                 {/* 날짜 */}
-                <div className="text-caption-normal text-gray500 font-medium pt-3 lg:pt-5">
+                <div className="text-caption-normal text-gray500 font-medium pt-3 lg:pt-5" aria-label={`모임 기간: ${formatDate(startDate)}부터 ${formatDate(endDate)}까지`}>
                   {`${formatDate(startDate)} - ${formatDate(endDate)}`}
                 </div>
               </div>
@@ -136,6 +138,5 @@ export default function MyLikeCard({ moim, onClick, onRemoveLike }: IMyLikeCardP
           </div>
         </div>
       </motion.div>
-    
   );
 }
