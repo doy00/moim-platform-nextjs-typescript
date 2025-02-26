@@ -65,14 +65,14 @@ export const ParticipantsProgressA: React.FC<IParticipantsProgressProps> = ({
                   left: `${targetProgress}%`,
                   scale: [1, 1.2, 1],
                 }}
-                transition={{
-                  left: springConfig,
-                  scale: {
-                    duration: 2,
-                    repeat: Infinity,
-                    repeatType: "reverse"
-                  }
-                }}
+                // transition={{
+                //   left: springConfig,
+                //   scale: {
+                //     duration: 2,
+                //     repeat: Infinity,
+                //     repeatType: "reverse"
+                //   }
+                // }}
                 style={{ translateX: '-50%', translateY: '-50%', }}
                 aria-hidden="true"
               >

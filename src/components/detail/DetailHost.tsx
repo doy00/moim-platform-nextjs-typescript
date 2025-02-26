@@ -41,7 +41,6 @@ export const DetailHost: React.FC<IDetailHostProps> = ({
                   alt={"주최자 프로필 이미지"}
                   fill
                   className="object-cover"
-                  priority={false}
                   loading="lazy"
                 />
             </div>
@@ -59,7 +58,7 @@ export const DetailHost: React.FC<IDetailHostProps> = ({
                     />
                   )}
               </div>
-              <span className="text-label-normal text-gray400">
+              <span className="text-label-normal text-gray500">
                 {introduction}
               </span>
             </div>
@@ -73,7 +72,7 @@ export const DetailHost: React.FC<IDetailHostProps> = ({
                 key={`tag-${index}`}
                 text={tag}
                 variant='tag'
-                className={cn("text-gray300")}
+                className={cn("text-gray400")}
               />
               ))}
             </div>

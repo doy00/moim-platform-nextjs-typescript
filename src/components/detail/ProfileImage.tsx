@@ -21,6 +21,12 @@ export const ProfileImage = ({ src, alt, width,  height, className }: ProfileIma
     }
   }, [src]);
 
+  // const handleError = () => {
+  //   if (imgSrc !== DEFAULT_IMAGE.PROFILE) {
+  //     setImgSrc(DEFAULT_IMAGE.PROFILE);
+  //   }
+  // };
+
   return (
     <Image
       src={imgSrc}

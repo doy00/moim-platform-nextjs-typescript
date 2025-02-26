@@ -64,12 +64,12 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   // 신청하기 버튼 라벨 결정 로직을 클라이언트에서만 실행되도록 useEffect 적용
   const [actionLabel, setActionLabel] = useState(''); 
   const [clientDisabled, setClientDisabled] = useState(false);
+
   useEffect(() => {
     if (isHost) setActionLabel('내가 작성한 모임입니다');
     else if (isJoined) setActionLabel('신청 취소하기');
     else if (!canJoin || moim?.status !== 'RECRUIT') setActionLabel('모집마감');
     else setActionLabel('신청하기');
-    
     setClientDisabled(isHost || moim?.status !== 'RECRUIT');
   }, [isHost, isJoined, canJoin, moim?.status]);
 
@@ -189,7 +189,6 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     }
   }, [isJoined, handleCancelClick, handleJoin]);
 
-
   const handleCancelConfirm = useCallback(async () => {
     try {
       const result = await handleLeaveMoim();
@@ -218,16 +217,10 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     }
   }, [handleLeaveMoim, router]);
 
-// 수정: 메모이제이션된 핸들러 사용
-const handleCloseDialog = useCallback(() => {
-  setShowCancelDialog(false);
-}, []);
-  // moim 데이터가 있을 때 기본 이미지 처리
-  // const moim = detailData ? {
-  //   ...detailData,
-  //   image: detailData.image || DEFAULT_IMAGE.MOIM
-  // } : null;
-
+  // 다이얼로그 닫기 핸들러
+  const handleCloseDialog = useCallback(() => {
+    setShowCancelDialog(false);
+  }, []);
 
   if (isDetailLoading || isMeLoading || !moim || !masterUser) return <DetailSkeleton />;
 
@@ -244,7 +237,6 @@ const handleCloseDialog = useCallback(() => {
         onJoin={handleActionClick}
         onLikeToggle={handleLike}
         actionLabel={getActionLabel}
-        // disabled={isHost || moim?.status !== 'RECRUIT'}   // (!canJoin && isJoined) || 
         disabled={clientDisabled}
       />
       <CancelJoinDialog
