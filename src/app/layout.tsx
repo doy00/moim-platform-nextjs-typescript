@@ -12,7 +12,7 @@ export const metadata: Metadata = defaultMetadata;
 const pretendard = localFont({
   src: [
     {
-      path: '../fonts/PretendardVariable.woff2',
+      path: '../fonts/PretendardVariable.subset.0.woff2',
       weight: '100 900',
       style: 'normal',
     },
@@ -30,10 +30,13 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <head>
-        {/* <script
-          src="https://t1.daumcdn.net/mapjsapi/bundle/postcode/prod/postcode.v2.js"
-          async
-        ></script> */}
+        <link
+          rel="preload"
+          as="font"
+          href="/fonts/PretendardVariable.subset.0.woff2"
+          type="font/woff2"
+          crossOrigin="anonymous"
+        />
       </head>
       <body className={`bg-background200 antialiased ${pretendard.variable}`}>
         <QueryProvider>
@@ -42,7 +45,7 @@ export default function RootLayout({
           {/* GNB는 HomeGnb 컴포넌트에서 관리 */}
           <HomeGnb />
         </QueryProvider>
-        <Toaster position='top-right'/>
+        <Toaster position="top-right" />
       </body>
     </html>
   );
