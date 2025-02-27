@@ -6,9 +6,11 @@ import { useLikeStore } from '@/stores/home/likeStore';
 import { IMoim } from '@/types/home/i-moim';
 import { useEffect } from 'react';
 import HomeCard from './HomeCard';
+import { MoimResponse } from '@/types/home/i-moim';
+import type { InfiniteData } from '@tanstack/react-query';
 
 interface HomeCardsProps {
-  data: any;
+  data: InfiniteData<MoimResponse> | undefined; 
   fetchNextPage: () => void;
   hasNextPage: boolean;
 }
@@ -21,9 +23,11 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
     fetchLikes();
   }, [fetchLikes]);
 
-  const filteredMoims =
-    data?.pages.flatMap((page: any) =>
-      page.data.filter((moim: IMoim) => {
+  const filteredMoims: IMoim[] =
+    data?.pages
+      .flatMap((page) => page.data)
+      .filter((moim) => {
+        // 필터 로직
         return (
           (moimType === 'all' || moimType.toUpperCase() === moim.moimType.toUpperCase()) &&
           (status === 'all' || status.toUpperCase() === moim.status.toUpperCase()) &&
@@ -32,8 +36,7 @@ export default function HomeCards({ data, fetchNextPage, hasNextPage }: HomeCard
             (onoff === 'online' && moim.address.includes('온라인으로 진행합니다')) ||
             (onoff === 'offline' && !moim.address.includes('온라인으로 진행합니다')))
         );
-      }),
-    ) || [];
+      }) ?? [];
 
   const sortedMoims = [...filteredMoims].sort((a, b) => {
     if (sortOrder === 'LATEST') {

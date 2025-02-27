@@ -9,6 +9,7 @@ export interface IMoim {
   status: string; 
   likes?: number; 
   isConfirmed: boolean;
+  recruitmentDeadline: Date | string;
 }
 
 export interface Pagination {
