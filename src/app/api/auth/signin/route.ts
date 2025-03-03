@@ -5,6 +5,17 @@ import { PostgrestError } from '@supabase/supabase-js';
 import { cookies } from 'next/headers';
 import { NextResponse } from 'next/server';
 
+export async function OPTIONS() {
+  return NextResponse.json({}, {
+    status: 200,
+    headers: {
+      'Access-Control-Allow-Origin': '*', // 🔥 모든 도메인 허용 (보안 필요 시 변경 가능)
+      'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+      'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+    },
+  });
+}
+
 export async function POST(request: Request) {
   const { email, password }: { email: string; password: string } = await request.json();
   const cookieStore = await cookies();
@@ -76,6 +87,13 @@ export async function POST(request: Request) {
 
   return NextResponse.json(
     { me, tokens: { accessToken: session?.access_token, refreshToken: session?.refresh_token } },
-    { status: 200 },
+    { 
+      status: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*', // 🔥 CORS 허용
+        'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+      },
+    }
   );
 }
