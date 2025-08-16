@@ -25,7 +25,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     data: detail,
     isLoading: isDetailLoading,
   } = useMoimDetail(moimId, {
-    enabled: !isMeLoading,
+    enabled: true, // 로그인 상태와 관계없이 항상 활성화
     user: me
   });
 
@@ -66,15 +66,36 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
   const [clientDisabled, setClientDisabled] = useState(false);
 
   useEffect(() => {
-    if (isHost) setActionLabel('내가 작성한 모임입니다');
-    else if (isJoined) setActionLabel('신청 취소하기');
-    else if (!canJoin || moim?.status !== 'RECRUIT') setActionLabel('모집마감');
-    else setActionLabel('신청하기');
-    setClientDisabled(isHost || moim?.status !== 'RECRUIT');
-  }, [isHost, isJoined, canJoin, moim?.status]);
+    if (!me) {
+      setActionLabel('로그인 후 신청하기');
+      setClientDisabled(false);
+    } else if (isHost) {
+      setActionLabel('내가 작성한 모임입니다');
+      setClientDisabled(true);
+    } else if (isJoined) {
+      setActionLabel('신청 취소하기');
+      setClientDisabled(false);
+    } else if (!canJoin || moim?.status !== 'RECRUIT') {
+      setActionLabel('모집마감');
+      setClientDisabled(true);
+    } else {
+      setActionLabel('신청하기');
+      setClientDisabled(false);
+    }
+  }, [me, isHost, isJoined, canJoin, moim?.status]);
 
   // 메모ㅇ) 찜하기 버튼 핸들러
   const handleLike = useCallback(async () => {
+    if (!me) {
+      toast.info('로그인 후 이용하실 수 있습니다', {
+        action: {
+          label: '로그인',
+          onClick: () => router.push('/auth/signin'),
+        },
+      });
+      return;
+    }
+    
     try {
       await handleToggleLike();
       toast.success(isLiked ? '찜하기가 취소되었어요' : '찜하기가 완료되었어요', {
@@ -89,7 +110,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     } catch (error) {
       toast.error('잠시후 다시 시도해주세요');
     }
-  }, [handleToggleLike, isLiked, router]);
+  }, [me, handleToggleLike, isLiked, router]);
   // 찜하기 버튼 핸들러
   // const handleLike = async () => {
   //   try {
@@ -110,6 +131,16 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
 
   // 메모ㅇ) 신청하기 버튼 핸들러
   const handleJoin = useCallback(async () => {
+    if (!me) {
+      toast.info('로그인 후 이용하실 수 있습니다', {
+        action: {
+          label: '로그인',
+          onClick: () => router.push('/auth/signin'),
+        },
+      });
+      return;
+    }
+
     try {
       const result = await handleJoinMoim();
       if (!result.success) {
@@ -134,7 +165,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         });
       }
     }
-  }, [handleJoinMoim, router]);
+  }, [me, handleJoinMoim, router]);
   // // 신청하기 버튼 핸들러
   // const handleJoin = async () => {
   //   try {
@@ -222,7 +253,7 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
     setShowCancelDialog(false);
   }, []);
 
-  if (isDetailLoading || isMeLoading || !moim || !masterUser) return <DetailSkeleton />;
+  if (isDetailLoading || !moim || !masterUser) return <DetailSkeleton />;
 
   return (
     <>
@@ -233,10 +264,10 @@ export default function DetailContainer({ moimId }: IDetailContainerProps) {
         reviews={moim?.reviews}
         isJoining={isJoining}
         canJoin={canJoin}
-        isLiked={isLiked || false}
+        isLiked={me ? (isLiked || false) : false}
         onJoin={handleActionClick}
         onLikeToggle={handleLike}
-        actionLabel={getActionLabel}
+        actionLabel={actionLabel}
         disabled={clientDisabled}
       />
       <CancelJoinDialog

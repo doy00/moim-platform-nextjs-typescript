@@ -24,7 +24,7 @@ export async function POST(request: Request) {
     const result = await mockAuth.signIn(email, password);
     
     return NextResponse.json(
-      { me: result.user, tokens: { accessToken: 'mock_token', refreshToken: 'mock_refresh' } },
+      { me: result.me, tokens: result.tokens },
       { 
         status: 200,
         headers: {

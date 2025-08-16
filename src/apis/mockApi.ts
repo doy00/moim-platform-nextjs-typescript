@@ -1,4 +1,4 @@
-import { mockMoims, mockParticipatedMoims, mockLikedMoims, mockReviews, mockCurrentUser } from '@/data/mockData';
+import { mockMoims, mockParticipatedMoims, mockLikedMoims, mockReviews, mockCurrentUser, mockUsers } from '@/data/mockData';
 
 export const mockApi = {
   // 모임 관련 API
@@ -43,7 +43,30 @@ export const mockApi = {
   
   // 좋아요 관련 API
   getLikedMoims: () => {
-    return Promise.resolve(mockLikedMoims);
+    // 좋아요한 모임 ID 기반으로 실제 모임 데이터 반환
+    const likedMoimIds = mockLikedMoims.map(liked => liked.moim_uuid);
+    const likedMoims = mockMoims.filter(moim => likedMoimIds.includes(moim.id));
+    
+    return Promise.resolve({
+      data: likedMoims.map(moim => ({
+        ...moim,
+        moimId: moim.id,
+        moimType: moim.category,
+        likes: moim.liked_counts,
+        participants: moim.participants_counts,
+        reviewsCount: moim.reviews_counts,
+        createdAt: moim.created_at,
+        isConfirmed: moim.is_confirmed,
+        recruitmentDeadline: moim.recruitment_deadline,
+        startDate: moim.start_date,
+        endDate: moim.end_date,
+        minParticipants: moim.min_participants,
+        maxParticipants: moim.max_participants,
+        participantsCount: moim.participants_counts,
+        likedCount: moim.liked_counts
+      })),
+      totalCount: likedMoims.length
+    });
   },
   
   likeMoim: (moimId: string) => {
@@ -83,5 +106,62 @@ export const mockApi = {
   
   updateUser: (userData: any) => {
     return Promise.resolve({ ...mockCurrentUser, ...userData });
+  },
+
+  // 모임 상세 조회 API
+  getMoimDetail: (moimId: string) => {
+    const moim = mockMoims.find(m => m.id === moimId);
+    if (!moim) {
+      return Promise.reject(new Error('존재하지 않는 모임입니다'));
+    }
+    
+    const masterUser = mockUsers.find(u => u.email === moim.master_email);
+    
+    // 해당 모임의 참가자 목록 찾기
+    const participantsList = mockParticipatedMoims
+      .filter(p => p.moim_uuid === moimId)
+      .map(p => ({
+        userUuid: p.user_uuid,
+        userEmail: p.user_email,
+        userNickname: p.user_nickname,
+        userImage: p.user_image
+      }));
+    
+    // 해당 모임의 리뷰 목록 찾기
+    const reviewsList = mockReviews
+      .filter(r => r.moim_uuid === moimId)
+      .map(r => ({
+        id: r.id,
+        review: r.review,
+        rate: r.rate,
+        userUuid: r.user_uuid,
+        userEmail: r.user_email,
+        userNickname: r.user_nickname,
+        userImage: r.user_image,
+        createdAt: r.created_at
+      }));
+    
+    return Promise.resolve({
+      moim: {
+        ...moim,
+        moimId: moim.id,
+        moimType: moim.category,
+        likes: moim.liked_counts,
+        participants: moim.participants_counts,
+        reviewsCount: moim.reviews_counts,
+        createdAt: moim.created_at,
+        isConfirmed: moim.is_confirmed,
+        recruitmentDeadline: moim.recruitment_deadline,
+        startDate: moim.start_date,
+        endDate: moim.end_date,
+        minParticipants: moim.min_participants,
+        maxParticipants: moim.max_participants,
+        participantsCount: moim.participants_counts,
+        likedCount: moim.liked_counts,
+        participantsList: participantsList,
+        reviewsList: reviewsList
+      },
+      masterUser: masterUser || mockUsers[0]
+    });
   }
 };

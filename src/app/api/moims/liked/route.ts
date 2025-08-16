@@ -1,21 +1,45 @@
 import { MOIMS_ITEMS_PER_PAGE } from '@/constants/common/common.const';
-import {
-  TLikedMoimsJoined,
-  TMoimClient,
-  TMoimsJoined,
-} from '@/types/supabase/supabase-custom.type';
-import { setCookie } from '@/utils/auth/auth-server.util';
-import { mapMoimsToClient } from '@/utils/common/mapMoims';
-import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+// import {
+//   TLikedMoimsJoined,
+//   TMoimClient,
+//   TMoimsJoined,
+// } from '@/types/supabase/supabase-custom.type';
+// import { setCookie } from '@/utils/auth/auth-server.util';
+// import { mapMoimsToClient } from '@/utils/common/mapMoims';
+// import { createClient } from '@/utils/supabase/server';
+// import { PostgrestError } from '@supabase/supabase-js';
+// import { cookies } from 'next/headers';
+import { mockApi } from '@/apis/mockApi';
 import { NextRequest, NextResponse } from 'next/server';
-import { getUser } from '../../auth/getUser';
+// import { getUser } from '../../auth/getUser';
 
 // 내가 좋아요한 모임 조회
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const pageQuery = searchParams.get('page');
+  
+  // 목업 데이터 사용
+  try {
+    const result = await mockApi.getLikedMoims();
+    const page = Math.max(1, Number(pageQuery) || 1);
+    const totalPages = Math.ceil(result.totalCount / MOIMS_ITEMS_PER_PAGE);
+
+    return NextResponse.json(
+      {
+        data: result.data,
+        pagination: {
+          totalItems: result.totalCount,
+          totalPages,
+          currentPage: page,
+        },
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    return NextResponse.json({ message: '좋아요한 모임을 불러오는데 실패했습니다' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -85,4 +109,5 @@ export async function GET(req: NextRequest) {
     },
     { status: 200 },
   );
+  */
 }

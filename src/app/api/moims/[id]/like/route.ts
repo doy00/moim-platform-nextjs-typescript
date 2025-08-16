@@ -1,11 +1,27 @@
-import { getUser } from '@/app/api/auth/getUser';
-import { mapMoimsToClient } from '@/utils/common/mapMoims';
-import { createClient } from '@/utils/supabase/server';
-import { cookies } from 'next/headers';
+// import { getUser } from '@/app/api/auth/getUser';
+// import { mapMoimsToClient } from '@/utils/common/mapMoims';
+// import { createClient } from '@/utils/supabase/server';
+// import { cookies } from 'next/headers';
+import { mockApi } from '@/apis/mockApi';
 import { NextResponse } from 'next/server';
 
 export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id;
+  
+  // 목업 데이터 사용
+  try {
+    const result = await mockApi.likeMoim(id);
+    const moimDetail = await mockApi.getMoimDetail(id);
+    
+    return NextResponse.json({
+      message: '모임 찜하기가 성공적으로 완료되었습니다',
+      data: moimDetail.moim
+    }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message || '찜하기 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -75,10 +91,26 @@ export async function POST(req: Request, { params }: { params: Promise<{ id: str
   };
 
   return NextResponse.json(response, { status: 200 });
+  */
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id;
+  
+  // 목업 데이터 사용
+  try {
+    const result = await mockApi.unlikeMoim(id);
+    const moimDetail = await mockApi.getMoimDetail(id);
+    
+    return NextResponse.json({
+      message: '모임 찜 해제가 성공적으로 완료되었습니다',
+      data: moimDetail.moim
+    }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message || '찜 해제 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -140,4 +172,5 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   };
 
   return NextResponse.json(response, { status: 200 });
+  */
 }

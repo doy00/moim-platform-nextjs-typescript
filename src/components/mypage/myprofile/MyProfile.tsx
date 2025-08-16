@@ -17,7 +17,7 @@ const ProfileWrapper = ({ children }: { children: React.ReactNode }) => (
 export default function MyProfile() {
   // const { data, isLoading } = useUserQuery();
   const { me, isMeLoading } = useAuth();
-  const position = userPositionTag(me);
+  const position = me ? userPositionTag(me) : null;
 
   // console.log(position);
 

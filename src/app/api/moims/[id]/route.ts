@@ -1,13 +1,24 @@
-import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
-import convertToWebP from '@/utils/common/converToWebp';
-import { mapMoimsToClient } from '@/utils/common/mapMoims';
-import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+// import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+// import convertToWebP from '@/utils/common/converToWebp';
+// import { mapMoimsToClient } from '@/utils/common/mapMoims';
+// import { createClient } from '@/utils/supabase/server';
+// import { PostgrestError } from '@supabase/supabase-js';
+// import { cookies } from 'next/headers';
+import { mockApi } from '@/apis/mockApi';
 import { NextResponse } from 'next/server';
 
 export async function GET(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id;
+  
+  // 목업 데이터 사용 - 로그인 없이 접근 가능
+  try {
+    const result = await mockApi.getMoimDetail(id);
+    return NextResponse.json(result, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message || '모임을 찾을 수 없습니다' }, { status: 404 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -56,10 +67,31 @@ export async function GET(req: Request, { params }: { params: Promise<{ id: stri
     },
     { status: 200 },
   );
+  */
 }
 
 export async function PUT(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id;
+  
+  // 목업 데이터 사용 - 모임 수정
+  try {
+    const formData = await req.formData();
+    const moimDataString = formData.get('moim_json');
+    
+    if (!moimDataString) {
+      return NextResponse.json({ message: 'formData에 moim_json이 없습니다' }, { status: 400 });
+    }
+
+    const moimDataOrigin = JSON.parse(moimDataString as string);
+    // 실제로는 목업 데이터를 업데이트하지 않고 성공 응답만 반환
+    const result = await mockApi.getMoimDetail(id);
+    
+    return NextResponse.json(result.moim, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: error.message || '모임 수정 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -167,10 +199,21 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
   const moimsToClient: TMoimClient[] = mapMoimsToClient([updatedMoim]);
 
   return NextResponse.json(moimsToClient[0], { status: 200 });
+  */
 }
 
 export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const id = (await params).id;
+  
+  // 목업 데이터 사용 - 모임 삭제
+  try {
+    // 실제로는 삭제하지 않고 성공 응답만 반환
+    return NextResponse.json({ message: '모임 삭제 성공' }, { status: 200 });
+  } catch (error: any) {
+    return NextResponse.json({ message: '모임 삭제 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -185,4 +228,5 @@ export async function DELETE(req: Request, { params }: { params: Promise<{ id: s
   }
 
   return NextResponse.json({ message: '모임 삭제 성공' }, { status: 200 });
+  */
 }

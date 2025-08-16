@@ -79,9 +79,9 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
   // 현재 보여줄 리뷰 개수 상태
   const [visibleCount, setVisibleCount] = useState(REIVEW_ITEMS_PER_PAGE);
   // 현재 보여줄 리뷰들 개수만큼 슬라이스
-  const visibleReivews = reviews.slice(0, visibleCount);
+  const visibleReivews = (reviews || []).slice(0, visibleCount);
   // 더 보여줄 리뷰가 있는지 확인
-  const hasMoreReivews = visibleCount < reviews.length;
+  const hasMoreReivews = visibleCount < (reviews || []).length;
   // '후기 더보기' 버튼
   const handleLoadMore = () => {setVisibleCount(prev => prev + REIVEW_ITEMS_PER_PAGE)};
 
@@ -93,7 +93,7 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
                   <div className="relative w-fit mt-4 lg:mt-8 px-2 font-semibold text-gray800 text-body-1-reading">
                     {"모임 후기"}
                     <span className="ml-2 text-orange200">
-                      {reviews.length}
+                      {(reviews || []).length}
                     </span>
                   </div>
                 {/* 빈 화면 UI */}
@@ -120,7 +120,7 @@ export const DetailReview: React.FC<IDetailReviewProps> = ({
             <div className="relative w-fit mt-5 lg:mt-8 px-2 font-semibold text-gray800 text-body-1-reading">
               {"모임 후기"}
               <span className="ml-2 text-orange200">
-                {reviews.length}
+                {(reviews || []).length}
               </span>
             </div>
 

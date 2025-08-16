@@ -24,7 +24,7 @@ export const DetailParticipants: React.FC<IDetailParticipantsProps> = ({
 }) => {
   // 주최자 포함 모든 참여자
   const allParticipants = useMemo(() => {
-    const masterExists = participants.some(p => p.userUuid === masterUser.id);
+    const masterExists = participants?.some(p => p.userUuid === masterUser.id);
 
     // 주최자가 참여자 목록에 없으면 추가
     if (!masterExists) {
@@ -35,11 +35,11 @@ export const DetailParticipants: React.FC<IDetailParticipantsProps> = ({
         userNickname: masterUser.nickname || '주최자',
         // isHost: true  // 주최자 표시를 위한 플래그
       };
-      return [masterParticipant, ...participants];
+      return [masterParticipant, ...(participants || [])];
     }
 
     // 이미 존재하는 경우 해당 참여자의 정보를 업데이트
-  return participants.map(p => {
+  return (participants || []).map(p => {
     if (p.userUuid === masterUser.id) {
       return {
         ...p,

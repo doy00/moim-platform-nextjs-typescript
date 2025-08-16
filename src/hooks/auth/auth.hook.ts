@@ -1,13 +1,14 @@
 'use client';
 
-import {
-  deleteSignOut,
-  getMe,
-  getProviderLogin,
-  postSignIn,
-  postSignUp,
-  putMe,
-} from '@/apis/auth/auth.api';
+// import {
+//   deleteSignOut,
+//   getMe,
+//   getProviderLogin,
+//   postSignIn,
+//   postSignUp,
+//   putMe,
+// } from '@/apis/auth/auth.api';
+import { mockAuth } from '@/utils/mockAuth';
 import { QUERY_KEY_ME } from '@/constants/auth/auth.const';
 import type {
   TAuthSignInInputs,
@@ -52,7 +53,7 @@ export const useDebounce = <T extends unknown[]>(
 export function useSignUpMutation(): UseMutationResult<TSignUpResponse, TError, TAuthSignUpInputs> {
   const queryClient = useQueryClient();
   return useMutation<TSignUpResponse, TError, TAuthSignUpInputs>({
-    mutationFn: postSignUp,
+    mutationFn: (data) => mockAuth.signUp(data.email, data.password, data),
     onSuccess: (data) => {
       setLocalStorageItem('access_token', data.tokens.accessToken);
       setLocalStorageItem('refresh_token', data.tokens.refreshToken);
@@ -70,7 +71,7 @@ export function useSignInMutation(): UseMutationResult<
   const queryClient = useQueryClient();
 
   return useMutation<TAuthSignInResponse, TError, TAuthSignInInputs>({
-    mutationFn: postSignIn,
+    mutationFn: (data) => mockAuth.signIn(data.email, data.password),
     onSuccess: (data) => {
       setLocalStorageItem('access_token', data.tokens.accessToken);
       setLocalStorageItem('refresh_token', data.tokens.refreshToken);
@@ -83,7 +84,7 @@ export function useSignInMutation(): UseMutationResult<
 export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError, void> {
   const queryClient = useQueryClient();
   return useMutation<TSignOutResponse, TError, void>({
-    mutationFn: deleteSignOut,
+    mutationFn: () => mockAuth.signOut(),
     onSuccess: () => {
       removeLocalStorageItem('access_token');
       removeLocalStorageItem('refresh_token');
@@ -96,17 +97,21 @@ export function useSignOutMutation(): UseMutationResult<TSignOutResponse, TError
 export function usePutMeMutation(): UseMutationResult<TMe, TError, TPutMeInputs> {
   const queryClient = useQueryClient();
   return useMutation<TMe, TError, TPutMeInputs>({
-    mutationFn: putMe,
+    mutationFn: (data) => Promise.resolve({ ...mockAuth.getCurrentUser(), ...data }),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: [QUERY_KEY_ME] });
     },
   });
 }
 
-export function useMeQuery(enabled: boolean = true): UseQueryResult<TMe, TError> {
-  return useQuery<TMe, TError>({
+export function useMeQuery(enabled: boolean = true): UseQueryResult<TMe | null, TError> {
+  return useQuery<TMe | null, TError>({
     queryKey: [QUERY_KEY_ME],
-    queryFn: () => getMe(),
+    queryFn: () => {
+      // 토큰이 있으면 사용자 정보 반환, 없으면 null 반환
+      const token = getLocalStorageItem('access_token');
+      return token ? mockAuth.getCurrentUser() : Promise.resolve(null);
+    },
     enabled,
   });
 }
@@ -114,7 +119,7 @@ export function useMeQuery(enabled: boolean = true): UseQueryResult<TMe, TError>
 export function useProviderLoginQuery({ provider, next }: { provider: string; next: string }) {
   return useQuery<{ message: string }, TError, { provider: string; next: string }>({
     queryKey: [QUERY_KEY_ME, provider, next],
-    queryFn: () => getProviderLogin(provider, next),
+    queryFn: () => Promise.resolve({ message: 'Mock provider login' }),
     enabled: !!provider && !!next,
   });
 }
