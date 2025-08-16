@@ -1,13 +1,23 @@
-import { TMe, TPutMeInputs } from '@/types/auth/auth.type';
-import { deleteCookie } from '@/utils/auth/auth-server.util';
-import convertToWebP from '@/utils/common/converToWebp';
-import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+// import { TMe, TPutMeInputs } from '@/types/auth/auth.type';
+// import { deleteCookie } from '@/utils/auth/auth-server.util';
+// import convertToWebP from '@/utils/common/converToWebp';
+// import { createClient } from '@/utils/supabase/server';
+// import { PostgrestError } from '@supabase/supabase-js';
+// import { cookies } from 'next/headers';
+import { mockApi } from '@/apis/mockApi';
 import { NextRequest, NextResponse } from 'next/server';
-import { getUser } from '../getUser';
+// import { getUser } from '../getUser';
 
 export async function GET() {
+  // 목업 데이터 사용
+  try {
+    const user = await mockApi.getUser();
+    return NextResponse.json(user, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: '사용자 정보 조회 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -33,9 +43,28 @@ export async function GET() {
   }
 
   return NextResponse.json(me, { status: 200 });
+  */
 }
 
 export async function PUT(req: NextRequest) {
+  // 목업 데이터 사용
+  try {
+    const formData = await req.formData();
+    const meDataString = formData.get('me_json');
+
+    if (!meDataString) {
+      return NextResponse.json({ message: 'formData에 me_json이 없습니다' }, { status: 400 });
+    }
+
+    const meDataOrigin = JSON.parse(meDataString as string);
+    const updatedUser = await mockApi.updateUser(meDataOrigin);
+    
+    return NextResponse.json(updatedUser, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: '사용자 정보 업데이트 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const formData = await req.formData();
   const meDataString = formData.get('me_json');
 
@@ -127,4 +156,5 @@ export async function PUT(req: NextRequest) {
   }
 
   return NextResponse.json(updatedUser, { status: 200 });
+  */
 }

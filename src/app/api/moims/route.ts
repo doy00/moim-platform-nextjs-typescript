@@ -1,16 +1,40 @@
 import { MOIMS_ITEMS_PER_PAGE } from '@/constants/common/common.const';
-import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
-import convertToWebP from '@/utils/common/converToWebp';
-import { mapMoimsToClient } from '@/utils/common/mapMoims';
-import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+// import { TMoimClient, TMoims, TMoimsJoined } from '@/types/supabase/supabase-custom.type';
+// import convertToWebP from '@/utils/common/converToWebp';
+// import { mapMoimsToClient } from '@/utils/common/mapMoims';
+// import { createClient } from '@/utils/supabase/server';
+// import { PostgrestError } from '@supabase/supabase-js';
+// import { cookies } from 'next/headers';
+import { mockApi } from '@/apis/mockApi';
 import { NextRequest, NextResponse } from 'next/server';
-import { getUser } from '../auth/getUser';
+// import { getUser } from '../auth/getUser';
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
   const pageQuery = searchParams.get('page');
+  
+  // 목업 데이터 사용
+  try {
+    const result = await mockApi.getMoims();
+    const page = Math.max(1, Number(pageQuery) || 1);
+    const totalPages = Math.ceil(result.totalCount / MOIMS_ITEMS_PER_PAGE);
+
+    return NextResponse.json(
+      {
+        data: result.data,
+        pagination: {
+          totalItems: result.totalCount,
+          totalPages,
+          currentPage: page,
+        },
+      },
+      { status: 200 },
+    );
+  } catch (error) {
+    return NextResponse.json({ message: '목업 데이터 로드 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -69,10 +93,29 @@ export async function GET(req: NextRequest) {
     },
     { status: 200 },
   );
+  */
 }
 
 // 모임 생성
 export async function POST(req: NextRequest) {
+  // 목업 데이터 사용
+  try {
+    const formData = await req.formData();
+    const moimDataString = formData.get('moim_json');
+    
+    if (!moimDataString) {
+      return NextResponse.json({ message: 'formData에 moim_json이 없습니다' }, { status: 400 });
+    }
+
+    const moimDataOrigin = JSON.parse(moimDataString as string);
+    const newMoim = await mockApi.createMoim(moimDataOrigin);
+    
+    return NextResponse.json(newMoim, { status: 200 });
+  } catch (error) {
+    return NextResponse.json({ message: '모임 생성 실패' }, { status: 500 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
 
@@ -197,4 +240,5 @@ export async function POST(req: NextRequest) {
 
   const moimsToClient: TMoimClient[] = mapMoimsToClient([moim]);
   return NextResponse.json(moimsToClient[0], { status: 200 });
+  */
 }

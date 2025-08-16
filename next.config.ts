@@ -7,10 +7,10 @@ const nextConfig: NextConfig = {
         protocol: 'https',
         hostname: 'sprint-fe-project.s3.ap-northeast-2.amazonaws.com',
       },
-      {
-        protocol: 'https',
-        hostname: 'kabbnwozubbpbafvlolf.supabase.co',
-      },
+      // {
+      //   protocol: 'https',
+      //   hostname: 'kabbnwozubbpbafvlolf.supabase.co',
+      // },
       {
         protocol: 'http',
         hostname: 'k.kakaocdn.net',

@@ -1,15 +1,16 @@
-import { TMe } from '@/types/auth/auth.type';
-import { setCookie } from '@/utils/auth/auth-server.util';
-import { createClient } from '@/utils/supabase/server';
-import { PostgrestError } from '@supabase/supabase-js';
-import { cookies } from 'next/headers';
+// import { TMe } from '@/types/auth/auth.type';
+// import { setCookie } from '@/utils/auth/auth-server.util';
+// import { createClient } from '@/utils/supabase/server';
+// import { PostgrestError } from '@supabase/supabase-js';
+// import { cookies } from 'next/headers';
+import { mockAuth } from '@/utils/mockAuth';
 import { NextResponse } from 'next/server';
 
 export async function OPTIONS() {
   return NextResponse.json({}, {
     status: 200,
     headers: {
-      'Access-Control-Allow-Origin': '*', // 🔥 모든 도메인 허용 (보안 필요 시 변경 가능)
+      'Access-Control-Allow-Origin': '*',
       'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
       'Access-Control-Allow-Headers': 'Content-Type, Authorization',
     },
@@ -17,6 +18,27 @@ export async function OPTIONS() {
 }
 
 export async function POST(request: Request) {
+  // 목업 인증 사용
+  try {
+    const { email, password }: { email: string; password: string } = await request.json();
+    const result = await mockAuth.signIn(email, password);
+    
+    return NextResponse.json(
+      { me: result.user, tokens: { accessToken: 'mock_token', refreshToken: 'mock_refresh' } },
+      { 
+        status: 200,
+        headers: {
+          'Access-Control-Allow-Origin': '*',
+          'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
+          'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        },
+      }
+    );
+  } catch (error) {
+    return NextResponse.json({ message: '로그인 실패' }, { status: 401 });
+  }
+
+  /* 기존 Supabase 코드 (주석처리)
   const { email, password }: { email: string; password: string } = await request.json();
   const cookieStore = await cookies();
   const supabase = createClient(cookieStore);
@@ -96,4 +118,5 @@ export async function POST(request: Request) {
       },
     }
   );
+  */
 }

@@ -1,8 +1,9 @@
-import { updateSession } from '@/utils/supabase/middleware';
 import { type NextRequest } from 'next/server';
+import { NextResponse } from 'next/server';
 
 export async function middleware(request: NextRequest) {
-  return await updateSession(request);
+  // Supabase 인증 비활성화 - 모든 요청 허용
+  return NextResponse.next();
 }
 
 export const config = {
