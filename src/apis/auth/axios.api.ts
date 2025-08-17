@@ -23,6 +23,8 @@ const getAccessToken = () => {
 
 api.interceptors.request.use(async (config) => {
   const token = getAccessToken();
+  // 토큰이 있는 경우에만 Authorization 헤더 추가
+  // 토큰이 없어도 요청은 계속 진행 (비로그인 사용자도 상세페이지 접근 가능)
   if (token) {
     config.headers.set('Authorization', `Bearer ${token}`);
   }

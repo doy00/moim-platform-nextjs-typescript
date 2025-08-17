@@ -1,7 +1,7 @@
 // app/detail/[id]/page.tsx
 import DetailContainer from '@/containers/detail/DetailContainer';
-import { Suspense } from "react";
-import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
+// import { Suspense } from "react";
+// import { DetailSkeleton } from '@/components/detail/DetailSkeleton';
 import { getDetail } from '@/apis/detail/detail.api';
 import { HydrationBoundary, QueryClient, dehydrate } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/detail/detail.const';
@@ -23,9 +23,9 @@ export default async function DetailPage({ params } : DetailPageProps) {
 
   return (
     <HydrationBoundary state={dehydrate(queryClient)}>
-      <Suspense fallback={<DetailSkeleton />}>
+      {/* <Suspense fallback={<DetailSkeleton />}> */}
         <DetailContainer moimId={moimId} />
-      </Suspense>
+      {/* </Suspense> */}
     </HydrationBoundary>
   );
 }
