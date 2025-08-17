@@ -4,6 +4,8 @@ import { IMoimMasterResponse } from '@/types/detail/t-moim';
 import { useQuery } from '@tanstack/react-query';
 import { QUERY_KEYS } from '@/constants/detail/detail.const';
 import { TMe } from '@/types/auth/auth.type';
+import { fetchMoims } from '@/utils/home/fetchMoims';
+import { mockApi } from '@/apis/mockApi';
 
 interface UseMoimDetailOptions {
   enabled?: boolean;
@@ -13,9 +15,10 @@ interface UseMoimDetailOptions {
 export const useMoimDetail = (moimId: string, options: UseMoimDetailOptions = {}) => {
   const { user, enabled = true } = options;
 
-  return useQuery<IMoimMasterResponse>({
+  return useQuery({
     queryKey: QUERY_KEYS.MOIM_DETAIL(moimId),
-    queryFn: () => getDetail(moimId),
+    // queryFn: () => getDetail(moimId),
+    queryFn: () => mockApi.getMoimDetail(moimId),
     enabled: options.enabled,
     // SSR된 데이터 재검증 방지
     staleTime: 1000 * 60, // 1분

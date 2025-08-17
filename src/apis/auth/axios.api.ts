@@ -3,9 +3,8 @@ import type { AxiosError, AxiosResponse } from 'axios';
 import axios from 'axios';
 
 const api = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL ?? 
-           process.env.NEXT_PUBLIC_VERCEL_URL ?? 
-           (typeof window !== 'undefined' ? window.location.origin : ''),
+  // baseURL을 빈 문자열로 설정하여 상대 경로만 사용
+  baseURL: '',
 });
 
 const isBrowser = () => typeof window !== 'undefined';

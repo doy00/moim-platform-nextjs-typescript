@@ -124,7 +124,7 @@ export const mockApi = {
         userUuid: p.user_uuid,
         userEmail: p.user_email,
         userNickname: p.user_nickname,
-        userImage: p.user_image
+        userImage: p.user_image || ''
       }));
     
     // 해당 모임의 리뷰 목록 찾기
@@ -143,23 +143,26 @@ export const mockApi = {
     
     return Promise.resolve({
       moim: {
-        ...moim,
         moimId: moim.id,
-        moimType: moim.category,
-        likes: moim.liked_counts,
-        participants: moim.participants_counts,
-        reviewsCount: moim.reviews_counts,
+        title: moim.title,
+        content: moim.content,
+        address: moim.address,
         createdAt: moim.created_at,
-        isConfirmed: moim.is_confirmed,
         recruitmentDeadline: moim.recruitment_deadline,
         startDate: moim.start_date,
         endDate: moim.end_date,
         minParticipants: moim.min_participants,
         maxParticipants: moim.max_participants,
-        participantsCount: moim.participants_counts,
-        likedCount: moim.liked_counts,
-        participantsList: participantsList,
-        reviewsList: reviewsList
+        moimType: moim.category,
+        status: moim.status,
+        likes: moim.liked_counts,
+        participants: moim.participants_counts,
+        reviewsCount: moim.reviews_counts,
+        isConfirmed: moim.is_confirmed,
+        likedUsers: mockLikedMoims.filter(l => l.moim_uuid === moim.id).map(l => l.user_uuid),
+        participatedUsers: participantsList,
+        reviews: reviewsList,
+        image: moim.images ? moim.images[0] : null
       },
       masterUser: masterUser || mockUsers[0]
     });
