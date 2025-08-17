@@ -1,10 +1,17 @@
+// 테스트 계정 정보
+export const testAccount = {
+  email: 'test@example.com',
+  password: 'test123',
+  nickname: '테스트 사용자'
+};
+
 export const mockUsers = [
   {
     id: '1',
-    email: 'user1@example.com',
-    nickname: '프론트엔드 개발자',
+    email: 'test@example.com',
+    nickname: '테스트 사용자',
     image: null,
-    introduction: '안녕하세요! React와 TypeScript를 주로 사용하는 프론트엔드 개발자입니다.',
+    introduction: '안녕하세요! 모임 플랫폼을 체험해보세요.',
     position: 'FRONTEND' as const,
     tags: ['React', 'TypeScript', 'Next.js'],
     is_social: false,

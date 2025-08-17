@@ -2,6 +2,7 @@
 
 import { useAuth, useSignInMutation } from '@/hooks/auth/auth.hook';
 import { signInSchema, type TSignInSchema } from '@/schemas/auth/auth.schema';
+import { testAccount } from '@/data/mockData';
 import { cn } from '@/utils/auth/ui.util';
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useRouter } from 'next/navigation';
@@ -36,6 +37,16 @@ export default function SignInForm() {
       password: data.password,
     };
     signIn(signInData);
+  };
+
+  // 테스트 계정으로 자동 로그인
+  const handleTestLogin = () => {
+    methods.setValue('email', testAccount.email);
+    methods.setValue('password', testAccount.password);
+    signIn({
+      email: testAccount.email,
+      password: testAccount.password,
+    });
   };
 
   const isDisabled =
@@ -118,6 +129,21 @@ export default function SignInForm() {
                   >
                     로그인
                   </AuthButton>
+                  
+                  {/* 테스트 계정 자동 로그인 버튼 */}
+                  <AuthButton
+                    className="bg-gray100 text-gray700 rounded-2xl h-[56px] text-body-1-normal font-semibold border border-gray300 hover:bg-gray200 transition-colors"
+                    type="button"
+                    onClick={handleTestLogin}
+                    disabled={isSignInPending}
+                  >
+                    테스트 계정으로 체험하기
+                  </AuthButton>
+                  
+                  <div className="w-full text-center text-gray400 text-caption-normal">
+                    <p>테스트 계정: {testAccount.email}</p>
+                    <p>비밀번호: {testAccount.password}</p>
+                  </div>
                 </div>
               </div>
             </form>
